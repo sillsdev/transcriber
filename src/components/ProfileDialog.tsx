@@ -632,22 +632,19 @@ function EditProfileView(props: IEditProfileView) {
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
     <Box id="profilePanel" sx={profilePanelProps}>
-      <Box sx={{ height: '100%' }}>
-        <StyledGrid item xs={12} md={5}>
-          <Box sx= {{ width: '150px',
-                      height: '150px',
-                      borderRadius: '50%', 
-                      border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                      padding: '17px',
-                      margin: '10% auto 1% auto' }}>
-            <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-          </Box>
-          <Caption sx={profileEmailProps} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
-          <ParatextLinkedButton setView={setView} />
-        </StyledGrid>
-      </Box>
-      <Box>
+      <StyledGrid item xs={12} md={5} height={"100%"}>
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px',
+                    margin: '10% auto 1% auto' }}>
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
+        <Caption sx={profileEmailProps} >{email || ''}</Caption>
+        <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
+        <ParatextLinkedButton setView={setView} />
+      </StyledGrid>
         {(!isOffline || offlineOnly) &&
         !editUserId &&
         currentUser &&
@@ -702,7 +699,6 @@ function EditProfileView(props: IEditProfileView) {
           </DeleteExpansion>
         )}
       </Box>
-    </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
       
