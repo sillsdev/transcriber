@@ -38,6 +38,7 @@ interface IProps {
   DangerProps?: SxProps<Theme>;
   DetailsProps?: SxProps<Theme>;
   DeleteButtonProps?: SxProps<Theme>;
+  ButtonBoxProps?: SxProps<Theme>;
   DeleteButtonLabel?: string;
   children?: any;
 }
@@ -45,7 +46,7 @@ interface IProps {
 export function DeleteExpansion(props: IProps) {
   const { handleDelete, title, explain, inProgress, icon, SummaryProps, 
           DangerHeader, DangerHeaderProps, DangerProps, DetailsProps, 
-          DeleteButtonProps, 
+          DeleteButtonProps, ButtonBoxProps,
           DeleteButtonLabel, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
@@ -74,7 +75,7 @@ export function DeleteExpansion(props: IProps) {
               flexGrow: 1,
               padding: '20px',
               border: '1px solid',
-              borderColor: 'secondary.main',
+              borderColor: 'secondary.main'
             }}
           >
             <div>
@@ -86,7 +87,7 @@ export function DeleteExpansion(props: IProps) {
               </FormLabel>
             </div>
             <GrowingSpacer />
-            <Box sx={{ alignSelf: 'center' }}>
+            <Box sx={ButtonBoxProps || { alignSelf: 'center' }}>
               <Button
                 id="deleteExpand"
                 key="delete"

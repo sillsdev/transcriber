@@ -161,8 +161,7 @@ const deleteUserProps = {
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
   opacity: '100%',
-  width: '120px',
-  marginLeft: 'calc(100% - 25px)',
+  //marginLeft: 'calc(100% - 25px)',
   '&.Mui-disabled': {
     color: 'primary.dark', 
     backgroundColor: 'primary.contrastText',
@@ -764,8 +763,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
                   DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
                   DeleteButtonProps={ deleteUserProps }
+                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
                   DeleteButtonLabel='Delete User' // TODO: Translation
-                  DangerProps={{ marginTop: '3px', textAlign: 'left', color: 'primary.contrastText' }}
+                  DangerProps={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    marginTop: '3px',
+                    textAlign: 'left',
+                    color: 'primary.contrastText'
+                  }}
                   DangerHeader='h6'
                   DangerHeaderProps={{ 
                     borderBottom: '1px solid', 
@@ -788,8 +795,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   <FormGroup
                     sx={{
                       display: 'flex',
-                      flexDirection: 'row',
-                      flexGrow: 1,
+                      flexDirection: 'column',
+                      alignItems: 'flex-start'
                     }}
                   >
                     <FormControlLabel
@@ -834,7 +841,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Box>
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
-            <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
+            <Grid item xs={12} sx={{ maxWidth: '100%' }}>
               {editUserId && /Add/i.test(editUserId) ? (
                 <Typography variant="h6">{tp.addMember}</Typography>
               ) : userNotComplete() ? (
