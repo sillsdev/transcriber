@@ -19,6 +19,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
 import { useSelector } from 'react-redux';
 import { deleteExpandSelector } from '../selector';
+import { Variant } from '@mui/material/styles/createTypography';
 
 const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
@@ -32,14 +33,20 @@ interface IProps {
   inProgress: boolean;
   icon?: React.ReactNode;
   SummaryProps?: SxProps<Theme>;
+  DangerHeader?: Variant;
+  DangerHeaderProps?: SxProps<Theme>
+  DangerProps?: SxProps<Theme>;
   DetailsProps?: SxProps<Theme>;
-  DeleteButtonProps?: ButtonProps;
+  DeleteButtonProps?: SxProps<Theme>;
   DeleteButtonLabel?: string;
   children?: any;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress, icon, SummaryProps, DetailsProps, DeleteButtonProps, DeleteButtonLabel, children } = props;
+  const { handleDelete, title, explain, inProgress, icon, SummaryProps, 
+          DangerHeader, DangerHeaderProps, DangerProps, DetailsProps, 
+          DeleteButtonProps, 
+          DeleteButtonLabel, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
@@ -56,12 +63,12 @@ export function DeleteExpansion(props: IProps) {
         <AccordionDetails sx={DetailsProps || { display: 'flex', flexDirection: 'column' }}>
           {children}
           <FormLabel>
-            <Typography variant="h5" sx={{ pb: '10px' }}>
+            <Typography variant={DangerHeader || "h5"} sx={DangerHeaderProps || { pb: '10px' }}>
               {t.dangerZone}
             </Typography>
           </FormLabel>
           <FormGroup
-            sx={{
+            sx={DangerProps || {
               display: 'flex',
               flexDirection: 'row',
               flexGrow: 1,
@@ -74,7 +81,7 @@ export function DeleteExpansion(props: IProps) {
               <FormLabel>
                 <Typography variant="h6">{title}</Typography>
               </FormLabel>
-              <FormLabel>
+              <FormLabel sx={ DangerProps }>
                 <div>{explain}</div>
               </FormLabel>
             </div>
@@ -86,10 +93,9 @@ export function DeleteExpansion(props: IProps) {
                 color="secondary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={{ m: 1 }}
+                sx={DeleteButtonProps || { m: 1 }}
                 onClick={handleDelete}
                 disabled={inProgress}
-                {...DeleteButtonProps}
               >
                 {DeleteButtonLabel || t.delete}
               </Button>
