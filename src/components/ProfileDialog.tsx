@@ -29,6 +29,8 @@ import {
   Skeleton,
   Switch,
   InputAdornment,
+  TextFieldProps,
+  BaseTextFieldProps,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
@@ -172,14 +174,16 @@ const StyledGrid = styled(Grid)<GridProps>(() => ({
   padding: '0 30px',
 }));
 
-interface IEditProfileView {
+interface ProfileDialogProps {
+  readOnlyMode?: boolean;
+  open: boolean;
+  onClose: () => void;
   finishAdd?: () => void;
-  onCancel?: () => void;
-  onSave?: () => void;
-};
-function EditProfileView(props: IEditProfileView) {
-  const { finishAdd, onCancel, onSave } = props;
+}
+export function ProfileDialog(props: ProfileDialogProps) {
+  const { readOnlyMode, onClose, open, finishAdd } = props;
   const users = useOrbitData<UserD[]>('user');
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -235,6 +239,7 @@ function EditProfileView(props: IEditProfileView) {
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
+  const [ readOnly, setReadOnly ] = useState(true);
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
@@ -403,9 +408,7 @@ function EditProfileView(props: IEditProfileView) {
       setEditUserId(null);
     }
     saving.current = false;
-    if (onSave) {
-      onSave();
-    }
+    setReadOnly(true);
   };
 
   const handleAdd = async () => {
@@ -488,9 +491,7 @@ function EditProfileView(props: IEditProfileView) {
         return;
       }
     }
-    if (onCancel) {
-      onCancel();
-    }
+    setReadOnly(true);
   };
 
   const handleCancelAborted = () => {
@@ -521,11 +522,6 @@ function EditProfileView(props: IEditProfileView) {
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
-
-  useEffect(() => {
-    setView('');
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
 
   useEffect(() => {
     let userRec = {
@@ -631,641 +627,14 @@ function EditProfileView(props: IEditProfileView) {
     // return <StickyRedirect to={view} />;
   }
 
-  return (<DialogContent id="profileContent" 
-    sx={profileContentProps}>
-    <Box id="profilePanel" sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5} height={"100%"}>
-        <Box sx= {{ width: '150px',
-                    height: '150px',
-                    borderRadius: '50%', 
-                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                    padding: '17px',
-                    margin: '10% auto 1% auto' }}>
-          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-        </Box>
-        <Caption sx={profileEmailProps} >{email || ''}</Caption>
-        <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
-        <ParatextLinkedButton setView={setView} />
-      </StyledGrid>
-        {(!isOffline || offlineOnly) &&
-        !editUserId &&
-        currentUser &&
-        currentUser.attributes?.name !== currentUser.attributes?.email && (
-          <DeleteExpansion
-            title={""}
-            explain={"The following action cannot be undone:"} // TODO: Translation
-            handleDelete={handleDelete}
-            inProgress={deleteItem !== ''}
-            icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
-            SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-            DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-            DeleteButtonProps={{  }}
-            DeleteButtonLabel='Delete User' // TODO: Translation
-          >
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                borderBottom: '1px solid', 
-                borderColor: 'primary.contrastText', 
-                textAlign: 'left' 
-              }}
-            >
-              Additional Settings {/*TODO: Translation*/}
-            </Typography>
-            <FormGroup
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexGrow: 1,
-              }}
-            >
-              <FormControlLabel
-                labelPlacement="start"
-                control={
-                  <Switch defaultChecked
-                    onChange={handleSyncFreqSwitch}
-                  />
-                }
-                label="Enable Data Sync: " // TODO: Setup translation for this
-                sx={{
-                  margin: '0px',
-                  '& .MuiSwitch-switchBase': {
-                    color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
-                    '&.Mui-checked': {
-                      color: 'primary.contrastText', // Color of the thumb when the switch is checked
-                      '& + .MuiSwitch-track': {
-                        backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
-                        opacity: '20%'
-                      },
-                    },
-                  },
-                  '& .MuiSwitch-track': {
-                    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
-                    opacity: '20%'
-                  },
-                }}
-              />
-              <FormControlLabel
-                labelPlacement="start"
-                sx={{ marginLeft: '2em' }}
-                control={
-                  <TextField
-                    title={tp.syncFrequency}
-                    value={syncFreq}
-                    onChange={handleSyncFreqChange}
-                    InputProps={{
-                      endAdornment: "min",
-                      sx: {
-                        color: 'primary.contrastText'
-                      }
-                    }}
-                    type="number"
-                    inputProps={{
-                      min: 0,
-                      max: 720
-                    }}
-                    size="small"
-                    sx={{
-                      marginLeft: '5px',
-                      padding: '0px',
-                      width: '100%',
-                      '& .MuiInputBase-root': {
-                        backgroundColor: 'primary.dark', // Background color of the input
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: 'primary.contrastText', // Border color of the input
-                        },
-                        '&:hover fieldset': {
-                          borderColor: 'primary.contrastText', // Border color on hover
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: 'secondary.dark', // Border color when focused
-                        },
-                        '&.Mui-disabled': {
-                          opacity: '75%' // Border opacity when disabled
-                        },
-                        '&.Mui-disabled:hover fieldset': {
-                          borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
-                        },
-                      },
-                      '& .MuiInputBase-input': {
-                        color: 'primary.contrastText', // Text color of the input
-                      },
-                      '& .MuiInputAdornment-root': {
-                        color: 'primary.contrastText'
-                      }
-                    }}
-                  />
-                }
-                label={"Frequency: "}
-                disabled={!sync}
-              />
-            </FormGroup>
-          </DeleteExpansion>
-        )}
-      </Box>
-    <Box id="profileMain" 
-      sx={profileMainProps}>
-      
-      <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
-          {editUserId && /Add/i.test(editUserId) ? (
-            <Typography variant="h6">{tp.addMember}</Typography>
-          ) : userNotComplete() ? (
-            <Typography variant="h6">{tp.completeProfile}</Typography>
-          ) : (
-            <Typography variant="h6">{tp.userProfile}</Typography>
-          )}
-          <FormControl sx={{ width: '100%'}}>
-            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="profileName"
-                    label={tp.name}
-                    sx={textFieldProps}
-                    value={name}
-                    onChange={handleNameChange}
-                    onClick={handleNameClick}
-                    helperText={
-                      dupName && (
-                        <Typography color="secondary" variant="caption">
-                          {tp.userExists}
-                        </Typography>
-                      )
-                    }
-                    margin="normal"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    required
-                    autoFocus
-                  />
-                }
-                label=""
-              />
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="given"
-                    label={tp.given}
-                    sx={textFieldProps}
-                    value={given || ''}
-                    onChange={handleGivenChange}
-                    margin="normal"
-                    required
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                  />
-                }
-                label=""
-              />
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="family"
-                    label={tp.family}
-                    sx={textFieldProps}
-                    value={family || ''}
-                    onChange={handleFamilyChange}
-                    margin="normal"
-                    required
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                  />
-                }
-                label=""
-              />
-              {userIsAdmin && editUserId && email !== '' && (
-                <FormControlLabel
-                  control={
-                    <SelectRole
-                      initRole={role}
-                      onChange={handleRoleChange}
-                      required={true}
-                    />
-                  }
-                  label=""
-                />
-              )}
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="select-locale"
-                    select
-                    label={tp.locale}
-                    sx={selectProps}
-                    value={locale}
-                    onChange={handleLocaleChange}
-                    SelectProps={{
-                      MenuProps: {
-                        sx: menuProps,
-                      },
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                    size="small"
-                    required={true}
-                  >
-                    {uiLanguages.map((option: string, idx: number) => (
-                      <MenuItem key={'loc' + idx} value={option}>
-                        {langName(locale, option)}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                }
-                label=""
-              />
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="select-timezone"
-                    select
-                    label={tp.timezone}
-                    sx={selectProps}
-                    value={timezone}
-                    onChange={handleTimezoneChange}
-                    SelectProps={{
-                      MenuProps: {
-                        sx: menuProps,
-                      },
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                    size="small"
-                    required={true}
-                  >
-                    {moment.tz
-                      .names()
-                      .map((option: string, idx: number) => (
-                        <MenuItem key={'tz' + idx} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                  </TextField>
-                }
-                label=""
-              />
-              {email !== '' && (
-                <FormControlLabel
-                  sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
-                  control={
-                    <Checkbox
-                      id="digest"
-                      checked={digest === 1}
-                      onChange={handleDigestChange}
-                      sx={{ margin: '0px' }}
-                    />
-                  }
-                  label={tp.sendDigest}
-                />
-              )}
-              {userIsSharedContentAdmin && (
-                <FormControlLabel
-                  sx={textFieldProps}
-                  control={
-                    <Checkbox
-                      id="sharedcontent"
-                      checked={sharedContent}
-                      onChange={handleSharedContentChange}
-                    />
-                  }
-                  label={tp.sharedContentCreator}
-                />
-              )}
-              {showDetail && (
-                <>
-                  <FormControlLabel
-                    control={
-                      <TextField
-                        id="phone"
-                        label={tp.phone}
-                        sx={textFieldProps}
-                        value={phone}
-                        onChange={handlePhoneChange}
-                        margin="normal"
-                        variant="outlined"
-                        size="small"
-                      />
-                    }
-                    label=""
-                  />
-                  {userIsAdmin && (
-                    <FormControlLabel
-                      sx={textFieldProps}
-                      control={
-                        <Checkbox
-                          id="checkbox-locked"
-                          checked={locked}
-                          onChange={handleLockedChange}
-                        />
-                      }
-                      label={tp.locked}
-                    />
-                  )}
-                </>
-              )}
-            </FormGroup>
-          </FormControl>
-          <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
-            <PriButton
-              id="profileSave"
-              key="add"
-              aria-label={tp.add}
-              disabled={
-                !requiredComplete() ||
-                !myChanged ||
-                saveRequested(toolId) ||
-                dupName
-              }
-              sx={{
-                marginLeft: '0'
-              }}
-              onClick={currentUser === undefined ? handleAdd : handleSave}
-            >
-              {editUserId && /Add/i.test(editUserId)
-                ? tp.add
-                : userNotComplete()
-                  ? tp.next
-                  : tp.save}
-            </PriButton>
-            {((editUserId && /Add/i.test(editUserId)) ||
-              (currentUser &&
-                currentUser.attributes?.name !==
-                currentUser.attributes?.email)) && (
-                <AltButton
-                  id="profileCancel"
-                  key="cancel"
-                  aria-label={tp.cancel}
-                  onClick={handleCancel}
-                >
-                  {tp.cancel}
-                </AltButton>
-              )}
-          </ActionRow>
-        </Grid>
-        {deleteItem !== '' && (
-        <Confirm
-          text={''}
-          yesResponse={handleDeleteConfirmed}
-          noResponse={handleDeleteRefused}
-        />
-      )}
-      {confirmCancel && (
-        <Confirm
-          text="Discard unsaved data?"
-          yesResponse={handleCancelConfirmed}
-          noResponse={handleCancelAborted}
-        />
-      )}
-    </Box>
-  </DialogContent>);
-}
-
-interface IReadProfileViewProps {
-  onEditClick?: MouseEventHandler<HTMLButtonElement>;
-};
-function ReadProfileView(props: IReadProfileViewProps) {
-  const { onEditClick } = props;
-  const theme = useTheme();
-  const users = useOrbitData<UserD[]>('user');
-  const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
-  const [memory] = useGlobal('memory');
-  const [editUserId,] = useGlobal('editUserId'); //verified this is not used in a function 2/18/25
-  const [organization] = useGlobal('organization');
-  const [user,] = useGlobal('user');
-  const [isDeveloper] = useGlobal('developer');
-  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
-  const [name, setName] = useState('');
-  const [given, setGiven] = useState<string | null>(null);
-  const [family, setFamily] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
-  const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
-  const [, setSyncFreq] = useState(2);
-  const [, setRole] = useState('');
-  const [locale, setLocale] = useState<string>(
-    localeDefault(isDeveloper === 'true')
-  );
-  const [phone, setPhone] = useState<string | null>(null);
-  const [bcp47, setBcp47] = useState<string | null>(null);
-  const [timerDir, setTimerDir] = useState<string | null>(null);
-  const [speed, setSpeed] = useState<string | null>(null);
-  const [progBar, setProgBar] = useState<string | null>(null);
-  const [hotKeys, setHotKeys] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
-  const [, setView] = useState('');
-
-  const getSyncFreq = (hotKeys: string | null) => {
-    const hk = JSON.parse(hotKeys ?? '{}');
-    return hk.syncFreq ?? 2;
-  };
-
-  useEffect(() => {
-    let userRec = {
-      type: 'user',
-      id: '',
-      attributes: {
-        name,
-        givenName: given,
-        familyName: family,
-        email,
-        phone,
-        timezone,
-        locale,
-        isLocked: true,
-        auth0Id: '',
-        silUserid: 0,
-        identityToken: '',
-        uilanguagebcp47: bcp47,
-        timercountUp: timerDir,
-        playbackSpeed: speed,
-        progressbarTypeid: progBar,
-        digestPreference: DigestPreference.dailyDigest,
-        newsPreference: false,
-        sharedContentCreator: false,
-        hotKeys,
-        avatarUrl,
-      },
-    } as User;
-    if (!editUserId || !/Add/i.test(editUserId)) {
-      const current = users.filter(
-        (u) => u.id === (editUserId ? editUserId : user)
-      );
-      if (current.length === 1) {
-        userRec = current[0];
-        setCurrentUser(userRec as UserD);
-        const orgMbrRecs = memory?.cache.query((q) =>
-          q.findRecords('organizationmembership')
-        ) as OrganizationMembership[];
-        const mbrRec = orgMbrRecs.filter(
-          (r) =>
-            related(r, 'user') === userRec.id &&
-            related(r, 'organization') === organization
-        );
-        if (mbrRec.length > 0) {
-          setRole(related(mbrRec[0], 'role'));
-        }
-      }
-    }
-    const attr = userRec.attributes;
-    if (!attr) return;
-    setName(attr.name !== attr.email ? attr.name : '');
-    setGiven(attr.givenName ? attr.givenName : '');
-    setFamily(attr.familyName ? attr.familyName : '');
-    setEmail(attr.email.toLowerCase());
-    setPhone(attr.phone);
-    setTimezone(attr.timezone || '');
-    setLocale(
-      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
-    );
-    setBcp47(attr.uilanguagebcp47);
-    setTimerDir(attr.timercountUp);
-    setSpeed(attr.playbackSpeed);
-    setProgBar(attr.progressbarTypeid);
-    setHotKeys(attr.hotKeys);
-    setAvatarUrl(attr.avatarUrl);
-    setSyncFreq(getSyncFreq(attr.hotKeys));
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [user, editUserId]);
-
-  const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.shiftKey) setShowDetail(!showDetail);
-  };
-
-  const userNotComplete = () =>
-    currentUser === undefined ||
-    currentUser.attributes?.name.toLowerCase() ===
-    currentUser.attributes?.email.toLowerCase();
-  return (<DialogContent id="profileContent" 
-    sx={profileContentProps}>
-    <Box id="profilePanel"
-      sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5} sx={{ height: '460px' }}>
-        <Box sx= {{ width: '150px',
-                    height: '150px',
-                    borderRadius: '50%', 
-                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                    padding: '17px',
-                    margin: '1% auto 1% auto' }}>
-          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-        </Box>
-        <Caption sx={profileEmailProps} >{email || ''}</Caption>
-        <Button onClick={onEditClick} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
-        <ParatextLinkedButton setView={setView}/>
-      </StyledGrid>
-    </Box>
-    <Box id="profileMain" 
-      sx={profileMainProps}>
-      <Grid container sx={{ height: '495px' }}>
-        <Grid item xs={12} md={7}>
-          {editUserId && /Add/i.test(editUserId) ? (
-            <Typography variant="h6">{tp.addMember}</Typography>
-          ) : userNotComplete() ? (
-            <Typography variant="h6">{tp.completeProfile}</Typography>
-          ) : (
-            <Typography variant="h6">{tp.userProfile}</Typography>
-          )}
-          <TextField
-            id="profileName"
-            label={tp.name}
-            sx={textFieldProps}
-            value={name}
-            onClick={handleNameClick}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          <TextField
-            id="given"
-            label={tp.given}
-            sx={textFieldProps}
-            value={given || ''}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          <TextField
-            id="family"
-            label={tp.family}
-            sx={textFieldProps}
-            value={family || ''}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          <TextField
-            id="select-locale"
-            label={tp.locale}
-            sx={selectProps}
-            value={langName(locale, locale)}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          <TextField
-            id="select-timezone"
-            label={tp.timezone}
-            sx={selectProps}
-            value={timezone}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          {showDetail && (
-            <TextField
-            id="phone"
-            label={tp.phone}
-            sx={textFieldProps}
-            value={phone || "none"}
-            margin="normal"
-            variant="standard"
-            InputProps={{
-              readOnly: true,
-              disableUnderline: true
-            }}
-          />
-          )}
-        </Grid>
-    </Grid>
-    </Box>
-  </DialogContent>);
-}
-
-interface ProfileDialogProps {
-  readOnlyMode?: boolean;
-  open: boolean;
-  onClose: () => void;
-  finishAdd?: () => void;
-}
-export function ProfileDialog(props: ProfileDialogProps) {
-  const { readOnlyMode, onClose, open, finishAdd } = props;
-  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const handleClose = () => onClose();
-  const [ readOnly, setReadOnly ] = useState(true);
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
 
-  const onEditClicked = () => setReadOnly(false);
-  const onCanceled = () => setReadOnly(true);
-  const onSaved = () => setReadOnly(true);
+  const onEditClicked = () => {
+    setReadOnly(false);
+    console.log("test");
+  };
 
   return (
     <Dialog
@@ -1297,11 +666,491 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <CloseIcon></CloseIcon>
         </IconButton>
       </DialogTitle>
-      {
-        readOnly ?
-        (<ReadProfileView onEditClick={onEditClicked}/>) :
-        (<EditProfileView finishAdd={finishAdd} onCancel={onCanceled} onSave={onSaved}></EditProfileView>)
-      }
+      <DialogContent id="profileContent" 
+        sx={profileContentProps}>
+          <Box id="profilePanel" sx={profilePanelProps}>
+            <StyledGrid item xs={12} md={5} height='100%'>
+              <Box sx= {{ width: '150px',
+                          height: '150px',
+                          borderRadius: '50%', 
+                          border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                          padding: '17px',
+                          margin: '1% auto 1% auto' }}>
+                <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+              </Box>
+              <Caption sx={profileEmailProps} >{email || ''}</Caption>
+              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
+              <ParatextLinkedButton setView={setView}/>
+            </StyledGrid>
+            {!readOnly && (!isOffline || offlineOnly) &&
+              !editUserId &&
+              currentUser &&
+              currentUser.attributes?.name !== currentUser.attributes?.email && (
+                <DeleteExpansion
+                  title={""}
+                  explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+                  handleDelete={handleDelete}
+                  inProgress={deleteItem !== ''}
+                  icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
+                  SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  DeleteButtonProps={{  }}
+                  DeleteButtonLabel='Delete User' // TODO: Translation
+                >
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      borderBottom: '1px solid', 
+                      borderColor: 'primary.contrastText', 
+                      textAlign: 'left' 
+                    }}
+                  >
+                    Additional Settings {/*TODO: Translation*/}
+                  </Typography>
+                  <FormGroup
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      flexGrow: 1,
+                      paddingLeft: '20px',
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Switch defaultChecked
+                          onChange={handleSyncFreqSwitch}
+                        />
+                      }
+                      labelPlacement="start"
+                      label="Enable Data Sync:" // TODO: Setup translation for this
+                      sx={{
+                        margin: '0px',
+                        '& .MuiSwitch-switchBase': {
+                          color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
+                          '&.Mui-checked': {
+                            color: 'primary.contrastText', // Color of the thumb when the switch is checked
+                            '& + .MuiSwitch-track': {
+                              backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
+                              opacity: '20%'
+                            },
+                          },
+                        },
+                        '& .MuiSwitch-track': {
+                          backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+                          opacity: '20%'
+                        },
+                      }}
+                    />
+                    <FormControlLabel
+                      control={
+                        <TextField
+                          title={tp.syncFrequency}
+                          value={syncFreq}
+                          onChange={handleSyncFreqChange}
+                          type="number"
+                          inputProps={{
+                            min: 0,
+                            max: 720
+                          }}
+                          InputProps={{
+                            endAdornment: "min",
+                            sx: {
+                              color: 'primary.contrastText'
+                            }
+                          }}
+                          size="small"
+                          sx={{
+                            marginLeft: '5px',
+                            padding: '0px',
+                            width: '100%',
+                            '& .MuiInputBase-root': {
+                              backgroundColor: 'primary.dark', // Background color of the input
+                            },
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'primary.contrastText', // Border color of the input
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'primary.contrastText', // Border color on hover
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'secondary.dark', // Border color when focused
+                              },
+                              '&.Mui-disabled': {
+                                opacity: '75%' // Border opacity when disabled
+                              },
+                              '&.Mui-disabled:hover fieldset': {
+                                borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
+                              },
+                            },
+                            '& .MuiInputBase-input': {
+                              color: 'primary.contrastText', // Text color of the input
+                            },
+                            '& .MuiInputAdornment-root': {
+                              color: 'primary.contrastText'
+                            }
+                          }}
+                        />
+                      }
+                      labelPlacement="start"
+                      label={"Frequency:"} // TODO: Translation
+                      sx={{ marginLeft: '2em' }}
+                      disabled={!sync}
+                    />
+                  </FormGroup>
+                </DeleteExpansion>
+              )}
+          </Box>
+          <Box id="profileMain" sx={profileMainProps}>
+          <Grid container sx={{ height: '495px' }}>
+            <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
+              {editUserId && /Add/i.test(editUserId) ? (
+                <Typography variant="h6">{tp.addMember}</Typography>
+              ) : userNotComplete() ? (
+                <Typography variant="h6">{tp.completeProfile}</Typography>
+              ) : (
+                <Typography variant="h6">{tp.userProfile}</Typography>
+              )}
+              {
+                readOnly ? (
+                  <Box>
+                    <TextField
+                      id="profileName"
+                      label={tp.name}
+                      value={name}
+                      onClick={handleNameClick}
+                      sx={textFieldProps}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    <TextField
+                      id="given"
+                      label={tp.given}
+                      value={given || ''}
+                      sx={textFieldProps}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    <TextField
+                      id="family"
+                      label={tp.family}
+                      value={family || ''}
+                      sx={textFieldProps}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    <TextField
+                      id="select-locale"
+                      label={tp.locale}
+                      sx={selectProps}
+                      value={langName(locale, locale)}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    <TextField
+                      id="select-timezone"
+                      label={tp.timezone}
+                      sx={selectProps}
+                      value={timezone}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    {showDetail && (
+                      <TextField
+                      id="phone"
+                      label={tp.phone}
+                      value={phone || "none"}
+                      sx={textFieldProps}
+                      margin="dense"
+                      variant="standard"
+                      size='small'
+                      InputProps={{
+                        readOnly: true,
+                        disableUnderline: true
+                      }}
+                    />
+                    )}
+                  </Box>
+                ) : (
+                  <Box>
+                    <FormControl sx={{ width: '100%'}}>
+                      <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
+                        <FormControlLabel
+                          control={
+                            <TextField
+                              id="profileName"
+                              label={tp.name}
+                              value={name}
+                              sx={textFieldProps}
+                              margin="normal"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              onChange={handleNameChange}
+                              onClick={handleNameClick}
+                              helperText={
+                                dupName && (
+                                  <Typography color="secondary" variant="caption">
+                                    {tp.userExists}
+                                  </Typography>
+                                )
+                              }
+                              required
+                              autoFocus
+                            />
+                          }
+                          label=""
+                        />
+                        <FormControlLabel
+                          control={
+                            <TextField
+                              id="given"
+                              label={tp.given}
+                              value={given || ''}
+                              sx={textFieldProps}
+                              margin="normal"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              onChange={handleGivenChange}
+                              required
+                            />
+                          }
+                          label=""
+                        />
+                        <FormControlLabel
+                          control={
+                            <TextField
+                              id="family"
+                              label={tp.family}
+                              value={family || ''}
+                              sx={textFieldProps}
+                              margin="normal"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              onChange={handleFamilyChange}
+                              required
+                            />
+                          }
+                          label=""
+                        />
+                        {userIsAdmin && editUserId && email !== '' && (
+                          <FormControlLabel
+                            control={
+                              <SelectRole
+                                initRole={role}
+                                onChange={handleRoleChange}
+                                required
+                              />
+                            }
+                            label=""
+                          />
+                        )}
+                        <FormControlLabel
+                          control={
+                            <TextField
+                              id="select-locale"
+                              select
+                              label={tp.locale}
+                              sx={selectProps}
+                              value={locale}
+                              margin="normal"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              onChange={handleLocaleChange}
+                              SelectProps={{
+                                MenuProps: {
+                                  sx: menuProps,
+                                },
+                              }}
+                              required
+                            >
+                              {uiLanguages.map((option: string, idx: number) => (
+                                <MenuItem key={'loc' + idx} value={option}>
+                                  {langName(locale, option)}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          }
+                          label=""
+                        />
+                        <FormControlLabel
+                          control={
+                            <TextField
+                              id="select-timezone"
+                              select
+                              label={tp.timezone}
+                              sx={selectProps}
+                              value={timezone}
+                              margin="normal"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              onChange={handleTimezoneChange}
+                              SelectProps={{
+                                MenuProps: {
+                                  sx: menuProps,
+                                },
+                              }}
+                              required={true}
+                            >
+                              {moment.tz
+                                .names()
+                                .map((option: string, idx: number) => (
+                                  <MenuItem key={'tz' + idx} value={option}>
+                                    {option}
+                                  </MenuItem>
+                                ))}
+                            </TextField>
+                          }
+                          label=""
+                        />
+                        {email !== '' && (
+                          <FormControlLabel
+                            sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
+                            control={
+                              <Checkbox
+                                id="digest"
+                                checked={digest === 1}
+                                onChange={handleDigestChange}
+                                sx={{ margin: '0px' }}
+                              />
+                            }
+                            label={tp.sendDigest}
+                          />
+                        )}
+                        {userIsSharedContentAdmin && (
+                          <FormControlLabel
+                            sx={textFieldProps}
+                            control={
+                              <Checkbox
+                                id="sharedcontent"
+                                checked={sharedContent}
+                                onChange={handleSharedContentChange}
+                              />
+                            }
+                            label={tp.sharedContentCreator}
+                          />
+                        )}
+                        {showDetail && (
+                          <>
+                            <FormControlLabel
+                              control={
+                                <TextField
+                                  id="phone"
+                                  label={tp.phone}
+                                  value={phone}
+                                  sx={textFieldProps}
+                                  margin="normal"
+                                  variant="outlined"
+                                  size="small"
+                                  fullWidth
+                                  onChange={handlePhoneChange}
+                                />
+                              }
+                              label=""
+                            />
+                            {userIsAdmin && (
+                              <FormControlLabel
+                                sx={textFieldProps}
+                                control={
+                                  <Checkbox
+                                    id="checkbox-locked"
+                                    checked={locked}
+                                    onChange={handleLockedChange}
+                                  />
+                                }
+                                label={tp.locked}
+                              />
+                            )}
+                          </>
+                        )}
+                      </FormGroup>
+                    </FormControl>
+                    <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
+                      <PriButton
+                        id="profileSave"
+                        key="add"
+                        aria-label={tp.add}
+                        disabled={
+                          !requiredComplete() ||
+                          !myChanged ||
+                          saveRequested(toolId) ||
+                          dupName
+                        }
+                        sx={{
+                          marginLeft: '0'
+                        }}
+                        onClick={currentUser === undefined ? handleAdd : handleSave}
+                      >
+                        {editUserId && /Add/i.test(editUserId)
+                          ? tp.add
+                          : userNotComplete()
+                            ? tp.next
+                            : tp.save}
+                      </PriButton>
+                      {((editUserId && /Add/i.test(editUserId)) ||
+                        (currentUser &&
+                          currentUser.attributes?.name !==
+                          currentUser.attributes?.email)) && (
+                          <AltButton
+                            id="profileCancel"
+                            key="cancel"
+                            aria-label={tp.cancel}
+                            onClick={handleCancel}
+                          >
+                            {tp.cancel}
+                          </AltButton>
+                        )}
+                    </ActionRow>
+                  </Box>
+                )
+              }
+            </Grid>
+          </Grid>
+          {!readOnly && deleteItem !== '' && (
+            <Confirm
+              text={''}
+              yesResponse={handleDeleteConfirmed}
+              noResponse={handleDeleteRefused}
+            />
+          )}
+          {!readOnly && confirmCancel && (
+            <Confirm
+              text="Discard unsaved data?"
+              yesResponse={handleCancelConfirmed}
+              noResponse={handleCancelAborted}
+            />
+          )}
+        </Box>
+      </DialogContent>
     </Dialog>
   );
 }
