@@ -74,6 +74,7 @@ import {
 } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
+import ExtendableDeleteExpansion from './ExtendableDeleteExpansion';
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
   width: 150,
@@ -185,7 +186,6 @@ const editProfileProps = {
 const deleteUserProps = {
   color: 'primary.dark', 
   backgroundColor: 'primary.contrastText',
-  textTransform: 'capitalize',
   opacity: '100%',
   //marginLeft: 'calc(100% - 25px)',
   '&.Mui-disabled': {
@@ -896,61 +896,40 @@ export function ProfileDialog(props: ProfileDialogProps) {
               currentUser &&
               currentUser.attributes?.name !== currentUser.attributes?.email &&
               (
-                <DeleteExpansion
-                  title={""}
-                  explain={tp.deleteWarning}
-                  handleDelete={handleDelete}
-                  inProgress={deleteItem !== ''}
-                  icon={(
-                    <ExpandMoreIcon 
-                      sx={{
-                        color: 'primary.contrastText',
-                        rotate: '180deg'
-                      }}
-                    />
-                  )}
-                  SummaryProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText',
-                    display: 'flex',
-                    position: 'absolute',
-                    bottom: '0px',
-                    width: '100%',
-                    zIndex: '2'
-                  }}
-                  DetailsProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText', 
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '8px 16px 64px',
-                    borderRadius: '5px'
-                  }}
-                  DeleteButtonProps={ deleteUserProps }
-                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                  DeleteButtonLabel={tp.deleteUser}
-                  DangerProps={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    marginTop: '3px',
-                    textAlign: 'left',
-                    color: 'primary.contrastText'
-                  }}
-                  DangerHeader='h6'
-                  DangerHeaderProps={{ 
-                    borderBottom: '1px solid', 
-                    borderColor: 'primary.contrastText', 
-                    textAlign: 'left',
-                    color: 'primary.contrastText',
-                    marginTop: '2em'
-                  }}
-                  BoxProps={{
-                    width: '100%',
+                <ExtendableDeleteExpansion
+                  AllProps={{
                     position: 'absolute', 
                     bottom: '0px',
                     borderRadius: '5px'
                   }}
+                  extendsDown={true}
+                  SummaryProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    position: 'absolute',
+                    bottom: '0px',
+                  }}
+                  IconProps={{
+                    color: 'primary.contrastText'
+                  }}
+                  DetailsProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    padding: '8px 16px 64px',
+                    borderRadius: '5px'
+                  }}
+                  DangerHeaderProps={{
+                    borderColor: 'primary.contrastText',
+                    color: 'primary.contrastText',
+                  }}
+                  DangerProps={{
+                    color: 'primary.contrastText'
+                  }}
+                  warning={tp.deleteWarning}
+                  ButtonProps={deleteUserProps}
+                  handleDelete={handleDelete}
+                  inProgress={deleteItem !== ''}
+                  buttonLabel={tp.deleteUser}
                 >
                   <Typography 
                     variant="h6" 
@@ -1020,7 +999,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       disabled={!sync}
                     />
                   </FormGroup>
-                </DeleteExpansion>
+                </ExtendableDeleteExpansion>
               )}
           </Box>
           <Box id="profileMain" sx={profileMainProps}>
