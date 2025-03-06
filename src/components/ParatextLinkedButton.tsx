@@ -31,8 +31,8 @@ const StyledCaption = styled(Typography, {
     width: '100%',
     textAlign: 'center',
     marginTop: '13%',
-    color: 'primary.contrastText',
-    opacity: '65%',
+    color: 'white',//primary.contrastText does not work for some reason
+    opacity: '65%', 
   }),
   ...(notLinked && {
     fontWeight: 'bold',
