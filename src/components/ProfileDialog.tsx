@@ -54,6 +54,7 @@ import { profileSelector } from '../selector';
 import { UnsavedContext } from '../context/UnsavedContext';
 import DeleteExpansion from '../components/DeleteExpansion';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordTransformResult, InitializedRecord } from '@orbit/records'
 import { useDispatch } from 'react-redux';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as action from '../store';
@@ -85,6 +86,7 @@ const textFieldProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
     marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -96,6 +98,8 @@ const selectProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
+    marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
@@ -505,7 +509,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
             currentUser !== undefined ? currentUser.id : ''
           )
         // we aren't allowing them to change owner organization currently
-      );
+      ).then(r => {
+        if (r) {
+          // set the currentUser to the saved user data
+          let res = (r as RecordTransformResult<InitializedRecord>[]);
+          setCurrentUser(res.at(0) as UserD);
+        }
+      });
       setLang(locale);
       const mbrRec = getMbrRoleRec(
         'organization',
@@ -839,7 +849,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           borderBottom: '1px solid lightgray'
         }}
       >
-        {t.myAccount}
+        {editUserId && /Add/i.test(editUserId) ? (
+            <Typography variant="h6">{tp.addMember}</Typography>
+          ) : userNotComplete() ? (
+            <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : (
+            <Typography variant="h6">{t.myAccount}</Typography>
+          )
+        }
         {readOnlyMode && 
         <IconButton
           aria-label="close"
@@ -992,22 +1009,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
-              {editUserId && /Add/i.test(editUserId) ? (
-                <Typography variant="h6">{tp.addMember}</Typography>
-              ) : userNotComplete() ? (
-                <Typography variant="h6">{tp.completeProfile}</Typography>
-              ) : (
-                <Typography variant="h6">{tp.userProfile}</Typography>
-              )}
-              {
-                readOnly ? (
+              {readOnly ? (
                   <Box>
                     <TextField
                       id="profileName"
                       label={tp.name}
                       value={name}
                       onClick={handleNameClick}
-                      sx={textFieldProps}
+                      sx={{...textFieldProps, marginTop: '11px'}}
                       margin="normal"
                       variant="standard"
                       size='small'
@@ -1086,7 +1095,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   </Box>
                 ) : (
                   <Box>
-                    <FormControl sx={{ width: '100%'}}>
+                    <FormControl sx={{ width: '100%', height: '443px'}}>
                       <FormGroup
                         sx={{
                           padding: '3px',
