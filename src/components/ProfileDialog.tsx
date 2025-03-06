@@ -818,7 +818,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           borderBottom: '1px solid lightgray'
         }}
       >
-        {t.myAccount}
+        {editUserId && /Add/i.test(editUserId) ? (
+            <Typography variant="h6">{tp.addMember}</Typography>
+          ) : userNotComplete() ? (
+            <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : (
+            <Typography variant="h6">{t.myAccount}</Typography>
+          )
+        }
         {readOnlyMode && 
          <IconButton
           aria-label="close"
@@ -968,15 +975,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
-              {editUserId && /Add/i.test(editUserId) ? (
-                <Typography variant="h6">{tp.addMember}</Typography>
-              ) : userNotComplete() ? (
-                <Typography variant="h6">{tp.completeProfile}</Typography>
-              ) : (
-                <Typography variant="h6">{tp.userProfile}</Typography>
-              )}
-              {
-                readOnly ? (
+              {readOnly ? (
                   <Box>
                     <TextField
                       id="profileName"
