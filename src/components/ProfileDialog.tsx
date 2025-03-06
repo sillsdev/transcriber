@@ -54,6 +54,7 @@ import { profileSelector } from '../selector';
 import { UnsavedContext } from '../context/UnsavedContext';
 import DeleteExpansion from '../components/DeleteExpansion';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordTransformResult, InitializedRecord } from '@orbit/records'
 import { useDispatch } from 'react-redux';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as action from '../store';
@@ -489,7 +490,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
             currentUser !== undefined ? currentUser.id : ''
           )
         // we aren't allowing them to change owner organization currently
-      );
+      ).then(r => {
+        if (r) {
+          // set the currentUser to the saved user data
+          let res = (r as RecordTransformResult<InitializedRecord>[]);
+          setCurrentUser(res.at(0) as UserD);
+        }
+      });
       setLang(locale);
       const mbrRec = getMbrRoleRec(
         'organization',
