@@ -197,6 +197,25 @@ const deleteUserProps = {
   }
 } as SxProps;
 
+// const logoutUserProps = {
+//   color: 'primary', 
+//   backgroundColor: 'primary.contrastText',
+//   textTransform: 'capitalize',
+//   opacity: '100%',
+//   //marginLeft: 'calc(100% - 25px)',
+//   '&.Mui-disabled': {
+//     color: 'primary', 
+//     backgroundColor: 'primary.contrastText',
+//     opacity: '50%'
+//   },
+//   '&:hover': {
+//     borderColor: 'primary',
+//     backgroundColor: 'primary.contrastText', 
+//     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+//     opacity: '90%'
+//   }
+// } as SxProps;
+
 const frequencyProps = {
   marginLeft: '5px',
   padding: '0px',
@@ -647,6 +666,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
+  
+  const handleLogout = () => {
+    setView('Logout');
+     //   return;
+  }
 
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
@@ -772,11 +796,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
   else if (view && !/Profile/i.test(view)) {
     // return <StickyRedirect to={view} />;
   }
-
   const handleClose = () => {
     if (myChanged) {
       setConfirmClose(tp.discardChanges);
     } else handleCloseConfirmed();
+  };
+  const handleCloseCreateProfile = (event: React.SyntheticEvent, reason: string | null) => {
+    if (!readOnlyMode && (reason === 'backdropClick' || reason === 'escapeKeyDown')) {
+      return;
+    }
+    handleClose();
   };
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
@@ -788,10 +817,12 @@ export function ProfileDialog(props: ProfileDialogProps) {
   return (
     <Dialog
       id="profile"
-      onClose={handleClose}
+      onClose={handleCloseCreateProfile}
       aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
+      // disableEscapeKeyDown={!readOnlyMode}
+      // disableBackdropClick
       disableEnforceFocus
       maxWidth="md"
       fullWidth
@@ -810,9 +841,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
       >
         {t.myAccount}
         {readOnlyMode && 
-         <IconButton
+        <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={() => {if (myChanged) {
+                            setConfirmClose(tp.discardChanges);
+                          } else handleCloseConfirmed();}}//handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}
@@ -830,13 +863,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
+              {readOnlyMode &&
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}
                 sx={editProfileProps}
               >
                 Edit Profile
-              </Button> {/* TODO: Translation*/}
+              </Button>} {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -1275,7 +1309,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           dupName
                         }
                         sx={{
-                          marginLeft: '0'
+                          marginLeft: '0',
+                          textTransform: 'capitalize'
                         }}
                         onClick={
                           currentUser === undefined ?
@@ -1302,6 +1337,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             {tp.cancel}
                           </AltButton>
                         )}
+                      {!readOnlyMode &&
+                      <AltButton
+                        id="createProfileLogout"
+                        key="logout"
+                        sx={{ textTransform: 'capitalize', margin:'20px' }}
+                        aria-label={tp.logout}
+                        onClick={handleLogout}
+                      >
+                        {tp.logout}
+                      </AltButton>}
                     </ActionRow>
                   </Box>
                 )
