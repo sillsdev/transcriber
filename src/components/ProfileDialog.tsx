@@ -420,7 +420,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
   const handleSyncFreqChange = (e: any) => {
-    if (e.target.value < 0) e.target.value = 0;
+    if (e.target.value < 1) e.target.value = 1;
     if (e.target.value > 720) e.target.value = 720;
     toolChanged(toolId, true);
     setSyncFreq(e.target.value);
@@ -880,14 +880,15 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              {readOnlyMode &&
+              {readOnlyMode && (
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}
                 sx={editProfileProps}
               >
-                Edit Profile
-              </Button>} {/* TODO: Translation*/}
+                {tp.edit}
+              </Button>
+              )}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -897,7 +898,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
               (
                 <DeleteExpansion
                   title={""}
-                  explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+                  explain={tp.deleteWarning}
                   handleDelete={handleDelete}
                   inProgress={deleteItem !== ''}
                   icon={(
@@ -927,7 +928,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   }}
                   DeleteButtonProps={ deleteUserProps }
                   ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                  DeleteButtonLabel='Delete User' // TODO: Translation
+                  DeleteButtonLabel={tp.deleteUser}
                   DangerProps={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -959,7 +960,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       textAlign: 'left' 
                     }}
                   >
-                    Additional Settings {/*TODO: Translation*/}
+                    {tp.additionalSettings}
                   </Typography>
                   <FormGroup
                     sx={{
@@ -968,16 +969,30 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       alignItems: 'flex-start'
                     }}
                   >
-                    <FormControlLabel
-                      control={
-                        <Switch defaultChecked
-                          onChange={handleSyncFreqSwitch}
+                    {syncFreq !== 0 ? (
+                      <FormControlLabel
+                        control={
+                          <Switch defaultChecked
+                            onChange={handleSyncFreqSwitch}
+                          />
+                        }
+                        labelPlacement="start"
+                        label={tp.syncFrequencyEnable}
+                        sx={ toggleSwitchProps }
+                      />
+                      ) : (
+                        <FormControlLabel
+                        control={
+                          <Switch
+                            onChange={handleSyncFreqSwitch}
+                          />
+                        }
+                        labelPlacement="start"
+                        label={tp.syncFrequencyEnable}
+                        sx={ toggleSwitchProps }
                         />
-                      }
-                      labelPlacement="start"
-                      label="Enable Data Sync:" // TODO: Setup translation for this
-                      sx={ toggleSwitchProps }
-                    />
+                      )
+                    }
                     <FormControlLabel
                       control={
                         <TextField
@@ -986,7 +1001,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           onChange={handleSyncFreqChange}
                           type="number"
                           inputProps={{
-                            min: 0,
+                            min: 1,
                             max: 720
                           }}
                           InputProps={{
@@ -1000,7 +1015,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         />
                       }
                       labelPlacement="start"
-                      label={"Frequency:"} // TODO: Translation
+                      label={tp.syncFrequencyLabel}
                       sx={{ marginLeft: '2em' }}
                       disabled={!sync}
                     />
@@ -1344,7 +1359,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             key="cancel"
                             aria-label={tp.cancel}
                             onClick={handleCancel}
-                            sx={{ textTransform: 'capitalize' }}
+                            sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                           >
                             {tp.cancel}
                           </AltButton>
@@ -1353,7 +1368,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       <AltButton
                         id="createProfileLogout"
                         key="logout"
-                        sx={{ textTransform: 'capitalize', margin:'20px' }}
+                        sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                         aria-label={tp.logout}
                         onClick={handleLogout}
                       >
@@ -1367,7 +1382,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Grid>
           {!readOnly && deleteItem !== '' && (
             <Confirm
-              text={tp.deleteExplained + " Are you sure you want to do this? "} // TODO Translate
+              text={tp.deleteExplained}
               yesResponse={handleDeleteConfirmed}
               noResponse={handleDeleteRefused}
             />
