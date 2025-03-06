@@ -1342,6 +1342,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             key="cancel"
                             aria-label={tp.cancel}
                             onClick={handleCancel}
+                            sx={{ textTransform: 'capitalize' }}
                           >
                             {tp.cancel}
                           </AltButton>
