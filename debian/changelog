@@ -1,3 +1,51 @@
+audio-project-manager (4.1.0.0)  experimental; urgency=high
+
+* Add SplitButton for ASR
+ * Add ai for noise removal, voice change, and transcribe (#1815)
+ * Add logic to choose a related language
+ * Avoid network error for large noise cancel files (#1865)
+ * Call Transcription via mediafile.  Find task id in segments (#1836)
+ * Don't show ASR if offline
+ * TT-6125 change audio capture options
+ * TT-6135, TT-6168, TT-6240 Handle desktop exit better
+ * TT-6150 Copy selected rows from sheet (#1851)
+ * TT-6208 Add a way to show general projects as stories in Akuo (#1811)
+ * TT-6216 No alert for download
+ * TT-6226 set min width for compare select
+ * TT-6229 Show note shared resource title instead of reference (#1819)
+ * TT-6241 set default progression (#1828)
+ * TT-6243 Add Settings button to personal projects (#1859)
+ * TT-6244 Handle large audio for AI (#1826)
+ * TT-6249-6253 Only recognize speech on transcriber steps when transcribe role is transcribe
+ * TT-6253 configured button
+ * TT-6260 no special chars in age or gender
+ * TT-6265 update rights collection (#1831)
+ * TT-6269 Return to same page on reload
+ * TT-6274 Allow user to do other things while transcribing (#1840)
+ * TT-6294 force not override existing transcription (#1854)
+ * TT-6297 show blue dot immediately on close of progress (#1843)
+ * TT-6303 Ask about propagating to section and movement (#1844)
+ * TT-6304 Check for Online before AI (#1849)
+ * TT-6307-6150 Create a Copy to Clipboard menu item (#1856)
+ * TT-6307-6150b use multi row selection (#1860)
+ * TT-6309 check bibleid and bibleName before Yes enabled (#1857)
+ * TT-6314 check if needs bibleid (#1862)
+ * TT-6320 no offline ai features
+ * TT-6322 No duplicate name (#1864)
+ * Update to build on Mac
+ * Update voice permission statement
+ * add publishing explicitly
+ * AI adding work for hire
+ * feature flags
+ * mobile team screen
+ * obthelps required bible (#1814)
+ * offer romanize for other non roman scripts
+ * project menu and personal choice
+ * return multiple tasks if timing available (#1841)
+ * treat Chinese special case
+
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 3 Mar 2024 15:36:00 -0600
+
 audio-project-manager (3.3.2.0)  experimental; urgency=high
 
  * TT-6202 maintain complete steps after transcriber submit
