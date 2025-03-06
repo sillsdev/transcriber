@@ -969,16 +969,30 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       alignItems: 'flex-start'
                     }}
                   >
-                    <FormControlLabel
-                      control={
-                        <Switch defaultChecked
-                          onChange={handleSyncFreqSwitch}
+                    {syncFreq !== 0 ? (
+                      <FormControlLabel
+                        control={
+                          <Switch defaultChecked
+                            onChange={handleSyncFreqSwitch}
+                          />
+                        }
+                        labelPlacement="start"
+                        label={tp.syncFrequencyEnable}
+                        sx={ toggleSwitchProps }
+                      />
+                      ) : (
+                        <FormControlLabel
+                        control={
+                          <Switch
+                            onChange={handleSyncFreqSwitch}
+                          />
+                        }
+                        labelPlacement="start"
+                        label={tp.syncFrequencyEnable}
+                        sx={ toggleSwitchProps }
                         />
-                      }
-                      labelPlacement="start"
-                      label={tp.syncFrequencyEnable}
-                      sx={ toggleSwitchProps }
-                    />
+                      )
+                    }
                     <FormControlLabel
                       control={
                         <TextField
