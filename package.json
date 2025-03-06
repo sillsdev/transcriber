@@ -253,5 +253,7 @@
   },
   "volta": {
     "node": "18.20.5"
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
