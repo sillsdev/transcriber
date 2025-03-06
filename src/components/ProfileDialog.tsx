@@ -85,6 +85,7 @@ const textFieldProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
     marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -96,6 +97,8 @@ const selectProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
+    marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
@@ -973,7 +976,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.name}
                       value={name}
                       onClick={handleNameClick}
-                      sx={textFieldProps}
+                      sx={{...textFieldProps, marginTop: '11px'}}
                       margin="normal"
                       variant="standard"
                       size='small'
