@@ -1342,7 +1342,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             key="cancel"
                             aria-label={tp.cancel}
                             onClick={handleCancel}
-                            sx={{ textTransform: 'capitalize' }}
+                            sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                           >
                             {tp.cancel}
                           </AltButton>
@@ -1351,7 +1351,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       <AltButton
                         id="createProfileLogout"
                         key="logout"
-                        sx={{ textTransform: 'capitalize', margin:'20px' }}
+                        sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                         aria-label={tp.logout}
                         onClick={handleLogout}
                       >
