@@ -1061,7 +1061,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   </Box>
                 ) : (
                   <Box>
-                    <FormControl sx={{ width: '100%'}}>
+                    <FormControl sx={{ width: '100%', height: '443px'}}>
                       <FormGroup
                         sx={{
                           padding: '3px',
