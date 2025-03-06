@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -210,7 +210,10 @@
       "hardenedRuntime": true,
       "entitlements": "env-config/entitlements.mac.plist",
       "entitlementsInherit": "env-config/entitlements.mac.plist",
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Please give us access to your microphone"
+      }
     },
     "dmg": {
       "sign": false
