@@ -86,6 +86,7 @@ const textFieldProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
     marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -97,6 +98,8 @@ const selectProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
+    marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
@@ -197,6 +200,25 @@ const deleteUserProps = {
     opacity: '90%'
   }
 } as SxProps;
+
+// const logoutUserProps = {
+//   color: 'primary', 
+//   backgroundColor: 'primary.contrastText',
+//   textTransform: 'capitalize',
+//   opacity: '100%',
+//   //marginLeft: 'calc(100% - 25px)',
+//   '&.Mui-disabled': {
+//     color: 'primary', 
+//     backgroundColor: 'primary.contrastText',
+//     opacity: '50%'
+//   },
+//   '&:hover': {
+//     borderColor: 'primary',
+//     backgroundColor: 'primary.contrastText', 
+//     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+//     opacity: '90%'
+//   }
+// } as SxProps;
 
 const frequencyProps = {
   marginLeft: '5px',
@@ -398,7 +420,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
   const handleSyncFreqChange = (e: any) => {
-    if (e.target.value < 0) e.target.value = 0;
+    if (e.target.value < 1) e.target.value = 1;
     if (e.target.value > 720) e.target.value = 720;
     toolChanged(toolId, true);
     setSyncFreq(e.target.value);
@@ -654,6 +676,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
+  
+  const handleLogout = () => {
+    setView('Logout');
+     //   return;
+  }
 
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
@@ -779,11 +806,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
   else if (view && !/Profile/i.test(view)) {
     // return <StickyRedirect to={view} />;
   }
-
   const handleClose = () => {
     if (myChanged) {
       setConfirmClose(tp.discardChanges);
     } else handleCloseConfirmed();
+  };
+  const handleCloseCreateProfile = (event: React.SyntheticEvent, reason: string | null) => {
+    if (!readOnlyMode && (reason === 'backdropClick' || reason === 'escapeKeyDown')) {
+      return;
+    }
+    handleClose();
   };
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
@@ -795,10 +827,12 @@ export function ProfileDialog(props: ProfileDialogProps) {
   return (
     <Dialog
       id="profile"
-      onClose={handleClose}
+      onClose={handleCloseCreateProfile}
       aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
+      // disableEscapeKeyDown={!readOnlyMode}
+      // disableBackdropClick
       disableEnforceFocus
       maxWidth="md"
       fullWidth
@@ -815,11 +849,20 @@ export function ProfileDialog(props: ProfileDialogProps) {
           borderBottom: '1px solid lightgray'
         }}
       >
-        {t.myAccount}
+        {editUserId && /Add/i.test(editUserId) ? (
+            <Typography variant="h6">{tp.addMember}</Typography>
+          ) : userNotComplete() ? (
+            <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : (
+            <Typography variant="h6">{t.myAccount}</Typography>
+          )
+        }
         {readOnlyMode && 
-         <IconButton
+        <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={() => {if (myChanged) {
+                            setConfirmClose(tp.discardChanges);
+                          } else handleCloseConfirmed();}}//handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}
@@ -837,6 +880,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
+              {readOnlyMode && (
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}
@@ -844,6 +888,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
               >
                 {tp.edit}
               </Button>
+              )}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -878,7 +923,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                     color: 'primary.contrastText', 
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: '8px 16px 64px'
+                    padding: '8px 16px 64px',
+                    borderRadius: '5px'
                   }}
                   DeleteButtonProps={ deleteUserProps }
                   ButtonBoxProps={{ alignSelf: 'flex-end' }}
@@ -902,7 +948,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   BoxProps={{
                     width: '100%',
                     position: 'absolute', 
-                    bottom: '0px'
+                    bottom: '0px',
+                    borderRadius: '5px'
                   }}
                 >
                   <Typography 
@@ -940,7 +987,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           onChange={handleSyncFreqChange}
                           type="number"
                           inputProps={{
-                            min: 0,
+                            min: 1,
                             max: 720
                           }}
                           InputProps={{
@@ -965,22 +1012,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
-              {editUserId && /Add/i.test(editUserId) ? (
-                <Typography variant="h6">{tp.addMember}</Typography>
-              ) : userNotComplete() ? (
-                <Typography variant="h6">{tp.completeProfile}</Typography>
-              ) : (
-                <Typography variant="h6">{tp.userProfile}</Typography>
-              )}
-              {
-                readOnly ? (
+              {readOnly ? (
                   <Box>
                     <TextField
                       id="profileName"
                       label={tp.name}
                       value={name}
                       onClick={handleNameClick}
-                      sx={textFieldProps}
+                      sx={{...textFieldProps, marginTop: '11px'}}
                       margin="normal"
                       variant="standard"
                       size='small'
@@ -1059,7 +1098,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   </Box>
                 ) : (
                   <Box>
-                    <FormControl sx={{ width: '100%'}}>
+                    <FormControl sx={{ width: '100%', height: '443px'}}>
                       <FormGroup
                         sx={{
                           padding: '3px',
@@ -1282,7 +1321,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           dupName
                         }
                         sx={{
-                          marginLeft: '0'
+                          marginLeft: '0',
+                          textTransform: 'capitalize'
                         }}
                         onClick={
                           currentUser === undefined ?
@@ -1305,10 +1345,21 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             key="cancel"
                             aria-label={tp.cancel}
                             onClick={handleCancel}
+                            sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                           >
                             {tp.cancel}
                           </AltButton>
                         )}
+                      {!readOnlyMode &&
+                      <AltButton
+                        id="createProfileLogout"
+                        key="logout"
+                        sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
+                        aria-label={tp.logout}
+                        onClick={handleLogout}
+                      >
+                        {tp.logout}
+                      </AltButton>}
                     </ActionRow>
                   </Box>
                 )

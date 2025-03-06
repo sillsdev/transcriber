@@ -10,10 +10,10 @@ export const HeadHeight = 64;
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#135CB9', //Better color: 1D9F90
+      main: '#135CB9', //Original: 135CB9, Better color: 1D9F90
     },
     secondary: {
-      main: '#00A7E1', //Better color: 25CBB8
+      main: '#00A7E1', //Original: 00A7E1, Better color: 25CBB8
     },
   },
 });
