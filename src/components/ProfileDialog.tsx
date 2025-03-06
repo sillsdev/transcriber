@@ -54,6 +54,7 @@ import { profileSelector } from '../selector';
 import { UnsavedContext } from '../context/UnsavedContext';
 import DeleteExpansion from '../components/DeleteExpansion';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordTransformResult, InitializedRecord } from '@orbit/records'
 import { useDispatch } from 'react-redux';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as action from '../store';
@@ -85,6 +86,7 @@ const textFieldProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
     marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -96,6 +98,8 @@ const selectProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    height: '47px',
+    marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
@@ -196,6 +200,25 @@ const deleteUserProps = {
     opacity: '90%'
   }
 } as SxProps;
+
+// const logoutUserProps = {
+//   color: 'primary', 
+//   backgroundColor: 'primary.contrastText',
+//   textTransform: 'capitalize',
+//   opacity: '100%',
+//   //marginLeft: 'calc(100% - 25px)',
+//   '&.Mui-disabled': {
+//     color: 'primary', 
+//     backgroundColor: 'primary.contrastText',
+//     opacity: '50%'
+//   },
+//   '&:hover': {
+//     borderColor: 'primary',
+//     backgroundColor: 'primary.contrastText', 
+//     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+//     opacity: '90%'
+//   }
+// } as SxProps;
 
 const frequencyProps = {
   marginLeft: '5px',
@@ -486,7 +509,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
             currentUser !== undefined ? currentUser.id : ''
           )
         // we aren't allowing them to change owner organization currently
-      );
+      ).then(r => {
+        if (r) {
+          // set the currentUser to the saved user data
+          let res = (r as RecordTransformResult<InitializedRecord>[]);
+          setCurrentUser(res.at(0) as UserD);
+        }
+      });
       setLang(locale);
       const mbrRec = getMbrRoleRec(
         'organization',
@@ -647,6 +676,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
+  
+  const handleLogout = () => {
+    setView('Logout');
+     //   return;
+  }
 
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
@@ -772,11 +806,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
   else if (view && !/Profile/i.test(view)) {
     // return <StickyRedirect to={view} />;
   }
-
   const handleClose = () => {
     if (myChanged) {
       setConfirmClose(tp.discardChanges);
     } else handleCloseConfirmed();
+  };
+  const handleCloseCreateProfile = (event: React.SyntheticEvent, reason: string | null) => {
+    if (!readOnlyMode && (reason === 'backdropClick' || reason === 'escapeKeyDown')) {
+      return;
+    }
+    handleClose();
   };
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
@@ -788,10 +827,12 @@ export function ProfileDialog(props: ProfileDialogProps) {
   return (
     <Dialog
       id="profile"
-      onClose={handleClose}
+      onClose={handleCloseCreateProfile}
       aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
+      // disableEscapeKeyDown={!readOnlyMode}
+      // disableBackdropClick
       disableEnforceFocus
       maxWidth="md"
       fullWidth
@@ -808,11 +849,20 @@ export function ProfileDialog(props: ProfileDialogProps) {
           borderBottom: '1px solid lightgray'
         }}
       >
-        {t.myAccount}
+        {editUserId && /Add/i.test(editUserId) ? (
+            <Typography variant="h6">{tp.addMember}</Typography>
+          ) : userNotComplete() ? (
+            <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : (
+            <Typography variant="h6">{t.myAccount}</Typography>
+          )
+        }
         {readOnlyMode && 
-         <IconButton
+        <IconButton
           aria-label="close"
-          onClick={handleClose}
+          onClick={() => {if (myChanged) {
+                            setConfirmClose(tp.discardChanges);
+                          } else handleCloseConfirmed();}}//handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}
@@ -830,13 +880,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
+              {readOnlyMode &&
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}
                 sx={editProfileProps}
               >
                 Edit Profile
-              </Button> {/* TODO: Translation*/}
+              </Button>} {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -960,22 +1011,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
-              {editUserId && /Add/i.test(editUserId) ? (
-                <Typography variant="h6">{tp.addMember}</Typography>
-              ) : userNotComplete() ? (
-                <Typography variant="h6">{tp.completeProfile}</Typography>
-              ) : (
-                <Typography variant="h6">{tp.userProfile}</Typography>
-              )}
-              {
-                readOnly ? (
+              {readOnly ? (
                   <Box>
                     <TextField
                       id="profileName"
                       label={tp.name}
                       value={name}
                       onClick={handleNameClick}
-                      sx={textFieldProps}
+                      sx={{...textFieldProps, marginTop: '11px'}}
                       margin="normal"
                       variant="standard"
                       size='small'
@@ -1054,7 +1097,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   </Box>
                 ) : (
                   <Box>
-                    <FormControl sx={{ width: '100%'}}>
+                    <FormControl sx={{ width: '100%', height: '443px'}}>
                       <FormGroup
                         sx={{
                           padding: '3px',
@@ -1277,7 +1320,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           dupName
                         }
                         sx={{
-                          marginLeft: '0'
+                          marginLeft: '0',
+                          textTransform: 'capitalize'
                         }}
                         onClick={
                           currentUser === undefined ?
@@ -1300,10 +1344,21 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             key="cancel"
                             aria-label={tp.cancel}
                             onClick={handleCancel}
+                            sx={{ textTransform: 'capitalize' }}
                           >
                             {tp.cancel}
                           </AltButton>
                         )}
+                      {!readOnlyMode &&
+                      <AltButton
+                        id="createProfileLogout"
+                        key="logout"
+                        sx={{ textTransform: 'capitalize', margin:'20px' }}
+                        aria-label={tp.logout}
+                        onClick={handleLogout}
+                      >
+                        {tp.logout}
+                      </AltButton>}
                     </ActionRow>
                   </Box>
                 )
