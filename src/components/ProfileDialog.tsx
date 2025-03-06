@@ -265,7 +265,7 @@ const toggleSwitchProps = {
     },
   },
   '& .MuiSwitch-track': {
-    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+    backgroundColor: 'secondary.contrastText', // Color of the track when the switch is unchecked
     opacity: '20%'
   },
 } as SxProps;
