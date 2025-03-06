@@ -116,7 +116,7 @@ export function UserMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {!isProfile && (
-          <StyledMenuItem id="myAccount" onClick={handleAction('Profile')}>
+          <StyledMenuItem id="myAccount" onClick={handleProfile(true)}>
             <ListItemIcon>
               <AccountIcon fontSize="small" />
             </ListItemIcon>
@@ -159,12 +159,6 @@ export function UserMenu(props: IProps) {
         </TermsItem>
         <TermsItem id="terms" onClick={handleAction('Terms')}>
           <ListItemText primary={t.terms} />
-        </TermsItem>
-        <TermsItem id="profiled" onClick={handleProfile(true)}>
-          <ListItemIcon>
-            <AccountIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary={t.myAccount} />
         </TermsItem>
       </StyledMenu>
 

@@ -85,6 +85,7 @@ const textFieldProps = {
   mx: 1,
   width: '100%',
   "&:has([readOnly]) ": {
+    marginBottom: '1px',
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
@@ -973,7 +974,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       value={name}
                       onClick={handleNameClick}
                       sx={textFieldProps}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
@@ -986,7 +987,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.given}
                       value={given || ''}
                       sx={textFieldProps}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
@@ -999,7 +1000,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.family}
                       value={family || ''}
                       sx={textFieldProps}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
@@ -1012,7 +1013,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.locale}
                       sx={selectProps}
                       value={langName(locale, locale)}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
@@ -1025,7 +1026,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.timezone}
                       sx={selectProps}
                       value={timezone}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
@@ -1039,7 +1040,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       label={tp.phone}
                       value={phone || "none"}
                       sx={textFieldProps}
-                      margin="dense"
+                      margin="normal"
                       variant="standard"
                       size='small'
                       InputProps={{
