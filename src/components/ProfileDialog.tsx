@@ -401,7 +401,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
   const handleSyncFreqChange = (e: any) => {
-    if (e.target.value < 0) e.target.value = 0;
+    if (e.target.value < 1) e.target.value = 1;
     if (e.target.value > 720) e.target.value = 720;
     toolChanged(toolId, true);
     setSyncFreq(e.target.value);
@@ -950,7 +950,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                           onChange={handleSyncFreqChange}
                           type="number"
                           inputProps={{
-                            min: 0,
+                            min: 1,
                             max: 720
                           }}
                           InputProps={{
