@@ -26,14 +26,12 @@ import {
   MenuItem,
   Checkbox,
   IconButton,
-  Skeleton,
   Switch,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
   langName,
@@ -187,7 +185,6 @@ const deleteUserProps = {
   color: 'primary.dark', 
   backgroundColor: 'primary.contrastText',
   opacity: '100%',
-  //marginLeft: 'calc(100% - 25px)',
   '&.Mui-disabled': {
     color: 'primary.dark', 
     backgroundColor: 'primary.contrastText',
@@ -200,25 +197,6 @@ const deleteUserProps = {
     opacity: '90%'
   }
 } as SxProps;
-
-// const logoutUserProps = {
-//   color: 'primary', 
-//   backgroundColor: 'primary.contrastText',
-//   textTransform: 'capitalize',
-//   opacity: '100%',
-//   //marginLeft: 'calc(100% - 25px)',
-//   '&.Mui-disabled': {
-//     color: 'primary', 
-//     backgroundColor: 'primary.contrastText',
-//     opacity: '50%'
-//   },
-//   '&:hover': {
-//     borderColor: 'primary',
-//     backgroundColor: 'primary.contrastText', 
-//     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-//     opacity: '90%'
-//   }
-// } as SxProps;
 
 const frequencyProps = {
   marginLeft: '5px',
@@ -831,8 +809,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
       aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
-      // disableEscapeKeyDown={!readOnlyMode}
-      // disableBackdropClick
       disableEnforceFocus
       maxWidth="md"
       fullWidth
@@ -862,7 +838,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           aria-label="close"
           onClick={() => {if (myChanged) {
                             setConfirmClose(tp.discardChanges);
-                          } else handleCloseConfirmed();}}//handleClose
+                          } else handleCloseConfirmed();}} //handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}

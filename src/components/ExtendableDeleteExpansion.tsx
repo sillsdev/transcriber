@@ -1,3 +1,4 @@
+import React from 'react';
 import { IDeleteExpansionStrings } from '../model';
 import {
   Accordion,
