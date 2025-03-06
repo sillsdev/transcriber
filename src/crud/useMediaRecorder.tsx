@@ -9,8 +9,8 @@ import { waitForIt } from '../utils/waitForIt';
 const CAPTURE_OPTIONS = {
   audio: {
     autoGainControl: false,
-    echoCancellation: false,
-    noiseSuppression: false,
+    echoCancellation: true,
+    noiseSuppression: true,
   },
   video: false,
 };
