@@ -1051,6 +1051,7 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addMember": string;
+    "additionalSettings": string;
     "cancel": string;
     "checkingParatext": string;
     "close": string;
@@ -1059,8 +1060,10 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "defaultTimezone": string;
     "deleteExplained": string;
     "deleteUser": string;
+    "deleteWarning": string;
     "discardChanges": string;
     "discardChangesExplained": string;
+    "edit": string;
     "email": string;
     "family": string;
     "given": string;
@@ -1082,6 +1085,8 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "sendDigest": string;
     "sharedContentCreator": string;
     "syncFrequency": string;
+    "syncFrequencyEnable": string;
+    "syncFrequencyLabel": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;

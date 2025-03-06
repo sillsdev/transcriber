@@ -842,8 +842,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 onClick={onEditClicked}
                 sx={editProfileProps}
               >
-                Edit Profile
-              </Button> {/* TODO: Translation*/}
+                {tp.edit}
+              </Button>
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -853,7 +853,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
               (
                 <DeleteExpansion
                   title={""}
-                  explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+                  explain={tp.deleteWarning}
                   handleDelete={handleDelete}
                   inProgress={deleteItem !== ''}
                   icon={(
@@ -882,7 +882,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   }}
                   DeleteButtonProps={ deleteUserProps }
                   ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                  DeleteButtonLabel='Delete User' // TODO: Translation
+                  DeleteButtonLabel={tp.deleteUser}
                   DangerProps={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -913,7 +913,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       textAlign: 'left' 
                     }}
                   >
-                    Additional Settings {/*TODO: Translation*/}
+                    {tp.additionalSettings}
                   </Typography>
                   <FormGroup
                     sx={{
@@ -929,7 +929,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         />
                       }
                       labelPlacement="start"
-                      label="Enable Data Sync:" // TODO: Setup translation for this
+                      label={tp.syncFrequencyEnable}
                       sx={ toggleSwitchProps }
                     />
                     <FormControlLabel
@@ -954,7 +954,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         />
                       }
                       labelPlacement="start"
-                      label={"Frequency:"} // TODO: Translation
+                      label={tp.syncFrequencyLabel}
                       sx={{ marginLeft: '2em' }}
                       disabled={!sync}
                     />
@@ -1317,7 +1317,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Grid>
           {!readOnly && deleteItem !== '' && (
             <Confirm
-              text={tp.deleteExplained + " Are you sure you want to do this? "} // TODO Translate
+              text={tp.deleteExplained}
               yesResponse={handleDeleteConfirmed}
               noResponse={handleDeleteRefused}
             />
