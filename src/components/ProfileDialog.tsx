@@ -922,7 +922,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                     color: 'primary.contrastText', 
                     display: 'flex',
                     flexDirection: 'column',
-                    padding: '8px 16px 64px'
+                    padding: '8px 16px 64px',
+                    borderRadius: '5px'
                   }}
                   DeleteButtonProps={ deleteUserProps }
                   ButtonBoxProps={{ alignSelf: 'flex-end' }}
@@ -946,7 +947,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   BoxProps={{
                     width: '100%',
                     position: 'absolute', 
-                    bottom: '0px'
+                    bottom: '0px',
+                    borderRadius: '5px'
                   }}
                 >
                   <Typography 
