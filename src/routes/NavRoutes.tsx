@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom';
 import Logout from './Logout';
 import Loading from './Loading';
-import Profile from './Profile';
 import CreateProfile from './CreateProfile';
 import { default as Team } from './TeamScreen';
 import { default as Plan } from './PlanScreen';
@@ -32,7 +31,6 @@ const routes = createRoutesFromElements([
     <Route path="/terms" element={<HTMLPage text={termsContent} />} />
     <Route path="/privacy" element={<HTMLPage text={privacyContent} />} />
     <Route path="/loading" element={<Auth el={<Loading />} />} />
-    <Route path="/profile" element={<Auth el={<Profile />} />} />
     <Route path="/createProfile" element={<Auth el={<CreateProfile />} />} />
     <Route path="/team" element={<Auth el={<Team />} />} />
     <Route path="/plan/:prjId/:tabNm" element={<Auth el={<Plan />} />} />

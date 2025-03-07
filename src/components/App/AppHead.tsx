@@ -341,8 +341,7 @@ export const AppHead = (props: IProps) => {
       if (
         pathname !== '/' &&
         !pathname.startsWith('/access') &&
-        pathname !== '/loading' &&
-        pathname !== '/profile'
+        pathname !== '/loading'
       ) {
         setView('Access');
       }
@@ -441,7 +440,6 @@ export const AppHead = (props: IProps) => {
   const handleTermsClose = () => setShowTerms('');
 
   if (view === 'Error') navigate('/error');
-  if (view === 'Profile') setTimeout(() => navigate('/profile'), 200);
   if (view === 'Logout') setTimeout(() => navigate('/logout'), 500);
   if (view === 'Access') setTimeout(() => navigate('/'), 200);
   if (view === 'Terms') navigate('/terms');

@@ -279,7 +279,7 @@ export function Loading() {
     }
     let fromUrl = getGotoUrl();
     let waitToNavigate = false;
-    if (fromUrl && !/^\/profile|^\/plan|^\/detail/.test(fromUrl))
+    if (fromUrl && !/^\/plan|^\/detail/.test(fromUrl))
       fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
@@ -306,7 +306,7 @@ export function Loading() {
             });
           }
         }
-      } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
+      }
     }
     if (!waitToNavigate) navigate(fromUrl || '/team');
   };
