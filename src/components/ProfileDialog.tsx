@@ -146,7 +146,8 @@ const profileMainProps = {
   maxWidth: '100%',
   justifyContent: 'center',
   mx: "10px",
-  padding: '10px'
+  padding: '10px',
+  paddingBottom: '0px'
 } as SxProps;
 
 const profileEmailProps = {
