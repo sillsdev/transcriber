@@ -356,6 +356,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(tp.nameNotEmail);
+      console.log("new message yay");
       return;
     }
     toolChanged(toolId, true);
@@ -1051,7 +1052,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   </Box>
                 ) : (
                   <Box>
-                    <FormControl sx={{ width: '100%', height: '443px'}}>
+                    <FormControl sx={{ width: '100%', height: '443px', marginBottom: '15px' }}>
                       <FormGroup
                         sx={{
                           padding: '3px',
@@ -1250,7 +1251,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             />
                             {userIsAdmin && (
                               <FormControlLabel
-                                sx={textFieldProps}
+                                sx={ textFieldProps }
                                 control={
                                   <Checkbox
                                     id="checkbox-locked"
