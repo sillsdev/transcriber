@@ -83,8 +83,6 @@ export function UserMenu(props: IProps) {
     if (action) action(what);
   };
 
-  const isProfile = useMemo(() => /\/profile/i.test(pathname), [pathname]);
-
   return (
     <div>
       <Button
@@ -115,14 +113,12 @@ export function UserMenu(props: IProps) {
             />
           </StyledMenuItem>
         )}
-        {!isProfile && (
-          <StyledMenuItem id="myAccount" onClick={handleProfile(true)}>
-            <ListItemIcon>
-              <AccountIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={t.myAccount} />
-          </StyledMenuItem>
-        )}
+        <StyledMenuItem id="myAccount" onClick={handleProfile(true)}>
+          <ListItemIcon>
+            <AccountIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary={t.myAccount} />
+        </StyledMenuItem>
         {shift && !isElectron && (
           <StyledMenuItem id="clearCache" onClick={handleAction('Clear')}>
             <ListItemIcon>
@@ -162,7 +158,11 @@ export function UserMenu(props: IProps) {
         </TermsItem>
       </StyledMenu>
 
-      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={true} />
+      <ProfileDialog
+        mode='viewMyAccount'
+        open={profileOpen} 
+        onClose={handleProfile(false)}
+      />
     </div>
   );
 }

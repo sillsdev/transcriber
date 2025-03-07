@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ProfileDialog } from "../components/ProfileDialog";
-import { restoreScroll } from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 interface CreateProfileProps {
     noMargin?: boolean;
@@ -8,16 +8,15 @@ interface CreateProfileProps {
 }
 
 export function CreateProfile(props: CreateProfileProps) {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [profileOpen, setProfileOpen] = React.useState(false);
-    const handleProfile = (visible: boolean) => () => {
-        if (visible !== profileOpen) setProfileOpen(visible);
-        restoreScroll();
-        setAnchorEl(null);
-    };
+    const navigate = useNavigate();
     return (
-        <ProfileDialog open={true} mannerOfOpen={"createProfile"} 
-                       readOnlyMode={false} onClose={handleProfile(false)} />
-    )
+      <ProfileDialog
+        mode='create'
+        open={true}
+        finishAdd={() => navigate('/team')}
+        onCancel={() => navigate('/logout')}
+        onSave={() => navigate('/team')}
+      />
+    );
 }
 export default CreateProfile;

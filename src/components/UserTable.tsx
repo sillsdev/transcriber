@@ -75,7 +75,6 @@ export function UserTable() {
   // const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -111,6 +110,7 @@ export function UserTable() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [view, setView] = useState('');
+  const [editId, setEditId] = useState<string | undefined>();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
@@ -286,9 +286,6 @@ export function UserTable() {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) {
-    navigate('/profile');
-  }
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
@@ -351,8 +348,14 @@ export function UserTable() {
       ) : (
         <></>
       )}
-      <ProfileDialog open={ profileOpen } mannerOfOpen={"editMember"} 
-                 onClose={handleProfile(false)} readOnlyMode={false} />
+      <ProfileDialog 
+        mode='editMember'
+        open={ profileOpen }
+        onClose={handleProfile(false)}
+        onCancel={handleProfile(false)}
+        onSave={handleProfile(false)}
+        editId={editId}
+      />
     </Box>
   );
 }
