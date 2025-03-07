@@ -516,7 +516,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
       setEditUserId(null);
     }
     saving.current = false;
-    setReadOnly(true);
+    if(mannerOfOpen === "editMember") { //adjust accordingly
+      handleCloseConfirmed();
+    }else {
+      setReadOnly(true);
+    }
   };
 
   const handleAdd = async () => {
