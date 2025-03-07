@@ -83,7 +83,10 @@ function AlertDialog(props: IProps) {
         {title || (isDelete ? t.delete : t.confirmation)}
       </DialogTitle>
       <DialogContent>
-        <DialogContent id="alertJsx">{jsx}</DialogContent>
+        {/*The following line creates whitespace in the alerts; however, it may
+          be used somewhere so that commenting this will result in an error. It 
+          does not seem like that is the case, but the line is below if needed:
+              <DialogContent id="alertJsx">{jsx}</DialogContent> */}
         <DialogContentText id="alertDesc">
           {text || t.areYouSure}
         </DialogContentText>
