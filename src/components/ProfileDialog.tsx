@@ -588,6 +588,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
     setSyncFreq(getSyncFreq(attr.hotKeys));
+    setSync(syncFreq > 0);
   }
 
   const handleCancel = () => {
@@ -743,6 +744,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
     setSyncFreq(getSyncFreq(attr.hotKeys));
+    setSync(syncFreq > 0);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user, editId]);
 
@@ -908,30 +910,17 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       alignItems: 'flex-start'
                     }}
                   >
-                    {syncFreq !== 0 ? (
-                      <FormControlLabel
-                        control={
-                          <Switch defaultChecked
-                            onChange={handleSyncFreqSwitch}
-                          />
-                        }
-                        labelPlacement="start"
-                        label={tp.syncFrequencyEnable}
-                        sx={ toggleSwitchProps }
-                      />
-                      ) : (
-                        <FormControlLabel
-                        control={
-                          <Switch
-                            onChange={handleSyncFreqSwitch}
-                          />
-                        }
-                        labelPlacement="start"
-                        label={tp.syncFrequencyEnable}
-                        sx={ toggleSwitchProps }
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={syncFreq > 0}
+                          onChange={handleSyncFreqSwitch}
                         />
-                      )
-                    }
+                      }
+                      labelPlacement="start"
+                      label={tp.syncFrequencyEnable}
+                      sx={ toggleSwitchProps }
+                    />
                     <FormControlLabel
                       control={
                         <TextField
