@@ -6326,6 +6326,13 @@
                 <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
         </trans-unit>
+        <trans-unit id="profile.editMember">
+            <source>Edit Member Profile</source>
+            <target />
+            <context-group>
+                <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+        </trans-unit>
          <trans-unit id="profile.email">
             <source>Email</source>
             <target/>

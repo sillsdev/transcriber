@@ -5422,6 +5422,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.editMember">
+         <segment>
+            <source>Edit Member Profile</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.email">
          <segment>
             <source>Email</source>

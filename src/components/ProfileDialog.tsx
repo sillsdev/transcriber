@@ -816,6 +816,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
             <Typography variant="h6">{tp.addMember}</Typography>
           ) : userNotComplete() ? (
             <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : editId ? (
+            <Typography variant="h6">{tp.editMember}</Typography>
           ) : (
             <Typography variant="h6">{t.myAccount}</Typography>
           )

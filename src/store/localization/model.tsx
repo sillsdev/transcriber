@@ -1064,6 +1064,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "discardChanges": string;
     "discardChangesExplained": string;
     "edit": string;
+    "editMember": string;
     "email": string;
     "family": string;
     "given": string;

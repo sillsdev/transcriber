@@ -1123,6 +1123,7 @@ const initialState = {
 			"discardChanges": "Discard unsaved Changes?",
 			"discardChangesExplained": "Discard unsaved Changes? ({0})",
 			"edit": "Edit Profile",
+			"editMember": "Edit Member Profile",
 			"email": "Email",
 			"family": "Family Name",
 			"given": "Given Name",
