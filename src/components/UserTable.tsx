@@ -353,7 +353,7 @@ export function UserTable() {
             <></>
           )}
         </Box>
-      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={true} />
+      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={false} />
     </div>
   );
 }
