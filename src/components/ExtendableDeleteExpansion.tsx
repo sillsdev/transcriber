@@ -116,7 +116,7 @@ export function ExtendableDeleteExpansion(props: IProps) {
                 color="primary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={{ m: 1, textTransform: 'capitalize', ...ButtonProps }}
+                sx={{ m: 1, ...ButtonProps }}
                 onClick={handleDelete}
                 disabled={inProgress}
               >

@@ -16,6 +16,11 @@ const theme = createTheme({
       main: '#00A7E1', //Original: 00A7E1, Better color: 25CBB8
     },
   },
+  typography: {
+    button: {
+      textTransform: 'capitalize'
+    }
+  }
 });
 
 function App() {

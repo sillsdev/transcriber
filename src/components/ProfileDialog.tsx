@@ -11,7 +11,6 @@ import {
 } from '../model';
 import {
   Dialog,
-  DialogTitle,
   Button,
   DialogContent,
   FormControlLabel,
@@ -25,10 +24,10 @@ import {
   TextField,
   MenuItem,
   Checkbox,
-  IconButton,
   Switch,
+  DialogTitle,
+  Stack,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -163,7 +162,6 @@ const profileEmailProps = {
 const editProfileProps = {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
-  textTransform: 'capitalize',
   opacity: '100%',
   width: '120px',
   '&.Mui-disabled': {
@@ -388,10 +386,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
     toolChanged(toolId, true);
     setSync(e.target.checked);
-    const newFreq = e.target.checked ? 2 : 0;
-    setSyncFreq(newFreq);
+    if (e.target.checked) {
+      setSyncFreq(2);
+    }
+    else {
+      setSyncFreq(0);
+    }
     var hk = JSON.parse(hotKeys ?? '{}');
-    setHotKeys(JSON.stringify({ ...hk, syncFreq: newFreq }));
+    setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
   const handleSyncFreqChange = (e: any) => {
     if (e.target.value < 1) e.target.value = 1;
@@ -583,8 +585,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setProgBar(attr.progressbarTypeid);
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
-    const syncFreq = getSyncFreq(attr.hotKeys);
-    setSyncFreq(syncFreq);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
     setSync(syncFreq > 0);
   }
 
@@ -740,8 +741,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setProgBar(attr.progressbarTypeid);
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
-    const syncFreq = getSyncFreq(attr.hotKeys);
-    setSyncFreq(syncFreq);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
     setSync(syncFreq > 0);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user, editId]);
@@ -820,485 +820,491 @@ export function ProfileDialog(props: ProfileDialogProps) {
             <Typography variant="h6">{t.myAccount}</Typography>
           )
         }
-        <IconButton
-          aria-label="close"
-          onClick={ handleClose } //handleClose
-          sx={{ color: 'secondary.contrastText' }}>
-          <CloseIcon></CloseIcon>
-        </IconButton>
       </DialogTitle>
       <DialogContent id="profileContent" 
         sx={profileContentProps}>
-          <Box id="profilePanel" sx={profilePanelProps}>
-            <StyledGrid item xs={12} height='100%' margin={'30px 0px'}>
-              <Box sx= {{ width: '150px',
-                          height: '150px',
-                          borderRadius: '50%', 
-                          border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                          padding: '17px',
-                          margin: '1% auto 1% auto' }}>
-                <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              </Box>
-              <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              {((editId && /Add/i.test(editId)) || !userNotComplete()) && (
-              <Button disabled={!readOnly}
-                variant="contained"
-                onClick={onEditClicked}
-                sx={editProfileProps}
+        <Box id="profilePanel" sx={profilePanelProps}>
+          <StyledGrid item xs={12} height='100%' margin={'30px 0px'}>
+            <Box sx= {{ width: '150px',
+              height: '150px',
+              borderRadius: '50%', 
+              border: '0.5px solid rgb(255, 255, 255, 0.5)',
+              padding: '17px',
+              margin: '1% auto 1% auto' }}>
+              <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+            </Box>
+            <Caption sx={profileEmailProps} >{email || ''}</Caption>
+            {((editId && /Add/i.test(editId)) || !userNotComplete()) && (
+            <Button disabled={!readOnly}
+              variant="contained"
+              onClick={onEditClicked}
+              sx={editProfileProps}
+            >
+              {tp.edit}
+            </Button>
+            )}
+            <ParatextLinkedButton setView={setView}/>
+          </StyledGrid>
+          {!readOnly && (!isOffline || offlineOnly) &&
+            !editId &&
+            currentUser &&
+            currentUser.attributes?.name !== currentUser.attributes?.email &&
+            (
+              <ExtendableDeleteExpansion
+                AllProps={{
+                  position: 'absolute', 
+                  bottom: '0px',
+                  borderRadius: '5px'
+                }}
+                extendsDown={true}
+                SummaryProps={{
+                  backgroundColor: 'primary.dark',
+                  color: 'primary.contrastText',
+                  position: 'absolute',
+                  bottom: '0px',
+                }}
+                IconProps={{
+                  color: 'primary.contrastText'
+                }}
+                DetailsProps={{
+                  backgroundColor: 'primary.dark',
+                  color: 'primary.contrastText',
+                  padding: '8px 16px 64px',
+                  borderRadius: '5px'
+                }}
+                DangerHeaderProps={{
+                  borderColor: 'primary.contrastText',
+                  color: 'primary.contrastText',
+                }}
+                DangerProps={{
+                  color: 'primary.contrastText'
+                }}
+                warning={tp.deleteWarning}
+                ButtonProps={deleteUserProps}
+                handleDelete={handleDelete}
+                inProgress={deleteItem !== ''}
+                buttonLabel={tp.deleteUser}
               >
-                {tp.edit}
-              </Button>
-              )}
-              <ParatextLinkedButton setView={setView}/>
-            </StyledGrid>
-            {!readOnly && (!isOffline || offlineOnly) &&
-              !editId &&
-              currentUser &&
-              currentUser.attributes?.name !== currentUser.attributes?.email &&
-              (
-                <ExtendableDeleteExpansion
-                  AllProps={{
-                    position: 'absolute', 
-                    bottom: '0px',
-                    borderRadius: '5px'
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    borderBottom: '1px solid', 
+                    borderColor: 'primary.contrastText', 
+                    textAlign: 'left' 
                   }}
-                  extendsDown={true}
-                  SummaryProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText',
-                    position: 'absolute',
-                    bottom: '0px',
-                  }}
-                  IconProps={{
-                    color: 'primary.contrastText'
-                  }}
-                  DetailsProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText',
-                    padding: '8px 16px 64px',
-                    borderRadius: '5px'
-                  }}
-                  DangerHeaderProps={{
-                    borderColor: 'primary.contrastText',
-                    color: 'primary.contrastText',
-                  }}
-                  DangerProps={{
-                    color: 'primary.contrastText'
-                  }}
-                  warning={tp.deleteWarning}
-                  ButtonProps={deleteUserProps}
-                  handleDelete={handleDelete}
-                  inProgress={deleteItem !== ''}
-                  buttonLabel={tp.deleteUser}
                 >
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
-                      borderBottom: '1px solid', 
-                      borderColor: 'primary.contrastText', 
-                      textAlign: 'left' 
-                    }}
-                  >
-                    {tp.additionalSettings}
-                  </Typography>
-                  <FormGroup
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={syncFreq > 0}
-                          onChange={handleSyncFreqSwitch}
-                        />
-                      }
-                      labelPlacement="start"
-                      label={tp.syncFrequencyEnable}
-                      sx={ toggleSwitchProps }
-                    />
-                    <FormControlLabel
-                      control={
-                        <TextField
-                          title={tp.syncFrequency}
-                          value={syncFreq}
-                          onChange={handleSyncFreqChange}
-                          type="number"
-                          inputProps={{
-                            min: 1,
-                            max: 720
-                          }}
-                          InputProps={{
-                            endAdornment: "min",
-                            sx: {
-                              color: 'primary.contrastText'
-                            }
-                          }}
-                          size="small"
-                          sx={ frequencyProps }
-                        />
-                      }
-                      labelPlacement="start"
-                      label={tp.syncFrequencyLabel}
-                      sx={{ marginLeft: '2em' }}
-                      disabled={!sync}
-                    />
-                  </FormGroup>
-                </ExtendableDeleteExpansion>
-              )}
-          </Box>
-          <Box id="profileMain" sx={profileMainProps}>
-          <Grid container sx={{ height: '495px' }}>
-            <Grid item xs={12} sx={{ maxWidth: '100%' }}>
-              {readOnly ? (
-                  <Box>
-                    <TextField
-                      id="profileName"
-                      label={tp.name}
-                      value={name}
-                      onClick={handleNameClick}
-                      sx={{...textFieldProps, marginTop: '11px'}}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    <TextField
-                      id="given"
-                      label={tp.given}
-                      value={given || ''}
-                      sx={textFieldProps}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    <TextField
-                      id="family"
-                      label={tp.family}
-                      value={family || ''}
-                      sx={textFieldProps}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    <TextField
-                      id="select-locale"
-                      label={tp.locale}
-                      sx={selectProps}
-                      value={langName(locale, locale)}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    <TextField
-                      id="select-timezone"
-                      label={tp.timezone}
-                      sx={selectProps}
-                      value={timezone}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    {showDetail && (
+                  {tp.additionalSettings}
+                </Typography>
+                <FormGroup
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={syncFreq > 0}
+                        onChange={handleSyncFreqSwitch}
+                      />
+                    }
+                    labelPlacement="start"
+                    label={tp.syncFrequencyEnable}
+                    sx={ toggleSwitchProps }
+                  />
+                  <FormControlLabel
+                    control={
                       <TextField
-                      id="phone"
-                      label={tp.phone}
-                      value={phone || "none"}
-                      sx={textFieldProps}
-                      margin="normal"
-                      variant="standard"
-                      size='small'
-                      InputProps={{
-                        readOnly: true,
-                        disableUnderline: true
-                      }}
-                    />
-                    )}
-                  </Box>
-                ) : (
-                  <Box>
-                    <FormControl sx={{ width: '100%', height: '443px', marginBottom: '15px' }}>
-                      <FormGroup
-                        sx={{
-                          padding: '3px',
-                          pb: 2,
-                          marginBottom: '30px',
-                          width: '100%'
+                        title={tp.syncFrequency}
+                        value={syncFreq}
+                        onChange={handleSyncFreqChange}
+                        type="number"
+                        inputProps={{
+                          min: 1,
+                          max: 720
                         }}
-                      >
-                        <FormControlLabel
-                          control={
-                            <TextField
-                              id="profileName"
-                              label={tp.name}
-                              value={name}
-                              sx={textFieldProps}
-                              margin="normal"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              onChange={handleNameChange}
-                              onClick={handleNameClick}
-                              helperText={
-                                dupName && (
-                                  <Typography 
-                                    color="secondary"
-                                    variant="caption"
-                                  >
-                                    {tp.userExists}
-                                  </Typography>
-                                )
-                              }
-                              required
-                              autoFocus
-                            />
+                        InputProps={{
+                          endAdornment: "min",
+                          sx: {
+                            color: 'primary.contrastText'
                           }
-                          label=""
-                        />
-                        <FormControlLabel
-                          control={
-                            <TextField
-                              id="given"
-                              label={tp.given}
-                              value={given || ''}
-                              sx={textFieldProps}
-                              margin="normal"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              onChange={handleGivenChange}
-                              required
-                            />
-                          }
-                          label=""
-                        />
-                        <FormControlLabel
-                          control={
-                            <TextField
-                              id="family"
-                              label={tp.family}
-                              value={family || ''}
-                              sx={textFieldProps}
-                              margin="normal"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              onChange={handleFamilyChange}
-                              required
-                            />
-                          }
-                          label=""
-                        />
-                        {userIsAdmin && editId && email !== '' && (
+                        }}
+                        size="small"
+                        sx={ frequencyProps }
+                      />
+                    }
+                    labelPlacement="start"
+                    label={tp.syncFrequencyLabel}
+                    sx={{ marginLeft: '2em' }}
+                    disabled={!sync}
+                  />
+                </FormGroup>
+              </ExtendableDeleteExpansion>
+            )}
+        </Box>
+        <Box id="profileMain" sx={profileMainProps}>
+                {readOnly ? (
+                    <Stack sx={{ height: '468px' }}>
+                      <TextField
+                        id="profileName"
+                        label={tp.name}
+                        value={name}
+                        onClick={handleNameClick}
+                        sx={{...textFieldProps, marginTop: '11px'}}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      <TextField
+                        id="given"
+                        label={tp.given}
+                        value={given || ''}
+                        sx={textFieldProps}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      <TextField
+                        id="family"
+                        label={tp.family}
+                        value={family || ''}
+                        sx={textFieldProps}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      <TextField
+                        id="select-locale"
+                        label={tp.locale}
+                        sx={selectProps}
+                        value={langName(locale, locale)}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      <TextField
+                        id="select-timezone"
+                        label={tp.timezone}
+                        sx={selectProps}
+                        value={timezone}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      {showDetail && (
+                        <TextField
+                        id="phone"
+                        label={tp.phone}
+                        value={phone || "none"}
+                        sx={textFieldProps}
+                        margin="normal"
+                        variant="standard"
+                        size='small'
+                        InputProps={{
+                          readOnly: true,
+                          disableUnderline: true
+                        }}
+                      />
+                      )}
+                    </Stack>
+                  ) : (
+                    <Stack>
+                      <FormControl sx={{ width: '100%' }}>
+                        <FormGroup
+                          sx={{
+                            padding: '3px',
+                            pb: 2,
+                            marginBottom: '30px',
+                            width: '100%'
+                          }}
+                        >
                           <FormControlLabel
                             control={
-                              <SelectRole
-                                initRole={role}
-                                onChange={handleRoleChange}
-                                required
+                              <TextField
+                                id="profileName"
+                                label={tp.name}
+                                value={name}
+                                sx={textFieldProps}
                                 margin="normal"
                                 variant="outlined"
                                 size="small"
+                                fullWidth
+                                onChange={handleNameChange}
+                                onClick={handleNameClick}
+                                helperText={
+                                  dupName && (
+                                    <Typography 
+                                      color="secondary"
+                                      variant="caption"
+                                    >
+                                      {tp.userExists}
+                                    </Typography>
+                                  )
+                                }
+                                required
+                                autoFocus
                               />
                             }
                             label=""
                           />
-                        )}
-                        <FormControlLabel
-                          control={
-                            <TextField
-                              id="select-locale"
-                              select
-                              label={tp.locale}
-                              sx={selectProps}
-                              value={locale}
-                              margin="normal"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              onChange={handleLocaleChange}
-                              SelectProps={{
-                                MenuProps: {
-                                  sx: menuProps,
-                                },
-                              }}
-                              required
-                            >
-                              {uiLanguages.map((option: string, idx: number) =>
-                              (
-                                <MenuItem key={'loc' + idx} value={option}>
-                                  {langName(locale, option)}
-                                </MenuItem>
-                              ))}
-                            </TextField>
-                          }
-                          label=""
-                        />
-                        <FormControlLabel
-                          control={
-                            <TextField
-                              id="select-timezone"
-                              select
-                              label={tp.timezone}
-                              sx={selectProps}
-                              value={timezone}
-                              margin="normal"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              onChange={handleTimezoneChange}
-                              SelectProps={{
-                                MenuProps: {
-                                  sx: menuProps,
-                                },
-                              }}
-                              required={true}
-                            >
-                              {moment.tz
-                                .names()
-                                .map((option: string, idx: number) => (
-                                  <MenuItem key={'tz' + idx} value={option}>
-                                    {option}
-                                  </MenuItem>
-                                ))}
-                            </TextField>
-                          }
-                          label=""
-                        />
-                        {email !== '' && (
                           <FormControlLabel
-                            sx={{
-                              ...textFieldProps,
-                              marginLeft: '-16px',
-                              paddingLeft: '0px'
-                            }}
                             control={
-                              <Checkbox
-                                id="digest"
-                                checked={digest === 1}
-                                onChange={handleDigestChange}
-                                sx={{ margin: '0px' }}
+                              <TextField
+                                id="given"
+                                label={tp.given}
+                                value={given || ''}
+                                sx={textFieldProps}
+                                margin="normal"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                onChange={handleGivenChange}
+                                required
                               />
                             }
-                            label={tp.sendDigest}
+                            label=""
                           />
-                        )}
-                        {userIsSharedContentAdmin && (
                           <FormControlLabel
-                            sx={textFieldProps}
                             control={
-                              <Checkbox
-                                id="sharedcontent"
-                                checked={sharedContent}
-                                onChange={handleSharedContentChange}
+                              <TextField
+                                id="family"
+                                label={tp.family}
+                                value={family || ''}
+                                sx={textFieldProps}
+                                margin="normal"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                onChange={handleFamilyChange}
+                                required
                               />
                             }
-                            label={tp.sharedContentCreator}
+                            label=""
                           />
-                        )}
-                        {showDetail && (
-                          <>
+                          {userIsAdmin && editId && email !== '' && (
                             <FormControlLabel
                               control={
-                                <TextField
-                                  id="phone"
-                                  label={tp.phone}
-                                  value={phone}
-                                  sx={textFieldProps}
+                                <SelectRole
+                                  initRole={role}
+                                  onChange={handleRoleChange}
+                                  required
                                   margin="normal"
                                   variant="outlined"
                                   size="small"
-                                  fullWidth
-                                  onChange={handlePhoneChange}
                                 />
                               }
                               label=""
                             />
-                            {userIsAdmin && (
+                          )}
+                          <FormControlLabel
+                            control={
+                              <TextField
+                                id="select-locale"
+                                select
+                                label={tp.locale}
+                                sx={selectProps}
+                                value={locale}
+                                margin="normal"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                onChange={handleLocaleChange}
+                                SelectProps={{
+                                  MenuProps: {
+                                    sx: menuProps,
+                                  },
+                                }}
+                                required
+                              >
+                                {uiLanguages.map((option: string, idx: number) =>
+                                (
+                                  <MenuItem key={'loc' + idx} value={option}>
+                                    {langName(locale, option)}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            }
+                            label=""
+                          />
+                          <FormControlLabel
+                            control={
+                              <TextField
+                                id="select-timezone"
+                                select
+                                label={tp.timezone}
+                                sx={selectProps}
+                                value={timezone}
+                                margin="normal"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                onChange={handleTimezoneChange}
+                                SelectProps={{
+                                  MenuProps: {
+                                    sx: menuProps,
+                                  },
+                                }}
+                                required={true}
+                              >
+                                {moment.tz
+                                  .names()
+                                  .map((option: string, idx: number) => (
+                                    <MenuItem key={'tz' + idx} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                              </TextField>
+                            }
+                            label=""
+                          />
+                          {email !== '' && (
+                            <FormControlLabel
+                              sx={{
+                                ...textFieldProps,
+                                marginLeft: '-14px',
+                                paddingLeft: '0px'
+                              }}
+                              control={
+                                <Checkbox
+                                  id="digest"
+                                  checked={digest === 1}
+                                  onChange={handleDigestChange}
+                                  sx={{ margin: '0px' }}
+                                />
+                              }
+                              label={tp.sendDigest}
+                            />
+                          )}
+                          {userIsSharedContentAdmin && (
+                            <FormControlLabel
+                              sx={textFieldProps}
+                              control={
+                                <Checkbox
+                                  id="sharedcontent"
+                                  checked={sharedContent}
+                                  onChange={handleSharedContentChange}
+                                />
+                              }
+                              label={tp.sharedContentCreator}
+                            />
+                          )}
+                          {showDetail && (
+                            <>
                               <FormControlLabel
-                                sx={ textFieldProps }
                                 control={
-                                  <Checkbox
-                                    id="checkbox-locked"
-                                    checked={locked}
-                                    onChange={handleLockedChange}
+                                  <TextField
+                                    id="phone"
+                                    label={tp.phone}
+                                    value={phone}
+                                    sx={textFieldProps}
+                                    margin="normal"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    onChange={handlePhoneChange}
                                   />
                                 }
-                                label={tp.locked}
+                                label=""
                               />
-                            )}
-                          </>
-                        )}
-                      </FormGroup>
-                    </FormControl>
-                    <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
-                      <PriButton
-                        id="profileSave"
-                        key="add"
-                        aria-label={tp.add}
-                        disabled={
-                          !requiredComplete() ||
-                          !myChanged ||
-                          saveRequested(toolId) ||
-                          dupName
-                        }
-                        sx={{
-                          marginLeft: '0',
-                          textTransform: 'capitalize'
-                        }}
-                        onClick={
-                          currentUser === undefined ?
-                            handleAdd :
-                            handleSave
-                        }
+                              {userIsAdmin && (
+                                <FormControlLabel
+                                  sx={ textFieldProps }
+                                  control={
+                                    <Checkbox
+                                      id="checkbox-locked"
+                                      checked={locked}
+                                      onChange={handleLockedChange}
+                                    />
+                                  }
+                                  label={tp.locked}
+                                />
+                              )}
+                            </>
+                          )}
+                        </FormGroup>
+                      </FormControl>
+                    </Stack>
+                  )
+                }
+            {!readOnly && (
+              <Box 
+                sx={{ 
+                  position: 'sticky', 
+                  bottom: '0px', 
+                  padding: '10px 0px', 
+                  paddingLeft: '10px',
+                  pointerEvents: 'auto', 
+                  zIndex: '10',
+                  borderTop: '1px solid black',
+                  backgroundColor: 'primary.contrastText'
+                }}
+              >
+                <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
+                  <PriButton
+                    id="profileSave"
+                    key="add"
+                    aria-label={tp.add}
+                    disabled={
+                      !requiredComplete() ||
+                      !myChanged ||
+                      saveRequested(toolId) ||
+                      dupName
+                    }
+                    sx={{
+                      marginLeft: '0',
+                      textTransform: 'capitalize'
+                    }}
+                    onClick={
+                      currentUser === undefined ?
+                        handleAdd :
+                        handleSave
+                    }
+                  >
+                    {editId && /Add/i.test(editId)
+                      ? tp.add
+                      : userNotComplete()
+                        ? tp.next
+                        : tp.save}
+                  </PriButton>
+                  {((mode === 'create') || (editId && /Add/i.test(editId)) ||
+                    (currentUser &&
+                      currentUser.attributes?.name !==
+                      currentUser.attributes?.email)) && (
+                      <AltButton
+                        id="profileCancel"
+                        key="cancel"
+                        aria-label={tp.cancel}
+                        onClick={handleCancel}
+                        sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                       >
-                        {editId && /Add/i.test(editId)
-                          ? tp.add
-                          : userNotComplete()
-                            ? tp.next
-                            : tp.save}
-                      </PriButton>
-                      {((mode === 'create') || (editId && /Add/i.test(editId)) ||
-                        (currentUser &&
-                          currentUser.attributes?.name !==
-                          currentUser.attributes?.email)) && (
-                          <AltButton
-                            id="profileCancel"
-                            key="cancel"
-                            aria-label={tp.cancel}
-                            onClick={handleCancel}
-                            sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
-                          >
-                            {mode === 'create' ? tp.logout : tp.cancel}
-                          </AltButton>
-                        )}
-                    </ActionRow>
-                  </Box>
-                )
-              }
-            </Grid>
-          </Grid>
+                        {mode === 'create' ? tp.logout : tp.cancel}
+                      </AltButton>
+                    )}
+                </ActionRow>
+              </Box>
+            )}
+          </Box>
           {!readOnly && deleteItem !== '' && (
             <Confirm
               text={tp.deleteExplained}
@@ -1320,7 +1326,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
               noResponse={handleCloseAborted}
             />
           )}
-        </Box>
       </DialogContent>
     </Dialog>
   );
