@@ -11,15 +11,11 @@ import {
   Button,
   Box,
   styled,
-  SxProps,
-  Theme,
-  ButtonProps,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
 import { useSelector } from 'react-redux';
 import { deleteExpandSelector } from '../selector';
-import { Variant } from '@mui/material/styles/createTypography';
 
 const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
@@ -31,75 +27,59 @@ interface IProps {
   explain: string;
   handleDelete: () => void;
   inProgress: boolean;
-  icon?: React.ReactNode;
-  SummaryProps?: SxProps<Theme>;
-  DangerHeader?: Variant;
-  DangerHeaderProps?: SxProps<Theme>
-  DangerProps?: SxProps<Theme>;
-  DetailsProps?: SxProps<Theme>;
-  DeleteButtonProps?: SxProps<Theme>;
-  ButtonBoxProps?: SxProps<Theme>;
-  BoxProps?: SxProps<Theme>;
-  DeleteButtonLabel?: string;
-  children?: any;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress, icon, SummaryProps, 
-          DangerHeader, DangerHeaderProps, DangerProps, DetailsProps, 
-          DeleteButtonProps, ButtonBoxProps, BoxProps,
-          DeleteButtonLabel, children } = props;
+  const { handleDelete, title, explain, inProgress } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
-    <Box sx={BoxProps || { width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Accordion>
         <AccordionSummary
-          expandIcon={ icon || <ExpandMoreIcon/>}
+          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={SummaryProps}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
-        <AccordionDetails sx={DetailsProps || { display: 'flex', flexDirection: 'column' }}>
-          {children}
+        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
           <FormLabel>
-            <Typography variant={DangerHeader || "h5"} sx={DangerHeaderProps || { pb: '10px' }}>
+            <Typography variant="h5" sx={{ pb: '10px' }}>
               {t.dangerZone}
             </Typography>
           </FormLabel>
           <FormGroup
-            sx={DangerProps || {
+            sx={{
               display: 'flex',
               flexDirection: 'row',
               flexGrow: 1,
               padding: '20px',
               border: '1px solid',
-              borderColor: 'secondary.main'
+              borderColor: 'secondary.main',
             }}
           >
             <div>
               <FormLabel>
                 <Typography variant="h6">{title}</Typography>
               </FormLabel>
-              <FormLabel sx={ DangerProps }>
+              <FormLabel>
                 <div>{explain}</div>
               </FormLabel>
             </div>
             <GrowingSpacer />
-            <Box sx={ButtonBoxProps || { alignSelf: 'center' }}>
+            <Box sx={{ alignSelf: 'center' }}>
               <Button
                 id="deleteExpand"
                 key="delete"
                 color="secondary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={DeleteButtonProps || { m: 1 }}
+                sx={{ m: 1 }}
                 onClick={handleDelete}
                 disabled={inProgress}
               >
-                {DeleteButtonLabel || t.delete}
+                {t.delete}
               </Button>
             </Box>
           </FormGroup>

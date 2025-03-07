@@ -26,14 +26,12 @@ import {
   MenuItem,
   Checkbox,
   IconButton,
-  Skeleton,
   Switch,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
   langName,
@@ -74,6 +72,7 @@ import {
 } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
+import ExtendableDeleteExpansion from './ExtendableDeleteExpansion';
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
   width: 150,
@@ -185,9 +184,7 @@ const editProfileProps = {
 const deleteUserProps = {
   color: 'primary.dark', 
   backgroundColor: 'primary.contrastText',
-  textTransform: 'capitalize',
   opacity: '100%',
-  //marginLeft: 'calc(100% - 25px)',
   '&.Mui-disabled': {
     color: 'primary.dark', 
     backgroundColor: 'primary.contrastText',
@@ -200,25 +197,6 @@ const deleteUserProps = {
     opacity: '90%'
   }
 } as SxProps;
-
-// const logoutUserProps = {
-//   color: 'primary', 
-//   backgroundColor: 'primary.contrastText',
-//   textTransform: 'capitalize',
-//   opacity: '100%',
-//   //marginLeft: 'calc(100% - 25px)',
-//   '&.Mui-disabled': {
-//     color: 'primary', 
-//     backgroundColor: 'primary.contrastText',
-//     opacity: '50%'
-//   },
-//   '&:hover': {
-//     borderColor: 'primary',
-//     backgroundColor: 'primary.contrastText', 
-//     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-//     opacity: '90%'
-//   }
-// } as SxProps;
 
 const frequencyProps = {
   marginLeft: '5px',
@@ -265,7 +243,7 @@ const toggleSwitchProps = {
     },
   },
   '& .MuiSwitch-track': {
-    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+    backgroundColor: 'secondary.contrastText', // Color of the track when the switch is unchecked
     opacity: '20%'
   },
 } as SxProps;
@@ -831,8 +809,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
       aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
-      // disableEscapeKeyDown={!readOnlyMode}
-      // disableBackdropClick
       disableEnforceFocus
       maxWidth="md"
       fullWidth
@@ -862,7 +838,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           aria-label="close"
           onClick={() => {if (myChanged) {
                             setConfirmClose(tp.discardChanges);
-                          } else handleCloseConfirmed();}}//handleClose
+                          } else handleCloseConfirmed();}} //handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}
@@ -896,61 +872,40 @@ export function ProfileDialog(props: ProfileDialogProps) {
               currentUser &&
               currentUser.attributes?.name !== currentUser.attributes?.email &&
               (
-                <DeleteExpansion
-                  title={""}
-                  explain={tp.deleteWarning}
-                  handleDelete={handleDelete}
-                  inProgress={deleteItem !== ''}
-                  icon={(
-                    <ExpandMoreIcon 
-                      sx={{
-                        color: 'primary.contrastText',
-                        rotate: '180deg'
-                      }}
-                    />
-                  )}
-                  SummaryProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText',
-                    display: 'flex',
-                    position: 'absolute',
-                    bottom: '0px',
-                    width: '100%',
-                    zIndex: '2'
-                  }}
-                  DetailsProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText', 
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '8px 16px 64px',
-                    borderRadius: '5px'
-                  }}
-                  DeleteButtonProps={ deleteUserProps }
-                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                  DeleteButtonLabel={tp.deleteUser}
-                  DangerProps={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    marginTop: '3px',
-                    textAlign: 'left',
-                    color: 'primary.contrastText'
-                  }}
-                  DangerHeader='h6'
-                  DangerHeaderProps={{ 
-                    borderBottom: '1px solid', 
-                    borderColor: 'primary.contrastText', 
-                    textAlign: 'left',
-                    color: 'primary.contrastText',
-                    marginTop: '2em'
-                  }}
-                  BoxProps={{
-                    width: '100%',
+                <ExtendableDeleteExpansion
+                  AllProps={{
                     position: 'absolute', 
                     bottom: '0px',
                     borderRadius: '5px'
                   }}
+                  extendsDown={true}
+                  SummaryProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    position: 'absolute',
+                    bottom: '0px',
+                  }}
+                  IconProps={{
+                    color: 'primary.contrastText'
+                  }}
+                  DetailsProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    padding: '8px 16px 64px',
+                    borderRadius: '5px'
+                  }}
+                  DangerHeaderProps={{
+                    borderColor: 'primary.contrastText',
+                    color: 'primary.contrastText',
+                  }}
+                  DangerProps={{
+                    color: 'primary.contrastText'
+                  }}
+                  warning={tp.deleteWarning}
+                  ButtonProps={deleteUserProps}
+                  handleDelete={handleDelete}
+                  inProgress={deleteItem !== ''}
+                  buttonLabel={tp.deleteUser}
                 >
                   <Typography 
                     variant="h6" 
@@ -1020,7 +975,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       disabled={!sync}
                     />
                   </FormGroup>
-                </DeleteExpansion>
+                </ExtendableDeleteExpansion>
               )}
           </Box>
           <Box id="profileMain" sx={profileMainProps}>

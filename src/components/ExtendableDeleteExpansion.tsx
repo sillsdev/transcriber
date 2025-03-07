@@ -1,3 +1,4 @@
+import React from 'react';
 import { IDeleteExpansionStrings } from '../model';
 import {
   Accordion,
@@ -35,7 +36,7 @@ interface IProps {
   DangerProps?: SxProps<Theme>;
   title?: string;
   TitleProps?: SxProps<Theme>;
-  explain: string;
+  warning: string;
   ButtonBoxProps?: SxProps<Theme>;
   ButtonProps?: SxProps<Theme>;
   handleDelete: () => void;
@@ -46,72 +47,76 @@ interface IProps {
 export function ExtendableDeleteExpansion(props: IProps) {
   const { AllProps, extendsDown, SummaryProps, IconProps, children, 
           DetailsProps, DangerHeaderProps, DangerProps, title, TitleProps, 
-          explain, ButtonBoxProps, ButtonProps, handleDelete, inProgress, 
+          warning, ButtonBoxProps, ButtonProps, handleDelete, inProgress, 
           buttonLabel } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
-    <Box sx={AllProps || { width: '100%' }}>
+    <Box sx={{ width: '100%', ...AllProps }}>
       <Accordion>
         <AccordionSummary
           expandIcon={extendsDown ? <ExpandMoreIcon sx={IconProps} /> : <ExpandLessIcon sx={IconProps} />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={SummaryProps}
+          sx={{
+            display: 'flex',
+            width: '100%',
+            zIndex: '2',
+            ...SummaryProps
+          }}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
         
-        <AccordionDetails sx={DetailsProps || { display: 'flex', flexDirection: 'column' }}>
+        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', ...DetailsProps }}>
           {children}
           
           <FormLabel>
-            <Typography variant="h6" sx={DangerHeaderProps || { 
-              borderBottom: '1px solid', 
-              borderColor: 'secondary.contrastText', 
+            <Typography variant="h6" sx={{ 
+              borderBottom: '1px solid',
               textAlign: 'left',
-              color: 'secondary.contrastText',
-              marginTop: '2em' 
+              marginTop: '2em',
+              ...DangerHeaderProps
             }}>
               {t.dangerZone}
             </Typography>
           </FormLabel>
           
           <FormGroup
-            sx={DangerProps || {
+            sx={{
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: 'column',
               flexGrow: 1,
-              padding: '20px',
-              border: '1px solid',
-              borderColor: 'secondary.main'
+              marginTop: '3px',
+              textAlign: 'left',
+              ...DangerProps
             }}
           >
             <FormLabel sx={TitleProps}>
               <Typography variant="h6">{title}</Typography>
             </FormLabel>
             
-            <FormLabel sx={ DangerProps || {
+            <FormLabel sx={{
               display: 'flex',
               flexDirection: 'column',
               flexGrow: 1,
               marginTop: '3px',
               textAlign: 'left',
-              color: 'secondary.contrastText'
+              ...DangerProps
             }}>
-              {explain || "The following action cannot be undone:"}
+              {warning || "The following action cannot be undone:"}
             </FormLabel>
 
             <GrowingSpacer />
 
-            <Box sx={ButtonBoxProps || { alignSelf: 'flex-end' }}>
+            <Box sx={{ alignSelf: 'flex-end', ...ButtonBoxProps }}>
               <Button
                 id="deleteExpand"
                 key="delete"
                 color="primary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={ButtonProps || { m: 1, textTransform: 'capitalize' }}
+                sx={{ m: 1, textTransform: 'capitalize', ...ButtonProps }}
                 onClick={handleDelete}
                 disabled={inProgress}
               >
