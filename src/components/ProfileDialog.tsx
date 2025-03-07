@@ -1256,7 +1256,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   paddingLeft: '10px',
                   pointerEvents: 'auto', 
                   zIndex: '10',
-                  borderTop: '1px solid black',
+                  borderTop: '1px solid lightGray',
                   backgroundColor: 'primary.contrastText'
                 }}
               >
