@@ -1146,6 +1146,9 @@ export function ProfileDialog(props: ProfileDialogProps) {
                                 initRole={role}
                                 onChange={handleRoleChange}
                                 required
+                                margin="normal"
+                                variant="outlined"
+                                size="small"
                               />
                             }
                             label=""

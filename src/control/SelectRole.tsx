@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from '@mui/material';
+import { MenuItem, TextField, TextFieldPropsSizeOverrides, TextFieldVariants } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, RoleD } from '../model';
 import { localizeRole } from '../utils';
@@ -6,6 +6,8 @@ import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { Variant } from '@mui/material/styles/createTypography';
+import { OverridableStringUnion } from '@mui/types';
 
 interface IProps {
   initRole?: string;
@@ -13,10 +15,15 @@ interface IProps {
   disabled?: boolean;
   label?: string;
   rowid?: string;
+  margin?: 'dense' | 'normal' | 'none';
+  variant?: TextFieldVariants;
+  size?: OverridableStringUnion<'small' | 'medium', TextFieldPropsSizeOverrides>;
+
   onChange: (role: string, rowid?: string) => void;
 }
 export const SelectRole = (props: IProps) => {
-  const { onChange, initRole, required, disabled, label, rowid } = props;
+  const { onChange, initRole, required, disabled, label, rowid, margin, variant, 
+          size } = props;
   const roles = useOrbitData<RoleD[]>('role');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
@@ -40,8 +47,9 @@ export const SelectRole = (props: IProps) => {
       value={role}
       onChange={handleRoleChange}
       helperText={label || ''}
-      margin="normal"
-      variant="filled"
+      margin={margin || "normal"}
+      variant={variant || "filled"}
+      size={size}
       required={required}
       disabled={disabled}
     >
