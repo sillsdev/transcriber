@@ -16,7 +16,8 @@ export function CreateProfile(props: CreateProfileProps) {
         setAnchorEl(null);
     };
     return (
-        <ProfileDialog open={true} readOnlyMode={false} onClose={handleProfile(false)} />
+        <ProfileDialog open={true} mannerOfOpen={"createProfile"} 
+                       readOnlyMode={false} onClose={handleProfile(false)} />
     )
 }
 export default CreateProfile;

@@ -351,7 +351,8 @@ export function UserTable() {
       ) : (
         <></>
       )}
-      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={true} />
+      <ProfileDialog open={ profileOpen } mannerOfOpen={"editMember"} 
+                 onClose={handleProfile(false)} readOnlyMode={false} />
     </Box>
   );
 }
