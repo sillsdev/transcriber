@@ -356,7 +356,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleNameChange = (e: any) => {
     if (e.target.value === email) {
       showMessage(tp.nameNotEmail);
-      console.log("new message yay");
       return;
     }
     toolChanged(toolId, true);
