@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from '../context/GlobalContext';
-import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
+import { localizeRole, 
+  LocalKey, 
+  localUserKey, 
+  useMyNavigate, 
+  restoreScroll } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
   User,
@@ -38,6 +42,7 @@ import { useSelector } from 'react-redux';
 import { sharedSelector, usertableSelector } from '../selector';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
+import ProfileDialog from './ProfileDialog';
 
 interface IRow {
   type: string;
@@ -77,6 +82,7 @@ export function UserTable() {
   const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
   const { userIsAdmin } = useRole();
+  const [profileOpen, setProfileOpen] = React.useState(false);
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
@@ -105,6 +111,7 @@ export function UserTable() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [view, setView] = useState('');
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
   const navigate = useMyNavigate();
@@ -120,10 +127,22 @@ export function UserTable() {
     setDialogVisible(false);
   };
 
+  const handleProfile = (visible: boolean) => () => {
+      if (visible !== profileOpen) setProfileOpen(visible);
+      restoreScroll();
+      setAnchorEl(null);
+  };
+
   const doEdit = (userId: string) => {
     setEditId(userId);
-    setView('Profile');//CreateProfile ??
+    //setView('Profile');//CreateProfile ??
+    //handleProfile(true);
+    // TODO: Figure out why running this code in handleProfile doesn't work
+    if (true !== profileOpen) setProfileOpen(true);
+    restoreScroll();
+    setAnchorEl(null);
   };
+
 
   const handleEdit = (userId: string) => (e: any) => {
     doEdit(userId);
@@ -271,68 +290,71 @@ export function UserTable() {
     navigate('/profile');
   }
   return (
-    <Box sx={{ display: 'flex' }}>
-      <div>
-        <ActionRow>
-          {canEdit && (
-            <>
-              {!offlineOnly && (
-                <PriButton
-                  key="add"
-                  aria-label={t.invite}
-                  onClick={handleInvite}
-                >
-                  {t.invite}
-                  <AddIcon sx={iconMargin} />
-                </PriButton>
-              )}
-              {offlineOnly && (
-                <PriButton
-                  key="add-member"
-                  aria-label={t.addMember}
-                  onClick={handleAddOpen}
-                >
-                  {t.addMember}
-                  <AddIcon sx={iconMargin} />
-                </PriButton>
-              )}
-            </>
+    <div>
+      <Box sx={{ display: 'flex' }}>
+        <div>
+          <ActionRow>
+            {canEdit && (
+              <>
+                {!offlineOnly && (
+                  <PriButton
+                    key="add"
+                    aria-label={t.invite}
+                    onClick={handleInvite}
+                  >
+                    {t.invite}
+                    <AddIcon sx={iconMargin} />
+                  </PriButton>
+                )}
+                {offlineOnly && (
+                  <PriButton
+                    key="add-member"
+                    aria-label={t.addMember}
+                    onClick={handleAddOpen}
+                  >
+                    {t.addMember}
+                    <AddIcon sx={iconMargin} />
+                  </PriButton>
+                )}
+              </>
+            )}
+            <GrowingSpacer />
+            <FilterButton filter={filter} onFilter={handleFilter} />
+          </ActionRow>
+          <ShapingTable
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            sortingEnabled={sortingEnabled}
+            filteringEnabled={filteringEnabled}
+            dataCell={Cell}
+            rows={data}
+            shaping={filter}
+          />
+        </div>
+          <Invite
+            visible={dialogVisible}
+            inviteIn={null}
+            addCompleteMethod={handleInviteComplete}
+            cancelMethod={handleInviteCancel}
+          />
+          <UserAdd
+            open={addOpen}
+            setOpen={handleSetAddOpen}
+            select={handleAddExisting}
+            add={handleAddNew}
+          />
+          {deleteItem !== '' ? (
+            <Confirm
+              text={''}
+              yesResponse={handleDeleteConfirmed}
+              noResponse={handleDeleteRefused}
+            />
+          ) : (
+            <></>
           )}
-          <GrowingSpacer />
-          <FilterButton filter={filter} onFilter={handleFilter} />
-        </ActionRow>
-        <ShapingTable
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          sortingEnabled={sortingEnabled}
-          filteringEnabled={filteringEnabled}
-          dataCell={Cell}
-          rows={data}
-          shaping={filter}
-        />
-      </div>
-      <Invite
-        visible={dialogVisible}
-        inviteIn={null}
-        addCompleteMethod={handleInviteComplete}
-        cancelMethod={handleInviteCancel}
-      />
-      <UserAdd
-        open={addOpen}
-        setOpen={handleSetAddOpen}
-        select={handleAddExisting}
-        add={handleAddNew}
-      />
-      {deleteItem !== '' ? (
-        <Confirm
-          text={''}
-          yesResponse={handleDeleteConfirmed}
-          noResponse={handleDeleteRefused}
-        />
-      ) : (
-        <></>
-      )}
-    </Box>
+        </Box>
+      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={true} />
+    </div>
   );
 }
 
