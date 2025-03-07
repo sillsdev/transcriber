@@ -387,14 +387,10 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
     toolChanged(toolId, true);
     setSync(e.target.checked);
-    if (e.target.checked) {
-      setSyncFreq(2);
-    }
-    else {
-      setSyncFreq(0);
-    }
+    const newFreq = e.target.checked ? 2 : 0;
+    setSyncFreq(newFreq);
     var hk = JSON.parse(hotKeys ?? '{}');
-    setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
+    setHotKeys(JSON.stringify({ ...hk, syncFreq: newFreq }));
   };
   const handleSyncFreqChange = (e: any) => {
     if (e.target.value < 1) e.target.value = 1;
@@ -586,7 +582,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setProgBar(attr.progressbarTypeid);
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
-    setSyncFreq(getSyncFreq(attr.hotKeys));
+    const syncFreq = getSyncFreq(attr.hotKeys);
+    setSyncFreq(syncFreq);
     setSync(syncFreq > 0);
   }
 
@@ -742,7 +739,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setProgBar(attr.progressbarTypeid);
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
-    setSyncFreq(getSyncFreq(attr.hotKeys));
+    const syncFreq = getSyncFreq(attr.hotKeys);
+    setSyncFreq(syncFreq);
     setSync(syncFreq > 0);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user, editId]);
