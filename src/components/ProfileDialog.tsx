@@ -267,12 +267,13 @@ const StyledGrid = styled(Grid)<GridProps>(() => ({
 
 interface ProfileDialogProps {
   readOnlyMode?: boolean;
+  mannerOfOpen?: string;
   open: boolean;
   onClose: () => void;
   finishAdd?: () => void;
 }
 export function ProfileDialog(props: ProfileDialogProps) {
-  const { readOnlyMode, onClose, open, finishAdd } = props;
+  const { readOnlyMode, onClose, mannerOfOpen, open, finishAdd } = props;
   const users = useOrbitData<UserD[]>('user');
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
@@ -644,7 +645,10 @@ export function ProfileDialog(props: ProfileDialogProps) {
     }
     resetUserData();
     doClose();
-    setReadOnly(true);
+    if(!(mannerOfOpen == 'editMember')){
+      setReadOnly(true);
+    }
+    
   };
 
   const handleCloseAborted = () => {
@@ -790,7 +794,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     } else handleCloseConfirmed();
   };
   const handleCloseCreateProfile = (event: React.SyntheticEvent, reason: string | null) => {
-    if (!readOnlyMode && (reason === 'backdropClick' || reason === 'escapeKeyDown')) {
+    if (mannerOfOpen == 'createProfile' && (reason === 'backdropClick' || reason === 'escapeKeyDown')) {
       return;
     }
     handleClose();
@@ -833,12 +837,10 @@ export function ProfileDialog(props: ProfileDialogProps) {
             <Typography variant="h6">{t.myAccount}</Typography>
           )
         }
-        {readOnlyMode && 
+        {mannerOfOpen !== 'createProfile' && 
         <IconButton
           aria-label="close"
-          onClick={() => {if (myChanged) {
-                            setConfirmClose(tp.discardChanges);
-                          } else handleCloseConfirmed();}} //handleClose
+          onClick={ handleClose } //handleClose
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>}
@@ -856,7 +858,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              {readOnlyMode && (
+              {editUserId && /Add/i.test(editUserId) || !userNotComplete() && (
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}
@@ -1313,13 +1315,15 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             id="profileCancel"
                             key="cancel"
                             aria-label={tp.cancel}
-                            onClick={handleCancel}
+                            onClick={ mannerOfOpen == "editMember"
+                                      ? handleClose
+                                      : handleCancel }
                             sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
                           >
                             {tp.cancel}
                           </AltButton>
                         )}
-                      {!readOnlyMode &&
+                      {mannerOfOpen === "createProfile" && 
                       <AltButton
                         id="createProfileLogout"
                         key="logout"
