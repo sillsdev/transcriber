@@ -6,7 +6,6 @@ import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
-import { Variant } from '@mui/material/styles/createTypography';
 import { OverridableStringUnion } from '@mui/types';
 
 interface IProps {

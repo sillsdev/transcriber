@@ -840,7 +840,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              {editId && /Add/i.test(editId) || !userNotComplete() && (
+              {((editId && /Add/i.test(editId)) || !userNotComplete()) && (
               <Button disabled={!readOnly}
                 variant="contained"
                 onClick={onEditClicked}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings, ISharedStrings, User, UserD } from '../model';
 import {
@@ -16,7 +16,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { StyledMenu, StyledMenuItem } from '../control';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
-import { useLocation } from 'react-router-dom';
 import { 
   localizeRole,
   restoreScroll, 
@@ -50,7 +49,6 @@ export function UserMenu(props: IProps) {
   const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
-  const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [userRec, setUserRec] = React.useState<UserD | undefined>(undefined);

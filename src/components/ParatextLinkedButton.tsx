@@ -2,14 +2,10 @@ import React from 'react';
 import {
   Typography,
   TypographyProps,
-  Link,
-  IconButton,
-  Button,
   styled,
 } from '@mui/material';
 import { IState, IProfileStrings } from '../model';
 import Confirm from './AlertDialog';
-import InfoIcon from '@mui/icons-material/Info';
 import { AltButton } from '../control/AltButton';
 import { useSelector } from 'react-redux';
 import { profileSelector } from '../selector';

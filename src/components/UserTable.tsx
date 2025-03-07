@@ -3,7 +3,6 @@ import { useGlobal } from '../context/GlobalContext';
 import { localizeRole, 
   LocalKey, 
   localUserKey, 
-  useMyNavigate, 
   restoreScroll } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
@@ -109,12 +108,10 @@ export function UserTable() {
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
-  const [view, setView] = useState('');
   const [editId, setEditId] = useState<string | undefined>();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
-  const navigate = useMyNavigate();
 
   const handleInvite = () => {
     setDialogVisible(true);
