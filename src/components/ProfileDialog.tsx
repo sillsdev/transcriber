@@ -71,6 +71,8 @@ import {
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
 import ExtendableDeleteExpansion from './ExtendableDeleteExpansion';
+import { AltActionBar } from './AltActionBar';
+import { StyledDialogTitle } from './StyledDialogTitle';
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
   width: 150,
@@ -799,17 +801,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
       maxWidth="md"
       fullWidth
     >
-      <DialogTitle
+      <StyledDialogTitle
         id="profileDlg"
-        sx={{
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          padding: '10px',
-          paddingLeft: '25px',
-          color: 'secondary.contrastText',
-          borderBottom: '1px solid lightgray'
-        }}
+        onClose={mode === "viewMyAccount" ? () => {
+          if (myChanged) {
+            setConfirmClose(tp.discardChanges);
+          } else handleCloseConfirmed();
+        } : undefined
+        }
       >
         {editId && /Add/i.test(editId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
@@ -821,7 +820,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
             <Typography variant="h6">{t.myAccount}</Typography>
           )
         }
-      </DialogTitle>
+      </StyledDialogTitle>
       <DialogContent id="profileContent" 
         sx={profileContentProps}>
         <Box id="profilePanel" sx={profilePanelProps}>
@@ -1261,48 +1260,38 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   backgroundColor: 'primary.contrastText'
                 }}
               >
-                <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
-                  <PriButton
-                    id="profileSave"
-                    key="add"
-                    aria-label={tp.add}
-                    disabled={
-                      !requiredComplete() ||
-                      !myChanged ||
-                      saveRequested(toolId) ||
-                      dupName
-                    }
-                    sx={{
-                      marginLeft: '0',
-                      textTransform: 'capitalize'
-                    }}
-                    onClick={
-                      currentUser === undefined ?
-                        handleAdd :
-                        handleSave
-                    }
-                  >
-                    {editId && /Add/i.test(editId)
-                      ? tp.add
-                      : userNotComplete()
-                        ? tp.next
-                        : tp.save}
-                  </PriButton>
-                  {((mode === 'create') || (editId && /Add/i.test(editId)) ||
+                <AltActionBar
+                  primaryLabel={
+                    editId && /Add/i.test(editId)
+                    ? tp.add
+                    : userNotComplete()
+                      ? tp.next
+                      : tp.save
+                  }
+                  primaryOnClick={
+                    currentUser === undefined ? handleAdd : handleSave
+                  }
+                  primaryDisabled={
+                    !requiredComplete() ||
+                    !myChanged ||
+                    saveRequested(toolId) ||
+                    dupName
+                  }
+                  primaryKey={"add"}
+                  primaryAria={tp.add}
+                  altShown={
+                    (mode === 'create') || 
+                    (editId && /Add/i.test(editId)) ||
                     (currentUser &&
                       currentUser.attributes?.name !==
-                      currentUser.attributes?.email)) && (
-                      <AltButton
-                        id="profileCancel"
-                        key="cancel"
-                        aria-label={tp.cancel}
-                        onClick={handleCancel}
-                        sx={{ textTransform: 'capitalize', marginLeft:'8px' }}
-                      >
-                        {mode === 'create' ? tp.logout : tp.cancel}
-                      </AltButton>
-                    )}
-                </ActionRow>
+                      currentUser.attributes?.email
+                  )}
+                  altLabel={mode === 'create' ? tp.logout : tp.cancel}
+                  altOnClick={handleCancel}
+                  altKey={"cancel"}
+                  altAria={tp.cancel}
+                  sx={{ width: '100%' }}
+                />
               </Box>
             )}
           </Box>
