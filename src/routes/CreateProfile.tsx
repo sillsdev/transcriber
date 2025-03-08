@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProfileDialog } from "../components/ProfileDialog";
-import { useNavigate } from 'react-router-dom';
+import { useMyNavigate } from '../utils';
 
 interface CreateProfileProps {
     noMargin?: boolean;
@@ -8,14 +8,14 @@ interface CreateProfileProps {
 }
 
 export function CreateProfile(props: CreateProfileProps) {
-    const navigate = useNavigate();
+    const navigate = useMyNavigate();
     return (
       <ProfileDialog
         mode='create'
         open={true}
         finishAdd={() => navigate('/team')}
         onCancel={() => navigate('/logout')}
-        onSave={() => navigate('/team')}
+        onSaveCompleted={() => navigate('/team')}
       />
     );
 }

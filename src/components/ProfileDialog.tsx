@@ -25,7 +25,6 @@ import {
   MenuItem,
   Checkbox,
   Switch,
-  DialogTitle,
   Stack,
 } from '@mui/material';
 import Confirm from '../components/AlertDialog';
@@ -69,7 +68,6 @@ import {
   UpdateRelatedRecord
 } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
-import { ActionRow, AltButton, PriButton } from '../control';
 import ExtendableDeleteExpansion from './ExtendableDeleteExpansion';
 import { AltActionBar } from './AltActionBar';
 import { StyledDialogTitle } from './StyledDialogTitle';
@@ -266,16 +264,17 @@ const StyledGrid = styled(Grid)<GridProps>(() => ({
 }));
 
 interface ProfileDialogProps {
-  mode?: 'create' | 'editMember' | 'viewMyAccount';
+  mode: 'create' | 'editMember' | 'viewMyAccount';
   open: boolean;
   editId?: string;
   onClose?: () => void;
   onSave?: () => void;
+  onSaveCompleted?: () => void;
   onCancel?: () => void;
   finishAdd?: () => void;
 }
 export function ProfileDialog(props: ProfileDialogProps) {
-  const { mode, open, editId, onClose, onSave, onCancel, finishAdd } = props;
+  const { mode, open, editId, onClose, onSave, onSaveCompleted, onCancel, finishAdd } = props;
   const users = useOrbitData<UserD[]>('user');
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
@@ -488,7 +487,12 @@ export function ProfileDialog(props: ProfileDialogProps) {
         if (r) {
           // set the currentUser to the saved user data
           let res = (r as RecordTransformResult<InitializedRecord>[]);
-          setCurrentUser(res.at(0) as UserD);
+          const user = res.at(0) as UserD;
+          setCurrentUser(user);
+          setUser(user.id);
+          if (onSaveCompleted) {
+            onSaveCompleted()
+          }
         }
       });
       setLang(locale);
