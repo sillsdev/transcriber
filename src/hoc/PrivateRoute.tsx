@@ -16,13 +16,12 @@ export function PrivateRoute({ el }: IProps) {
 
   if (
     !pathname?.endsWith('null') &&
-    pathname !== '/loading' &&
-    pathname !== '/profile'
+    pathname !== '/loading'
   )
     localStorage.setItem(localUserKey(LocalKey.url), pathname);
   if (!offline && !authenticated())
     navigate('/', { state: { from: pathname } });
-
+  
   return el;
 }
 export default PrivateRoute;

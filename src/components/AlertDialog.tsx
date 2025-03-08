@@ -83,22 +83,28 @@ function AlertDialog(props: IProps) {
         {title || (isDelete ? t.delete : t.confirmation)}
       </DialogTitle>
       <DialogContent>
-        <DialogContent id="alertJsx">{jsx}</DialogContent>
+      {jsx && (<DialogContent id="alertJsx">{jsx}</DialogContent>)}
         <DialogContentText id="alertDesc">
           {text || t.areYouSure}
         </DialogContentText>
       </DialogContent>
       <StyledDialogActions noOnLeft={noOnLeft}>
-        <Button id="alertNo" onClick={handleNo} color="primary">
+        <Button 
+          id="alertNo" 
+          onClick={handleNo} 
+          color="primary"
+          variant="contained"
+          sx={{ textTransform: 'capitalize' }}
+          autoFocus
+        >
           {no || t.no}
         </Button>
         {yes !== '' && (
           <Button
             id="alertYes"
             onClick={handleYes}
-            variant="contained"
             color="primary"
-            autoFocus
+            sx={{ textTransform: 'capitalize', border: '0.5px solid', borderColor: 'primary' }}
           >
             {yes || t.yes}
           </Button>

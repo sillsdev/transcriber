@@ -6225,252 +6225,294 @@
             <source>Add</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.addMember">
             <source>Complete User Profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.additionalSettings">
+            <source>Additional Settings</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.checkingParatext">
             <source>Checking for {0} account...</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.close">
             <source>Close</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.completeProfile">
             <source>Complete User Profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="profile.defaultLocale">
       		<source>Default locale set.</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="profile.defaultTimezone">
       		<source>Default timezone set.</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="profile.deleteExplained">
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
-            <target/>
+            <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
+            <target />
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.deleteUser">
             <source>Delete User</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.deleteWarning">
+            <source>The following action cannot be undone:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="profile.discardChanges">
       		<source>Discard unsaved Changes?</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="profile.discardChangesExplained">
       		<source>Discard unsaved Changes? ({0})</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+        <trans-unit id="profile.edit">
+            <source>Edit Profile</source>
+            <target />
+            <context-group>
+                <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+        </trans-unit>
+        <trans-unit id="profile.editMember">
+            <source>Edit Member Profile</source>
+            <target />
+            <context-group>
+                <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+        </trans-unit>
          <trans-unit id="profile.email">
             <source>Email</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.family">
             <source>Family Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.given">
             <source>Given Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.installParatext">
             <source>Install {0} to be able to sync.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.linkingExplained">
             <source>Log out and log in with {0} button</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.locale">
             <source>Preferred Language</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.locked">
             <source>Locked</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.logout">
             <source>Logout</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.name">
             <source>Full Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.nameNotEmail">
             <source>Please choose a name other than your email address.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.next">
             <source>Next</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.notLinked">
             <source>Not linked to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextLinked">
             <source>Linked to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextLinking">
             <source>Linking to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextNotLinked">
             <source>Link to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.phone">
             <source>Phone</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.role">
             <source>Team Role</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.save">
             <source>Save</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendDigest">
             <source>Receive Email Notifications and Digests</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sharedContentCreator">
             <source>Allow user to create shared content projects.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.syncFrequency">
             <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.syncFrequencyEnable">
+            <source>Enable Data Sync:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.syncFrequencyLabel">
+            <source>Frequency:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userExists">
             <source>This offline user exists.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userProfile">
             <source>User profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="projButtons.categoryTitle">

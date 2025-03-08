@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from '../context/GlobalContext';
-import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
+import { localizeRole, 
+  LocalKey, 
+  localUserKey, 
+  restoreScroll } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
   User,
@@ -38,6 +41,7 @@ import { useSelector } from 'react-redux';
 import { sharedSelector, usertableSelector } from '../selector';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
+import ProfileDialog from './ProfileDialog';
 
 interface IRow {
   type: string;
@@ -70,13 +74,13 @@ export function UserTable() {
   // const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
   const { userIsAdmin } = useRole();
+  const [profileOpen, setProfileOpen] = React.useState(false);
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
@@ -104,10 +108,10 @@ export function UserTable() {
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
-  const [view, setView] = useState('');
+  const [editId, setEditId] = useState<string | undefined>();
+  const [, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
-  const navigate = useMyNavigate();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -120,10 +124,22 @@ export function UserTable() {
     setDialogVisible(false);
   };
 
+  const handleProfile = (visible: boolean) => () => {
+      if (visible !== profileOpen) setProfileOpen(visible);
+      restoreScroll();
+      setAnchorEl(null);
+  };
+
   const doEdit = (userId: string) => {
     setEditId(userId);
-    setView('Profile');
+    //setView('Profile');//CreateProfile ??
+    //handleProfile(true);
+    // TODO: Figure out why running this code in handleProfile doesn't work
+    if (true !== profileOpen) setProfileOpen(true);
+    restoreScroll();
+    setAnchorEl(null);
   };
+
 
   const handleEdit = (userId: string) => (e: any) => {
     doEdit(userId);
@@ -267,9 +283,6 @@ export function UserTable() {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) {
-    navigate('/profile');
-  }
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
@@ -332,6 +345,14 @@ export function UserTable() {
       ) : (
         <></>
       )}
+      <ProfileDialog 
+        mode='editMember'
+        open={ profileOpen }
+        onClose={handleProfile(false)}
+        onCancel={handleProfile(false)}
+        onSave={handleProfile(false)}
+        editId={editId}
+      />
     </Box>
   );
 }
