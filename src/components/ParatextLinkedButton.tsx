@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Typography,
-  TypographyProps,
-  styled,
-} from '@mui/material';
+import { Typography, TypographyProps, styled } from '@mui/material';
 import { IState, IProfileStrings } from '../model';
 import Confirm from './AlertDialog';
 import { AltButton } from '../control/AltButton';
@@ -13,7 +9,6 @@ import { useHasParatext } from '../utils';
 import { useGlobal } from '../context/GlobalContext';
 import { addPt } from '../utils/addPt';
 import CheckIcon from '@mui/icons-material/Check';
-
 
 interface StyledCaptionProps extends TypographyProps {
   isCaption?: boolean;
@@ -27,8 +22,8 @@ const StyledCaption = styled(Typography, {
     width: '100%',
     textAlign: 'center',
     marginTop: '13%',
-    color: 'white',//primary.contrastText does not work for some reason
-    opacity: '65%', 
+    color: 'white', //primary.contrastText does not work for some reason
+    opacity: '65%',
   }),
   ...(notLinked && {
     fontWeight: 'bold',
@@ -63,9 +58,15 @@ export const ParatextLinkedButton = (props: IProps) => {
   return (
     <>
       {status?.errStatus ? (
-        <StyledCaption isCaption notLinked sx = {{ color: 'primary.contrastText',
-                                                   fontSize: '13px', 
-                                                   fontWeight: 'normal' }}>
+        <StyledCaption
+          isCaption
+          notLinked
+          sx={{
+            color: 'primary.contrastText',
+            fontSize: '13px',
+            fontWeight: 'normal',
+          }}
+        >
           {addPt(t.notLinked)}
         </StyledCaption>
       ) : (
@@ -77,15 +78,16 @@ export const ParatextLinkedButton = (props: IProps) => {
             <AltButton
               id="paraButton"
               key="paratext"
-              sx={{ color: 'primary.contrastText', 
-                    borderColor: 'primary.contrastText', 
-                    textTransform: 'capitalize',
-                    transition: 'opacity 0.2s ease-in-out',
-                    opacity: '100%',
-                    '&:hover': {
-                      opacity: '80%',
-                      borderColor: 'primary.contrastText'
-                    }
+              sx={{
+                color: 'primary.contrastText',
+                borderColor: 'primary.contrastText',
+                textTransform: 'capitalize',
+                transition: 'opacity 0.2s ease-in-out',
+                opacity: '100%',
+                '&:hover': {
+                  opacity: '80%',
+                  borderColor: 'primary.contrastText',
+                },
               }}
               onClick={handleHowTo}
             >
@@ -98,10 +100,12 @@ export const ParatextLinkedButton = (props: IProps) => {
         ) : (
           status?.statusMsg || addPt(t.checkingParatext)
         )}
-        {(hasParatext) && status?.complete && <CheckIcon sx={{position: 'relative', top: '+5px'}}/>}
+        {hasParatext && status?.complete && (
+          <CheckIcon sx={{ position: 'relative', top: '+5px' }} />
+        )}
         {/* //(hasParatext)  && status?.complete ||  ptPath && */}
       </StyledCaption>
-      
+
       {howToLink && (
         <Confirm
           title={addPt(t.paratextLinking)}

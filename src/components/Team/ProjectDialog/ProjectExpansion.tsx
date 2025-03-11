@@ -125,59 +125,45 @@ export function ProjectExpansion(props: IProjectDialogState) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Accordion>
-        <StyledAccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="proj-exp-content"
-          id="proj-exp-header"
-        >
-          <Heading>{t.advanced}</Heading>
-          {'\u00A0 '}
-          <RenderCustomize />
-        </StyledAccordionSummary>
-        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
-          <EditorSettings state={state} setState={setState} />
-
-          <Options
-            label={t.layout}
-            defaultValue={state.flat ? t.flat : t.hierarchical}
-            options={[t.hierarchical, t.flat]}
-            onChange={handleLayoutChange}
-            decorations={decoration}
-          />
-          <Options
-            label={t.organizedBy}
-            defaultValue={localOrgBy}
-            options={options}
-            onChange={handleOrgByChange}
-            addOption={options.length === 5 ? handleAddOption : undefined}
-            otherLabel={t.other}
-            decorations={decoration}
-          />
-          {!state.isPersonal && (
-            <>
-              <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
-                {t.sharedResources}
-              </FormLabel>
-              {!userIsSharedContentCreator && (
-                <FormLabel>{t.howToPublic}</FormLabel>
-              )}
-              <FormControlLabel
-                sx={{ mx: 1, mb: 1 }}
-                control={
-                  <Checkbox
-                    id="checkbox-shared"
-                    checked={isPublic}
-                    onChange={handleShareable}
-                    disabled={!userIsSharedContentCreator}
-                  />
-                }
-                label={t.isPublic}
-              />
-            </>
+      <EditorSettings state={state} setState={setState} />
+      <Options
+        label={t.layout}
+        defaultValue={state.flat ? t.flat : t.hierarchical}
+        options={[t.hierarchical, t.flat]}
+        onChange={handleLayoutChange}
+        decorations={decoration}
+      />
+      <Options
+        label={t.organizedBy}
+        defaultValue={localOrgBy}
+        options={options}
+        onChange={handleOrgByChange}
+        addOption={options.length === 5 ? handleAddOption : undefined}
+        otherLabel={t.other}
+        decorations={decoration}
+      />
+      {!state.isPersonal && (
+        <>
+          <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
+            {t.sharedResources}
+          </FormLabel>
+          {!userIsSharedContentCreator && (
+            <FormLabel>{t.howToPublic}</FormLabel>
           )}
-        </AccordionDetails>
-      </Accordion>
+          <FormControlLabel
+            sx={{ mx: 1, mb: 1 }}
+            control={
+              <Checkbox
+                id="checkbox-shared"
+                checked={isPublic}
+                onChange={handleShareable}
+                disabled={!userIsSharedContentCreator}
+              />
+            }
+            label={t.isPublic}
+          />
+        </>
+      )}
       <SnackBar message={message} />
     </Box>
   );

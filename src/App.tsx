@@ -5,6 +5,7 @@ import { UnsavedProvider } from './context/UnsavedContext';
 import SnackBarProvider from './hoc/SnackBar';
 import { HotKeyProvider } from './context/HotKeyContext';
 import routes from './routes/NavRoutes';
+import { title } from 'node:process';
 export const HeadHeight = 64;
 
 const theme = createTheme({

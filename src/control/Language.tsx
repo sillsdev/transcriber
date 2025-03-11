@@ -115,7 +115,7 @@ export const Language = (props: IProps) => {
     }
   }, [state, onChange]);
 
-  const widthStyle: CSSProperties = { width: 400 };
+  const widthStyle: CSSProperties = { width: 300 };
 
   const fullBox = React.useMemo(() => {
     if (props.hideSpelling && props.hideFont) return undefined;
@@ -158,7 +158,7 @@ export const Language = (props: IProps) => {
               <TextField
                 id="language-font"
                 label={t.font}
-                sx={{ mx: 1 }}
+                sx={{ mx: 1, marginLeft: '11px' }}
                 value={fontFamilyName(font)}
                 onClick={handleChangeFont}
                 onKeyDown={handleChangeFont}

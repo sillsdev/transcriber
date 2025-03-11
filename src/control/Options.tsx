@@ -79,6 +79,7 @@ const OptionCtrl = (props: IProps) => {
       <RadioGroup
         value={other !== '' ? other : defaultValue || ''}
         onChange={handleChange}
+        sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}
       >
         {options.map((k, i) => {
           return (

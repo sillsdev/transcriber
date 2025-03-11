@@ -67,7 +67,7 @@ export const ProjectBook = (props: IProjectDialogState) => {
   const onCancel = () => {};
   //future default book for scripture tested but turned off for now
   return (
-    <div>
+    <div style={{ backgroundColor: 'lime' }}>
       {type !== 'scripture' && (
         <>
           <FormLabel sx={{ color: 'secondary.main' }}>
