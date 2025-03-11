@@ -124,7 +124,6 @@ export function Access() {
   const [isDeveloper] = useGlobal('developer');
   const [user] = useGlobal('user');
 
-  const [, setEditId] = useGlobal('editUserId');
   const [, setOfflineOnly] = useGlobal('offlineOnly');
   const getGlobal = useGetGlobal();
   const tokenCtx = useContext(TokenContext);
@@ -207,7 +206,6 @@ export function Access() {
     logout();
     setOfflineOnly(true);
     await offlineSetup();
-    setEditId('Add');
   };
 
   // see: https://web.dev/persistent-storage/

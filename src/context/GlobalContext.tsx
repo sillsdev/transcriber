@@ -30,7 +30,6 @@ export interface GlobalState {
   connected: boolean; //verified //useCheckOnline
   dataChangeCount: number; //verified
   developer: string | null; //not verified but not userfacing
-  editUserId: string | null; //verified //UserTable, Access, Profile
   enableOffsite: boolean; //verified
   home: boolean; //verified //TeamScreen, useHome
   importexportBusy: boolean; //verified
