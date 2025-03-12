@@ -23,6 +23,7 @@ export interface Section extends BaseModel {
     group: RecordRelationship;
     titleMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    organizationScheme: RecordRelationship;
   };
 }
 

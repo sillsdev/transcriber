@@ -30,6 +30,10 @@ export interface Project extends BaseModel {
     users: RecordRelationship;
     plans: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    editsheetUser: RecordRelationship;
+    editsheetGroup: RecordRelationship;
+    publishUser: RecordRelationship;
+    publishGroup: RecordRelationship;
   };
 }
 
