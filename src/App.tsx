@@ -18,9 +18,9 @@ const theme = createTheme({
   },
   typography: {
     button: {
-      textTransform: 'capitalize'
-    }
-  }
+      textTransform: 'capitalize',
+    },
+  },
 });
 
 function App() {

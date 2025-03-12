@@ -25,6 +25,7 @@ interface IProps {
   otherLabel?: string;
   decorations?: IDecorations;
   required?: boolean;
+  pt?: number;
 }
 
 const OptionCtrl = (props: IProps) => {
@@ -37,6 +38,7 @@ const OptionCtrl = (props: IProps) => {
     decorations,
     required,
     otherLabel,
+    pt,
   } = props;
   const [other, setOther] = React.useState<string | null>('');
   const tc: IControlStrings = useSelector(controlSelector, shallowEqual);
@@ -72,13 +74,14 @@ const OptionCtrl = (props: IProps) => {
   };
 
   return (
-    <Box sx={{ pt: 4 }}>
+    <Box sx={{ pt: pt ?? 4 }}>
       <FormLabel required={required} sx={{ color: 'secondary.main' }}>
         {label}
       </FormLabel>
       <RadioGroup
         value={other !== '' ? other : defaultValue || ''}
         onChange={handleChange}
+        sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}
       >
         {options.map((k, i) => {
           return (

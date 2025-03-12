@@ -1599,6 +1599,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "advanced": string;
     "backtranslation": string;
+    "basic": string;
     "cancel": string;
     "configure": string;
     "cannotChangeLayout": string;
@@ -1622,6 +1623,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "movements": string;
     "nameInUse": string;
     "newProject": string;
+    "newTag": string;
     "organizedBy": string;
     "other": string;
     "pericopes": string;

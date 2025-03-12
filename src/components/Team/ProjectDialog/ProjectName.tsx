@@ -25,12 +25,14 @@ export const ProjectName = (props: IProps) => {
     <TextField
       autoFocus
       margin="dense"
-      id="name"
+      id="project-name"
+      variant="standard"
       required
       label={t.projectName}
       value={name}
       helperText={nameInUse && t.nameInUse}
       onChange={handleChangeName}
+      sx={{ minWidth: '196px', flex: '1 1 calc(50% - 5px)' }}
       fullWidth
     />
   );

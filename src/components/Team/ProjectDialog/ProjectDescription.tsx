@@ -6,7 +6,7 @@ import { vProjectSelector } from '../../../selector';
 
 export const ProjectDescription = (props: IProjectDialogState) => {
   const { state, setState } = props;
-  const t = useSelector(vProjectSelector, shallowEqual)
+  const t = useSelector(vProjectSelector, shallowEqual);
   const { description } = state;
 
   const handleChangeDescription = (e: any) => {
@@ -18,9 +18,12 @@ export const ProjectDescription = (props: IProjectDialogState) => {
     <TextField
       margin="dense"
       id="description"
-      label={t.description}
+      multiline
+      variant="standard"
+      label={t.description} // Should say Audio Project Description
       value={description}
       onChange={handleChangeDescription}
+      sx={{ minWidth: '196px', flex: '1 1 calc(50% - 5px)' }}
       fullWidth
     />
   );

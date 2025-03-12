@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Typography,
   FormControlLabel,
   Checkbox,
   FormLabel,
   Box,
-  styled,
-  AccordionSummaryProps,
-  TypographyProps,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IProjectDialogState } from './ProjectDialog';
-import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
@@ -26,19 +18,6 @@ import { vProjectSelector } from '../../../selector';
 import { useGlobal } from '../../../context/GlobalContext';
 import { Render } from '../../../assets/brands';
 
-const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
-  ({ theme }) => ({
-    '& .MuiTypography-root': {
-      color: theme.palette.secondary.main,
-    },
-  })
-);
-
-const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(18),
-  fontWeight: theme.typography.fontWeightRegular,
-}));
-
 const RenderRecommended = () => {
   const t = useSelector(vProjectSelector, shallowEqual);
 
@@ -46,17 +25,6 @@ const RenderRecommended = () => {
     <Typography variant="caption" sx={{ display: 'flex' }}>
       <RenderLogo />
       {'\u00A0' + t.renderRecommended.replace('{0}', Render)}
-    </Typography>
-  );
-};
-
-const RenderCustomize = () => {
-  const t = useSelector(vProjectSelector, shallowEqual);
-
-  return (
-    <Typography variant="caption" sx={{ display: 'flex' }}>
-      <RenderLogo />
-      {'\u00A0' + t.renderCustomize.replace('{0}', Render)}
     </Typography>
   );
 };
@@ -125,59 +93,45 @@ export function ProjectExpansion(props: IProjectDialogState) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Accordion>
-        <StyledAccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="proj-exp-content"
-          id="proj-exp-header"
-        >
-          <Heading>{t.advanced}</Heading>
-          {'\u00A0 '}
-          <RenderCustomize />
-        </StyledAccordionSummary>
-        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
-          <EditorSettings state={state} setState={setState} />
-
-          <Options
-            label={t.layout}
-            defaultValue={state.flat ? t.flat : t.hierarchical}
-            options={[t.hierarchical, t.flat]}
-            onChange={handleLayoutChange}
-            decorations={decoration}
-          />
-          <Options
-            label={t.organizedBy}
-            defaultValue={localOrgBy}
-            options={options}
-            onChange={handleOrgByChange}
-            addOption={options.length === 5 ? handleAddOption : undefined}
-            otherLabel={t.other}
-            decorations={decoration}
-          />
-          {!state.isPersonal && (
-            <>
-              <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
-                {t.sharedResources}
-              </FormLabel>
-              {!userIsSharedContentCreator && (
-                <FormLabel>{t.howToPublic}</FormLabel>
-              )}
-              <FormControlLabel
-                sx={{ mx: 1, mb: 1 }}
-                control={
-                  <Checkbox
-                    id="checkbox-shared"
-                    checked={isPublic}
-                    onChange={handleShareable}
-                    disabled={!userIsSharedContentCreator}
-                  />
-                }
-                label={t.isPublic}
-              />
-            </>
+      <Options
+        label={t.layout}
+        defaultValue={state.flat ? t.flat : t.hierarchical}
+        options={[t.hierarchical, t.flat]}
+        onChange={handleLayoutChange}
+        decorations={decoration}
+        pt={0}
+      />
+      <Options
+        label={t.organizedBy}
+        defaultValue={localOrgBy}
+        options={options}
+        onChange={handleOrgByChange}
+        addOption={options.length === 5 ? handleAddOption : undefined}
+        otherLabel={t.other}
+        decorations={decoration}
+      />
+      {!state.isPersonal && (
+        <Box sx={{ pt: 2 }}>
+          <FormLabel sx={{ color: 'secondary.main' }}>
+            {t.sharedResources}
+          </FormLabel>
+          {!userIsSharedContentCreator && (
+            <FormLabel>{t.howToPublic}</FormLabel>
           )}
-        </AccordionDetails>
-      </Accordion>
+          <FormControlLabel
+            sx={{ display: 'flex', flexDirection: 'row', mx: 1, mb: 1 }}
+            control={
+              <Checkbox
+                id="checkbox-shared"
+                checked={isPublic}
+                onChange={handleShareable}
+                disabled={!userIsSharedContentCreator}
+              />
+            }
+            label={t.isPublic}
+          />
+        </Box>
+      )}
       <SnackBar message={message} />
     </Box>
   );

@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ITag, IVProjectStrings } from '../../../model';
 import {
-  Button,
+  Box,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
-  DialogProps,
-  styled,
+  Tabs,
+  Tab,
+  SxProps,
+  Stack,
+  FormLabel,
 } from '@mui/material';
 import {
   ProjectName,
   ProjectDescription,
   ProjectType,
-  ProjectTags,
   ProjectExpansion,
   Language,
   ILanguage,
@@ -23,13 +23,9 @@ import { IDialog } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
 import { ProjectBook } from './ProjectBook';
-
-const StyledDialog = styled(Dialog)<DialogProps>(() => ({
-  '& .MuiDialog-paper': {
-    maxWidth: '850px',
-    minWidth: '535px',
-  },
-}));
+import { StyledDialogTitle } from '../../StyledDialogTitle';
+import { AltActionBar } from '../../../AltActionBar';
+import Tags from '../../../control/Tags';
 
 const initState = {
   name: '',
@@ -58,21 +54,36 @@ export interface IProjectDialogState {
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
   setBookErr?: React.Dispatch<React.SetStateAction<string>>;
   addMode?: boolean;
+  tagCheck?: boolean;
 }
 
 interface IProps extends IDialog<IProjectDialog> {
   nameInUse?: (newName: string) => boolean;
 }
 
+const tabProps = {
+  width: '50%',
+} as SxProps;
+
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const t = useSelector(vProjectSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
   const [bookErr, setBookErr] = React.useState('');
+  const [basicTab, setBasicTab] = useState(true);
   const addingRef = React.useRef(false);
+
+  const initTags = useMemo(
+    () => ({
+      [t.testing]: false,
+      [t.backtranslation]: false,
+      [t.training]: false,
+    }),
+    [t]
+  );
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -101,52 +112,132 @@ export function ProjectDialog(props: IProps) {
     setState((state) => ({ ...state, ...val }));
   };
 
+  const [value, setValue] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+    if (newValue === 0) {
+      setBasicTab(true);
+    } else {
+      setBasicTab(false);
+    }
+  };
+
   return (
-    <StyledDialog
+    <Dialog
+      id="projectSettings"
       open={isOpen}
       onClose={handleClose}
       aria-labelledby="projectDlg"
+      scroll={'paper'}
+      disableEnforceFocus
+      maxWidth="md"
+      fullWidth
     >
-      <DialogTitle id="projectDlg">
+      <StyledDialogTitle id="projectDlg">
         {t.newProject.replace('{0}', mode === Mode.add ? t.configure : t.edit)}
-      </DialogTitle>
-      <DialogContent>
-        <ProjectName state={state} setState={setState} inUse={nameInUse} />
-        <ProjectDescription state={state} setState={setState} />
-        <ProjectType type={type} onChange={handleTypeChange} />
-        <ProjectBook
-          state={state}
-          setState={setState}
-          setBookErr={setBookErr}
-        />
-        <Language {...state} onChange={handleLanguageChange} />
-        <ProjectTags state={state} setState={setState} />
-        <ProjectExpansion
-          state={state}
-          setState={setState}
-          addMode={mode === Mode.add}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button id="projCancel" onClick={handleClose} color="primary">
-          {t.cancel}
-        </Button>
-        <Button
-          id="projAdd"
-          onClick={handleAdd}
-          color="primary"
-          disabled={
-            (nameInUse && nameInUse(name)) ||
-            name === '' ||
-            bcp47 === 'und' ||
-            type === '' ||
-            bookErr !== ''
-          }
-        >
-          {mode === Mode.add ? t.add : t.save}
-        </Button>
-      </DialogActions>
-    </StyledDialog>
+      </StyledDialogTitle>
+      <Tabs
+        value={value}
+        onChange={handleTabChange}
+        sx={{
+          maxWidth: '400px',
+          width: '100%',
+          '& .MuiTabs-indicator': {
+            backgroundColor: 'secondary.dark',
+            height: '2px',
+          },
+          '& .Mui-selected': {
+            color: 'secondary.dark',
+          },
+        }}
+      >
+        <Tab label={t.basic} sx={tabProps} />
+        <Tab label={t.advanced} sx={tabProps} />
+      </Tabs>
+      {basicTab ? (
+        <Box>
+          <DialogContent>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: '10px',
+              }}
+            >
+              <ProjectName
+                state={state}
+                setState={setState}
+                inUse={nameInUse}
+              />
+              <ProjectDescription state={state} setState={setState} />
+            </Box>
+            <ProjectType type={type} onChange={handleTypeChange} />
+            <ProjectBook
+              state={state}
+              setState={setState}
+              setBookErr={setBookErr}
+            />
+            <Stack sx={{ pt: 1, pb: 2 }}>
+              <Language
+                {...state}
+                onChange={handleLanguageChange}
+                direction="row"
+                sx={{ pt: 0 }}
+              />
+            </Stack>
+            <FormLabel sx={{ color: 'secondary.light' }}>{t.tags}</FormLabel>
+            <Tags
+              label={t.newTag}
+              tags={
+                Object.keys(state?.tags).length > 0 ? state?.tags : initTags
+              }
+              onChange={(tags) => setState((state) => ({ ...state, tags }))}
+            />
+          </DialogContent>
+        </Box>
+      ) : (
+        <Box>
+          <DialogContent>
+            <ProjectExpansion
+              state={state}
+              setState={setState}
+              addMode={mode === Mode.add}
+            />
+          </DialogContent>
+        </Box>
+      )}
+
+      <AltActionBar
+        primaryLabel={mode === Mode.add ? t.add : t.save}
+        primaryOnClick={handleAdd}
+        primaryDisabled={
+          (nameInUse && nameInUse(name)) ||
+          name === '' ||
+          bcp47 === 'und' ||
+          type === '' ||
+          bookErr !== ''
+        }
+        primaryKey={'add'}
+        primaryAria={t.add}
+        altShown={true}
+        altLabel={t.cancel}
+        altOnClick={handleClose}
+        altKey={'cancel'}
+        altAria={t.cancel}
+        sx={{
+          position: 'sticky',
+          bottom: '0px',
+          padding: '10px 0px',
+          paddingLeft: '10px',
+          pointerEvents: 'auto',
+          zIndex: '10',
+          borderTop: '1px solid lightgray',
+          backgroundColor: 'primary.contrastText',
+        }}
+      />
+    </Dialog>
   );
 }
 

@@ -660,7 +660,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
-
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
     await waitForRemoteQueue('wait for any changes to finish');
@@ -782,7 +781,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
 
   if (/Logout/i.test(view)) navigate('/logout');
   else if (/access/i.test(view)) navigate('/');
-
   const handleClose = () => {
     if (onClose) {
       if (myChanged) {

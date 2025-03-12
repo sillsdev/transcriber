@@ -17,6 +17,8 @@ import { fontFamilyName } from '../utils/fontFamilyName';
 import { IPickerStrings, IVProjectStrings } from '../model';
 
 const StyledFormControlLabel = styled(FormControlLabel)<FormControlLabelProps>({
+  margin: 0,
+  marginRight: '16px',
   '& .MuiFormControlLabel-asterisk': {
     display: 'none',
   },
@@ -47,6 +49,7 @@ interface IProps extends ILanguage {
   disabled?: boolean;
   required?: boolean;
   sx?: SxProps;
+  direction?: 'column' | 'row';
 }
 
 export const Language = (props: IProps) => {
@@ -115,11 +118,11 @@ export const Language = (props: IProps) => {
     }
   }, [state, onChange]);
 
-  const widthStyle: CSSProperties = { width: 400 };
+  const widthStyle: CSSProperties = { width: 300 };
 
   const fullBox = React.useMemo(() => {
     if (props.hideSpelling && props.hideFont) return undefined;
-    return { pt: 3 };
+    return { pt: 1 };
   }, [props.hideSpelling, props.hideFont]);
 
   return (
@@ -127,7 +130,7 @@ export const Language = (props: IProps) => {
       {fullBox && (
         <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
       )}
-      <FormGroup sx={fullBox || undefined}>
+      <FormGroup row={props.direction === 'row'}>
         <StyledFormControlLabel
           id="language-code"
           ref={langEl}
@@ -153,12 +156,12 @@ export const Language = (props: IProps) => {
           label=""
         />
         {!Boolean(props?.hideFont) && (
-          <FormControlLabel
+          <StyledFormControlLabel
             control={
               <TextField
                 id="language-font"
                 label={t.font}
-                sx={{ mx: 1 }}
+                // sx={{ mx: 1, marginLeft: '11px' }}
                 value={fontFamilyName(font)}
                 onClick={handleChangeFont}
                 onKeyDown={handleChangeFont}
@@ -172,7 +175,7 @@ export const Language = (props: IProps) => {
           />
         )}
         {!Boolean(props?.hideSpelling) && (
-          <FormControlLabel
+          <StyledFormControlLabel
             control={
               <Checkbox
                 id="language-spellCheck"
