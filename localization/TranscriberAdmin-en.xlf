@@ -916,6 +916,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.projectPermissions">
+         <segment>
+            <source>Allow Projects to set permissions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sync">
          <segment>
             <source>Sync ({0})</source>

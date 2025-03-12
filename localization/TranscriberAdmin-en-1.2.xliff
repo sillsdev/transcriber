@@ -1067,6 +1067,13 @@
                <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.projectPermissions">
+            <source>Allow Projects to set permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>

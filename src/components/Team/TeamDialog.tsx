@@ -25,6 +25,7 @@ import {
   defaultWorkflow,
   orgDefaultFeatures,
   orgDefaultLangProps,
+  orgDefaultPermissions,
   orgDefaultWorkflowProgression,
   pubDataCopyright,
   pubDataLangProps,
@@ -98,6 +99,7 @@ export function TeamDialog(props: IProps) {
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
+  const [permissions, setPermissions] = useState(true);
   const { getDefault } = useOrgDefaults();
   const reset = () => {
     setName('');
@@ -112,6 +114,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
+    setPermissions(true);
     setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
@@ -162,6 +165,7 @@ export function TeamDialog(props: IProps) {
           current.attributes?.defaultParams ?? defaultParams
         );
         df = setParam(orgDefaultFeatures, features, df);
+        df = setParam(orgDefaultPermissions, permissions, df);
         const team = {
           ...current,
           attributes: {
@@ -238,6 +242,9 @@ export function TeamDialog(props: IProps) {
         break;
       case 'workflowProgression':
         setWorkflowProgression(value);
+        break;
+      case orgDefaultPermissions:
+        setPermissions(value === 'true');
         break;
       case 'noNoise':
       case 'deltaVoice':
@@ -378,7 +385,7 @@ export function TeamDialog(props: IProps) {
           <TeamSettings
             mode={mode}
             team={values?.team}
-            values={{ features, workflowProgression }}
+            values={{ features, workflowProgression, permissions }}
             setValue={setValue}
           />
           {mode !== DialogMode.add && canPublish && (
