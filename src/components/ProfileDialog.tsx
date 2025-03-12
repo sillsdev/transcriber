@@ -505,12 +505,12 @@ export function ProfileDialog(props: ProfileDialogProps) {
         'organization',
         organization,
         currentUserId
-      ) as OrganizationMembershipD[];
-      if (mbrRec.length > 0) {
-        const curRoleId = related(mbrRec[0], 'role');
+      ) as OrganizationMembershipD;
+      if (mbrRec) {
+        const curRoleId = related(mbrRec, 'role');
         if (curRoleId !== role) {
           memory.update((t) =>
-            UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
+            UpdateRelatedRecord(t, mbrRec, 'role', 'role', role, user)
           );
         }
       }

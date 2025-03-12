@@ -240,7 +240,7 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
         setPublishingData(setParam(pubDataLangProps, value, publishingData));
         break;
-      case 'workflowProgression':
+      case orgDefaultWorkflowProgression:
         setWorkflowProgression(value);
         break;
       case orgDefaultPermissions:

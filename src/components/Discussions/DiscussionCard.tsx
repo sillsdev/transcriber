@@ -30,8 +30,6 @@ import {
   Section,
   Plan,
   Passage,
-  GroupD,
-  UserD,
   OrganizationD,
 } from '../../model';
 import ResolveIcon from '@mui/icons-material/Check';
@@ -77,7 +75,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
-import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
+import GroupOrUserAssignment from '../../control/GroupOrUserAssignment';
 import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useSelector } from 'react-redux';
@@ -89,6 +87,7 @@ import BigDialog from '../../hoc/BigDialog';
 import { DiscussionMove } from './DiscussionMove';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import { useGroupOrUser } from '../../crud/useGroupOrUser';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -208,8 +207,6 @@ export const DiscussionCard = (props: IProps) => {
   const plans = useOrbitData<Plan[]>('plan');
   const artifactcategorys =
     useOrbitData<ArtifactCategory[]>('artifactcategory');
-  const users = useOrbitData<UserD[]>('user');
-  const groups = useOrbitData<GroupD[]>('group');
   const teams = useOrbitData<OrganizationD[]>('organization');
   const t: IDiscussionCardStrings = useSelector(
     discussionCardSelector,
@@ -263,7 +260,13 @@ export const DiscussionCard = (props: IProps) => {
   const { permissions, canAccess, approvalStatus, getAuthor, hasPermission } =
     usePermissions();
   const { myGroups, citGroup, mentorGroup } = usePeerGroups();
-  const [editAssigned, setEditAssigned] = useState<string>('');
+  const {
+    assignedGroup,
+    assignedUser,
+    editAssigned,
+    setEditAssigned,
+    setAssigned,
+  } = useGroupOrUser();
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
@@ -317,16 +320,13 @@ export const DiscussionCard = (props: IProps) => {
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
-  const userPrefix = 'u:';
-  const groupPrefix = 'g:';
-
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
 
   const handleReset = () => {
     setEditSubject('');
-    setEditAssigned('');
+    setAssigned('', '');
     setEditCategory('');
     setComment('');
     commentText.current = '';
@@ -403,10 +403,8 @@ export const DiscussionCard = (props: IProps) => {
   }, [comments, discussion.id, permissions]);
 
   useEffect(() => {
-    var a = related(discussion, 'group');
-    if (a) setEditAssigned(groupPrefix + a);
-    a = related(discussion, 'user');
-    if (a) setEditAssigned(userPrefix + a);
+    setAssigned(related(discussion, 'group'), related(discussion, 'user'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussion]);
 
   useEffect(() => {
@@ -581,7 +579,7 @@ export const DiscussionCard = (props: IProps) => {
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
-      setEditAssigned(currentAssigned());
+      setAssigned(related(discussion, 'group'), related(discussion, 'user'));
       setEditCategory(related(discussion, 'artifactCategory') || '');
       setEditing(true);
     } else if (what === 'delete') {
@@ -657,14 +655,14 @@ export const DiscussionCard = (props: IProps) => {
     setChangeAssignment(false);
   };
   const handleGroupChange = (e: string) => {
-    if (groupPrefix + e !== editAssigned) {
-      setEditAssigned(groupPrefix + e);
+    if (e !== assignedGroup?.id) {
+      setAssigned(e, '');
       setChanged(true);
     }
   };
   const handleUserChange = (e: string) => {
-    if (userPrefix + e !== editAssigned) {
-      setEditAssigned(userPrefix + e);
+    if (e !== assignedUser?.id) {
+      setAssigned('', e);
       setChanged(true);
     }
   };
@@ -763,17 +761,6 @@ export const DiscussionCard = (props: IProps) => {
     setMoveTo(undefined);
     clearCompleted(myToolId);
   };
-  const assignedGroup = useMemo(() => {
-    return editAssigned.startsWith(groupPrefix)
-      ? groups?.find((g) => g.id === editAssigned.substring(groupPrefix.length))
-      : undefined;
-  }, [editAssigned, groups]);
-
-  const assignedUser = useMemo(() => {
-    return editAssigned.startsWith(userPrefix)
-      ? users?.find((u) => u.id === editAssigned.substring(userPrefix.length))
-      : undefined;
-  }, [editAssigned, users]);
 
   const version = useMemo(() => {
     const mediafile = mediafiles.find(
@@ -816,20 +803,11 @@ export const DiscussionCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightDiscussion, myRegion?.start, refresh, requestHighlight]);
 
-  const currentAssigned = () =>
-    related(discussion, 'group')
-      ? groupPrefix + related(discussion, 'group')
-      : related(discussion, 'user')
-      ? userPrefix + related(discussion, 'user')
-      : '';
-
   useEffect(() => {
-    const assigned = editAssigned || currentAssigned();
     assignedToMeRef.current =
-      assigned === userPrefix + user ||
-      myGroups.map((grp) => groupPrefix + grp.id).includes(assigned);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editAssigned, myGroups]);
+      assignedUser?.id === user ||
+      myGroups.map((grp) => grp.id).includes(assignedGroup?.id ?? 'x');
+  }, [assignedUser, assignedGroup, myGroups, user]);
 
   useEffect(() => {
     if (assignedToMeRef.current) {
@@ -872,7 +850,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [myComments]);
 
   const handleAssignedClick = () => {
-    setEditAssigned(currentAssigned());
+    setAssigned(related(discussion, 'group'), related(discussion, 'user'));
     setChangeAssignment(!changeAssignment as boolean);
   };
   const handleTextChange = (newText: string) => {
@@ -1039,15 +1017,13 @@ export const DiscussionCard = (props: IProps) => {
                     </LightTooltip>
                   )}
                   {!isPersonal && changeAssignment && (
-                    <SelectDiscussionAssignment
+                    <GroupOrUserAssignment
                       id={`group-${discussion.id}`}
-                      org={false}
+                      listAdmins={true}
                       initAssignment={editAssigned}
                       onChange={handleAssignedChange}
                       required={false}
                       label={t.assign}
-                      userPrefix={userPrefix}
-                      groupPrefix={groupPrefix}
                     />
                   )}
                   {!discussion.attributes.resolved && (

@@ -8194,6 +8194,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.permissionSettings">
+         <segment>
+            <source>Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionEditSheet">
+         <segment>
+            <source>Allow to edit Audio Project Setup sheet content.  If left blank, all team members will be allowed to edit the sheet.  Admins are always allowed to edit.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionPublish">
+         <segment>
+            <source>Allow to publish content.  If left blank, all team members will be allowed to publish.  Admins are always allowed to publish.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.preview">
          <segment>
             <source>Preview</source>

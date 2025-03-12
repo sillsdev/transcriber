@@ -181,6 +181,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "settings": string;
     "notesHelper": string;
     "notesProject": string;
+    "projectPermissions": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;
@@ -1627,6 +1628,9 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "organizedBy": string;
     "other": string;
     "pericopes": string;
+    "permissionSettings": string;
+    "permissionEditSheet": string;
+    "permissionPublish": string;
     "preview": string;
     "projectName": string;
     "renderCustomize": string;

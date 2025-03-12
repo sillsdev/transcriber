@@ -9,11 +9,12 @@ export interface IUserName {
   name: string;
 }
 
-export const usePeerGroups = () => {
+export const usePeerGroups = (team?: string) => {
   const users = useOrbitData<User[]>('user');
   const groups = useOrbitData<GroupD[]>('group');
   const memberships = useOrbitData<GroupMembership[]>('groupmembership');
   const [organization] = useGlobal('organization');
+  const [org] = useState(team ?? organization);
   const allUsersGroup = useAllUserGroup();
   const { getUserRec } = useUser();
   const [userNames, setUserNames] = useState<IUserName[]>([]);
@@ -40,9 +41,9 @@ export const usePeerGroups = () => {
   };
 
   const allUserId = useMemo(
-    () => allUsersGroup(organization)?.id,
+    () => allUsersGroup(org)?.id,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [organization]
+    [org]
   );
 
   useEffect(() => {
@@ -67,12 +68,12 @@ export const usePeerGroups = () => {
           g?.attributes &&
           !g.attributes?.allUsers &&
           groupIds.includes(g.id) &&
-          related(g, 'owner') === organization
+          related(g, 'owner') === org
       )
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memberships, organization, users]);
+  }, [memberships, org, users]);
 
   useEffect(() => {
     setPeerGroups(
@@ -80,11 +81,11 @@ export const usePeerGroups = () => {
         (g) =>
           g?.attributes &&
           !g.attributes?.allUsers &&
-          related(g, 'owner') === organization
+          related(g, 'owner') === org
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groups, organization]);
+  }, [groups, org]);
 
   useEffect(() => {
     const users = userNames.map((r) => r.userId);

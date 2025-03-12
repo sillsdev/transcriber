@@ -5,36 +5,38 @@ import {
   User,
   Group,
   OrganizationMembership,
+  RoleNames,
+  OrganizationMembershipD,
 } from '../model';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
-import { related } from '../crud';
+import { related, useRole } from '../crud';
 import { useGlobal } from '../context/GlobalContext';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { groupPrefix, userPrefix } from '../crud/useGroupOrUser';
 
 interface IProps {
   id?: string;
-  org: boolean;
+  listAdmins: boolean;
   initAssignment?: string;
   required?: boolean;
   disabled?: boolean;
   label?: string;
-  userPrefix: string;
-  groupPrefix: string;
+  team?: string;
   onChange: (value: string) => void;
 }
 
-export const SelectDiscussionAssignment = (props: IProps) => {
+export const GroupOrUserAssignment = (props: IProps) => {
   const {
     onChange,
     initAssignment,
     required,
     disabled,
     label,
-    userPrefix,
-    groupPrefix,
     id: idIn,
+    listAdmins,
+    team,
   } = props;
   const users = useOrbitData<User[]>('user');
   const orgmems = useOrbitData<OrganizationMembership[]>(
@@ -45,6 +47,7 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [organization] = useGlobal('organization');
   const [value, setValue] = useState(initAssignment);
+  const { getMbrRole } = useRole();
   const t = useSelector(
     discussionCardSelector,
     shallowEqual
@@ -61,8 +64,14 @@ export const SelectDiscussionAssignment = (props: IProps) => {
 
   useEffect(() => {
     var orgusers = orgmems
-      .filter((om) => related(om, 'organization') === organization)
+      .filter((om) => related(om, 'organization') === (team ?? organization))
+      .filter(
+        (om) =>
+          listAdmins ||
+          getMbrRole(om as OrganizationMembershipD) === RoleNames.Member
+      )
       .map((om) => related(om, 'user'));
+
     setOrgUsers(
       users
         .filter(
@@ -81,7 +90,9 @@ export const SelectDiscussionAssignment = (props: IProps) => {
             : 1
         )
     );
-  }, [organization, users, orgmems, offlineOnly]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization, team, users, orgmems, offlineOnly, listAdmins]);
+
   return (
     <TextField
       id={idIn || 'selectassignment'}
@@ -114,4 +125,4 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   );
 };
 
-export default SelectDiscussionAssignment;
+export default GroupOrUserAssignment;
