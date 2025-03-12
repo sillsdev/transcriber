@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ITag, IVProjectStrings } from '../../../model';
 import {
   Box,
   Dialog,
   DialogContent,
-  Grid,
   Tabs,
   Tab,
   SxProps,
+  Stack,
+  FormLabel,
 } from '@mui/material';
 import {
   ProjectName,
   ProjectDescription,
   ProjectType,
-  ProjectTags,
   ProjectExpansion,
   Language,
   ILanguage,
@@ -25,6 +25,7 @@ import { vProjectSelector } from '../../../selector';
 import { ProjectBook } from './ProjectBook';
 import { StyledDialogTitle } from '../../StyledDialogTitle';
 import { AltActionBar } from '../../../AltActionBar';
+import Tags from '../../../control/Tags';
 
 const initState = {
   name: '',
@@ -61,12 +62,12 @@ interface IProps extends IDialog<IProjectDialog> {
 }
 
 const tabProps = {
-  width: "50%"
+  width: '50%',
 } as SxProps;
 
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const t = useSelector(vProjectSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
@@ -74,6 +75,15 @@ export function ProjectDialog(props: IProps) {
   const [bookErr, setBookErr] = React.useState('');
   const [basicTab, setBasicTab] = useState(true);
   const addingRef = React.useRef(false);
+
+  const initTags = useMemo(
+    () => ({
+      [t.testing]: false,
+      [t.backtranslation]: false,
+      [t.training]: false,
+    }),
+    [t]
+  );
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -104,16 +114,14 @@ export function ProjectDialog(props: IProps) {
 
   const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    if (newValue === 0){
+    if (newValue === 0) {
       setBasicTab(true);
-    }
-    else {
+    } else {
       setBasicTab(false);
     }
   };
-
 
   return (
     <Dialog
@@ -129,53 +137,77 @@ export function ProjectDialog(props: IProps) {
       <StyledDialogTitle id="projectDlg">
         {t.newProject.replace('{0}', mode === Mode.add ? t.configure : t.edit)}
       </StyledDialogTitle>
-      <Tabs 
+      <Tabs
         value={value}
-        onChange={handleChange}
+        onChange={handleTabChange}
         sx={{
-          maxWidth: "400px",
-          width: "100%",
-          "& .MuiTabs-indicator": {
-              backgroundColor: "secondary.dark",
-              height: "2px",
-            },
-          "& .Mui-selected": {
-            color: "secondary.dark"
-          }
+          maxWidth: '400px',
+          width: '100%',
+          '& .MuiTabs-indicator': {
+            backgroundColor: 'secondary.dark',
+            height: '2px',
+          },
+          '& .Mui-selected': {
+            color: 'secondary.dark',
+          },
         }}
       >
-        <Tab label="Basic" sx={ tabProps }/>
-        <Tab label="Advanced" sx={ tabProps }/>
+        <Tab label={t.basic} sx={tabProps} />
+        <Tab label={t.advanced} sx={tabProps} />
       </Tabs>
       {basicTab ? (
-          <Box>
-            <DialogContent>
-              <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
-                <ProjectName state={state} setState={setState} inUse={nameInUse} />
-                <ProjectDescription state={state} setState={setState} />
-              </Box>
-              <ProjectType type={type} onChange={handleTypeChange} />
-              <ProjectBook
+        <Box>
+          <DialogContent>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: '10px',
+              }}
+            >
+              <ProjectName
                 state={state}
                 setState={setState}
-                setBookErr={setBookErr}
+                inUse={nameInUse}
               />
-              <Language {...state} onChange={handleLanguageChange} />
-              <ProjectTags state={state} setState={setState} />
-            </DialogContent>
-          </Box>
-        ) : (
-          <Box>
-            <DialogContent>
-              <ProjectExpansion
-                state={state}
-                setState={setState}
-                addMode={mode === Mode.add}
+              <ProjectDescription state={state} setState={setState} />
+            </Box>
+            <ProjectType type={type} onChange={handleTypeChange} />
+            <ProjectBook
+              state={state}
+              setState={setState}
+              setBookErr={setBookErr}
+            />
+            <Stack sx={{ pt: 1, pb: 2 }}>
+              <Language
+                {...state}
+                onChange={handleLanguageChange}
+                direction="row"
+                sx={{ pt: 0 }}
               />
-            </DialogContent>
-          </Box>
-        )
-      }
+            </Stack>
+            <FormLabel sx={{ color: 'secondary.light' }}>{t.tags}</FormLabel>
+            <Tags
+              label={t.newTag}
+              tags={
+                Object.keys(state?.tags).length > 0 ? state?.tags : initTags
+              }
+              onChange={(tags) => setState((state) => ({ ...state, tags }))}
+            />
+          </DialogContent>
+        </Box>
+      ) : (
+        <Box>
+          <DialogContent>
+            <ProjectExpansion
+              state={state}
+              setState={setState}
+              addMode={mode === Mode.add}
+            />
+          </DialogContent>
+        </Box>
+      )}
 
       <AltActionBar
         primaryLabel={mode === Mode.add ? t.add : t.save}
@@ -187,22 +219,22 @@ export function ProjectDialog(props: IProps) {
           type === '' ||
           bookErr !== ''
         }
-        primaryKey={"add"}
+        primaryKey={'add'}
         primaryAria={t.add}
         altShown={true}
         altLabel={t.cancel}
         altOnClick={handleClose}
-        altKey={"cancel"}
+        altKey={'cancel'}
         altAria={t.cancel}
-        sx={{ 
-          position: 'sticky', 
-          bottom: '0px', 
-          padding: '10px 0px', 
+        sx={{
+          position: 'sticky',
+          bottom: '0px',
+          padding: '10px 0px',
           paddingLeft: '10px',
-          pointerEvents: 'auto', 
+          pointerEvents: 'auto',
           zIndex: '10',
           borderTop: '1px solid lightgray',
-          backgroundColor: 'primary.contrastText'
+          backgroundColor: 'primary.contrastText',
         }}
       />
     </Dialog>

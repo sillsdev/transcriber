@@ -132,7 +132,7 @@ export default function Tags({ label, tags, onChange, sx }: IProps) {
           {option}
         </li>
       )}
-      style={{ width: 500 }}
+      style={{ width: '100%' }}
       renderInput={(params) => (
         <TextField
           {...params}

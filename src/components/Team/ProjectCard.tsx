@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
+import StoryIcon from '@mui/icons-material/RecordVoiceOver';
 import { BsPencilSquare } from 'react-icons/bs';
 import ShareIcon from '@mui/icons-material/OfflineShare';
 import moment from 'moment';
@@ -68,6 +69,9 @@ const ProjectCardRoot = styled('div')(({ theme }) => ({
   },
   '& .MuiTypography-root': {
     cursor: 'default ',
+  },
+  '& .MuiCardContent-root': {
+    maxWidth: '243px',
   },
   cursor: 'pointer',
 }));
@@ -332,6 +336,12 @@ export const ProjectCard = (props: IProps) => {
     setDeleteItem(undefined);
   };
 
+  const isStory = useMemo(
+    () => getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [project]
+  );
+
   const projectValues = (project: VProjectD) => {
     const attr = project.attributes;
     const value: IProjectDialog = {
@@ -339,8 +349,7 @@ export const ProjectCard = (props: IProps) => {
       description: attr.description || '',
       type: attr?.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
-      story:
-        getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
+      story: isStory,
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -373,11 +382,17 @@ export const ProjectCard = (props: IProps) => {
             <Typography
               variant="h6"
               component="h2"
-              sx={{ display: 'flex', alignItems: 'center' }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
             >
               {(project?.attributes?.type || '').toLowerCase() ===
               'scripture' ? (
                 <ScriptureIcon />
+              ) : isStory ? (
+                <StoryIcon />
               ) : (
                 <BsPencilSquare />
               )}

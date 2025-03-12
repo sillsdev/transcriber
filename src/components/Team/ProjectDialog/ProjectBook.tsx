@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   FormLabel,
@@ -67,7 +68,13 @@ export const ProjectBook = (props: IProjectDialogState) => {
   const onCancel = () => {};
   //future default book for scripture tested but turned off for now
   return (
-    <div style={{ backgroundColor: 'lime' }}>
+    <Box
+      sx={{
+        boxShadow: 2,
+        borderRadius: '5px',
+        p: type !== 'scripture' ? 1 : 0,
+      }}
+    >
       {type !== 'scripture' && (
         <>
           <FormLabel sx={{ color: 'secondary.main' }}>
@@ -108,6 +115,6 @@ export const ProjectBook = (props: IProjectDialogState) => {
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 };

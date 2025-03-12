@@ -25,7 +25,7 @@ export const ProjectName = (props: IProps) => {
     <TextField
       autoFocus
       margin="dense"
-      id="name"
+      id="project-name"
       variant="standard"
       required
       label={t.projectName}

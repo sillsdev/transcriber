@@ -1,11 +1,8 @@
 import React from 'react';
-import ScriptureIcon from '@mui/icons-material/MenuBook';
-import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
 import { Options } from '.';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
-
 
 interface IProps {
   type: string;
@@ -26,6 +23,7 @@ export const ProjectType = (props: IProps) => {
         .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))
         .map((t) => t.attributes.name.toLowerCase())}
       onChange={onChange}
+      pt={1}
     />
   );
 };

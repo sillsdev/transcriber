@@ -8020,6 +8020,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.basic">
+         <segment>
+            <source>Basic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.cancel">
          <segment>
             <source>Cancel</source>
@@ -8155,6 +8161,12 @@
       <unit id="vProject.newProject">
          <segment>
             <source>{0} Audio Project Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.newTag">
+         <segment>
+            <source>New Tag</source>
             <target/>
          </segment>
       </unit>

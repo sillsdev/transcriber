@@ -9359,6 +9359,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.basic">
+            <source>Basic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="vProject.cancel">
             <source>Cancel</source>
             <target/>
@@ -9516,6 +9523,13 @@
          </trans-unit>
          <trans-unit id="vProject.newProject">
             <source>{0} Audio Project Settings</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.newTag">
+            <source>New Tag</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
