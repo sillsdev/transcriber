@@ -45,6 +45,10 @@ const initState = {
   organizedBy: '',
   isPersonal: false,
   vProjectStrings: {} as IVProjectStrings,
+  sheetUser: undefined as string | undefined,
+  sheetGroup: undefined as string | undefined,
+  publishUser: undefined as string | undefined,
+  publishGroup: undefined as string | undefined,
 };
 export const initProjectState = { ...initState };
 export type IProjectDialog = typeof initState;
@@ -55,10 +59,12 @@ export interface IProjectDialogState {
   setBookErr?: React.Dispatch<React.SetStateAction<string>>;
   addMode?: boolean;
   tagCheck?: boolean;
+  team?: string;
 }
 
 interface IProps extends IDialog<IProjectDialog> {
   nameInUse?: (newName: string) => boolean;
+  team?: string;
 }
 
 const tabProps = {
@@ -66,7 +72,8 @@ const tabProps = {
 } as SxProps;
 
 export function ProjectDialog(props: IProps) {
-  const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
+  const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse, team } =
+    props;
   const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
@@ -204,6 +211,7 @@ export function ProjectDialog(props: IProps) {
               state={state}
               setState={setState}
               addMode={mode === Mode.add}
+              team={team}
             />
           </DialogContent>
         </Box>

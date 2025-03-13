@@ -280,6 +280,10 @@ export const ProjectCard = (props: IProps) => {
       organizedBy,
       book,
       story,
+      sheetGroup,
+      sheetUser,
+      publishGroup,
+      publishUser,
     } = values;
     var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
     var defaultParams = setParam(
@@ -306,6 +310,10 @@ export const ProjectCard = (props: IProps) => {
         flat: values.flat,
         organizedBy,
         defaultParams,
+        sheetUser,
+        sheetGroup,
+        publishUser,
+        publishGroup,
       },
     });
     if (oldBook !== book) UpdatePublishingBookRows(oldBook, book);
@@ -362,6 +370,10 @@ export const ProjectCard = (props: IProps) => {
       organizedBy: attr.organizedBy || vProjectStrings.sections,
       isPersonal: personalProjects.includes(project),
       vProjectStrings: vProjectStrings,
+      sheetUser: related(project, 'editsheetuser'),
+      sheetGroup: related(project, 'editsheetgroup'),
+      publishUser: related(project, 'publishuser'),
+      publishGroup: related(project, 'publishgroup'),
     };
     return value;
   };

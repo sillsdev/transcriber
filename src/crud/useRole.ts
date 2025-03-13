@@ -69,24 +69,26 @@ export const useRole = () => {
     const table = memory?.cache.query((q) =>
       q.findRecords(tableName)
     ) as InitializedRecord[];
-    return table.filter(
+    var rows = table.filter(
       (tbl) => related(tbl, 'user') === userId && related(tbl, relate) === id
     );
+    if (rows.length > 0) return rows[0];
+    return undefined;
   };
 
-  const getMbrRole = (memberRecs: InitializedRecord[]) => {
-    if (memberRecs.length === 1) {
-      var roleId = related(memberRecs[0], 'role');
+  const getMbrRole = (memberRec: InitializedRecord | undefined) => {
+    if (memberRec) {
+      var roleId = related(memberRec, 'role');
       if (!roleId) {
         //default to Admin
         logError(
           Severity.error,
           errorReporter,
-          `missing role:${memberRecs[0].keys?.remoteId}`
+          `missing role:${memberRec.keys?.remoteId}`
         );
         roleId = getRoleId(RoleNames.Admin);
         memory.update((t) => [
-          ...ReplaceRelatedRecord(t, memberRecs[0], 'role', 'role', roleId),
+          ...ReplaceRelatedRecord(t, memberRec, 'role', 'role', roleId),
         ]);
       }
       const roleRec = memory?.cache.query((q) =>
@@ -100,8 +102,8 @@ export const useRole = () => {
   };
 
   const getMyOrgRole = (orgId: string) => {
-    const gMbrRecs = getMbrRoleRec('organization', orgId, user);
-    return getMbrRole(gMbrRecs);
+    const gMbrRec = getMbrRoleRec('organization', orgId, user);
+    return getMbrRole(gMbrRec);
   };
 
   const setMyOrgRole = useMemo(
@@ -118,6 +120,7 @@ export const useRole = () => {
     getRoleId,
     getRoleRec,
     getMbrRoleRec,
+    getMbrRole,
     setMyOrgRole,
     getMyOrgRole,
     userIsAdmin,

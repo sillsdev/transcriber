@@ -207,6 +207,10 @@ export const AddCard = (props: IProps) => {
       tags,
       organizedBy,
       book,
+      sheetUser,
+      sheetGroup,
+      publishUser,
+      publishGroup,
     } = values;
     var defaultParams = setParam(projDefBook, book, '{}');
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
@@ -227,6 +231,10 @@ export const AddCard = (props: IProps) => {
           flat: values.flat,
           organizedBy,
           defaultParams,
+          sheetUser,
+          sheetGroup,
+          publishUser,
+          publishGroup,
         },
       } as VProject,
       team
@@ -390,6 +398,7 @@ export const AddCard = (props: IProps) => {
               onCommit={handleCommit}
               nameInUse={nameInUse}
               values={projDef}
+              team={team?.id}
             />
           </Box>
         </StyledCardContent>

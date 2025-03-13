@@ -30,6 +30,10 @@ export interface VProject extends BaseModel {
     dateUpdated: string;
     dateArchived: string;
     lastModifiedBy: number;
+    sheetUser: string | undefined;
+    sheetGroup: string | undefined;
+    publishUser: string | undefined;
+    publishGroup: string | undefined;
   };
   relationships?: {
     project: RecordRelationship;
@@ -42,6 +46,10 @@ export interface VProject extends BaseModel {
     projectintegrations: RecordRelationship;
     users: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    //editsheetUser: RecordRelationship;
+    //editsheetGroup: RecordRelationship;
+    //publishUser: RecordRelationship;
+    //publishGroup: RecordRelationship;
   };
 }
 

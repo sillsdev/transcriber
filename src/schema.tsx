@@ -231,6 +231,10 @@ const schemaDefinition: RecordSchemaSettings = {
         },
         // sections: { kind: 'hasMany', type: 'section', inverse: 'project' },
         plans: { kind: 'hasMany', type: 'plan', inverse: 'project' },
+        editsheetuser: { kind: 'hasOne', type: 'user' },
+        editsheetgroup: { kind: 'hasOne', type: 'group' },
+        publishuser: { kind: 'hasOne', type: 'user' },
+        publishgroup: { kind: 'hasOne', type: 'group' },
         lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
@@ -311,6 +315,7 @@ const schemaDefinition: RecordSchemaSettings = {
         transcriber: { kind: 'hasOne', type: 'user' },
         group: { kind: 'hasOne', type: 'group' },
         lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+        organizationScheme: { kind: 'hasOne', type: 'organizationscheme' },
       },
     },
     passage: {
@@ -674,6 +679,7 @@ if (requestedSchema > 3 && schemaDefinition.models) {
         kind: 'hasOne',
         type: 'orgworkflowstep',
       },
+      creatorUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.comment = {
@@ -997,6 +1003,35 @@ if (requestedSchema > 8 && schemaDefinition.models) {
     },
   };
   schemaDefinition.version = 9;
+}
+if (requestedSchema > 9 && schemaDefinition.models) {
+  schemaDefinition.models.organizationscheme = {
+    keys: { remoteId: {} },
+    attributes: {
+      name: { type: 'string' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
+    },
+    relationships: {
+      organization: { kind: 'hasOne', type: 'organization' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+    },
+  };
+  schemaDefinition.models.organizationschemestep = {
+    keys: { remoteId: {} },
+    attributes: {
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
+    },
+    relationships: {
+      organizationscheme: { kind: 'hasOne', type: 'organizationscheme' },
+      orgworkflowstep: { kind: 'hasOne', type: 'orgworkflowstep' },
+      user: { kind: 'hasOne', type: 'user' },
+      group: { kind: 'hasOne', type: 'group' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+    },
+  };
+  schemaDefinition.version = 10;
 }
 
 export const schema = new RecordSchema(schemaDefinition);

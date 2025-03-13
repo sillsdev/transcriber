@@ -1067,6 +1067,13 @@
                <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.projectPermissions">
+            <source>Allow Projects to set permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>
@@ -9556,6 +9563,27 @@
                <context context-type="sourcefile">LastEdit.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.permissionSettings">
+            <source>Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.permissionEditSheet">
+            <source>Allow to edit Audio Project Setup sheet content.  If left blank, all team members will be allowed to edit the sheet.  Admins are always allowed to edit.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>           
+         <trans-unit id="vProject.permissionPublish">
+            <source>Allow to publish content.  If left blank, all team members will be allowed to publish.  Admins are always allowed to publish.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>                    
          <trans-unit id="vProject.preview">
             <source>Preview</source>
             <target/>
