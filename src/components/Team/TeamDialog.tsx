@@ -291,13 +291,14 @@ export function TeamDialog(props: IProps) {
 
         if (values) {
           if (values.team) {
-            const wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
+            const wfp = getDefault(orgDefaultWorkflowProgression, values.team);
             setWorkflowProgression(
               wfp === 'step'
                 ? t.workflowProgressionStep
                 : t.workflowProgressionPassage
             );
-            setFeatures(getDefault(orgDefaultFeatures, values?.team));
+            setFeatures(getDefault(orgDefaultFeatures, values.team));
+            setPermissions(getDefault(orgDefaultPermissions, values.team));
           }
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));

@@ -76,7 +76,7 @@ interface IProps {
 export function TeamSettings(props: IProps) {
   const { mode, team, values, setValue } = props;
   const ctx = React.useContext(TeamContext);
-  const [permissions, setPermissions] = useState(values.permissions);
+  const [permissions, setPermissions] = useState(true);
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -97,6 +97,11 @@ export function TeamSettings(props: IProps) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values?.workflowProgression]);
+
+  useEffect(() => {
+    setPermissions(values?.permissions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values?.permissions]);
 
   const setProgression = (val: string) => {
     setWorkflowProgression(val);
