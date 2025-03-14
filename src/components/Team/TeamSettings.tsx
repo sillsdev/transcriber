@@ -80,7 +80,7 @@ export function TeamSettings(props: IProps) {
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
-  const { cardStrings } = ctx.state;
+  const { cardStrings, personalTeam } = ctx.state;
   const t = cardStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const workflowOptions = [
@@ -131,16 +131,18 @@ export function TeamSettings(props: IProps) {
         </AccordionSummary>
         <Details>
           <Stack spacing={1}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={permissions}
-                  onChange={handlePermissionSwitch}
-                />
-              }
-              labelPlacement="end"
-              label={t.projectPermissions}
-            />
+            {team?.id !== personalTeam && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={permissions}
+                    onChange={handlePermissionSwitch}
+                  />
+                }
+                labelPlacement="end"
+                label={t.projectPermissions}
+              />
+            )}
             <Options
               label={t.workflowProgression}
               defaultValue={workflowProgression}

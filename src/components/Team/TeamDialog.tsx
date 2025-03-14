@@ -114,7 +114,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
-    setPermissions(true);
+    setPermissions(values?.team?.id !== personalTeam);
     setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
@@ -289,17 +289,18 @@ export function TeamDialog(props: IProps) {
       if (!defaultParams) {
         setDefaultParams(values?.team.attributes?.defaultParams || '{}');
 
-        if (values) {
-          if (values.team) {
-            const wfp = getDefault(orgDefaultWorkflowProgression, values.team);
-            setWorkflowProgression(
-              wfp === 'step'
-                ? t.workflowProgressionStep
-                : t.workflowProgressionPassage
-            );
-            setFeatures(getDefault(orgDefaultFeatures, values.team));
-            setPermissions(getDefault(orgDefaultPermissions, values.team));
-          }
+        if (values?.team) {
+          const wfp = getDefault(orgDefaultWorkflowProgression, values.team);
+          setWorkflowProgression(
+            wfp === 'step'
+              ? t.workflowProgressionStep
+              : t.workflowProgressionPassage
+          );
+          setFeatures(getDefault(orgDefaultFeatures, values.team));
+          setPermissions(
+            getDefault(orgDefaultPermissions, values.team) ??
+              values.team.id !== personalTeam
+          );
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
         }
@@ -351,7 +352,6 @@ export function TeamDialog(props: IProps) {
     } else setOwner('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
-
   return (
     <div>
       <Dialog
