@@ -1068,7 +1068,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.projectPermissions">
-            <source>Allow Projects to set permissions</source>
+            <source>Permissions may be set for projects of this team.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectButtons.tsx</context>

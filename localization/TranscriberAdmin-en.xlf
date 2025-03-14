@@ -918,7 +918,7 @@
       </unit>
       <unit id="cards.projectPermissions">
          <segment>
-            <source>Allow Projects to set permissions</source>
+            <source>Permissions may be set for projects of this team.</source>
             <target/>
          </segment>
       </unit>

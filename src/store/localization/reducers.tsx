@@ -196,7 +196,7 @@ const initialState = {
 			"settings": "Settings",
 			"notesHelper": "Shared explanations, rationales, footnotes, etc.",
 			"notesProject": "Project with Notes",
-			"projectPermissions": "Allow Projects to set permissions",
+			"projectPermissions": "Permissions may be set for projects of this team.",
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
