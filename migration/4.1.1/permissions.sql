@@ -25,6 +25,7 @@ lastmodifiedorigin text DEFAULT 'https://admin-dev.siltranscriber.org'::text NOT
 );
 CREATE UNIQUE INDEX pk_organizationscheme ON public.organizationschemes USING btree (id);
 ALTER TABLE public.organizationschemes ADD CONSTRAINT fk_organizationschemes_organizations_organizationid FOREIGN KEY (organizationid) REFERENCES organizations(id) ON DELETE CASCADE;
+grant all on organizationschemes to transcriber;
 
 --drop table organizationschemestep;
 create table organizationschemesteps (
@@ -39,6 +40,7 @@ lastmodifiedby int4 NULL,
 archived bool DEFAULT false NULL,
 lastmodifiedorigin text DEFAULT 'https://admin-dev.siltranscriber.org'::text NOT NULL
 );
+
 CREATE UNIQUE INDEX pk_organizationschemestep ON public.organizationschemesteps USING btree (id);
 CREATE INDEX ix_organizationschemestep_organizationschemeid ON public.organizationschemesteps USING btree (organizationschemeid);
 CREATE INDEX ix_organizationschemestep_orgworkflowstepid ON public.organizationschemesteps USING btree (orgworkflowstepid);
@@ -47,6 +49,7 @@ ALTER TABLE public.organizationschemesteps ADD CONSTRAINT fk_organizationschemes
 ALTER TABLE public.organizationschemesteps ADD CONSTRAINT fk_organizationschemesteps_users_userid FOREIGN KEY (userid) REFERENCES users(id) ON DELETE set NULL;
 ALTER TABLE public.organizationschemesteps ADD CONSTRAINT fk_organizationschemesteps_groups_groupid FOREIGN KEY (groupid) REFERENCES groups(id) ON DELETE set NULL;
 ALTER TABLE public.organizationschemesteps ADD CONSTRAINT fk_organizationschemesteps_orgworkflowsteps_orgworkflowstepid FOREIGN KEY (orgworkflowstepid) REFERENCES orgworkflowsteps(id) ON DELETE CASCADE;
+grant all on organizationschemesteps to transcriber;
 
 alter table sections add organizationschemeid int4;
 ALTER TABLE public.sections ADD CONSTRAINT fk_sections_organizationschemes_organizationschemesid FOREIGN KEY (organizationschemeid) REFERENCES organizationschemes(id) ON DELETE CASCADE;
