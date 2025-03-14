@@ -24,6 +24,7 @@ import { useGlobal } from '../../../context/GlobalContext';
 import { Render } from '../../../assets/brands';
 import GroupOrUserAssignment from '../../../control/GroupOrUserAssignment';
 import { useGroupOrUser } from '../../../crud/useGroupOrUser';
+import { TeamContext } from '../../../context/TeamContext';
 
 const RenderRecommended = () => {
   const t = useSelector(vProjectSelector, shallowEqual);
@@ -49,6 +50,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
   const [initialized, setInitialized] = useState(false);
   const { getOrgDefault } = useOrgDefaults();
   const [organization] = useGlobal('organization');
+  const ctx = React.useContext(TeamContext);
+  const { personalTeam } = ctx.state;
   const [org] = useState(team ?? organization);
   const [permissions, setPermissions] = useState(false);
   const canBeFlat = useCanBeFlat();
@@ -81,7 +84,9 @@ export function ProjectExpansion(props: IProjectDialogState) {
   } = useGroupOrUser();
 
   useEffect(() => {
-    setPermissions(getOrgDefault(orgDefaultPermissions, org) ?? true);
+    setPermissions(
+      getOrgDefault(orgDefaultPermissions, org) ?? org !== personalTeam
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
