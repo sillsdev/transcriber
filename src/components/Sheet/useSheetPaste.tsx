@@ -37,7 +37,13 @@ export const useWfPaste = (props: IProps) => {
   };
 
   const isValidNumber = (value: string): boolean => {
-    return /^-?\d*\.?\d+$/.test(value);
+    const fvalue = parseFloat(value);
+    return (
+      /^-?\d*\.?\d+$/.test(value) &&
+      !isNaN(fvalue) &&
+      fvalue > 0 &&
+      fvalue.toFixed(0) === value
+    );
   };
 
   const validTable = (rows: string[][]) => {
