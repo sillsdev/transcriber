@@ -29,6 +29,7 @@ export enum LocalKey {
   migration = 'migration', // last migration version
   plan = 'selected-plan', // last plan selected
   mode = 'mode', // last mode (online-cloud or online-local)
+  fontData = 'fontData', // last font data
 }
 
 export const localUserKey = (id: LocalKey) => {

@@ -43,7 +43,6 @@ function TranscriptionShow(props: IProps) {
   const { id, isMediaId, visible, closeMethod, exportId, version } = props;
   const workflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [org] = useGlobal('organization');
   const [projectId] = useGlobal('project'); //will be constant here
   const [open, setOpen] = useState(visible);
@@ -101,7 +100,7 @@ function TranscriptionShow(props: IProps) {
           getMediaProjRec(mediaRec, memory, reporter) ||
           (findRecord(memory, 'project', projectId) as ProjectD);
         if (projRec)
-          getFontData(projRec, offline).then((data) => {
+          getFontData(projRec, exportId).then((data) => {
             setFontValues(data);
           });
       } else {

@@ -1,10 +1,5 @@
 import React, { CSSProperties } from 'react';
-import {
-  FormLabel,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
+import { FormLabel, FormGroup, FormControlLabel } from '@mui/material';
 import { IVProjectStrings } from '../../../model';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';
@@ -14,11 +9,7 @@ import { vProjectSelector } from '../../../selector';
 export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
   const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
-  const { font, fontSize, rtl } = state;
-
-  const handleChangeRtl = () => {
-    setState((state) => ({ ...state, rtl: !state.rtl }));
-  };
+  const { font, fontSize } = state;
 
   const handleFontSize = (fontSize: string) => {
     setState((state) => ({ ...state, fontSize: fontSize }));
@@ -45,17 +36,6 @@ export const EditorSettings = (props: IProjectDialogState) => {
             />
           }
           label=""
-        />
-        <FormControlLabel
-          sx={{ mx: 1 }}
-          control={
-            <Checkbox
-              id="checkbox-rtl"
-              checked={rtl}
-              onChange={handleChangeRtl}
-            />
-          }
-          label={t.rightToLeft}
         />
         <FormLabel>{t.preview}</FormLabel>
         <div style={previewStyle}>
