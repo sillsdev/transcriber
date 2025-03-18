@@ -5,6 +5,9 @@ import {
   Checkbox,
   FormLabel,
   Box,
+  Grid,
+  styled,
+  GridProps,
 } from '@mui/material';
 import { IProjectDialogState } from './ProjectDialog';
 import { Options } from '.';
@@ -25,6 +28,13 @@ import { Render } from '../../../assets/brands';
 import GroupOrUserAssignment from '../../../control/GroupOrUserAssignment';
 import { useGroupOrUser } from '../../../crud/useGroupOrUser';
 import { TeamContext } from '../../../context/TeamContext';
+import { useOrgMembers } from '../../../crud/useOrgMembers';
+
+const StyledGrid = styled(Grid)<GridProps>({
+  '& > .MuiGrid-item': {
+    paddingTop: 0,
+  },
+});
 
 const RenderRecommended = () => {
   const t = useSelector(vProjectSelector, shallowEqual);
@@ -37,7 +47,7 @@ const RenderRecommended = () => {
   );
 };
 
-export function ProjectExpansion(props: IProjectDialogState) {
+export function ProjectAdvanced(props: IProjectDialogState) {
   const { state, setState, addMode, team } = props;
   const {
     organizedBy,
@@ -54,6 +64,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
   const { personalTeam } = ctx.state;
   const [org] = useState(team ?? organization);
   const [permissions, setPermissions] = useState(false);
+  const orgMembers = useOrgMembers({ team: org, listAdmins: false });
   const canBeFlat = useCanBeFlat();
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
   const { userIsSharedContentCreator } = useRole();
@@ -197,29 +208,35 @@ export function ProjectExpansion(props: IProjectDialogState) {
       />
       {!state.isPersonal && (
         <>
-          {permissions && (
+          {permissions && orgMembers.length > 0 && (
             <>
               <FormLabel sx={{ color: 'secondary.main' }}>
                 {t.permissionSettings}
               </FormLabel>
-              <GroupOrUserAssignment
-                id={`sheet`}
-                listAdmins={false}
-                initAssignment={editSheetAssigned}
-                onChange={handleEditsheetAssignedChange}
-                required={false}
-                label={t.permissionEditSheet}
-                team={team}
-              />
-              <GroupOrUserAssignment
-                id={`publish`}
-                listAdmins={false}
-                initAssignment={editPublishAssigned}
-                onChange={handlePublishAssignedChange}
-                required={false}
-                label={t.permissionPublish}
-                team={team}
-              />
+              <StyledGrid container spacing={2}>
+                <Grid item xs={12} md={6} sx={{ pt: 0 }}>
+                  <GroupOrUserAssignment
+                    id={'sheet-permission'}
+                    listAdmins={false}
+                    initAssignment={editSheetAssigned}
+                    onChange={handleEditsheetAssignedChange}
+                    required={false}
+                    label={t.permissionEditSheet}
+                    team={team}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ pt: 0 }}>
+                  <GroupOrUserAssignment
+                    id={'publish-permission'}
+                    listAdmins={false}
+                    initAssignment={editPublishAssigned}
+                    onChange={handlePublishAssignedChange}
+                    required={false}
+                    label={t.permissionPublish}
+                    team={team}
+                  />
+                </Grid>
+              </StyledGrid>
             </>
           )}
           <Box sx={{ pt: 2 }}>

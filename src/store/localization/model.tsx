@@ -277,6 +277,8 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
     "addComment": string;
+    "adminsAlways": string;
+    "all": string;
     "assign": string;
     "earlierVersion": string;
     "groupuser": string;

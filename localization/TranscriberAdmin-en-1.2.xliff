@@ -1571,8 +1571,22 @@
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.adminsAlways">
+            <source>Admins are always allowed.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.all">
+            <source>All members</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.assign">
-            <source>Assign to a Group or Team Member</source>
+            <source>Assign to:</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -1586,7 +1600,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="discussionCard.groupuser">
-            <source>Group/Team Member</source>
+            <source>Peer Group / Member {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -9571,14 +9585,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.permissionEditSheet">
-            <source>Allow to edit Audio Project Setup sheet content.  If left blank, all team members will be allowed to edit the sheet.  Admins are always allowed to edit.</source>
+            <source>Spreadsheet Edit limited to:</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>
             </context-group>
          </trans-unit>           
          <trans-unit id="vProject.permissionPublish">
-            <source>Allow to publish content.  If left blank, all team members will be allowed to publish.  Admins are always allowed to publish.</source>
+            <source>Publish and Export limited to:</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>

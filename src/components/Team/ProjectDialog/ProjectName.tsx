@@ -32,7 +32,7 @@ export const ProjectName = (props: IProps) => {
       value={name}
       helperText={nameInUse && t.nameInUse}
       onChange={handleChangeName}
-      sx={{ minWidth: '196px', flex: '1 1 calc(50% - 5px)' }}
+      sx={{ minWidth: '150px', flex: '1 1 calc(50% - 16px)' }}
       fullWidth
     />
   );

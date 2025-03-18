@@ -1,20 +1,11 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {
-  IDiscussionCardStrings,
-  User,
-  Group,
-  OrganizationMembership,
-  RoleNames,
-  OrganizationMembershipD,
-} from '../model';
+import { IDiscussionCardStrings, User, Group } from '../model';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
-import { related, useRole } from '../crud';
-import { useGlobal } from '../context/GlobalContext';
-import { useOrbitData } from '../hoc/useOrbitData';
 import { groupPrefix, userPrefix } from '../crud/useGroupOrUser';
+import { useOrgMembers } from '../crud/useOrgMembers';
 
 interface IProps {
   id?: string;
@@ -38,16 +29,9 @@ export const GroupOrUserAssignment = (props: IProps) => {
     listAdmins,
     team,
   } = props;
-  const users = useOrbitData<User[]>('user');
-  const orgmems = useOrbitData<OrganizationMembership[]>(
-    'organizationmembership'
-  );
   const { peerGroups } = usePeerGroups();
-  const [orgUsers, setOrgUsers] = useState<User[]>([]);
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
-  const [organization] = useGlobal('organization');
+  const orgUsers = useOrgMembers({ team, listAdmins });
   const [value, setValue] = useState(initAssignment);
-  const { getMbrRole } = useRole();
   const t = useSelector(
     discussionCardSelector,
     shallowEqual
@@ -62,46 +46,18 @@ export const GroupOrUserAssignment = (props: IProps) => {
     setValue(initAssignment);
   }, [initAssignment]);
 
-  useEffect(() => {
-    var orgusers = orgmems
-      .filter((om) => related(om, 'organization') === (team ?? organization))
-      .filter(
-        (om) =>
-          listAdmins ||
-          getMbrRole(om as OrganizationMembershipD) === RoleNames.Member
-      )
-      .map((om) => related(om, 'user'));
-
-    setOrgUsers(
-      users
-        .filter(
-          (u) =>
-            u.attributes &&
-            Boolean(u?.keys?.remoteId) !== offlineOnly &&
-            orgusers.includes(u.id)
-        )
-        .sort((i, j) =>
-          (i.attributes.familyName || '') < (j.attributes.familyName || '')
-            ? -1
-            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
-            ? 1
-            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
-            ? -1
-            : 1
-        )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organization, team, users, orgmems, offlineOnly, listAdmins]);
-
-  return (
+  return orgUsers.length > 0 ? (
     <TextField
       id={idIn || 'selectassignment'}
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
-      label={t.groupuser}
+      label={label || t.groupuser.replace('{0}', '')}
       value={value}
       onChange={handleAssigmentChange}
-      helperText={label || ''}
+      helperText={t.groupuser.replace(
+        '{0}',
+        !listAdmins ? `(${t.adminsAlways})` : ''
+      )}
       margin="normal"
       variant="filled"
       required={required}
@@ -121,7 +77,12 @@ export const GroupOrUserAssignment = (props: IProps) => {
           } ${option.attributes.email?.toLowerCase()}`}
         </MenuItem>
       ))}
+      <MenuItem key="all" value={''}>
+        {t.all}
+      </MenuItem>
     </TextField>
+  ) : (
+    <></>
   );
 };
 

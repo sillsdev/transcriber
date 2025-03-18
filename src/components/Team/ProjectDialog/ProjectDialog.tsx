@@ -14,7 +14,7 @@ import {
   ProjectName,
   ProjectDescription,
   ProjectType,
-  ProjectExpansion,
+  ProjectAdvanced,
   Language,
   ILanguage,
 } from '.';
@@ -170,7 +170,7 @@ export function ProjectDialog(props: IProps) {
                 display: 'flex',
                 flexDirection: 'row',
                 flexWrap: 'wrap',
-                gap: '10px',
+                gap: '32px',
               }}
             >
               <ProjectName
@@ -207,7 +207,7 @@ export function ProjectDialog(props: IProps) {
       ) : (
         <Box>
           <DialogContent>
-            <ProjectExpansion
+            <ProjectAdvanced
               state={state}
               setState={setState}
               addMode={mode === Mode.add}
