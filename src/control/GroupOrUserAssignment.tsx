@@ -38,8 +38,9 @@ export const GroupOrUserAssignment = (props: IProps) => {
   ) as IDiscussionCardStrings;
 
   const handleAssigmentChange = (e: any) => {
-    setValue(e.target.value);
-    onChange && onChange(e.target.value);
+    const value = e.target.value !== 'all' ? e.target.value : undefined;
+    setValue(value);
+    onChange && onChange(value);
   };
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={label || t.groupuser.replace('{0}', '')}
-      value={value}
+      value={value || 'all'}
       onChange={handleAssigmentChange}
       helperText={t.groupuser.replace(
         '{0}',
@@ -77,7 +78,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
           } ${option.attributes.email?.toLowerCase()}`}
         </MenuItem>
       ))}
-      <MenuItem key="all" value={''}>
+      <MenuItem key="all" value={'all'}>
         {t.all}
       </MenuItem>
     </TextField>

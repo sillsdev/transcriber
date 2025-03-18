@@ -1586,7 +1586,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.assign">
-            <source>Assign to:</source>
+            <source>Assign</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -9585,14 +9585,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.permissionEditSheet">
-            <source>Spreadsheet Edit limited to:</source>
+            <source>Spreadsheet Editor</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>
             </context-group>
          </trans-unit>           
          <trans-unit id="vProject.permissionPublish">
-            <source>Publish and Export limited to:</source>
+            <source>Can Publish and Export</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>
