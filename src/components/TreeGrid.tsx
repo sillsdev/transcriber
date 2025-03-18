@@ -71,6 +71,41 @@ interface IProps {
   canSelectRow?: (row: any) => boolean;
 }
 
+interface ISelectProps {
+  canSelectRow?: (row: any) => boolean;
+  isItemSelected: boolean;
+  handleClick: (event: React.MouseEvent<unknown>, id?: number) => void;
+  labelId?: string;
+  rowIdx?: (r: any | undefined) => number;
+  r?: any;
+}
+
+function SelectCell({
+  canSelectRow,
+  isItemSelected,
+  handleClick,
+  labelId,
+  rowIdx,
+  r,
+}: ISelectProps) {
+  return (
+    <TableCell>
+      {!canSelectRow || canSelectRow(r) ? (
+        <Checkbox
+          color="primary"
+          checked={isItemSelected}
+          onClick={(event) => handleClick(event, rowIdx?.(r))}
+          inputProps={{
+            'aria-labelledby': labelId,
+          }}
+        />
+      ) : (
+        <></>
+      )}
+    </TableCell>
+  );
+}
+
 interface IRowProps {
   selected: number[];
   setSelected: (selected: number[]) => void;
@@ -97,12 +132,12 @@ function MyRow(props: IProps & IRowProps) {
   } = props;
   const [open, setOpen] = React.useState(false);
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
+  const handleClick = (event: React.MouseEvent<unknown>, id?: number) => {
+    const selectedIndex = selected.indexOf(id ?? -1);
     let newSelected: number[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, id ?? -1);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -135,20 +170,14 @@ function MyRow(props: IProps & IRowProps) {
       >
         <>
           {select ? (
-            <TableCell>
-              {!canSelectRow || canSelectRow(r) ? (
-                <Checkbox
-                  color="primary"
-                  checked={isItemSelected}
-                  onClick={(event) => handleClick(event, rowIdx(r))}
-                  inputProps={{
-                    'aria-labelledby': labelId,
-                  }}
-                />
-              ) : (
-                <></>
-              )}
-            </TableCell>
+            <SelectCell
+              canSelectRow={canSelectRow}
+              isItemSelected={isItemSelected}
+              handleClick={handleClick}
+              labelId={labelId}
+              rowIdx={rowIdx}
+              r={r}
+            />
           ) : (
             <></>
           )}
@@ -301,13 +330,30 @@ function TreeGrid(props: IProps) {
     return 0;
   };
 
+  const handleSelectAll = (event: React.MouseEvent<unknown>) => {
+    let newSelected: number[] = [];
+    if (selected.length !== rows.length) {
+      newSelected = rows.map((r, i) => i);
+    }
+    setSelected(newSelected);
+    select && select(newSelected);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label={'dense table'}>
         <TableHead>
           <TableRow>
             <>
-              {select ? <TableCell /> : <></>}
+              {select ? (
+                <SelectCell
+                  isItemSelected={selected.length === rows.length}
+                  handleClick={handleSelectAll}
+                  labelId={'select-all'}
+                />
+              ) : (
+                <></>
+              )}
               {treeColumn ? <TableCell /> : <></>}
               {colSpec.map((c) =>
                 !c.hidden ? (
