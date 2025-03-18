@@ -36,14 +36,9 @@ export const useWfPaste = (props: IProps) => {
     return /^\s*-?\d*\.?\d*$/.test(value);
   };
 
-  const isValidNumber = (value: string): boolean => {
-    const fvalue = parseFloat(value);
-    return (
-      /^-?\d*\.?\d+$/.test(value) &&
-      !isNaN(fvalue) &&
-      fvalue > 0 &&
-      fvalue.toFixed(0) === value
-    );
+  const isPositiveInteger = (value: string): boolean => {
+    // only accepting positive integers (the rest are filtered out)
+    return /^\d+$/.test(value);
   };
 
   const validTable = (rows: string[][]) => {
@@ -137,7 +132,10 @@ export const useWfPaste = (props: IProps) => {
     index: number,
     array: string[][]
   ): void => {
-    if (isValidNumber(value[secNumCol]) && isValidNumber(value[passNumCol])) {
+    if (
+      isPositiveInteger(value[secNumCol]) &&
+      isPositiveInteger(value[passNumCol])
+    ) {
       let cp = [...value];
       cp[passNumCol] = '';
       value[secNumCol] = '';
@@ -162,8 +160,8 @@ export const useWfPaste = (props: IProps) => {
         while (
           rows.find((value: string[]) => {
             return (
-              isValidNumber(value[secNumCol]) &&
-              isValidNumber(value[passNumCol])
+              isPositiveInteger(value[secNumCol]) &&
+              isPositiveInteger(value[passNumCol])
             );
           }) !== undefined
         ) {
@@ -177,7 +175,8 @@ export const useWfPaste = (props: IProps) => {
         .filter((row, rowIndex) => rowIndex >= startRow)
         .filter(
           (row2) =>
-            isValidNumber(row2[secNumCol]) || isValidNumber(row2[passNumCol])
+            isPositiveInteger(row2[secNumCol]) ||
+            isPositiveInteger(row2[passNumCol])
         )
         .forEach((r) => {
           const ws = { deleted: false } as MySheet;
@@ -185,11 +184,11 @@ export const useWfPaste = (props: IProps) => {
             const val = r[i];
             if (c === 'book') ws.book = findBook(val);
             else if (c === 'sectionSeq') {
-              if (isValidNumber(val)) lastSec = parseInt(val);
+              if (isPositiveInteger(val)) lastSec = parseInt(val);
               ws.sectionSeq = lastSec;
               ws.sectionUpdated = updatedAt;
             } else if (c === 'passageSeq') {
-              ws.passageSeq = isValidNumber(val) ? parseInt(val) : 0;
+              ws.passageSeq = isPositiveInteger(val) ? parseInt(val) : 0;
               ws.passageUpdated = updatedAt;
             } else ws[c] = val;
           });
