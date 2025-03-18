@@ -301,7 +301,6 @@ const initialState = {
 		"en": {
 			"addComment": "Add",
 			"adminsAlways": "Admins are always allowed.",
-			"all": "All members",
 			"assign": "Assign",
 			"earlierVersion": "From an earlier version",
 			"groupuser": "Peer Group / Member {0}",
@@ -314,6 +313,7 @@ const initialState = {
 			"confirmDelete": "Delete this discussion and all comments?",
 			"locate": "Locate discussion subject in audio recording",
 			"move": "Select step for discussion",
+			"onlyAdmin": "Only Admins",
 			"or": "or",
 			"playOrStop": "Play or Stop",
 			"resolved": "Resolve",

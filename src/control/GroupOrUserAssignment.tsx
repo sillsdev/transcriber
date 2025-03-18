@@ -7,6 +7,8 @@ import { discussionCardSelector } from '../selector';
 import { groupPrefix, userPrefix } from '../crud/useGroupOrUser';
 import { useOrgMembers } from '../crud/useOrgMembers';
 
+const OnlyAdmin = 'only-admin';
+
 interface IProps {
   id?: string;
   listAdmins: boolean;
@@ -38,7 +40,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
   ) as IDiscussionCardStrings;
 
   const handleAssigmentChange = (e: any) => {
-    const value = e.target.value !== 'all' ? e.target.value : undefined;
+    const value = e.target.value !== OnlyAdmin ? e.target.value : undefined;
     setValue(value);
     onChange && onChange(value);
   };
@@ -53,7 +55,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={label || t.groupuser.replace('{0}', '')}
-      value={value || 'all'}
+      value={value || (!listAdmins ? OnlyAdmin : '')}
       onChange={handleAssigmentChange}
       helperText={t.groupuser.replace(
         '{0}',
@@ -78,9 +80,11 @@ export const GroupOrUserAssignment = (props: IProps) => {
           } ${option.attributes.email?.toLowerCase()}`}
         </MenuItem>
       ))}
-      <MenuItem key="all" value={'all'}>
-        {t.all}
-      </MenuItem>
+      {!listAdmins && (
+        <MenuItem key="only-admin" value={OnlyAdmin}>
+          {t.onlyAdmin}
+        </MenuItem>
+      )}
     </TextField>
   ) : (
     <></>

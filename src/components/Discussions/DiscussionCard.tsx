@@ -58,8 +58,6 @@ import {
   ArtifactCategoryType,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
-import SelectGroup from '../../control/SelectPeerGroup';
-import SelectUser from '../../control/SelectUser';
 import { LightTooltip, StageReport } from '../../control';
 import SelectArtifactCategory, {
   ScriptureEnum,
@@ -666,6 +664,12 @@ export const DiscussionCard = (props: IProps) => {
       setChanged(true);
     }
   };
+  const handleAssign = (e: string) => {
+    if (e !== assignedGroup?.id && e !== assignedUser?.id) {
+      setEditAssigned(e);
+      setChanged(true);
+    }
+  };
   const onCategoryChange = (cat: string) => {
     if (cat !== editCategory) {
       setEditCategory(cat);
@@ -893,27 +897,13 @@ export const DiscussionCard = (props: IProps) => {
                 />
                 {!isPersonal && (
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <SelectGroup
+                    <GroupOrUserAssignment
                       id={`group-${discussion.id}`}
-                      org={false}
-                      initGroup={assignedGroup?.id || ''}
-                      onChange={handleGroupChange}
+                      listAdmins={true}
+                      initAssignment={editAssigned}
+                      onChange={handleAssign}
                       required={false}
-                      label={t.assignGroup}
-                    />
-                    <Typography
-                      variant="h6"
-                      component="h2"
-                      sx={{ m: 1, mt: 3, color: 'primary.dark' }}
-                    >
-                      {t.or}
-                    </Typography>
-                    <SelectUser
-                      id={`user-${discussion.id}`}
-                      initUser={assignedUser?.id || ''}
-                      onChange={handleUserChange}
-                      required={false}
-                      label={t.assignUser}
+                      label={t.assign}
                     />
                   </Box>
                 )}

@@ -1354,12 +1354,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionCard.all">
-         <segment>
-            <source>All members</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="discussionCard.assign">
          <segment>
             <source>Assign</source>
@@ -1429,6 +1423,12 @@
       <unit id="discussionCard.move">
          <segment>
             <source>Select step for discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.onlyAdmin">
+         <segment>
+            <source>Only Admins</source>
             <target/>
          </segment>
       </unit>

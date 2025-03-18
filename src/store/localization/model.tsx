@@ -278,7 +278,6 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
     "addComment": string;
     "adminsAlways": string;
-    "all": string;
     "assign": string;
     "earlierVersion": string;
     "groupuser": string;
@@ -291,6 +290,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "confirmDelete": string;
     "locate": string;
     "move": string;
+    "onlyAdmin": string;
     "or": string;
     "playOrStop": string;
     "resolved": string;

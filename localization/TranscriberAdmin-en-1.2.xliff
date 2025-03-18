@@ -1578,13 +1578,6 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionCard.all">
-            <source>All members</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">DiscussionCard.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="discussionCard.assign">
             <source>Assign</source>
             <target/>
@@ -1669,6 +1662,13 @@
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.onlyAdmin">
+            <source>Only Admins</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.or">
             <source>or</source>
             <target/>
