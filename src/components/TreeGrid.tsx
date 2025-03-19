@@ -330,10 +330,15 @@ function TreeGrid(props: IProps) {
     return 0;
   };
 
+  const sections = React.useMemo(() => rows.filter((r) => !r.parentId), [rows]);
+
   const handleSelectAll = (event: React.MouseEvent<unknown>) => {
     let newSelected: number[] = [];
-    if (selected.length !== rows.length) {
-      newSelected = rows.map((r, i) => i);
+    if (selected.length !== sections.length) {
+      newSelected = rows
+        .map((r, i) => ({ ...r, rIdx: i }))
+        .filter((r) => !r.parentId)
+        .map((r) => r.rIdx);
     }
     setSelected(newSelected);
     select && select(newSelected);
@@ -347,7 +352,7 @@ function TreeGrid(props: IProps) {
             <>
               {select ? (
                 <SelectCell
-                  isItemSelected={selected.length === rows.length}
+                  isItemSelected={selected.length === sections.length}
                   handleClick={handleSelectAll}
                   labelId={'select-all'}
                 />
