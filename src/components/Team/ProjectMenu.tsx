@@ -39,6 +39,7 @@ interface IProps {
   justFilter?: boolean;
   action?: (what: string) => void;
   stopPlayer?: () => void;
+  canPublish: boolean;
 }
 
 export function ProjectMenu(props: IProps) {
@@ -50,6 +51,7 @@ export function ProjectMenu(props: IProps) {
     project,
     justFilter,
     stopPlayer,
+    canPublish,
   } = props;
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
@@ -183,7 +185,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={tpb.import} />
           </StyledMenuItem>
         )}
-        {!justFilter && (
+        {!justFilter && (isOffline || canPublish) && (
           <StyledMenuItem id="projMenuExp" onClick={handle('export')}>
             <ListItemIcon>
               <ExportIcon />

@@ -46,10 +46,6 @@ export interface VProject extends BaseModel {
     projectintegrations: RecordRelationship;
     users: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
-    //editsheetUser: RecordRelationship;
-    //editsheetGroup: RecordRelationship;
-    //publishUser: RecordRelationship;
-    //publishGroup: RecordRelationship;
   };
 }
 

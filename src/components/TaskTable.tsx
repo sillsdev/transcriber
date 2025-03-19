@@ -161,6 +161,7 @@ export function TaskTable(props: IProps) {
     loading,
     pdBusy,
     discussionSize,
+    canPublish,
   } = usePassageDetailContext();
   const { sectionArr } = useContext(PassageDetailContext).state;
   const filterRef = useRef(filter);
@@ -574,6 +575,7 @@ export function TaskTable(props: IProps) {
           projectPlans={projectPlans(projectId)}
           planColumn={true}
           sectionArr={sectionArr}
+          canPublish={canPublish}
         />
       </BigDialog>
       <BigDialog

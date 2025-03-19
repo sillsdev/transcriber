@@ -7408,6 +7408,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.nopermission">
+         <segment>
+            <source>You do not have permission to download the project.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
             <source>Creation complete. Downloading {0}</source>

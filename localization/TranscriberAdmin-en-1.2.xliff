@@ -8644,6 +8644,13 @@
                <context context-type="sourcefile">ProjectDownload.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriptionTab.nopermission">
+            <source>You do not have permission to download the project.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="transcriptionTab.downloading">
             <source>Creation complete. Downloading {0}</source>
             <target/>

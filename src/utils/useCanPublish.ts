@@ -8,15 +8,21 @@ import { profileSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { UpdateRecord } from '../model/baseModel';
 import { addPt } from './addPt';
+import { useProjectPermissions } from './useProjectPermissions';
 
 export const useCanPublish = () => {
-  const [canPublish, setCanPublish] = useState<boolean | undefined>();
+  const [canAddPublishing, setCanAddPublishing] = useState<
+    boolean | undefined
+  >(); //allowed to turn it on (paratext)
+
   const askingRef = useRef(false);
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
+  const { canPublish } = useProjectPermissions();
+
   const users = useOrbitData<User[]>('user');
   const paratext_canPublish = useSelector(
     (state: IState) => state.paratext.canPublish
@@ -33,14 +39,14 @@ export const useCanPublish = () => {
   useEffect(() => {
     if (user && users) {
       const u = users.find((u) => u.id === user);
-      setCanPublish(u?.attributes?.canPublish ?? false);
+      setCanAddPublishing((u?.attributes?.canPublish ?? false) && canPublish);
     }
-  }, [user, users]);
+  }, [user, users, canPublish]);
 
   useEffect(() => {
     if (!isOffline) {
       if (
-        canPublish === false && //if it's still undefined...wait for it to be set from user
+        canAddPublishing === false && //if it's still undefined...wait for it to be set from user
         !askingRef.current &&
         accessToken &&
         !paratext_canPublishStatus
@@ -57,7 +63,7 @@ export const useCanPublish = () => {
           //showMessage(translateParatextError(paratext_canPublishStatus, ts));
           console.error(paratext_canPublishStatus.errMsg);
         } else if (paratext_canPublishStatus.complete) {
-          setCanPublish(paratext_canPublish as boolean);
+          setCanAddPublishing((paratext_canPublish as boolean) && canPublish);
           const u = users.find((u) => u.id === user);
           if (u !== undefined) {
             u.attributes.canPublish = paratext_canPublish as boolean;
@@ -67,15 +73,15 @@ export const useCanPublish = () => {
         }
       }
     } else {
-      setCanPublish(false);
+      setCanAddPublishing(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     accessToken,
     isOffline,
-    canPublish,
+    canAddPublishing,
     paratext_canPublish,
     paratext_canPublishStatus,
   ]);
-  return { canPublish };
+  return { canAddPublishing };
 };

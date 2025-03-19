@@ -53,7 +53,6 @@ import {
   useBible,
   useOrganizedBy,
   usePublishDestination,
-  useRole,
 } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -264,6 +263,7 @@ export function PlanSheet(props: IProps) {
     readonly,
     sectionArr,
     shared,
+    canPublish,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -326,9 +326,8 @@ export function PlanSheet(props: IProps) {
   const [confirmPublish, setConfirmPublish] = useState(false);
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
-  const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
-  const { canPublish } = useCanPublish();
+  const { canAddPublishing } = useCanPublish();
   const rowsPerPage = useRef(20);
   const [scrollCount, setScrollCount] = useState(0);
   const [curTop, setCurTop] = useState(0);
@@ -345,6 +344,7 @@ export function PlanSheet(props: IProps) {
       var bible = getOrgBible(org);
       setHasBible((bible?.attributes.bibleName ?? '') !== '');
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
@@ -820,7 +820,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!canPublish && !publishingOn) {
+    if (!canAddPublishing && !publishingOn) {
       showMessage(addPt(t.paratextRequired));
       return;
     }
@@ -971,13 +971,13 @@ export function PlanSheet(props: IProps) {
     },
     [emptyRow, curTop]
   );
-
+  console.log('readonly', readonly);
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {userIsAdmin && (
+            {!readonly && (
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
@@ -1014,6 +1014,7 @@ export function PlanSheet(props: IProps) {
                   onCopy={handleSheetCopy}
                   onPaste={handleTablePaste}
                   onReseq={handleResequence}
+                  canPublish={canPublish}
                 />
               </>
             )}
@@ -1022,7 +1023,7 @@ export function PlanSheet(props: IProps) {
             {data.length > 1 &&
               !offline &&
               !inlinePassages &&
-              !readonly &&
+              canPublish &&
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
@@ -1052,7 +1053,7 @@ export function PlanSheet(props: IProps) {
               hidePublishing={hidePublishing}
               disabled={!filtered && (rowInfo.length < 2 || anyRecording)}
             />
-            {userIsAdmin && (
+            {!readonly && (
               <>
                 <PriButton
                   id="planSheetSave"

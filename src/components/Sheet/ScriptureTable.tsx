@@ -196,8 +196,9 @@ export function ScriptureTable(props: IProps) {
     hidePublishing,
     publishingOn,
     setSectionArr,
-    setCanPublish,
+    setCanAddPublishing,
     togglePublishing,
+    canPublish,
   } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
@@ -336,7 +337,7 @@ export function ScriptureTable(props: IProps) {
     var anyPublishing = !getGlobal('offline')
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
-    if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
+    if (publishingOn !== anyPublishing) setCanAddPublishing(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -1988,8 +1989,9 @@ export function ScriptureTable(props: IProps) {
       >
         <VersionDlg
           passId={versionRow?.passage?.id || ''}
-          canSetDestination={!offline}
+          canSetDestination={!offline && canPublish}
           hasPublishing={publishingOn}
+          canPublish={canPublish}
         />
       </BigDialog>
       <BigDialog
