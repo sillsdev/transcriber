@@ -971,7 +971,6 @@ export function PlanSheet(props: IProps) {
     },
     [emptyRow, curTop]
   );
-  console.log('readonly', readonly);
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
