@@ -106,11 +106,20 @@ interface IProps {
   step?: string;
   orgSteps?: OrgWorkflowStepD[];
   sectionArr: [number, string][];
+  canPublish: boolean;
 }
 
 export function TranscriptionTab(props: IProps) {
-  const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
-    props;
+  const {
+    projectPlans,
+    planColumn,
+    floatTop,
+    step,
+    orgSteps,
+    sectionArr,
+    canPublish,
+  } = props;
+
   const { pasId } = useParams();
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
@@ -276,8 +285,16 @@ export function TranscriptionTab(props: IProps) {
   };
   const handleProjectExport = () => {
     setAlertOpen(false);
-    if (getGlobal('offline')) setOpenExport(true);
-    else doProjectExport(ExportType.PTF);
+    var offline = getGlobal('offline');
+
+    if (offline) {
+      if (canPublish) setOpenExport(true);
+      else doProjectExport(ExportType.ITF);
+    } else {
+      if (canPublish) doProjectExport(ExportType.PTF);
+      //this should have been disabled so I don't think we'll get here
+      else showMessage(t.nopermission);
+    }
   };
 
   const exportId = useMemo(
@@ -662,7 +679,7 @@ export function TranscriptionTab(props: IProps) {
           color="default"
         >
           <TabActions>
-            {(planColumn || floatTop) && (
+            {(canPublish || offline) && (planColumn || floatTop) && (
               <AltButton
                 id="transExp"
                 key="export"

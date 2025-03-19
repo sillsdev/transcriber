@@ -94,7 +94,7 @@ export function TeamDialog(props: IProps) {
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
-  const { canPublish } = useCanPublish();
+  const { canAddPublishing } = useCanPublish();
 
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
@@ -389,7 +389,7 @@ export function TeamDialog(props: IProps) {
             values={{ features, workflowProgression, permissions }}
             setValue={setValue}
           />
-          {mode !== DialogMode.add && canPublish && (
+          {mode !== DialogMode.add && canAddPublishing && (
             <PublishExpansion
               t={t}
               team={values?.team}

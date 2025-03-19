@@ -45,7 +45,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const passages = useOrbitData<Passage[]>('passage');
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture, sectionArr } = ctx.state;
+  const { flat, scripture, sectionArr, canPublish } = ctx.state;
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [plan] = useGlobal('plan'); //will be constant here
@@ -186,6 +186,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             {...props}
             projectPlans={plans.filter((p) => p.id === plan)}
             sectionArr={sectionArr}
+            canPublish={canPublish}
           />
         )}
       </Box>

@@ -1473,6 +1473,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "copyTranscriptions": string;
     "creatingDownloadFile": string;
     "writingDownloadFile": string;
+    "nopermission": string;
     "downloading": string;
     "downloadingProject": string;
     "downloadProject": string;

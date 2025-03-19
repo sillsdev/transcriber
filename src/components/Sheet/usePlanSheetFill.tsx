@@ -150,7 +150,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionArr, setSectionArr, shared } = ctx.state;
+  const { readonly, sectionArr, setSectionArr, shared, canPublish } = ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
   const [planId] = useGlobal('plan'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -323,6 +323,7 @@ export const usePlanSheetFill = ({
           rowIndex={rowIndex}
           organizedBy={organizedBy}
           onAction={onAction}
+          canPublish={canPublish}
         />
       );
     }

@@ -49,6 +49,7 @@ interface IProps {
   shared: boolean;
   canSetDestination: boolean;
   hasPublishing: boolean;
+  canPublish: boolean;
   sectionArr: [number, string][];
   setPlayItem: (item: string) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
@@ -63,6 +64,7 @@ export const AudioTable = (props: IProps) => {
     shared,
     canSetDestination,
     hasPublishing,
+    canPublish,
     sectionArr,
   } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
@@ -97,7 +99,6 @@ export const AudioTable = (props: IProps) => {
           { name: 'duration', title: t.duration },
           { name: 'size', title: t.size },
           { name: 'date', title: t.date },
-          { name: 'detach', title: '\u00A0' },
         ]
       : [
           { name: 'planName', title: t.planName },
@@ -110,8 +111,8 @@ export const AudioTable = (props: IProps) => {
           { name: 'duration', title: t.duration },
           { name: 'size', title: t.size },
           { name: 'date', title: t.date },
-          { name: 'detach', title: '\u00A0' },
         ];
+  if (canPublish) columnDefs.push({ name: 'detach', title: '\u00A0' });
   const columnWidths =
     shared || sectionArr.length > 0
       ? [
@@ -126,7 +127,6 @@ export const AudioTable = (props: IProps) => {
           { columnName: 'duration', width: 100 },
           { columnName: 'size', width: 100 },
           { columnName: 'date', width: 100 },
-          { columnName: 'detach', width: 120 },
         ]
       : [
           { columnName: 'planName', width: 150 },
@@ -139,8 +139,8 @@ export const AudioTable = (props: IProps) => {
           { columnName: 'duration', width: 100 },
           { columnName: 'size', width: 100 },
           { columnName: 'date', width: 100 },
-          { columnName: 'detach', width: 120 },
         ];
+  if (canPublish) columnWidths.push({ columnName: 'detach', width: 120 });
 
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
@@ -425,6 +425,7 @@ export const AudioTable = (props: IProps) => {
             passId={verHist}
             canSetDestination={canSetDestination}
             hasPublishing={hasPublishing}
+            canPublish={canPublish}
           />
         </BigDialog>
       )}

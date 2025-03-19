@@ -10,7 +10,7 @@ import {
   Discussion,
   GroupMembership,
 } from '../model';
-import { findRecord, usePlanType, useRole } from '../crud';
+import { findRecord, usePlanType } from '../crud';
 import {
   projDefSectionMap,
   useProjectDefaults,
@@ -19,7 +19,7 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
 import { LocalKey, localUserKey } from '../utils';
-
+import { useProjectPermissions } from '../utils/useProjectPermissions';
 export interface IRowData {}
 
 const initState = {
@@ -35,10 +35,11 @@ const initState = {
   shared: false,
   publishingOn: true,
   hidePublishing: true,
+  canPublish: false,
   sectionArr: [] as [number, string][],
   setSectionArr: (sectionArr: [number, string][]) => {},
   togglePublishing: () => {},
-  setCanPublish: (canPublish: boolean) => {},
+  setCanAddPublishing: (canAddPublishing: boolean) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -67,14 +68,12 @@ const PlanProvider = (props: IProps) => {
   const [project] = useGlobal('project'); //will be constant here
   const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [isDeveloper] = useGlobal('developer');
   const getPlanType = usePlanType();
-  const { userIsAdmin } = useRole();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
-  const [readonly, setReadOnly] = useState(
-    (isOffline && !offlineOnly) || !userIsAdmin
-  );
+  const { canEditSheet, canPublish } = useProjectPermissions();
+  const [readonly] = useState(!canEditSheet);
+
   const [state, setState] = useState({
     ...initState,
     projButtonStr,
@@ -131,7 +130,7 @@ const PlanProvider = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
-  const setCanPublish = (publishingOn: boolean) => {
+  const setCanAddPublishing = (publishingOn: boolean) => {
     setState((state) => ({ ...state, publishingOn }));
   };
 
@@ -144,11 +143,6 @@ const PlanProvider = (props: IProps) => {
     );
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
-
-  React.useEffect(() => {
-    const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
-    if (readonly !== newValue) setReadOnly(newValue);
-  }, [userIsAdmin, isOffline, offlineOnly, readonly]);
 
   //don't do this anymore because we also check in the busy checks
   /*
@@ -167,8 +161,9 @@ const PlanProvider = (props: IProps) => {
           setSectionArr,
           connected,
           readonly,
+          canPublish,
           togglePublishing,
-          setCanPublish,
+          setCanAddPublishing,
         },
         setState,
       }}

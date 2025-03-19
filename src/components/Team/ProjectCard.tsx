@@ -61,6 +61,7 @@ import {
 } from '../../crud/useProjectDefaults';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { UpdateRecord } from '../../model/baseModel';
+import { useProjectPermissions } from '../../utils/useProjectPermissions';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -165,6 +166,11 @@ export const ProjectCard = (props: IProps) => {
     loadProject(project);
     leaveHome();
   };
+
+  const { canPublish } = useProjectPermissions(
+    related(project, 'organization'),
+    related(project, 'project')
+  );
 
   useEffect(() => {
     if (open !== '') doOpen(open);
@@ -418,6 +424,7 @@ export const ProjectCard = (props: IProps) => {
               inProject={false}
               isAdmin={isAdmin}
               isPersonal={personalProjects.includes(project)}
+              canPublish={canPublish}
             />
           </FirstLineDiv>
           <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>
@@ -475,6 +482,7 @@ export const ProjectCard = (props: IProps) => {
           projectPlans={projectPlans(projectId)}
           planColumn={true}
           sectionArr={getProjectDefault(projDefSectionMap) ?? []}
+          canPublish={canPublish}
         />
       </BigDialog>
       <BigDialog
