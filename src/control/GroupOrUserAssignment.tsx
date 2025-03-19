@@ -40,7 +40,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
   ) as IDiscussionCardStrings;
 
   const handleAssigmentChange = (e: any) => {
-    const value = e.target.value !== OnlyAdmin ? e.target.value : undefined;
+    const value = e.target.value !== OnlyAdmin ? e.target.value : '';
     setValue(value);
     onChange && onChange(value);
   };
