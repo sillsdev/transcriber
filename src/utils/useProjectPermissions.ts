@@ -34,25 +34,22 @@ export const useProjectPermissions = (team?: string, proj?: string) => {
     var editgroup = related(projectRec, 'editsheetgroup');
     var edituser = related(projectRec, 'editsheetuser');
 
-    if (
+    setCanEditSheet(
       !(isOffline && !offlineOnly) &&
-      (isAdmin ||
-        (editgroup && myGroups.findIndex((g) => g.id === editgroup) > -1) ||
-        (edituser && edituser === user))
-    )
-      setCanEditSheet(true);
-    else setCanEditSheet(false);
+        (isAdmin ||
+          (editgroup && myGroups.findIndex((g) => g.id === editgroup) > -1) ||
+          (edituser && edituser === user))
+    );
 
     var publishgroup = related(projectRec, 'publishgroup');
     var publishuser = related(projectRec, 'publishuser');
     if (publishgroup) console.log(publishgroup, myGroups);
-    if (
+    setCanPublish(
       isAdmin ||
-      (publishgroup && myGroups.findIndex((g) => g.id === publishgroup) > -1) ||
-      (publishuser && publishuser === user)
-    )
-      setCanPublish(true);
-    else setCanPublish(false);
+        (publishgroup &&
+          myGroups.findIndex((g) => g.id === publishgroup) > -1) ||
+        (publishuser && publishuser === user)
+    );
   }, [projectRec, myGroups, isAdmin, user, isOffline, offlineOnly]);
 
   return { canEditSheet, canPublish };

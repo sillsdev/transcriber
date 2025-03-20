@@ -1022,7 +1022,6 @@ export function PlanSheet(props: IProps) {
             {data.length > 1 &&
               !offline &&
               !inlinePassages &&
-              canPublish &&
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
