@@ -72,7 +72,7 @@ const PlanProvider = (props: IProps) => {
   const getPlanType = usePlanType();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
   const { canEditSheet, canPublish } = useProjectPermissions();
-  const [readonly] = useState(!canEditSheet);
+  const [readonly, setReadonly] = useState(!canEditSheet);
 
   const [state, setState] = useState({
     ...initState,
@@ -91,6 +91,10 @@ const PlanProvider = (props: IProps) => {
   const setSectionArr = (newArr: [number, string][]) => {
     setProjectDefault(projDefSectionMap, newArr);
   };
+
+  useEffect(() => {
+    setReadonly(!canEditSheet);
+  }, [canEditSheet]);
 
   useEffect(() => {
     const { scripture, flat } = getPlanType(plan);
