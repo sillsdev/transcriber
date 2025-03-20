@@ -19,6 +19,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
 import { useSelector } from 'react-redux';
 import { deleteExpandSelector } from '../selector';
+import { useGlobal } from '../context/GlobalContext';
 
 const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
@@ -45,43 +46,69 @@ interface IProps {
 }
 
 export function ExtendableDeleteExpansion(props: IProps) {
-  const { AllProps, extendsDown, SummaryProps, IconProps, children, 
-          DetailsProps, DangerHeaderProps, DangerProps, title, TitleProps, 
-          warning, ButtonBoxProps, ButtonProps, handleDelete, inProgress, 
-          buttonLabel } = props;
+  const {
+    AllProps,
+    extendsDown,
+    SummaryProps,
+    IconProps,
+    children,
+    DetailsProps,
+    DangerHeaderProps,
+    DangerProps,
+    title,
+    TitleProps,
+    warning,
+    ButtonBoxProps,
+    ButtonProps,
+    handleDelete,
+    inProgress,
+    buttonLabel,
+  } = props;
+  const [offlineOnly] = useGlobal('offlineOnly');
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
     <Box sx={{ width: '100%', ...AllProps }}>
       <Accordion>
         <AccordionSummary
-          expandIcon={extendsDown ? <ExpandMoreIcon sx={IconProps} /> : <ExpandLessIcon sx={IconProps} />}
+          expandIcon={
+            extendsDown ? (
+              <ExpandMoreIcon sx={IconProps} />
+            ) : (
+              <ExpandLessIcon sx={IconProps} />
+            )
+          }
           aria-controls="panel1a-content"
           id="panel1a-header"
           sx={{
             display: 'flex',
             width: '100%',
             zIndex: '2',
-            ...SummaryProps
+            ...SummaryProps,
           }}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
-        
-        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', ...DetailsProps }}>
-          {children}
-          
+
+        <AccordionDetails
+          sx={{ display: 'flex', flexDirection: 'column', ...DetailsProps }}
+        >
+          {!offlineOnly && children}
+
           <FormLabel>
-            <Typography variant="h6" sx={{ 
-              borderBottom: '1px solid',
-              textAlign: 'left',
-              marginTop: '2em',
-              ...DangerHeaderProps
-            }}>
+            <Typography
+              variant="h6"
+              sx={{
+                borderBottom: '1px solid',
+                textAlign: 'left',
+                marginTop: !offlineOnly ? '2em' : '0em',
+                ...DangerHeaderProps,
+              }}
+            >
               {t.dangerZone}
             </Typography>
           </FormLabel>
-          
+
           <FormGroup
             sx={{
               display: 'flex',
@@ -89,22 +116,24 @@ export function ExtendableDeleteExpansion(props: IProps) {
               flexGrow: 1,
               marginTop: '3px',
               textAlign: 'left',
-              ...DangerProps
+              ...DangerProps,
             }}
           >
             <FormLabel sx={TitleProps}>
               <Typography variant="h6">{title}</Typography>
             </FormLabel>
-            
-            <FormLabel sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexGrow: 1,
-              marginTop: '3px',
-              textAlign: 'left',
-              ...DangerProps
-            }}>
-              {warning || "The following action cannot be undone:"}
+
+            <FormLabel
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: 1,
+                marginTop: '3px',
+                textAlign: 'left',
+                ...DangerProps,
+              }}
+            >
+              {warning || 'The following action cannot be undone:'}
             </FormLabel>
 
             <GrowingSpacer />
