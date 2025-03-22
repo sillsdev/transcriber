@@ -490,11 +490,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
         )
         .then((r) => {
           if (r) {
-            // set the currentUser to the saved user data
-            let res = r as RecordTransformResult<InitializedRecord>[];
-            const user = res.at(0) as UserD;
-            setCurrentUser(user);
-            setUser(user.id);
+            // set the currentUser to the saved user data unless admin editing
+            if (!editId) {
+              let res = r as RecordTransformResult<InitializedRecord>[];
+              const user = res.at(0) as UserD;
+              setCurrentUser(user);
+              setUser(user.id);
+            }
             if (onSaveCompleted) {
               onSaveCompleted();
             }
