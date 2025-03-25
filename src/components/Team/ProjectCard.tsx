@@ -18,6 +18,8 @@ import ScriptureIcon from '@mui/icons-material/MenuBook';
 import StoryIcon from '@mui/icons-material/RecordVoiceOver';
 import { BsPencilSquare } from 'react-icons/bs';
 import ShareIcon from '@mui/icons-material/OfflineShare';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import moment from 'moment';
 import {
   DialogMode,
@@ -167,7 +169,7 @@ export const ProjectCard = (props: IProps) => {
     leaveHome();
   };
 
-  const { canPublish } = useProjectPermissions(
+  const { canPublish, canEditSheet } = useProjectPermissions(
     related(project, 'organization'),
     related(project, 'project')
   );
@@ -454,6 +456,8 @@ export const ProjectCard = (props: IProps) => {
                     label={localizeProjectTag(t, vProjectStrings)}
                   />
                 ))}
+              {canEditSheet && <EditNoteIcon />}
+              {canPublish && <PublishedWithChangesIcon />}
             </>
           </CardActions>
         )}
