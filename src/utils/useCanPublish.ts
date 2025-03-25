@@ -21,7 +21,7 @@ export const useCanPublish = () => {
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
-  const { canEditSheet } = useProjectPermissions();
+  const { canEditSheet, canPublish } = useProjectPermissions();
 
   const users = useOrbitData<User[]>('user');
   const paratext_canPublish = useSelector(
@@ -39,9 +39,11 @@ export const useCanPublish = () => {
   useEffect(() => {
     if (user && users) {
       const u = users.find((u) => u.id === user);
-      setCanAddPublishing((u?.attributes?.canPublish ?? false) && canEditSheet);
+      setCanAddPublishing(
+        (u?.attributes?.canPublish ?? false) && (canEditSheet || canPublish)
+      );
     }
-  }, [user, users, canEditSheet]);
+  }, [user, users, canEditSheet, canPublish]);
 
   useEffect(() => {
     if (!isOffline) {
@@ -63,7 +65,9 @@ export const useCanPublish = () => {
           //showMessage(translateParatextError(paratext_canPublishStatus, ts));
           console.error(paratext_canPublishStatus.errMsg);
         } else if (paratext_canPublishStatus.complete) {
-          setCanAddPublishing((paratext_canPublish as boolean) && canEditSheet);
+          setCanAddPublishing(
+            (paratext_canPublish as boolean) && (canEditSheet || canPublish)
+          );
           const u = users.find((u) => u.id === user);
           if (u !== undefined) {
             u.attributes.canPublish = paratext_canPublish as boolean;
