@@ -253,7 +253,7 @@ export const PlanMoreMenuItems: FC<
           />
         )}
 
-        {isPassage && (
+        {showIcon(ExtraIcon.VernacularRecord) && (
           <MenuItem
             id="planActUpload"
             onClick={onUpload(rowIndex)}
@@ -262,16 +262,18 @@ export const PlanMoreMenuItems: FC<
             <AddIcon sx={{ color: 'primary.light' }} />
           </MenuItem>
         )}
-        {isPassage && psgType !== PassageTypeEnum.CHAPTERNUMBER && (
-          <MenuItem
-            id="planActRec"
-            onClick={handleRecord(rowIndex)}
-            title={t.recordAudio}
-          >
-            <MicIcon sx={{ color: 'primary.light' }} />
-          </MenuItem>
-        )}
-        {isElectron && isPassage && (
+        {isPassage &&
+          psgType !== PassageTypeEnum.CHAPTERNUMBER &&
+          showIcon(ExtraIcon.VernacularRecord) && (
+            <MenuItem
+              id="planActRec"
+              onClick={handleRecord(rowIndex)}
+              title={t.recordAudio}
+            >
+              <MicIcon sx={{ color: 'primary.light' }} />
+            </MenuItem>
+          )}
+        {isElectron && isPassage && showIcon(ExtraIcon.VernacularRecord) && (
           <MenuItem
             id="planActAud"
             title={ts.launchAudacity}
@@ -280,7 +282,7 @@ export const PlanMoreMenuItems: FC<
             <AudacityLogo />
           </MenuItem>
         )}
-        {canDelete && !readonly && (
+        {canDelete && !readonly && showIcon(ExtraIcon.Delete) && (
           <MenuItem
             id="planActDel"
             title={t.delete}

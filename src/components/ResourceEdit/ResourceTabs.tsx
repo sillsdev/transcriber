@@ -21,7 +21,6 @@ import {
   useSharedResRead,
   useSharedResUpdate,
   useSharedResDelete,
-  useRole,
   findRecord,
   useArtifactCategory,
   remoteIdNum,
@@ -41,6 +40,11 @@ import { remotePullAll } from '../../crud/syncToMemory';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import { usePassageType } from '../../crud/usePassageType';
+import { useProjectPermissions } from '../../utils/useProjectPermissions';
+
+export enum DialogModePartial {
+  'titleOnly' = 4,
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -104,7 +108,6 @@ export function ResourceTabs({
   const updatePassage = usePassageUpdate();
   const graphicUpdate = useGraphicUpdate();
   const graphicCreate = useGraphicCreate();
-  const { userIsAdmin } = useRole();
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
@@ -114,10 +117,11 @@ export function ResourceTabs({
   const { showMessage } = useSnackBar();
   const { localizedArtifactCategory } = useArtifactCategory();
   const { getPassageTypeRec } = usePassageType();
+  const { canEditSheet, canPublish } = useProjectPermissions();
 
   const readOnly = useMemo(
-    () => !userIsAdmin || (offline && !offlineOnly),
-    [userIsAdmin, offline, offlineOnly]
+    () => !canEditSheet || (offline && !offlineOnly),
+    [canEditSheet, offline, offlineOnly]
   );
 
   const sharedResRec = React.useMemo(
@@ -339,9 +343,12 @@ export function ResourceTabs({
       </Box>
       <TabPanel value={value} index={0}>
         <ResourceOverview
-          mode={
+          mode={DialogMode.add} //ignored
+          dialogmode={
             readOnly
-              ? DialogMode.view
+              ? canPublish
+                ? DialogModePartial.titleOnly
+                : DialogMode.view
               : values
               ? DialogMode.edit
               : DialogMode.add

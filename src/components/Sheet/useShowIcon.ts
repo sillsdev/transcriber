@@ -1,20 +1,23 @@
 import { ExtraIcon } from '.';
 import { rowTypes } from './rowTypes';
 import { ISheet } from '../../model';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 interface IExtraMap {
   [key: number]: boolean;
 }
 
 interface IProps {
-  readonly: boolean;
+  canEditSheet: boolean;
+  canPublish: boolean;
   rowInfo: ISheet[];
   inlinePassages: boolean;
   hidePublishing: boolean;
 }
 
 export const useShowIcon = ({
-  readonly,
+  canEditSheet,
+  canPublish,
   rowInfo,
   inlinePassages,
   hidePublishing,
@@ -35,32 +38,39 @@ export const useShowIcon = ({
     lastSection,
     isFirstMovement,
   } = rowTypes(rowInfo);
-
+  const { canDoVernacular } = useStepPermissions();
   return (filtered: boolean, offline: boolean, rowIndex: number) =>
     (icon: ExtraIcon) => {
       const extraMap: IExtraMap = {
+        //section publish
         [ExtraIcon.Publish]:
           !inlinePassages &&
           (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
           !hidePublishing,
-        [ExtraIcon.Publishing]: !inlinePassages && !hidePublishing,
+        [ExtraIcon.Publishing]:
+          (canPublish || canEditSheet) && !inlinePassages && !hidePublishing, //update publishing under add section
         [ExtraIcon.MovementAbove]:
+          (canPublish || canEditSheet) &&
           !inlinePassages &&
           (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
           !hidePublishing,
         [ExtraIcon.SectionAbove]:
-          isSectionHead(rowIndex) || isMovement(rowIndex),
-        [ExtraIcon.SectionEnd]: true,
+          canEditSheet && (isSectionHead(rowIndex) || isMovement(rowIndex)),
+        [ExtraIcon.SectionEnd]: canEditSheet,
         [ExtraIcon.PassageBelow]:
+          canEditSheet &&
           !inlinePassages &&
           (isSectionHead(rowIndex) ||
             (isPassageType(rowIndex) && inSection(rowIndex))),
-        [ExtraIcon.PassageLast]: !inlinePassages && isSectionHead(rowIndex),
+        [ExtraIcon.PassageLast]:
+          canEditSheet && !inlinePassages && isSectionHead(rowIndex),
         [ExtraIcon.PassageEnd]:
+          canEditSheet &&
           !inlinePassages &&
           (isSectionHead(rowInfo.length - 1) ||
             isPassageType(rowInfo.length - 1)),
         [ExtraIcon.Note]:
+          canEditSheet &&
           !inlinePassages &&
           !hidePublishing &&
           (isChapter(rowIndex) ||
@@ -69,33 +79,43 @@ export const useShowIcon = ({
             isVerseRange(rowIndex) ||
             isNote(rowIndex)),
         [ExtraIcon.SectionUp]:
+          canEditSheet &&
           (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
           !firstSection(rowIndex),
         [ExtraIcon.SectionDown]:
+          canEditSheet &&
           (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
           !lastSection(rowIndex),
         [ExtraIcon.PassageToPrev]:
+          canEditSheet &&
           !inlinePassages &&
           firstInSection(rowIndex) &&
           //I can move a note into whatever is before the first section
           (!firstSection(rowIndex) || (isNote(rowIndex) && rowIndex > 1)),
         [ExtraIcon.PassageUp]:
+          canEditSheet &&
           !inlinePassages &&
           !firstInSection(rowIndex) &&
           (isVerseRange(rowIndex) || isNote(rowIndex)),
         [ExtraIcon.PassageDown]:
+          canEditSheet &&
           !inlinePassages &&
           (isVerseRange(rowIndex) || isNote(rowIndex)) &&
           !isSectionType(rowIndex + 1) &&
           rowIndex < rowInfo.length - 1,
         [ExtraIcon.PassageToNext]:
+          canEditSheet &&
           !inlinePassages &&
           (isVerseRange(rowIndex) || isNote(rowIndex)) &&
           (isSectionHead(rowIndex + 1) ||
             isMovement(rowIndex + 1) ||
             isAltBook(rowIndex + 1)),
         [ExtraIcon.FirstMovement]: isFirstMovement(rowIndex),
+        [ExtraIcon.VernacularRecord]:
+          canDoVernacular(rowInfo[rowIndex + 1]?.sectionId?.id ?? '') &&
+          isPassageType(rowIndex),
+        [ExtraIcon.Delete]: canEditSheet,
       };
-      return !readonly && !offline && !filtered && extraMap[icon];
+      return !offline && !filtered && extraMap[icon];
     };
 };

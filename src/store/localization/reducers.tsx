@@ -1072,7 +1072,7 @@ const initialState = {
 			"nonNumber": "Do not change to non-number.",
 			"noPublishDelete": "Do not delete published items.",
 			"insertFirstPassage": "Add Passage as first in {0} {1}",
-			"paratextRequired": "You must be a {0} user with access to FOBAI resources to use this feature.",
+			"paratextRequired": "You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.",
 			"passageBelow": "Add Passage below Passage {0}",
 			"passageEnd": "Add Passage to End",
 			"passageToPrevSection": "Move {pt} {0} Up",

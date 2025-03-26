@@ -4,6 +4,7 @@ import { useRole } from '../crud/useRole';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { findRecord, related } from '../crud';
 import { ProjectD } from '../model';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 export const useProjectPermissions = (team?: string, proj?: string) => {
   const [canEditSheet, setCanEditSheet] = useState(false);
@@ -17,6 +18,7 @@ export const useProjectPermissions = (team?: string, proj?: string) => {
   const { myGroups } = usePeerGroups(team);
   const [project] = useGlobal('project'); //will be constant here
   const [projectRec, setProjectRec] = useState<ProjectD>();
+  const projects = useOrbitData<ProjectD[]>('project');
 
   useEffect(() => {
     if (team) setIsAdmin(userIsOrgAdmin(team));
@@ -28,27 +30,29 @@ export const useProjectPermissions = (team?: string, proj?: string) => {
     if (!isAdmin) {
       setProjectRec(findRecord(memory, 'project', proj ?? project) as ProjectD);
     }
-  }, [memory, proj, project, isAdmin]);
+  }, [memory, proj, project, isAdmin, projects]);
 
   useEffect(() => {
     var editgroup = related(projectRec, 'editsheetgroup');
     var edituser = related(projectRec, 'editsheetuser');
 
     setCanEditSheet(
-      !(isOffline && !offlineOnly) &&
+      (!(isOffline && !offlineOnly) &&
         (isAdmin ||
           (editgroup && myGroups.findIndex((g) => g.id === editgroup) > -1) ||
-          (edituser && edituser === user))
+          (edituser && edituser === user))) ??
+        false
     );
 
     var publishgroup = related(projectRec, 'publishgroup');
     var publishuser = related(projectRec, 'publishuser');
-    if (publishgroup) console.log(publishgroup, myGroups);
+
     setCanPublish(
-      isAdmin ||
+      (isAdmin ||
         (publishgroup &&
           myGroups.findIndex((g) => g.id === publishgroup) > -1) ||
-        (publishuser && publishuser === user)
+        (publishuser && publishuser === user)) ??
+        false
     );
   }, [projectRec, myGroups, isAdmin, user, isOffline, offlineOnly]);
 

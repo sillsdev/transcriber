@@ -150,7 +150,8 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionArr, setSectionArr, shared, canPublish } = ctx.state;
+  const { canEditSheet, sectionArr, setSectionArr, shared, canPublish } =
+    ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
   const [planId] = useGlobal('plan'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -159,7 +160,8 @@ export const usePlanSheetFill = ({
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
   const showIcon = useShowIcon({
-    readonly,
+    canEditSheet,
+    canPublish,
     rowInfo,
     inlinePassages,
     hidePublishing: !publishingOn || hidePublishing,
@@ -190,7 +192,7 @@ export const usePlanSheetFill = ({
 
   const bookEditor: ICellEditor = useCallback(
     (props: any) => {
-      if (readonly) return <></>;
+      if (!canEditSheet) return <></>;
       return (
         <BookSelect
           id="book"
@@ -202,7 +204,7 @@ export const usePlanSheetFill = ({
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookSuggestions, readonly, t.bookSelect]
+    [bookSuggestions, canEditSheet, t.bookSelect]
   );
 
   const ActivateCell: ICellEditor = (props: any) => {
@@ -348,6 +350,7 @@ export const usePlanSheetFill = ({
     mediaPlaying: boolean;
     canPlay: boolean;
     canEdit: boolean;
+    readonly: boolean;
   }
 
   const actionValue = ({
@@ -357,6 +360,7 @@ export const usePlanSheetFill = ({
     mediaPlaying,
     canPlay,
     canEdit,
+    readonly,
   }: ActionValueProps) => {
     if (!passage) return <></>;
     return (
@@ -369,9 +373,10 @@ export const usePlanSheetFill = ({
         canEdit={canEdit}
         onPlayStatus={onPlayStatus}
         onEdit={
-          rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE ||
-          (shared &&
-            rowInfo[rowIndex].passageType !== PassageTypeEnum.CHAPTERNUMBER)
+          !readonly &&
+          (rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE ||
+            (shared &&
+              rowInfo[rowIndex].passageType !== PassageTypeEnum.CHAPTERNUMBER))
             ? onEdit
             : undefined
         }
@@ -413,6 +418,7 @@ export const usePlanSheetFill = ({
     mediaPlaying,
     canEdit,
     canPlay,
+    readonly,
   }: ActionCellProps) =>
     ({
       value: actionValue({
@@ -422,6 +428,7 @@ export const usePlanSheetFill = ({
         mediaPlaying,
         canEdit,
         canPlay,
+        readonly,
       }),
       readOnly: true,
       className: calcClassName,
@@ -431,7 +438,7 @@ export const usePlanSheetFill = ({
     e: string | number,
     rowIndex: number,
     cellIndex: number,
-    anyRecording: boolean,
+    readonly: boolean,
     isNote: boolean = false
   ) => {
     const handleTextChange = (value: string) => {
@@ -457,6 +464,7 @@ export const usePlanSheetFill = ({
         </>
       );
     };
+
     return (
       <>
         {isNote && noteTitle(e as string)}
@@ -469,7 +477,8 @@ export const usePlanSheetFill = ({
               ''
             }
             ws={rowInfo[rowIndex]}
-            anyRecording={anyRecording}
+            readonly={readonly}
+            showpublish={!hidePublishing && publishingOn}
             onRecording={onRecording}
             onTextChange={handleTextChange}
             onMediaIdChange={handleMediaIdChange}
@@ -547,8 +556,8 @@ export const usePlanSheetFill = ({
     refCol: number;
     calcClassName: string;
     rowIndex: number;
-    anyRecording: boolean;
     sharedRes: boolean;
+    anyRecording: boolean;
   }
 
   const rowCells =
@@ -558,13 +567,17 @@ export const usePlanSheetFill = ({
       refCol,
       calcClassName,
       rowIndex,
-      anyRecording,
       sharedRes,
+      anyRecording,
     }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
       const descCol = colSlugs.indexOf('comment');
+      const canEditTitle =
+        !anyRecording &&
+        (canEditSheet || (canPublish && !hidePublishing && publishingOn));
+
       if (cellIndex === SectionSeqCol && section && !hidePublishing) {
         return {
           value: e,
@@ -577,7 +590,7 @@ export const usePlanSheetFill = ({
       if (cellIndex === bookCol && passage)
         return {
           value: e,
-          readOnly: readonly,
+          readOnly: !canEditSheet,
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
@@ -589,7 +602,7 @@ export const usePlanSheetFill = ({
       ) {
         return {
           value: e,
-          component: TitleValue(e, rowIndex, cellIndex, anyRecording),
+          component: TitleValue(e, rowIndex, cellIndex, !canEditTitle),
           forceComponent: true,
           readOnly: true,
           className: calcClassName,
@@ -607,7 +620,7 @@ export const usePlanSheetFill = ({
               rowData[rowIndex][descCol] as string,
               rowIndex,
               descCol,
-              anyRecording
+              !canEditTitle
             ),
             forceComponent: true,
             readOnly: true,
@@ -616,7 +629,7 @@ export const usePlanSheetFill = ({
         } else if (cellIndex === descCol) {
           return {
             value: '',
-            readOnly: readonly,
+            readOnly: !canEditSheet,
             className: calcClassName,
           };
         }
@@ -633,7 +646,7 @@ export const usePlanSheetFill = ({
             rowInfo[rowIndex].sharedResource?.attributes.title || '',
             rowIndex,
             cellIndex,
-            anyRecording,
+            !canEditTitle,
             true
           ),
           forceComponent: true,
@@ -644,7 +657,7 @@ export const usePlanSheetFill = ({
 
       if (cellIndex === refCol) {
         if (
-          readonly ||
+          !canEditSheet ||
           !passage ||
           (!inlinePassages &&
             passageTypeFromRef(e as string, inlinePassages) !==
@@ -679,12 +692,12 @@ export const usePlanSheetFill = ({
       return {
         value: e,
         readOnly:
-          readonly ||
+          !canEditSheet ||
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
           cellIndex === passageSeqCol ||
           (sharedRes && getGlobal('offline')) ||
           passage
-            ? false
+            ? cellIndex <= 1
             : section
             ? cellIndex > 1
             : cellIndex <= 1,
@@ -743,7 +756,7 @@ export const usePlanSheetFill = ({
               passageSequenceNumber={positiveWholeOnly(
                 row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
               )}
-              readonly={readonly || check.length > 0}
+              readonly={check.length > 0}
               onDelete={onDelete}
               onPlayStatus={onPlayStatus}
               onAudacity={onAudacity}
@@ -754,9 +767,7 @@ export const usePlanSheetFill = ({
               canAssign={userIsAdmin && !movement && !book}
               canDelete={userIsAdmin && (!offline || offlineOnly)}
               active={active - 1 === rowIndex}
-              onDisableFilter={
-                !readonly && filtered ? disableFilter : undefined
-              }
+              onDisableFilter={filtered ? disableFilter : undefined}
               showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
               onAction={onAction}
             />
@@ -790,7 +801,7 @@ export const usePlanSheetFill = ({
         Boolean(rowInfo[rowIndex].sharedResource) &&
         related(rowInfo[rowIndex].sharedResource, 'passage') !==
           rowInfo[rowIndex].passage?.id;
-
+      const sharedOffline = sharedRes && getGlobal('offline');
       const calcClassName =
         iscurrent +
         (section
@@ -798,7 +809,6 @@ export const usePlanSheetFill = ({
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
           : 'pass');
-      const readonly = anyRecording || (sharedRes && getGlobal('offline'));
       const sheetRow = [
         stepCell({
           passage,
@@ -806,7 +816,7 @@ export const usePlanSheetFill = ({
           refCol,
           rowIndex,
           calcClassName,
-          readonly: readonly,
+          readonly: sharedOffline || anyRecording,
         }),
         assignmentCell(rowIndex, calcClassName),
         publishedCell({
@@ -814,7 +824,7 @@ export const usePlanSheetFill = ({
           rowIndex,
           calcClassName:
             calcClassName + (beta && !hidePublishing ? ' beta' : ''),
-          canEdit: !readonly,
+          canEdit: canPublish,
         }),
         actionCell({
           passage,
@@ -825,11 +835,13 @@ export const usePlanSheetFill = ({
           mediaPlaying,
           canPlay:
             !anyRecording && (rowInfo[rowIndex].mediaId?.id || '') !== '',
-          canEdit: !readonly,
+          canEdit: !sharedOffline && !anyRecording,
+          readonly:
+            !canEditSheet && (!canPublish || hidePublishing || !publishingOn),
         }),
       ];
       if (!hidePublishing && publishingOn)
-        sheetRow.push(graphicCell(rowIndex, calcClassName, readonly));
+        sheetRow.push(graphicCell(rowIndex, calcClassName, !canPublish));
       row
         .slice(0, 6) // quits when it runs out of columns
         .map(
@@ -839,8 +851,8 @@ export const usePlanSheetFill = ({
             refCol,
             calcClassName,
             rowIndex,
-            anyRecording,
             sharedRes,
+            anyRecording,
           })
         )
         .forEach((c) => {
@@ -858,7 +870,8 @@ export const usePlanSheetFill = ({
           book,
           active,
           filtered,
-          readonly: readonly,
+          readonly:
+            sharedOffline || anyRecording || (!canEditSheet && !canPublish),
         })
       );
       return sheetRow;

@@ -29,6 +29,7 @@ const StyledMenuIcon = styled(ListItemIcon)<ListItemIconProps>(({ theme }) => ({
 }));
 
 interface IProps {
+  canEditSheet: boolean;
   readonly: boolean;
   inlinePassages: boolean;
   numRows: number;
@@ -50,6 +51,7 @@ interface IProps {
 
 export const AddSectionPassageButtons = (props: IProps) => {
   const {
+    canEditSheet,
     readonly,
     inlinePassages,
     numRows,
@@ -84,146 +86,164 @@ export const AddSectionPassageButtons = (props: IProps) => {
 
   return (
     <>
-      <AltButton
-        id="planSheetAddSec"
-        key="addSection"
-        aria-label={t.addSection}
-        onClick={handleMenu}
-        disabled={readonly}
-      >
-        {t.addSection.replace('{0}', organizedBy)}
-        <DropDownIcon sx={iconMargin} />
-      </AltButton>
-      {!inlinePassages && (
-        <AltButton
-          id="planSheetAddPass"
-          key="addPassage"
-          aria-label={t.addPassage}
-          onClick={handleMenu}
-          disabled={numRows < 2 || readonly}
-        >
-          {t.addPassage}
-          <DropDownIcon sx={iconMargin} />
-        </AltButton>
+      {canEditSheet && (
+        <>
+          <AltButton
+            id="planSheetAddSec"
+            key="addSection"
+            aria-label={t.addSection}
+            onClick={handleMenu}
+            disabled={readonly}
+          >
+            {t.addSection.replace('{0}', organizedBy)}
+            <DropDownIcon sx={iconMargin} />
+          </AltButton>
+          {!inlinePassages && (
+            <AltButton
+              id="planSheetAddPass"
+              key="addPassage"
+              aria-label={t.addPassage}
+              onClick={handleMenu}
+              disabled={numRows < 2 || readonly}
+            >
+              {t.addPassage}
+              <DropDownIcon sx={iconMargin} />
+            </AltButton>
+          )}
+          {/*Section Button Menu */}
+          <Menu
+            id="section-menu"
+            anchorReference={'anchorEl'}
+            anchorEl={actionMenuItem}
+            open={actionMenuItem?.id === 'planSheetAddSec'}
+            onClose={handleClose}
+          >
+            {onDisableFilter && (
+              <MenuItem id="filtered" onClick={onDisableFilter}>
+                {t.filtered}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.MovementAbove) && (
+              <MenuItem
+                id="secAbove"
+                onClick={handleAction(ExtraIcon.MovementAbove)}
+              >
+                <StyledMenuIcon>
+                  <InsertMovementIcon />
+                </StyledMenuIcon>
+                {t.movementAbove
+                  .replace('{0}', organizedBy)
+                  .replace('{1}', sectionSequenceNumber)}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.SectionAbove) && (
+              <MenuItem
+                id="secAbove"
+                onClick={handleAction(ExtraIcon.SectionAbove)}
+              >
+                <StyledMenuIcon>
+                  <InsertSectionIcon />
+                </StyledMenuIcon>
+                {t.sectionAbove
+                  .replace('{0}', organizedBy)
+                  .replace('{1}', organizedBy)
+                  .replace('{2}', sectionSequenceNumber)}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.SectionEnd) && (
+              <MenuItem
+                id="secEnd"
+                onClick={handleAction(ExtraIcon.SectionEnd)}
+              >
+                <StyledMenuIcon>
+                  <SectionEndIcon />
+                </StyledMenuIcon>
+                {t.sectionEnd.replace('{0}', organizedBy)}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.Publishing) && canAddPublishing && (
+              <MenuItem
+                id="publishing"
+                onClick={handleAction(ExtraIcon.Publishing)}
+              >
+                <StyledMenuIcon>
+                  <AddPublishingIcon />
+                </StyledMenuIcon>
+                {t.addPublishing}
+              </MenuItem>
+            )}
+          </Menu>
+          {/*Passage Button Menu */}
+          <Menu
+            keepMounted
+            open={!inlinePassages && actionMenuItem?.id === 'planSheetAddPass'}
+            onClose={handleClose}
+            anchorReference={'anchorEl'}
+            anchorEl={actionMenuItem}
+          >
+            {onDisableFilter && (
+              <MenuItem id="filtered" onClick={onDisableFilter}>
+                {t.filtered}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.PassageBelow) && isSection && (
+              <MenuItem
+                id="psgAsFirst"
+                onClick={handleAction(ExtraIcon.PassageBelow)}
+              >
+                <StyledMenuIcon>
+                  <PassageBelowIcon />
+                </StyledMenuIcon>
+                {t.insertFirstPassage
+                  .replace('{0}', organizedBy)
+                  .replace('{1}', sectionSequenceNumber)}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.PassageBelow) && isPassage && (
+              <MenuItem
+                id="passBelow"
+                onClick={handleAction(ExtraIcon.PassageBelow)}
+              >
+                <StyledMenuIcon>
+                  <PassageBelowIcon />
+                </StyledMenuIcon>
+                {t.passageBelow.replace('{0}', passageSequenceNumber)}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.PassageEnd) && (
+              <MenuItem
+                id="passageEnd"
+                onClick={handleAction(ExtraIcon.PassageEnd)}
+              >
+                <StyledMenuIcon>
+                  <PassageEndIcon />
+                </StyledMenuIcon>
+                {t.passageEnd}
+              </MenuItem>
+            )}
+            {showIcon(ExtraIcon.Note) && (
+              <MenuItem
+                id="addnote"
+                onClick={handleAction(ExtraIcon.Note)}
+                title={t.addNote}
+              >
+                <StyledMenuIcon>
+                  <AddNoteIcon />
+                </StyledMenuIcon>
+                {t.addNote}
+              </MenuItem>
+            )}
+          </Menu>
+        </>
       )}
-      {/*Section Button Menu */}
-      <Menu
-        id="section-menu"
-        anchorReference={'anchorEl'}
-        anchorEl={actionMenuItem}
-        open={actionMenuItem?.id === 'planSheetAddSec'}
-        onClose={handleClose}
-      >
-        {onDisableFilter && (
-          <MenuItem id="filtered" onClick={onDisableFilter}>
-            {t.filtered}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.MovementAbove) && (
-          <MenuItem
-            id="secAbove"
-            onClick={handleAction(ExtraIcon.MovementAbove)}
-          >
-            <StyledMenuIcon>
-              <InsertMovementIcon />
-            </StyledMenuIcon>
-            {t.movementAbove
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.SectionAbove) && (
-          <MenuItem
-            id="secAbove"
-            onClick={handleAction(ExtraIcon.SectionAbove)}
-          >
-            <StyledMenuIcon>
-              <InsertSectionIcon />
-            </StyledMenuIcon>
-            {t.sectionAbove
-              .replace('{0}', organizedBy)
-              .replace('{1}', organizedBy)
-              .replace('{2}', sectionSequenceNumber)}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.SectionEnd) && (
-          <MenuItem id="secEnd" onClick={handleAction(ExtraIcon.SectionEnd)}>
-            <StyledMenuIcon>
-              <SectionEndIcon />
-            </StyledMenuIcon>
-            {t.sectionEnd.replace('{0}', organizedBy)}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.Publishing) && canAddPublishing && (
-          <MenuItem id="bookTitle" onClick={handleAction(ExtraIcon.Publishing)}>
-            <StyledMenuIcon>
-              <AddPublishingIcon />
-            </StyledMenuIcon>
-            {t.addPublishing}
-          </MenuItem>
-        )}
-      </Menu>
-      {/*Passage Button Menu */}
-      <Menu
-        keepMounted
-        open={!inlinePassages && actionMenuItem?.id === 'planSheetAddPass'}
-        onClose={handleClose}
-        anchorReference={'anchorEl'}
-        anchorEl={actionMenuItem}
-      >
-        {onDisableFilter && (
-          <MenuItem id="filtered" onClick={onDisableFilter}>
-            {t.filtered}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.PassageBelow) && isSection && (
-          <MenuItem
-            id="psgAsFirst"
-            onClick={handleAction(ExtraIcon.PassageBelow)}
-          >
-            <StyledMenuIcon>
-              <PassageBelowIcon />
-            </StyledMenuIcon>
-            {t.insertFirstPassage
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.PassageBelow) && isPassage && (
-          <MenuItem
-            id="passBelow"
-            onClick={handleAction(ExtraIcon.PassageBelow)}
-          >
-            <StyledMenuIcon>
-              <PassageBelowIcon />
-            </StyledMenuIcon>
-            {t.passageBelow.replace('{0}', passageSequenceNumber)}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.PassageEnd) && (
-          <MenuItem
-            id="passageEnd"
-            onClick={handleAction(ExtraIcon.PassageEnd)}
-          >
-            <StyledMenuIcon>
-              <PassageEndIcon />
-            </StyledMenuIcon>
-            {t.passageEnd}
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.Note) && (
-          <MenuItem
-            id="addnote"
-            onClick={handleAction(ExtraIcon.Note)}
-            title={t.addNote}
-          >
-            <StyledMenuIcon>
-              <AddNoteIcon />
-            </StyledMenuIcon>
-            {t.addNote}
-          </MenuItem>
-        )}
-      </Menu>
+      {!canEditSheet && showIcon(ExtraIcon.Publishing) && canAddPublishing && (
+        <MenuItem id="publishing" onClick={handleAction(ExtraIcon.Publishing)}>
+          <StyledMenuIcon>
+            <AddPublishingIcon />
+          </StyledMenuIcon>
+          {t.addPublishing}
+        </MenuItem>
+      )}
     </>
   );
 };

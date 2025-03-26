@@ -32,6 +32,7 @@ import { orgDefaultResKw, useOrgDefaults } from '../../crud';
 import { NoteTitle } from './NoteTitle';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectNote from './SelectNote';
+import { DialogModePartial } from './ResourceTabs';
 
 export interface IResourceDialog {
   title: string;
@@ -58,6 +59,7 @@ export interface IResourceState {
 }
 
 interface IProps extends IDialog<IResourceDialog> {
+  dialogmode: Mode | DialogModePartial;
   isNote: boolean;
   ws: ISheet | undefined;
   nameInUse?: (newName: string) => boolean;
@@ -67,7 +69,7 @@ interface IProps extends IDialog<IResourceDialog> {
 
 export default function ResourceOverview(props: IProps) {
   const {
-    mode,
+    dialogmode,
     values,
     isOpen,
     isNote,
@@ -116,9 +118,17 @@ export default function ResourceOverview(props: IProps) {
   const [state, setState] = React.useState({ ...initState });
   const { title, bcp47, keywords } = state;
 
+  const updateTitleState = useMemo(
+    () => (dialogmode !== Mode.view ? setState : undefined),
+    [dialogmode]
+  );
+
   const updateState = useMemo(
-    () => (mode === Mode.view ? undefined : setState),
-    [mode]
+    () =>
+      dialogmode === Mode.view || dialogmode === DialogModePartial.titleOnly
+        ? undefined
+        : setState,
+    [dialogmode]
   );
 
   useEffect(() => {
@@ -149,8 +159,8 @@ export default function ResourceOverview(props: IProps) {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    if (mode !== Mode.view)
-      setState((state) => ({ ...state, ...val, changed: true }));
+    updateState &&
+      updateState((state) => ({ ...state, ...val, changed: true }));
   };
 
   const handleDelete = () => {
@@ -186,10 +196,10 @@ export default function ResourceOverview(props: IProps) {
   return !findNote ? (
     <Box>
       <Stack spacing={2}>
-        {isNote && mode !== Mode.view ? (
-          <NoteTitle state={state} setState={updateState} />
+        {isNote && dialogmode !== Mode.view ? (
+          <NoteTitle state={state} setState={updateTitleState} />
         ) : (
-          <ResourceTitle state={state} setState={updateState} />
+          <ResourceTitle state={state} setState={updateTitleState} />
         )}
         <ResourceDescription state={state} setState={updateState} />
         <ResourceCategory state={state} setState={updateState} />
@@ -202,7 +212,10 @@ export default function ResourceOverview(props: IProps) {
               onChange={handleLanguageChange}
               hideSpelling
               hideFont
-              disabled={mode === Mode.view}
+              disabled={
+                dialogmode === Mode.view ||
+                dialogmode === DialogModePartial.titleOnly
+              }
             />
           </>
         ) : (
@@ -214,7 +227,13 @@ export default function ResourceOverview(props: IProps) {
         {isNote && (
           <>
             <LightTooltip title={t.findNote}>
-              <IconButton onClick={handleFind} disabled={mode === Mode.view}>
+              <IconButton
+                onClick={handleFind}
+                disabled={
+                  dialogmode === Mode.view ||
+                  dialogmode === DialogModePartial.titleOnly
+                }
+              >
                 <SearchIcon color="primary" />
               </IconButton>
             </LightTooltip>
@@ -232,7 +251,7 @@ export default function ResourceOverview(props: IProps) {
         <AltButton id="resCancel" onClick={handleClose}>
           {ts.cancel}
         </AltButton>
-        {mode !== Mode.view && (
+        {dialogmode !== Mode.view && (
           <PriButton
             id="resSave"
             onClick={handleAdd}
@@ -243,7 +262,7 @@ export default function ResourceOverview(props: IProps) {
               recording.current
             }
           >
-            {mode === Mode.add ? t.add : ts.save}
+            {dialogmode === Mode.add ? t.add : ts.save}
           </PriButton>
         )}
       </ActionRow>

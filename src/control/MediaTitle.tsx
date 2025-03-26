@@ -87,7 +87,7 @@ const TitleStart = ({
               aria-label="play"
               onClick={handlePlay}
               onMouseDown={handleMouseDownSave}
-              disabled={disabled}
+              disabled={false}
               edge="start"
             >
               {playing ? (
