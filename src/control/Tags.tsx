@@ -99,6 +99,7 @@ export default function Tags({ label, tags, onChange, sx }: IProps) {
 
   return (
     <Autocomplete
+      readOnly={!onChange}
       multiple
       id="checkboxes-tags"
       options={options}

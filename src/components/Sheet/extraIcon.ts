@@ -15,4 +15,6 @@ export enum ExtraIcon {
   SectionUp,
   SectionDown,
   FirstMovement,
+  VernacularRecord,
+  Delete,
 }

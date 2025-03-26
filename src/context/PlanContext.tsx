@@ -24,7 +24,6 @@ export interface IRowData {}
 
 const initState = {
   t: {} as IMainStrings,
-  readonly: false,
   connected: false,
   projButtonStr: {} as IProjButtonsStrings,
   mediafiles: [] as MediaFile[],
@@ -35,6 +34,7 @@ const initState = {
   shared: false,
   publishingOn: true,
   hidePublishing: true,
+  canEditSheet: false,
   canPublish: false,
   sectionArr: [] as [number, string][],
   setSectionArr: (sectionArr: [number, string][]) => {},
@@ -72,8 +72,6 @@ const PlanProvider = (props: IProps) => {
   const getPlanType = usePlanType();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
   const { canEditSheet, canPublish } = useProjectPermissions();
-  const [readonly, setReadonly] = useState(!canEditSheet);
-
   const [state, setState] = useState({
     ...initState,
     projButtonStr,
@@ -91,10 +89,6 @@ const PlanProvider = (props: IProps) => {
   const setSectionArr = (newArr: [number, string][]) => {
     setProjectDefault(projDefSectionMap, newArr);
   };
-
-  useEffect(() => {
-    setReadonly(!canEditSheet);
-  }, [canEditSheet]);
 
   useEffect(() => {
     const { scripture, flat } = getPlanType(plan);
@@ -164,7 +158,7 @@ const PlanProvider = (props: IProps) => {
           sectionArr: getSectionMap() ?? [],
           setSectionArr,
           connected,
-          readonly,
+          canEditSheet,
           canPublish,
           togglePublishing,
           setCanAddPublishing,

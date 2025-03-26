@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import MediaTitle from '../../control/MediaTitle';
 import { useGlobal } from '../../context/GlobalContext';
 import { ISheet } from '../../model';
@@ -8,7 +8,8 @@ interface IProps {
   title: string;
   mediaId: string;
   ws: ISheet;
-  anyRecording: boolean;
+  readonly: boolean;
+  showpublish: boolean;
   passageId?: string;
   onRecording: (recording: boolean) => void;
   onTextChange: (value: string) => void;
@@ -19,7 +20,8 @@ export function TitleEdit({
   title,
   mediaId,
   ws,
-  anyRecording,
+  readonly,
+  showpublish,
   passageId,
   onRecording,
   onTextChange,
@@ -50,18 +52,23 @@ export function TitleEdit({
   };
 
   return (
-    <MediaTitle
-      titlekey={`title-${ws.sectionSeq}_${ws.passageSeq}`}
-      label={'\u200B'} // zero-width space
-      mediaId={titleMediafile}
-      title={titlex}
-      defaultFilename={getDefaultName(ws, 'title', memory, planId)}
-      onTextChange={handleChangeTitle}
-      onRecording={onRecording}
-      useplan={planId}
-      onMediaIdChange={handleChangeTitleMedia}
-      disabled={anyRecording}
-      passageId={passageId}
-    />
+    <>
+      {readonly && !showpublish && ((<>{titlex}</>) as ReactElement)}
+      {(!readonly || showpublish) && (
+        <MediaTitle
+          titlekey={`title-${ws.sectionSeq}_${ws.passageSeq}`}
+          label={'\u200B'} // zero-width space
+          mediaId={titleMediafile}
+          title={titlex}
+          defaultFilename={getDefaultName(ws, 'title', memory, planId)}
+          onTextChange={handleChangeTitle}
+          onRecording={onRecording}
+          useplan={planId}
+          onMediaIdChange={handleChangeTitleMedia}
+          disabled={readonly}
+          passageId={passageId}
+        />
+      )}
+    </>
   );
 }

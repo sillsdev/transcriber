@@ -11,6 +11,7 @@ import { addPt } from './addPt';
 import { useProjectPermissions } from './useProjectPermissions';
 
 export const useCanPublish = () => {
+  const [userCanPublish, setUserCanPublish] = useState<boolean | undefined>();
   const [canAddPublishing, setCanAddPublishing] = useState<
     boolean | undefined
   >(); //allowed to turn it on (paratext)
@@ -39,8 +40,9 @@ export const useCanPublish = () => {
   useEffect(() => {
     if (user && users) {
       const u = users.find((u) => u.id === user);
+      setUserCanPublish(u?.attributes?.canPublish ?? false);
       setCanAddPublishing(
-        (u?.attributes?.canPublish ?? false) && (canEditSheet || canPublish)
+        (u?.attributes?.canPublish as boolean) && (canEditSheet || canPublish)
       );
     }
   }, [user, users, canEditSheet, canPublish]);
@@ -48,7 +50,7 @@ export const useCanPublish = () => {
   useEffect(() => {
     if (!isOffline) {
       if (
-        canAddPublishing === false && //if it's still undefined...wait for it to be set from user
+        userCanPublish === false && //if it's still undefined...wait for it to be set from user...requery if it's false
         !askingRef.current &&
         accessToken &&
         !paratext_canPublishStatus
@@ -69,7 +71,10 @@ export const useCanPublish = () => {
             (paratext_canPublish as boolean) && (canEditSheet || canPublish)
           );
           const u = users.find((u) => u.id === user);
-          if (u !== undefined) {
+          if (
+            u !== undefined &&
+            u.attributes.canPublish !== (paratext_canPublish as boolean)
+          ) {
             u.attributes.canPublish = paratext_canPublish as boolean;
             memory.update((t) => UpdateRecord(t, u as UserD, user));
           }

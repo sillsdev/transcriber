@@ -260,7 +260,7 @@ export function PlanSheet(props: IProps) {
     hidePublishing,
     publishingOn,
     connected,
-    readonly,
+    canEditSheet,
     sectionArr,
     shared,
     canPublish,
@@ -316,8 +316,10 @@ export function PlanSheet(props: IProps) {
   const organizedBy = getOrganizedBy(true);
   const organizedByPlural = getOrganizedBy(false);
   const { isPublished } = usePublishDestination();
+
   const showIcon = useShowIcon({
-    readonly,
+    canEditSheet,
+    canPublish,
     rowInfo,
     inlinePassages,
     hidePublishing,
@@ -433,8 +435,8 @@ export function PlanSheet(props: IProps) {
     [key: number]: () => void;
   }
   const actionMap: IActionMap = {
-    [ExtraIcon.Publish]: onPublish,
-    [ExtraIcon.Publishing]: updatePublishing,
+    [ExtraIcon.Publish]: onPublish, //section publish
+    [ExtraIcon.Publishing]: updatePublishing, //menuitem in add section
     [ExtraIcon.Note]: onNote,
     [ExtraIcon.PassageBelow]: onPassageBelow,
     [ExtraIcon.MovementAbove]: onMovementAbove,
@@ -564,6 +566,10 @@ export function PlanSheet(props: IProps) {
   };
 
   const PrefixedCols = 4;
+  const readonly = useMemo(
+    () => !canEditSheet && !canPublish,
+    [canEditSheet, canPublish]
+  );
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
@@ -981,7 +987,8 @@ export function PlanSheet(props: IProps) {
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
-                  readonly={anyRecording || readonly}
+                  canEditSheet={canEditSheet}
+                  readonly={anyRecording}
                   isSection={dataRowisSection}
                   isPassage={isPassageType(currentRow - 1)}
                   mouseposition={position}
@@ -996,25 +1003,27 @@ export function PlanSheet(props: IProps) {
                   )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
-                <ProjButtons
-                  {...props}
-                  noCopy={pasting || filtered}
-                  noPaste={pasting || anyRecording || readonly || filtered}
-                  noReseq={
-                    pasting ||
-                    data.length < 2 ||
-                    anyRecording ||
-                    readonly ||
-                    filtered ||
-                    !hidePublishing
-                  }
-                  noImExport={anyRecording || pasting}
-                  noIntegrate={anyRecording || pasting || data.length < 2}
-                  onCopy={handleSheetCopy}
-                  onPaste={handleTablePaste}
-                  onReseq={handleResequence}
-                  canPublish={canPublish}
-                />
+                {canEditSheet && (
+                  <ProjButtons
+                    {...props}
+                    noCopy={pasting || filtered}
+                    noPaste={pasting || anyRecording || readonly || filtered}
+                    noReseq={
+                      pasting ||
+                      data.length < 2 ||
+                      anyRecording ||
+                      !canEditSheet ||
+                      filtered ||
+                      !hidePublishing
+                    }
+                    noImExport={anyRecording || pasting}
+                    noIntegrate={anyRecording || pasting || data.length < 2}
+                    onCopy={handleSheetCopy}
+                    onPaste={handleTablePaste}
+                    onReseq={handleResequence}
+                    canPublish={canPublish}
+                  />
+                )}
               </>
             )}
 
