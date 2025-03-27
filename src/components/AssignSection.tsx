@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
@@ -32,6 +32,11 @@ import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import Confirm from './AlertDialog';
 
+enum ConfirmType {
+  delete,
+  modify,
+}
+
 interface IProps {
   sections: Array<Section>;
   scheme?: string; // id of scheme to edit
@@ -58,11 +63,10 @@ function AssignSection(props: IProps) {
   const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
   const [schemeName, setSchemeName] = useState('');
-  const assignMap = useRef(new Map<string, string>());
-  const [assignArr, setAssignArr] = useState<string[]>([]);
+  const [assignArr, setAssignArr] = useState<[string, string][]>([]);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = useState('');
-  const [confirm, setConfirm] = useState<() => Promise<void>>();
+  const [confirm, setConfirm] = useState<ConfirmType>();
   const [confirmMsg, setConfirmMsg] = useState('');
   const orgSteps = useMemo(() => {
     return allOrgSteps?.filter(
@@ -143,7 +147,7 @@ function AssignSection(props: IProps) {
           )
         );
       }
-      for (let [step, value] of Array.from(assignMap.current.entries())) {
+      for (let [step, value] of assignArr) {
         if (!step || !value) continue;
         const [actorType, actorId] = value.split(':');
         const relateType = actorType === 'u' ? 'user' : 'group';
@@ -217,7 +221,7 @@ function AssignSection(props: IProps) {
       () => false,
       500
     );
-    for (let [step, value] of Array.from(assignMap.current.entries())) {
+    for (let [step, value] of assignArr) {
       let t = new RecordTransformBuilder();
       let ops: RecordOperation[] = [];
       const [actorType, actorId] = value.split(':');
@@ -289,7 +293,7 @@ function AssignSection(props: IProps) {
           .replace('{0}', nImp.toString())
           .replace('{1}', getOrganizedBy(nImp === 1))
       );
-      setConfirm(confirmDelete);
+      setConfirm(ConfirmType.delete);
       return;
     }
     await confirmDelete();
@@ -316,7 +320,7 @@ function AssignSection(props: IProps) {
           .replace('{2}', nImp.toString())
           .replace('{3}', getOrganizedBy(nImp === 1))
       );
-      setConfirm(confirmClose);
+      setConfirm(ConfirmType.modify);
       return;
     }
     await confirmClose();
@@ -329,28 +333,29 @@ function AssignSection(props: IProps) {
         setSchemeName(schemeRec.attributes?.name);
       }
       if (steps?.length > 0) {
+        const assignMap = new Map<string, string>();
         for (let s of steps.filter(
           (s) => related(s, 'organizationscheme') === scheme
         )) {
           if (related(s, 'group')) {
-            assignMap.current.set(
+            assignMap.set(
               related(s, 'orgWorkflowStep'),
               'g:' + related(s, 'group')
             );
           } else if (related(s, 'user')) {
-            assignMap.current.set(
+            assignMap.set(
               related(s, 'orgWorkflowStep'),
               'u:' + related(s, 'user')
             );
           }
         }
-        setAssignArr(Array.from(assignMap.current.values()));
+        setAssignArr(Array.from(assignMap.entries()));
       }
     } else {
       setSchemeName('');
       setAssignArr([]);
-      assignMap.current.clear();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [steps, schemes, scheme]);
 
   useEffect(() => {
@@ -367,76 +372,83 @@ function AssignSection(props: IProps) {
 
   const handleAssign = (step: string, value: string) => {
     console.log('handleAssign', step, value);
-    assignMap.current.set(step, value);
+    const assignMap = new Map<string, string>(assignArr);
+    assignMap.set(step, value);
+    setAssignArr(Array.from(assignMap.entries()));
   };
 
   return (
-    <Dialog
-      open={open}
-      fullWidth={true}
-      maxWidth="sm"
-      onClose={handleClose}
-      aria-labelledby="assignDlg"
-      disableEnforceFocus
-    >
-      <DialogTitle id="assignDlg">
-        {t.title.replace('{0}', organizedBy)}
-      </DialogTitle>
-      <DialogContent>
-        <TextField
-          id="scheme-name"
-          label={t.schemeName}
-          value={schemeName}
-          helperText={
-            isNameDuplicate && schemeName.trim() !== '' ? t.duplicateName : ''
-          }
-          onChange={(e) => setSchemeName(e.target.value)}
-          sx={{ m: 1, width: '40ch' }}
-        />
-        {orgSteps
-          .filter((s) => (s?.attributes?.sequencenum ?? -1) >= 0)
-          .sort(
-            (a, b) =>
-              (a?.attributes?.sequencenum ?? 0) -
-              (b?.attributes?.sequencenum ?? 0)
-          )
-          .map((s) => (
-            <GroupOrUserAssignment
-              listAdmins={true}
-              key={s.id}
-              label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
-              initAssignment={
-                assignArr.length ? assignMap.current.get(s.id) : undefined
-              }
-              onChange={(value) => handleAssign(s.id, value)}
-            />
-          ))}
-      </DialogContent>
-      <DialogActions>
-        {scheme && (
-          <AltButton color="warning" onClick={handleDelete}>
-            {t.delete}
-          </AltButton>
-        )}
-        <GrowingSpacer />
-        <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
-        <PriButton
-          id="assignClose"
-          onClick={handleClose}
-          disabled={!schemeName.trim() || isNameDuplicate}
-        >
-          {ts.save}
-        </PriButton>
-      </DialogActions>
-      {confirm && (
+    <>
+      <Dialog
+        open={open}
+        fullWidth={true}
+        maxWidth="sm"
+        onClose={handleClose}
+        aria-labelledby="assignDlg"
+        disableEnforceFocus
+      >
+        <DialogTitle id="assignDlg">
+          {t.title.replace('{0}', organizedBy)}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            id="scheme-name"
+            label={t.schemeName}
+            value={schemeName}
+            helperText={
+              isNameDuplicate && schemeName.trim() !== '' ? t.duplicateName : ''
+            }
+            onChange={(e) => setSchemeName(e.target.value)}
+            sx={{ m: 1, width: '40ch' }}
+          />
+          {orgSteps
+            .filter((s) => (s?.attributes?.sequencenum ?? -1) >= 0)
+            .sort(
+              (a, b) =>
+                (a?.attributes?.sequencenum ?? 0) -
+                (b?.attributes?.sequencenum ?? 0)
+            )
+            .map((s) => (
+              <GroupOrUserAssignment
+                listAdmins={true}
+                key={s.id}
+                label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
+                initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
+                onChange={(value) => handleAssign(s.id, value)}
+              />
+            ))}
+        </DialogContent>
+        <DialogActions>
+          {scheme && (
+            <AltButton color="warning" onClick={handleDelete}>
+              {t.delete}
+            </AltButton>
+          )}
+          <GrowingSpacer />
+          <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
+          <PriButton
+            id="assignClose"
+            onClick={handleClose}
+            disabled={!schemeName.trim() || isNameDuplicate}
+          >
+            {ts.save}
+          </PriButton>
+        </DialogActions>
+      </Dialog>
+      {confirm !== undefined && (
         <Confirm
-          title={confirm === confirmClose ? t.confirmModify : t.confirmDelete}
+          title={
+            confirm === ConfirmType.modify ? t.confirmModify : t.confirmDelete
+          }
           text={confirmMsg}
           noResponse={() => setConfirm(undefined)}
-          yesResponse={() => confirm()}
+          yesResponse={() => {
+            if (confirm === ConfirmType.modify) confirmClose();
+            else confirmDelete();
+          }}
         />
       )}
-    </Dialog>
+    </>
   );
 }
 
