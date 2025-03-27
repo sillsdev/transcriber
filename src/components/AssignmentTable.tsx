@@ -19,7 +19,7 @@ import {
   MediaFile,
 } from '../model';
 import { RecordIdentity } from '@orbit/records';
-import { Menu, MenuItem, styled } from '@mui/material';
+import { Button, Menu, MenuItem, styled } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { AltButton, iconMargin } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -67,7 +67,7 @@ interface IRow {
   id: string;
   name: React.ReactNode;
   state: string;
-  scheme: string;
+  scheme: React.ReactNode;
   passages: string;
   parentId: string;
   sort: string;
@@ -149,10 +149,19 @@ export function AssignmentTable(props: IProps) {
     return schemes?.filter((s) => related(s, 'organization') === org);
   }, [schemes, org]);
 
+  const handleView = (schemeId: string) => () => {
+    setAssignMenu(undefined);
+    setAssignSectionVisible(schemeId);
+  };
+
   const getSchemeName = (section: Section) => {
     const schemeId = related(section, 'organizationScheme');
     const scheme = schemes.find((s) => s.id === schemeId);
-    return scheme?.attributes?.name ?? '';
+    return (
+      <Button onClick={handleView(schemeId)}>
+        {scheme?.attributes?.name ?? ''}
+      </Button>
+    );
   };
 
   const getAssignments = () => {
@@ -364,7 +373,7 @@ export function AssignmentTable(props: IProps) {
             showfilters={filter}
             showgroups={filter}
             checks={check}
-            select={handleCheck}
+            select={userIsAdmin ? handleCheck : undefined}
             canSelectRow={(row) => row?.parentId === ''}
           />
         </PaddedBox>
@@ -394,6 +403,7 @@ export function AssignmentTable(props: IProps) {
         visible={assignSectionVisible !== undefined}
         closeMethod={() => setAssignSectionVisible(undefined)}
         refresh={() => setRefresh(refresh + 1)}
+        readOnly={!userIsAdmin}
       />
       {confirmAction !== '' ? (
         <Confirm

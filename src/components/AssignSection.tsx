@@ -43,10 +43,11 @@ interface IProps {
   visible: boolean;
   closeMethod?: () => void;
   refresh?: () => void;
+  readOnly?: boolean;
 }
 
 function AssignSection(props: IProps) {
-  const { sections, scheme, visible, closeMethod, refresh } = props;
+  const { sections, scheme, visible, closeMethod, readOnly, refresh } = props;
   const t: IAssignSectionStrings = useSelector(
     assignSectionSelector,
     shallowEqual
@@ -399,6 +400,7 @@ function AssignSection(props: IProps) {
               isNameDuplicate && schemeName.trim() !== '' ? t.duplicateName : ''
             }
             onChange={(e) => setSchemeName(e.target.value)}
+            disabled={readOnly}
             sx={{ m: 1, width: '40ch' }}
           />
           {orgSteps
@@ -415,24 +417,29 @@ function AssignSection(props: IProps) {
                 label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
                 initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
                 onChange={(value) => handleAssign(s.id, value)}
+                disabled={readOnly}
               />
             ))}
         </DialogContent>
         <DialogActions>
-          {scheme && (
+          {scheme && !readOnly && (
             <AltButton color="warning" onClick={handleDelete}>
               {t.delete}
             </AltButton>
           )}
           <GrowingSpacer />
-          <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
-          <PriButton
-            id="assignClose"
-            onClick={handleClose}
-            disabled={!schemeName.trim() || isNameDuplicate}
-          >
-            {ts.save}
-          </PriButton>
+          <AltButton onClick={handleCancel}>
+            {readOnly ? ts.close : ts.cancel}
+          </AltButton>
+          {!readOnly && (
+            <PriButton
+              id="assignClose"
+              onClick={handleClose}
+              disabled={!schemeName.trim() || isNameDuplicate}
+            >
+              {ts.save}
+            </PriButton>
+          )}
         </DialogActions>
       </Dialog>
       {confirm !== undefined && (
