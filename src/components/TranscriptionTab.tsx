@@ -598,6 +598,7 @@ export function TranscriptionTab(props: IProps) {
     column: any;
     tableRow: any;
     tableColumn: any;
+    canPublish: boolean;
   }
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
@@ -615,7 +616,13 @@ export function TranscriptionTab(props: IProps) {
     </Table.Cell>
   );
 
-  const ActionCell = ({ value, style, mediaId, ...restProps }: ICell) => (
+  const ActionCell = ({
+    value,
+    style,
+    mediaId,
+    canPublish,
+    ...restProps
+  }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <IconButton
@@ -629,9 +636,10 @@ export function TranscriptionTab(props: IProps) {
         >
           {t.elan}
           <br />
+
           {t.export}
         </IconButton>
-        <AudioDownload mediaId={mediaId} title={t.download} />
+        {canPublish && <AudioDownload mediaId={mediaId} title={t.download} />}
       </Box>
     </Table.Cell>
   );
@@ -663,7 +671,13 @@ export function TranscriptionTab(props: IProps) {
         ) as MediaFileD[];
         const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
-          return <ActionCell {...props} mediaId={latest[0].id as string} />;
+          return (
+            <ActionCell
+              {...props}
+              mediaId={latest[0].id as string}
+              canPublish={canPublish}
+            />
+          );
         else return <Table.Cell {...props} value=""></Table.Cell>;
       }
     }
