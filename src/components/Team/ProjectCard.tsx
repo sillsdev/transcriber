@@ -456,8 +456,16 @@ export const ProjectCard = (props: IProps) => {
                     label={localizeProjectTag(t, vProjectStrings)}
                   />
                 ))}
-              {canEditSheet && <EditNoteIcon />}
-              {canPublish && <PublishedWithChangesIcon />}
+              {canEditSheet && !isAdmin && (
+                <EditNoteIcon
+                  sx={{ display: 'flex', color: 'primary.contrastText' }}
+                />
+              )}
+              {canPublish && !isAdmin && (
+                <PublishedWithChangesIcon
+                  sx={{ display: 'flex', color: 'primary.contrastText' }}
+                />
+              )}
             </>
           </CardActions>
         )}
