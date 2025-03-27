@@ -5,11 +5,13 @@ import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { IPassageDetailStepCompleteStrings } from '../../model';
+import { IPassageDetailStepCompleteStrings, OrganizationD } from '../../model';
 import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { useStepPermissions } from '../../utils/useStepPermission';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 export const PassageDetailStepComplete = () => {
   const {
@@ -23,6 +25,8 @@ export const PassageDetailStepComplete = () => {
     section,
     passage,
   } = usePassageDetailContext();
+  const { canDoSectionStep } = useStepPermissions();
+  const organizations = useOrbitData<OrganizationD[]>('organization');
   const { pathname } = useLocation();
   const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
@@ -34,6 +38,12 @@ export const PassageDetailStepComplete = () => {
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   }, setCurrentStep);
+
+  const hasPermission = useMemo(
+    () => canDoSectionStep(currentstep, section),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentstep, section, organizations]
+  );
 
   const complete = useMemo(
     () => stepComplete(currentstep),
@@ -74,7 +84,7 @@ export const PassageDetailStepComplete = () => {
         sx={{ color: 'primary.light' }}
         title={t.title}
         onClick={handleToggleComplete}
-        disabled={view !== ''}
+        disabled={!hasPermission || view !== ''}
       >
         {complete ? (
           <CompleteIcon id="step-yes" />
@@ -87,7 +97,7 @@ export const PassageDetailStepComplete = () => {
         sx={{ color: 'primary.light' }}
         title={t.setNext}
         onClick={handleSetCompleteTo}
-        disabled={view !== ''}
+        disabled={!hasPermission || view !== ''}
       >
         <ChecklistIcon id="step-next" />
       </IconButton>
