@@ -10,6 +10,7 @@ import {
   ArtifactType,
   Resource,
   SheetLevel,
+  OrganizationD,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PlayInPlayer } from '../../../context/PassageDetailContext';
@@ -31,7 +32,6 @@ import {
   useSecResUserRead,
   useSecResUserDelete,
   useOrganizedBy,
-  useRole,
   findRecord,
   useArtifactCategory,
   IArtifactCategory,
@@ -80,6 +80,7 @@ import { LaunchLink } from '../../../control/LaunchLink';
 import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
 import { mediaContentType } from '../../../utils/contentType';
+import { useStepPermissions } from '../../../utils/useStepPermission';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -175,15 +176,16 @@ export function PassageDetailArtifacts() {
   const [performedBy, setPerformedBy] = useState('');
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
-  const { userIsAdmin } = useRole();
   const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const { canDoSectionStep } = useStepPermissions();
   const [findTabsClose, setFindTabsClose] = useState(false);
   const getGlobal = useGetGlobal();
+  const organizations = useOrbitData<OrganizationD[]>('organization');
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -456,23 +458,26 @@ export function PassageDetailArtifacts() {
     [passage]
   );
 
-  const getSectionType = (passage: Passage) => {
-    const sectionId = related(passage, 'section');
-    const sectionRec = findRecord(memory, 'section', sectionId) as Section;
-    const level = sectionRec?.attributes?.level;
+  const getSectionType = () => {
+    const level = section.attributes?.level;
     if (level === SheetLevel.Book) return 'BOOK';
     if (level === SheetLevel.Movement) return 'MOVE';
   };
+  const hasPermission = useMemo(
+    () => canDoSectionStep(currentstep, section),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentstep, section, organizations]
+  );
 
   const sectDesc = useMemo(
     () =>
-      getSectionType(passage) === PassageTypeEnum.BOOK
+      getSectionType() === PassageTypeEnum.BOOK
         ? t.bookResource
-        : getSectionType(passage) === PassageTypeEnum.MOVEMENT
+        : getSectionType() === PassageTypeEnum.MOVEMENT
         ? t.movementResource
         : getOrganizedBy(true),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passage]
+    [section]
   );
 
   const listFilter = (r: IRow) =>
@@ -726,7 +731,6 @@ export function PassageDetailArtifacts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plan]
   );
-
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
@@ -738,7 +742,7 @@ export function PassageDetailArtifacts() {
               </AltButton>
             </Grid>
           )}
-          {userIsAdmin && (!offline || offlineOnly) && (
+          {hasPermission && (!offline || offlineOnly) && (
             <>
               <Grid item>
                 <AddResource action={handleAction} />
@@ -793,7 +797,9 @@ export function PassageDetailArtifacts() {
             onDone={handleDone}
             onDelete={handleDelete}
             onEdit={
-              userIsAdmin && (!offline || offlineOnly) ? handleEdit : undefined
+              hasPermission && (!offline || offlineOnly)
+                ? handleEdit
+                : undefined
             }
           />
         ))}
@@ -840,6 +846,7 @@ export function PassageDetailArtifacts() {
         <FindTabs
           onClose={() => handleFindVisible(false)}
           closeRequested={findTabsClose}
+          canAdd={hasPermission}
         />
       </BigDialog>
       <BigDialog
