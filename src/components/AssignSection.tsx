@@ -105,7 +105,7 @@ function AssignSection(props: IProps) {
         ...UpdateRelatedRecord(
           t,
           stepRec,
-          'orgworkflowstep',
+          'orgWorkflowStep',
           'orgworkflowstep',
           step,
           user
