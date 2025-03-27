@@ -85,6 +85,7 @@ const initialState = {
 	}),
 	"assignmentTable": new LocalizedStrings({
 		"en": {
+			"addScheme": "Add Permission Scheme",
 			"assignSec": "Assign {0}",
 			"delete": "Delete",
 			"filter": "Filter",
@@ -99,8 +100,10 @@ const initialState = {
 	}),
 	"assignSection": new LocalizedStrings({
 		"en": {
+			"assignment": "{0} Assignment",
 			"close": "Close",
 			"role": "Role",
+			"schemeName": "Permission Scheme Name",
 			"title": "Assign {0}",
 			"users": "Members",
 		}
@@ -1352,6 +1355,7 @@ const initialState = {
 			"role": "Role",
 			"save": "Save",
 			"saving": "Saving...",
+			"scheme": "Permission Scheme",
 			"select": "Select",
 			"teamrole": "Team Role",
 			"transcriber": "Transcriber",

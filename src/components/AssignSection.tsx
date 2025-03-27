@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
@@ -6,118 +6,30 @@ import {
   SectionD,
   IAssignSectionStrings,
   ISharedStrings,
-  OrganizationMembership,
-  UserD,
+  OrgWorkflowStepD,
 } from '../model';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Radio,
-  ListItemAvatar,
-  IconButton,
+  TextField,
 } from '@mui/material';
+import { related, useOrganizedBy } from '../crud';
 import {
-  Grid,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Box,
-  SxProps,
-} from '@mui/material';
-import UserAvatar from './UserAvatar';
-import {
-  related,
-  sectionTranscriberName,
-  sectionEditorName,
-  sectionNumber,
-  useOrganizedBy,
-} from '../crud';
-import { TranscriberIcon, EditorIcon } from './RoleIcons';
-import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
+  AddRecord,
+  UpdateLastModifiedBy,
+  UpdateRelatedRecord,
+} from '../model/baseModel';
 import { PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
-import { PlanContext } from '../context/PlanContext';
-
-const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
-const gridProps = { m: 'auto', p: 1 } as SxProps;
-
-interface SectionListProps {
-  sections: Array<Section>;
-  users: UserD[];
-}
-
-function SectionList({ sections, users }: SectionListProps) {
-  const { sectionArr } = useContext(PlanContext).state;
-  const sectionMap = new Map<number, string>(sectionArr);
-  return (
-    <>
-      {sections.map((p) => {
-        return (
-          <TableRow key={p.id}>
-            <TableCell component="th" scope="row">
-              {sectionNumber(p, sectionMap) + ' ' + p.attributes.name}
-            </TableCell>
-            <TableCell align="right">
-              {sectionTranscriberName(p, users)}
-            </TableCell>
-            <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
-          </TableRow>
-        );
-      })}
-    </>
-  );
-}
-
-interface UserListProps {
-  id?: string;
-  users: UserD[];
-  memberIds: string[];
-  selected: string;
-  select: (id: string) => () => void;
-}
-
-function UserList({ id, users, memberIds, selected, select }: UserListProps) {
-  return (
-    <>
-      {users
-        .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
-        .map((m) => {
-          const labelId = 'user-' + m.attributes.name;
-          return (
-            <ListItem
-              id={`${id}-${m.id}`}
-              key={`${id}-${m.id}`}
-              role="listitem"
-              onClick={select(m.id as string)}
-            >
-              <ListItemIcon>
-                <Radio
-                  checked={selected === m.id}
-                  tabIndex={-1}
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemAvatar>
-                <UserAvatar userRec={m} />
-              </ListItemAvatar>
-              <ListItemText id={labelId} primary={m.attributes.name} />
-            </ListItem>
-          );
-        })}
-    </>
-  );
-}
+import GroupOrUserAssignment from '../control/GroupOrUserAssignment';
+import { OrganizationSchemeD } from '../model/organizationScheme';
+import { waitForIt } from '../utils/waitForIt';
+import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 
 interface IProps {
   sections: Array<Section>;
@@ -125,10 +37,7 @@ interface IProps {
   closeMethod?: () => void;
   refresh?: () => void;
 }
-export enum TranscriberActors {
-  Transcriber = 'Transcriber',
-  Editor = 'Editor',
-}
+
 function AssignSection(props: IProps) {
   const { sections, visible, closeMethod, refresh } = props;
   const t: IAssignSectionStrings = useSelector(
@@ -136,39 +45,97 @@ function AssignSection(props: IProps) {
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const users = useOrbitData<UserD[]>('user');
-  const orgMemberships = useOrbitData<OrganizationMembership[]>(
-    'organizationmembership'
-  );
+  const allOrgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
-  const [memberIds, setMemberIds] = useState<string[]>([]);
-  const [selectedTranscriber, setSelectedTranscriber] = useState('');
-  const [selectedReviewer, setSelectedReviewer] = useState('');
+  const [schemeName, setSchemeName] = useState('');
+  const assignMap = useRef(new Map<string, string>());
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = useState('');
+  const orgSteps = useMemo(() => {
+    return allOrgSteps?.filter(
+      (s) => related(s, 'organization') === organization
+    );
+  }, [allOrgSteps, organization]);
 
-  const handleClose = () => {
-    if (closeMethod) {
-      closeMethod();
+  const handleAdd = async () => {
+    let schemeRec = {
+      type: 'organizationscheme',
+      attributes: {
+        name: schemeName,
+      },
+    } as OrganizationSchemeD;
+    await memory.update((t) => [
+      ...AddRecord(t, schemeRec, user, memory),
+      ...UpdateRelatedRecord(
+        t,
+        schemeRec,
+        'organization',
+        'organization',
+        organization,
+        user
+      ),
+    ]);
+    await waitForIt(
+      'add scheme',
+      () => Boolean(schemeRec.id),
+      () => false,
+      500
+    );
+    for (let [step, value] of Array.from(assignMap.current.entries())) {
+      let stepRec = {
+        type: 'organizationschemestep',
+        attributes: {},
+      } as OrganizationSchemeStepD;
+      let t = new RecordTransformBuilder();
+      let ops: RecordOperation[] = [...AddRecord(t, stepRec, user, memory)];
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          stepRec,
+          'organizationscheme',
+          'organizationscheme',
+          schemeRec.id,
+          user
+        )
+      );
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          stepRec,
+          'orgworkflowstep',
+          'orgworkflowstep',
+          step,
+          user
+        )
+      );
+      const [actorType, actorId] = value.split(':');
+      const relateType = actorType === 'u' ? 'user' : 'group';
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          stepRec,
+          relateType,
+          relateType,
+          actorId,
+          user
+        )
+      );
+      await memory.update(ops);
     }
-    setOpen(false);
+    return schemeRec.id as string;
   };
 
-  const assign = async (
-    section: Section,
-    userId: string,
-    role: TranscriberActors
-  ) => {
+  const assign = async (section: Section, schemeId: string) => {
     await memory.update((t) => [
       ...UpdateRelatedRecord(
         t,
         section as SectionD,
-        role.toLowerCase(),
-        'user',
-        userId,
+        'organizationScheme',
+        'organizationscheme',
+        schemeId,
         user
       ),
       ...UpdateLastModifiedBy(
@@ -179,42 +146,21 @@ function AssignSection(props: IProps) {
     ]);
   };
 
-  const handleSelectTranscriber = (id: string) => async () => {
-    const newVal = id !== selectedTranscriber ? id : '';
-    setSelectedTranscriber(newVal);
+  const doAssigne = async (schemeId: string) => {
     for (let s of sections) {
-      await assign(s, newVal, TranscriberActors.Transcriber);
-    }
-    refresh && refresh();
-  };
-  const handleSelectReviewer = (id: string) => async () => {
-    const newVal = id !== selectedReviewer ? id : '';
-    setSelectedReviewer(newVal);
-    for (let s of sections) {
-      await assign(s, newVal, TranscriberActors.Editor);
-    }
-    refresh && refresh();
-  };
-
-  const doSetSelected = (section: Section) => {
-    const newTranscriber = related(section, 'transcriber');
-    if (selectedTranscriber !== newTranscriber) {
-      setSelectedTranscriber(related(section, 'transcriber'));
-    }
-    const newReviewer = related(section, 'editor');
-    if (selectedReviewer !== newReviewer) {
-      setSelectedReviewer(related(section, 'editor'));
+      await assign(s, schemeId);
     }
   };
 
-  useEffect(() => {
-    const newIds: string[] = orgMemberships
-      .filter((gm) => related(gm, 'organization') === organization)
-      .map((gm) => related(gm, 'user'))
-      .sort();
-    setMemberIds(newIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgMemberships, organization]);
+  const handleClose = async () => {
+    const schemeId = await handleAdd();
+    await doAssigne(schemeId);
+    refresh?.();
+    if (closeMethod) {
+      closeMethod();
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
     const newOrganizedBy = getOrganizedBy(false);
@@ -225,111 +171,60 @@ function AssignSection(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (open !== visible) {
-      setOpen(visible);
-    }
-    doSetSelected(sections[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, sections]);
+    if (visible) setOpen(true);
+  }, [visible]);
+
+  const handleAssign = (step: string, value: string) => {
+    console.log('handleAssign', step, value);
+    assignMap.current.set(step, value);
+  };
 
   return (
-    <div>
-      <Dialog
-        open={open}
-        fullWidth={true}
-        maxWidth="md"
-        onClose={handleClose}
-        aria-labelledby="assignDlg"
-        disableEnforceFocus
-      >
-        <DialogTitle id="assignDlg">
-          {t.title.replace('{0}', organizedBy)}
-        </DialogTitle>
-        <DialogContent>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="flex-start"
-            sx={gridProps}
-          >
-            <Paper>
-              <Table sx={{ minWidth: 650 }} size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{organizedBy}</TableCell>
-                    <TableCell align="right">
-                      <Box sx={headProps}>
-                        <TranscriberIcon />
-                        {ts.transcriber}
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={headProps}>
-                        <EditorIcon />
-                        {ts.editor}
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <SectionList sections={sections} users={users} />
-                </TableBody>
-              </Table>
-            </Paper>
-          </Grid>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="flex-start"
-            sx={gridProps}
-          >
-            <Grid item>
-              <Paper>
-                <List dense component="div">
-                  <ListItem key="head">
-                    <TranscriberIcon />
-                    {ts.transcriber}
-                  </ListItem>
-                  <UserList
-                    id={'assignTranscriber'}
-                    users={users}
-                    memberIds={memberIds}
-                    selected={selectedTranscriber}
-                    select={handleSelectTranscriber}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <List dense component="div">
-                  <ListItem key="head">
-                    <IconButton>
-                      <EditorIcon />
-                    </IconButton>
-                    {ts.editor}
-                  </ListItem>
-                  <UserList
-                    id={'assignEditor'}
-                    users={users}
-                    memberIds={memberIds}
-                    selected={selectedReviewer}
-                    select={handleSelectReviewer}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <PriButton id="assignClose" onClick={handleClose}>
-            {t.close}
-          </PriButton>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog
+      open={open}
+      fullWidth={true}
+      maxWidth="sm"
+      onClose={handleClose}
+      aria-labelledby="assignDlg"
+      disableEnforceFocus
+    >
+      <DialogTitle id="assignDlg">
+        {t.title.replace('{0}', organizedBy)}
+      </DialogTitle>
+      <DialogContent>
+        <TextField
+          id="scheme-name"
+          label={t.schemeName}
+          value={schemeName}
+          onChange={(e) => setSchemeName(e.target.value)}
+          sx={{ m: 1, width: '40ch' }}
+        />
+        {orgSteps
+          .filter((s) => (s?.attributes?.sequencenum ?? -1) >= 0)
+          .sort(
+            (a, b) =>
+              (a?.attributes?.sequencenum ?? 0) -
+              (b?.attributes?.sequencenum ?? 0)
+          )
+          .map((s) => (
+            <GroupOrUserAssignment
+              listAdmins={true}
+              key={s.id}
+              label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
+              onChange={(value) => handleAssign(s.id, value)}
+            />
+          ))}
+      </DialogContent>
+      <DialogActions>
+        <PriButton
+          id="assignClose"
+          onClick={handleClose}
+          disabled={!schemeName.trim()}
+        >
+          {ts.save}
+        </PriButton>
+      </DialogActions>
+    </Dialog>
   );
 }
 

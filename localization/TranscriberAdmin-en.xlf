@@ -346,6 +346,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.addScheme">
+         <segment>
+            <source>Add Permission Scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign {0}</source>
@@ -406,6 +412,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.assignment">
+         <segment>
+            <source>{0} Assignment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.close">
          <segment>
             <source>Close</source>
@@ -415,6 +427,12 @@
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.schemeName">
+         <segment>
+            <source>Permission Scheme Name</source>
             <target/>
          </segment>
       </unit>
@@ -6505,6 +6523,12 @@
       <unit id="shared.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.scheme">
+         <segment>
+            <source>Permission Scheme</source>
             <target/>
          </segment>
       </unit>

@@ -401,6 +401,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignmentTable.addScheme">
+            <source>Add Permission Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
             <source>Assign {0}</source>
             <target/>
@@ -471,6 +478,13 @@
                <context context-type="sourcefile">AssignmentTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.assignment">
+            <source>{0} Assignment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.close">
             <source>Close</source>
             <target/>
@@ -480,6 +494,13 @@
          </trans-unit>
          <trans-unit id="assignSection.role">
             <source>Role</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.schemeName">
+            <source>Permission Scheme Name</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>
@@ -7589,6 +7610,13 @@
          </trans-unit>
          <trans-unit id="shared.saving">
             <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">drawer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.scheme">
+            <source>Permission Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
