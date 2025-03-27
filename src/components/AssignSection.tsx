@@ -21,7 +21,7 @@ import {
   UpdateLastModifiedBy,
   UpdateRelatedRecord,
 } from '../model/baseModel';
-import { PriButton } from '../control';
+import { AltButton, GrowingSpacer, PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
@@ -30,48 +30,181 @@ import { OrganizationSchemeD } from '../model/organizationScheme';
 import { waitForIt } from '../utils/waitForIt';
 import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import Confirm from './AlertDialog';
 
 interface IProps {
   sections: Array<Section>;
+  scheme?: string; // id of scheme to edit
   visible: boolean;
   closeMethod?: () => void;
   refresh?: () => void;
 }
 
 function AssignSection(props: IProps) {
-  const { sections, visible, closeMethod, refresh } = props;
+  const { sections, scheme, visible, closeMethod, refresh } = props;
   const t: IAssignSectionStrings = useSelector(
     assignSectionSelector,
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const allOrgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
+  const schemes = useOrbitData<OrganizationSchemeD[]>('organizationscheme');
+  const steps = useOrbitData<OrganizationSchemeStepD[]>(
+    'organizationschemestep'
+  );
+  const allSections = useOrbitData<Section[]>('section');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
   const [schemeName, setSchemeName] = useState('');
   const assignMap = useRef(new Map<string, string>());
+  const [assignArr, setAssignArr] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = useState('');
+  const [confirm, setConfirm] = useState<() => Promise<void>>();
+  const [confirmMsg, setConfirmMsg] = useState('');
   const orgSteps = useMemo(() => {
     return allOrgSteps?.filter(
       (s) => related(s, 'organization') === organization
     );
   }, [allOrgSteps, organization]);
+  const impactedSections = useMemo(() => {
+    return allSections?.filter(
+      (s) => related(s, 'organizationScheme') === scheme
+    );
+  }, [allSections, scheme]);
+
+  const isNameDuplicate = useMemo(() => {
+    return schemes
+      .filter((s) => s.id !== scheme)
+      .some((s) => s.attributes?.name === schemeName.trim());
+  }, [scheme, schemeName, schemes]);
+
+  interface IStepProps {
+    t: RecordTransformBuilder;
+    ops: RecordOperation[];
+    schemeRec: OrganizationSchemeD;
+    step: string;
+    relateType: string;
+    actorId: string;
+    value: string;
+  }
+  const createSchemeStep = ({
+    t,
+    ops,
+    schemeRec,
+    step,
+    relateType,
+    actorId,
+  }: IStepProps) => {
+    const stepRec = {
+      type: 'organizationschemestep',
+      attributes: {},
+    } as OrganizationSchemeStepD;
+    ops.push(...AddRecord(t, stepRec, user, memory));
+    ops.push(
+      ...UpdateRelatedRecord(
+        t,
+        stepRec,
+        'organizationscheme',
+        'organizationscheme',
+        schemeRec.id,
+        user
+      )
+    );
+    ops.push(
+      ...UpdateRelatedRecord(
+        t,
+        stepRec,
+        'orgWorkflowStep',
+        'orgworkflowstep',
+        step,
+        user
+      )
+    );
+    ops.push(
+      ...UpdateRelatedRecord(t, stepRec, relateType, relateType, actorId, user)
+    );
+  };
 
   const handleAdd = async () => {
-    let schemeRec = {
+    let schemeRec = schemes.find((s) => s.id === scheme) as
+      | OrganizationSchemeD
+      | undefined;
+    if (schemeRec !== undefined) {
+      // update name if changed
+      if (schemeName !== schemeRec?.attributes?.name) {
+        await memory.update((t) =>
+          t.replaceAttribute(
+            schemeRec as OrganizationSchemeD,
+            'name',
+            schemeName.trim()
+          )
+        );
+      }
+      for (let [step, value] of Array.from(assignMap.current.entries())) {
+        if (!step || !value) continue;
+        const [actorType, actorId] = value.split(':');
+        const relateType = actorType === 'u' ? 'user' : 'group';
+        let t = new RecordTransformBuilder();
+        let ops: RecordOperation[] = [];
+        let stepRec = steps.find(
+          (s) =>
+            related(s, 'organizationscheme') === scheme &&
+            related(s, 'orgWorkflowStep') === step
+        ) as OrganizationSchemeStepD | undefined;
+        // if the step permission exists, update it
+        if (stepRec !== undefined) {
+          const curId = related(stepRec, relateType);
+          if (curId !== actorId) {
+            ops.push(
+              ...UpdateRelatedRecord(
+                t,
+                stepRec,
+                relateType,
+                relateType,
+                actorId,
+                user
+              )
+            );
+          }
+          if (curId === '') {
+            // changing the type user <=> group, remove old type
+            const otherType = actorType === 'u' ? 'group' : 'user';
+            ops.push(
+              ...UpdateRelatedRecord(t, stepRec, otherType, otherType, '', user)
+            );
+          }
+        } else {
+          createSchemeStep({
+            t,
+            ops,
+            schemeRec,
+            step,
+            relateType,
+            actorId,
+            value,
+          });
+        }
+        if (ops.length > 0) {
+          await memory.update(ops);
+        }
+      }
+
+      return schemeRec.id as string;
+    }
+    schemeRec = {
       type: 'organizationscheme',
       attributes: {
-        name: schemeName,
+        name: schemeName.trim(),
       },
     } as OrganizationSchemeD;
     await memory.update((t) => [
-      ...AddRecord(t, schemeRec, user, memory),
+      ...AddRecord(t, schemeRec as OrganizationSchemeD, user, memory),
       ...UpdateRelatedRecord(
         t,
-        schemeRec,
+        schemeRec as OrganizationSchemeD,
         'organization',
         'organization',
         organization,
@@ -80,55 +213,31 @@ function AssignSection(props: IProps) {
     ]);
     await waitForIt(
       'add scheme',
-      () => Boolean(schemeRec.id),
+      () => Boolean(schemeRec?.id),
       () => false,
       500
     );
     for (let [step, value] of Array.from(assignMap.current.entries())) {
-      let stepRec = {
-        type: 'organizationschemestep',
-        attributes: {},
-      } as OrganizationSchemeStepD;
       let t = new RecordTransformBuilder();
-      let ops: RecordOperation[] = [...AddRecord(t, stepRec, user, memory)];
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          stepRec,
-          'organizationscheme',
-          'organizationscheme',
-          schemeRec.id,
-          user
-        )
-      );
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          stepRec,
-          'orgWorkflowStep',
-          'orgworkflowstep',
-          step,
-          user
-        )
-      );
+      let ops: RecordOperation[] = [];
       const [actorType, actorId] = value.split(':');
       const relateType = actorType === 'u' ? 'user' : 'group';
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          stepRec,
-          relateType,
-          relateType,
-          actorId,
-          user
-        )
-      );
+      createSchemeStep({
+        t,
+        ops,
+        schemeRec,
+        step,
+        relateType,
+        actorId,
+        value,
+      });
       await memory.update(ops);
     }
     return schemeRec.id as string;
   };
 
   const assign = async (section: Section, schemeId: string) => {
+    if (related(section, 'organizationScheme') === schemeId) return;
     await memory.update((t) => [
       ...UpdateRelatedRecord(
         t,
@@ -146,21 +255,103 @@ function AssignSection(props: IProps) {
     ]);
   };
 
-  const doAssigne = async (schemeId: string) => {
+  const doAssign = async (schemeId: string) => {
     for (let s of sections) {
       await assign(s, schemeId);
     }
   };
 
-  const handleClose = async () => {
-    const schemeId = await handleAdd();
-    await doAssigne(schemeId);
+  const handleCancel = () => {
+    if (closeMethod) {
+      closeMethod();
+    }
+    setOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    if (scheme) {
+      await memory.update((t) =>
+        t.removeRecord({ type: 'organizationscheme', id: scheme })
+      );
+    }
     refresh?.();
     if (closeMethod) {
       closeMethod();
     }
     setOpen(false);
   };
+
+  const handleDelete = async () => {
+    if (impactedSections.length > 0) {
+      const nImp = impactedSections.length;
+      setConfirmMsg(
+        t.deleteSections
+          .replace('{0}', nImp.toString())
+          .replace('{1}', getOrganizedBy(nImp === 1))
+      );
+      setConfirm(confirmDelete);
+      return;
+    }
+    await confirmDelete();
+  };
+
+  const confirmClose = async () => {
+    const schemeId = await handleAdd();
+    await doAssign(schemeId);
+    refresh?.();
+    if (closeMethod) {
+      closeMethod();
+    }
+    setOpen(false);
+  };
+
+  const handleClose = async () => {
+    const nImp = impactedSections.length;
+    if (nImp > sections.length) {
+      const nSecs = sections.length;
+      setConfirmMsg(
+        t.modifySections
+          .replace('{0}', nSecs.toString())
+          .replace('{1}', getOrganizedBy(nSecs === 1))
+          .replace('{2}', nImp.toString())
+          .replace('{3}', getOrganizedBy(nImp === 1))
+      );
+      setConfirm(confirmClose);
+      return;
+    }
+    await confirmClose();
+  };
+
+  useEffect(() => {
+    if (scheme) {
+      const schemeRec = schemes.find((s) => s.id === scheme);
+      if (schemeRec) {
+        setSchemeName(schemeRec.attributes?.name);
+      }
+      if (steps?.length > 0) {
+        for (let s of steps.filter(
+          (s) => related(s, 'organizationscheme') === scheme
+        )) {
+          if (related(s, 'group')) {
+            assignMap.current.set(
+              related(s, 'orgWorkflowStep'),
+              'g:' + related(s, 'group')
+            );
+          } else if (related(s, 'user')) {
+            assignMap.current.set(
+              related(s, 'orgWorkflowStep'),
+              'u:' + related(s, 'user')
+            );
+          }
+        }
+        setAssignArr(Array.from(assignMap.current.values()));
+      }
+    } else {
+      setSchemeName('');
+      setAssignArr([]);
+      assignMap.current.clear();
+    }
+  }, [steps, schemes, scheme]);
 
   useEffect(() => {
     const newOrganizedBy = getOrganizedBy(false);
@@ -196,6 +387,9 @@ function AssignSection(props: IProps) {
           id="scheme-name"
           label={t.schemeName}
           value={schemeName}
+          helperText={
+            isNameDuplicate && schemeName.trim() !== '' ? t.duplicateName : ''
+          }
           onChange={(e) => setSchemeName(e.target.value)}
           sx={{ m: 1, width: '40ch' }}
         />
@@ -211,19 +405,37 @@ function AssignSection(props: IProps) {
               listAdmins={true}
               key={s.id}
               label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
+              initAssignment={
+                assignArr.length ? assignMap.current.get(s.id) : undefined
+              }
               onChange={(value) => handleAssign(s.id, value)}
             />
           ))}
       </DialogContent>
       <DialogActions>
+        {scheme && (
+          <AltButton color="warning" onClick={handleDelete}>
+            {t.delete}
+          </AltButton>
+        )}
+        <GrowingSpacer />
+        <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
         <PriButton
           id="assignClose"
           onClick={handleClose}
-          disabled={!schemeName.trim()}
+          disabled={!schemeName.trim() || isNameDuplicate}
         >
           {ts.save}
         </PriButton>
       </DialogActions>
+      {confirm && (
+        <Confirm
+          title={confirm === confirmClose ? t.confirmModify : t.confirmDelete}
+          text={confirmMsg}
+          noResponse={() => setConfirm(undefined)}
+          yesResponse={() => confirm()}
+        />
+      )}
     </Dialog>
   );
 }

@@ -90,6 +90,12 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
     "assignment": string;
     "close": string;
+    "confirmDelete": string;
+    "confirmModify": string;
+    "delete": string;
+    "deleteSections": string;
+    "duplicateName": string;
+    "modifySections": string;
     "role": string;
     "schemeName": string;
     "title": string;

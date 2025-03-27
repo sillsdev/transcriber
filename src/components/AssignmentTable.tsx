@@ -390,6 +390,7 @@ export function AssignmentTable(props: IProps) {
       </Menu>
       <AssignSection
         sections={selectedSections}
+        scheme={assignSectionVisible}
         visible={assignSectionVisible !== undefined}
         closeMethod={() => setAssignSectionVisible(undefined)}
         refresh={() => setRefresh(refresh + 1)}

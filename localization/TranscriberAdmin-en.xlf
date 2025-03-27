@@ -424,6 +424,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.confirmDelete">
+         <segment>
+            <source>Confirm Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.confirmModify">
+         <segment>
+            <source>Confirm Modify</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.deleteSections">
+         <segment>
+            <source>Delete will remove permissions from {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.duplicateName">
+         <segment>
+            <source>Duplicate Permission Scheme name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.modifySections">
+         <segment>
+            <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>

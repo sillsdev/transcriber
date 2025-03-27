@@ -102,6 +102,12 @@ const initialState = {
 		"en": {
 			"assignment": "{0} Assignment",
 			"close": "Close",
+			"confirmDelete": "Confirm Delete",
+			"confirmModify": "Confirm Modify",
+			"delete": "Delete",
+			"deleteSections": "Delete will remove permissions from {0} {1}",
+			"duplicateName": "Duplicate Permission Scheme name",
+			"modifySections": "{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme",
 			"role": "Role",
 			"schemeName": "Permission Scheme Name",
 			"title": "Assign {0}",

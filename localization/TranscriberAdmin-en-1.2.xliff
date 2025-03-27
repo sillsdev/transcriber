@@ -492,6 +492,48 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.confirmDelete">
+            <source>Confirm Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.confirmModify">
+            <source>Confirm Modify</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.delete">
+            <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.deleteSections">
+            <source>Delete will remove permissions from {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.duplicateName">
+            <source>Duplicate Permission Scheme name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.modifySections">
+            <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.role">
             <source>Role</source>
             <target/>
