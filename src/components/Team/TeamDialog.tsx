@@ -55,6 +55,7 @@ export interface ITeamDialog {
   noNoise?: boolean;
   deltaVoice?: boolean;
   aiTranscribe?: boolean;
+  resetProjectPermissions:boolean
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -99,7 +100,10 @@ export function TeamDialog(props: IProps) {
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
-  const [permissions, setPermissions] = useState(true);
+  const [permissions, setPermissions] = useState(false);
+  const [savedPermission, setSavedPermission] = useState(false);
+  const [resetProjects, setResetProjects] = useState(false);
+
   const { getDefault } = useOrgDefaults();
   const reset = () => {
     setName('');
@@ -114,7 +118,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
-    setPermissions(values?.team?.id !== personalTeam);
+    setPermissions(false);
     setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
@@ -199,6 +203,7 @@ export function TeamDialog(props: IProps) {
             bibleMediafile: bibleMediafileRef.current,
             isoMediafile: isoMediafileRef.current,
             process: process || defaultWorkflow,
+            resetProjectPermissions: resetProjects,
           },
           async (id: string) => {
             reset();
@@ -244,7 +249,9 @@ export function TeamDialog(props: IProps) {
         setWorkflowProgression(value);
         break;
       case orgDefaultPermissions:
-        setPermissions(value === 'true');
+        var newPermission = value === 'true';
+        setPermissions(newPermission);
+        setResetProjects(newPermission !== savedPermission && !newPermission);
         break;
       case 'noNoise':
       case 'deltaVoice':
@@ -297,10 +304,10 @@ export function TeamDialog(props: IProps) {
               : t.workflowProgressionPassage
           );
           setFeatures(getDefault(orgDefaultFeatures, values.team));
-          setPermissions(
-            getDefault(orgDefaultPermissions, values.team) ??
-              values.team.id !== personalTeam
-          );
+          var permission =
+            getDefault(orgDefaultPermissions, values.team) ?? false; //if default is true use this values.team.id !== personalTeam
+          setPermissions(permission);
+          setSavedPermission(permission);
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
         }

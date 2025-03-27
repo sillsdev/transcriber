@@ -29,8 +29,14 @@ export const TeamItem = (props: IProps) => {
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [deleteItem, setDeleteItem] = useState<RecordIdentity>();
   const ctx = React.useContext(TeamContext);
-  const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
-    ctx.state;
+  const {
+    teamProjects,
+    teamMembers,
+    teamUpdate,
+    teamDelete,
+    isAdmin,
+    resetProjectPermissions,
+  } = ctx.state;
   const t = ctx.state.cardStrings;
   const { createBible, updateBible } = useBible();
   const [openMember, setOpenMember] = useState(false);
@@ -68,7 +74,7 @@ export const TeamItem = (props: IProps) => {
         );
 
     teamUpdate(values.team);
-
+    if (values.resetProjectPermissions) await resetProjectPermissions(team.id);
     cb && (await cb(values.team.id));
     setEditOpen(false);
   };

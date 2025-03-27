@@ -60,8 +60,13 @@ import {
 } from '../selector';
 import { useDispatch } from 'react-redux';
 import { useHome } from '../utils';
-import { RecordIdentity } from '@orbit/records';
+import {
+  RecordIdentity,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 
 export type TeamIdType = OrganizationD | null;
 
@@ -115,6 +120,7 @@ const initState = {
   setImportOpen: (val: boolean) => {},
   importProject: undefined as any,
   doImport: (p: VProject | undefined = undefined) => {},
+  resetProjectPermissions: (team: string) => {},
 };
 
 export type ICtxState = typeof initState & {};
@@ -172,6 +178,7 @@ const TeamProvider = (props: IProps) => {
   const [, setProject] = useGlobal('project');
   const [, setPlan] = useGlobal('plan');
   const [user] = useGlobal('user');
+  const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [importOpen, setImportOpen] = useState(false);
@@ -445,6 +452,40 @@ const TeamProvider = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations, orgMembers, user, isOffline]);
 
+  const resetProjectPermissions = async (teamId: string) => {
+    let projects = (
+      memory?.cache.query((q) => q.findRecords('project')) as ProjectD[]
+    ).filter((p) => related(p, 'organization') === teamId);
+    var checkit = [
+      'editsheetuser',
+      'editsheetgroup',
+      'publishuser',
+      'publishgroup',
+    ];
+    var tb = new RecordTransformBuilder();
+    var ops = [] as RecordOperation[];
+    projects.forEach((p) => {
+      var update = false;
+      checkit.forEach((c) => {
+        if (related(p, c) !== undefined) update = true;
+      });
+      if (update) {
+        checkit.forEach((c) => {
+          ops.push(
+            ...ReplaceRelatedRecord(
+              tb,
+              p,
+              c,
+              c.endsWith('user') ? 'user' : 'group',
+              ''
+            )
+          );
+        });
+        ops.push(...UpdateLastModifiedBy(tb, p, user));
+      }
+    });
+    if (ops.length > 0) await memory.update(ops);
+  };
   return (
     <TeamContext.Provider
       value={{
@@ -474,6 +515,7 @@ const TeamProvider = (props: IProps) => {
           setImportOpen,
           importProject,
           doImport,
+          resetProjectPermissions,
         },
         setState,
       }}
