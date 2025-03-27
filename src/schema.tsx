@@ -1025,7 +1025,7 @@ if (requestedSchema > 9 && schemaDefinition.models) {
     },
     relationships: {
       organizationscheme: { kind: 'hasOne', type: 'organizationscheme' },
-      orgworkflowstep: { kind: 'hasOne', type: 'orgworkflowstep' },
+      orgWorkflowStep: { kind: 'hasOne', type: 'orgworkflowstep' },
       user: { kind: 'hasOne', type: 'user' },
       group: { kind: 'hasOne', type: 'group' },
       lastModifiedByUser: { kind: 'hasOne', type: 'user' },
