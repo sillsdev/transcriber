@@ -110,6 +110,7 @@ export function AssignmentTable(props: IProps) {
   const [assignMenu, setAssignMenu] = useState<HTMLButtonElement>();
   const sectionMap = new Map<number, string>(sectionArr);
   const [selectedSections, setSelectedSections] = useState<Section[]>([]);
+  const [readOnly, setReadOnly] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -152,6 +153,7 @@ export function AssignmentTable(props: IProps) {
   const handleView = (schemeId: string) => () => {
     setAssignMenu(undefined);
     setAssignSectionVisible(schemeId);
+    setReadOnly(true);
   };
 
   const getSchemeName = (section: Section) => {
@@ -232,6 +234,7 @@ export function AssignmentTable(props: IProps) {
     } else {
       setAssignMenu(undefined);
       setAssignSectionVisible(schemeId);
+      setReadOnly(false);
     }
   };
 
@@ -403,7 +406,7 @@ export function AssignmentTable(props: IProps) {
         visible={assignSectionVisible !== undefined}
         closeMethod={() => setAssignSectionVisible(undefined)}
         refresh={() => setRefresh(refresh + 1)}
-        readOnly={!userIsAdmin}
+        readOnly={readOnly}
       />
       {confirmAction !== '' ? (
         <Confirm
