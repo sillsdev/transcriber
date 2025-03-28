@@ -245,7 +245,8 @@ export function AssignmentTable(props: IProps) {
       let work = false;
       check.forEach((i) => {
         const row = data[i];
-        if (row.scheme !== '') work = true;
+        // since scheme is a button, we need to check if it has children
+        if (Boolean((row.scheme as any)?.props?.children)) work = true;
       });
       if (!work) {
         showMessage(t.selectRowsToRemove);
