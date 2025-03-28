@@ -28,8 +28,8 @@ export interface ISheet {
   kind: IwsKind;
   sectionSeq: number;
   title?: string;
-  transcriber?: RecordIdentity;
-  editor?: RecordIdentity;
+  scheme?: RecordIdentity;
+  assign?: RecordIdentity;
   sectionId?: RecordIdentity;
   sectionUpdated?: string;
   passageSeq: number;

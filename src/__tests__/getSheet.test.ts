@@ -15,6 +15,7 @@ import { InitializedRecord } from '@orbit/records';
 import { ISTFilterState } from '../components/Sheet/filterMenu';
 import { PassageTypeEnum } from '../model/passageType';
 import { PublishDestinationEnum } from '../crud/usePublishDestination';
+import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
 
 var mockMemory = {} as Memory;
 
@@ -321,6 +322,7 @@ var gsDefaults = {
   plan: '',
   sections: [] as SectionD[],
   passages: [] as PassageD[],
+  organizationSchemeSteps: [] as OrganizationSchemeStepD[],
   flat: false,
   projectShared: false,
   memory: mockMemory,

@@ -14,6 +14,7 @@ import {
   useRole,
   ArtifactTypeSlug,
   useArtifactType,
+  findRecord,
 } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
@@ -25,7 +26,7 @@ import {
   isPublishingTitle,
   passageTypeFromRef,
 } from '../../control/RefRender';
-import { memo, useContext, useCallback, useMemo, ReactElement } from 'react';
+import { useContext, useCallback, useMemo, ReactElement } from 'react';
 import TaskAvatar from '../TaskAvatar';
 import { PassageTypeEnum } from '../../model/passageType';
 import PlanActionMenu from './PlanActionMenu';
@@ -41,6 +42,7 @@ import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
 import { PublishButton } from './PublishButton';
 import { NoteIcon } from '../../control/PlanIcons';
+import { OrganizationSchemeD } from '../../model/organizationScheme';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -153,6 +155,7 @@ export const usePlanSheetFill = ({
   const { canEditSheet, sectionArr, setSectionArr, shared, canPublish } =
     ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
+  const [memory] = useGlobal('memory');
   const [planId] = useGlobal('plan'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
@@ -213,8 +216,6 @@ export const usePlanSheetFill = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return <></>;
   };
-
-  const MemoizedTaskAvatar = memo(TaskAvatar);
 
   const titleRow = (columns: ICell[]) => {
     const titles = [
@@ -290,12 +291,19 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
+  const schemeName = (schemeId: string) => {
+    const schemeRec = findRecord(memory, 'organizationscheme', schemeId) as
+      | OrganizationSchemeD
+      | undefined;
+    return schemeRec?.attributes?.name;
+  };
+
   const assignmentCell = (rowIndex: number, calcClassName: string) =>
     ({
-      value: (
-        <MemoizedTaskAvatar
-          assigned={rowInfo[rowIndex].transcriber?.id || ''}
-        />
+      value: rowInfo[rowIndex].assign ? (
+        <TaskAvatar assigned={rowInfo[rowIndex].assign || null} />
+      ) : (
+        schemeName(rowInfo[rowIndex].scheme?.id || '')
       ),
       readOnly: true,
       className: calcClassName,
