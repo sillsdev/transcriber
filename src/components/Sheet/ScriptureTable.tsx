@@ -125,6 +125,7 @@ import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
+import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
 
 const SaveWait = 500;
 
@@ -150,6 +151,9 @@ export function ScriptureTable(props: IProps) {
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const workflowSteps = useOrbitData<WorkflowStep[]>('workflowstep');
   const orgWorkflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
+  const organizationSchemeSteps = useOrbitData<OrganizationSchemeStepD[]>(
+    'organizationschemestep'
+  );
   const t: IScriptureTableStrings = useSelector(
     scriptureTableSelector,
     shallowEqual
@@ -1373,6 +1377,7 @@ export function ScriptureTable(props: IProps) {
         plan,
         sections,
         passages,
+        organizationSchemeSteps,
         flat,
         projectShared: shared,
         memory,
@@ -1408,6 +1413,7 @@ export function ScriptureTable(props: IProps) {
     orgSteps,
     lastSaved,
     hidePublishing,
+    organizationSchemeSteps,
   ]);
 
   interface ILocal {

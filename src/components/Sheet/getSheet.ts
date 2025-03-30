@@ -20,9 +20,10 @@ import { toCamel } from '../../utils/toCamel';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
-import { InitializedRecord } from '@orbit/records';
+import { InitializedRecord, RecordIdentity } from '@orbit/records';
 import { PublishDestinationEnum } from '../../crud';
 import { addPt } from '../../utils/addPt';
+import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -30,8 +31,7 @@ const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
       rec.level = item.level;
       rec.kind = item.kind;
       rec.sectionSeq = item.sectionSeq;
-      rec.transcriber = item.transcriber;
-      rec.editor = item.editor;
+      rec.scheme = item.scheme;
       rec.title = item.title;
       rec.deleted = item.deleted;
       rec.published = item.published;
@@ -142,6 +142,7 @@ export interface GetSheetProps {
   plan: string;
   sections: SectionD[];
   passages: PassageD[];
+  organizationSchemeSteps: OrganizationSchemeStepD[];
   flat: boolean;
   projectShared: boolean;
   memory: Memory;
@@ -172,6 +173,7 @@ export const getSheet = ({
   plan,
   sections,
   passages,
+  organizationSchemeSteps,
   flat,
   projectShared,
   memory,
@@ -193,8 +195,8 @@ export const getSheet = ({
   let plansections = sections
     .filter((s) => related(s, 'plan') === plan)
     .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
-  const userid = { type: 'user' };
-  var sectionfiltered = false;
+  let sectionfiltered = false;
+  let schemeId: string | undefined = undefined;
   plansections.forEach((section) => {
     let item = { ...initItem };
     let curSection = 1;
@@ -220,14 +222,10 @@ export const getSheet = ({
           ? section.attributes.state
           : item.passageType;
       item.title = section?.attributes?.name;
-      const transcriber = related(section, 'transcriber');
-      item.transcriber =
-        transcriber && transcriber.id !== ''
-          ? { ...userid, id: transcriber }
-          : undefined;
-      const editor = related(section, 'editor');
-      item.editor =
-        editor && editor.id !== '' ? { ...userid, id: editor } : undefined;
+      schemeId = related(section, 'organizationScheme');
+      item.scheme = schemeId
+        ? { type: 'organizationscheme', id: schemeId }
+        : undefined;
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
@@ -317,6 +315,15 @@ export const getSheet = ({
             ? addPt(wfStr.getString(strTag))
             : stepRec.attributes.name;
           item.stepId = stepRec.id;
+          const schemeStep = organizationSchemeSteps.find(
+            (s) =>
+              related(s, 'orgWorkflowStep') === stepId &&
+              related(s, 'organizationscheme') === schemeId
+          );
+          if (schemeStep) {
+            item.assign = (schemeStep.relationships?.user?.data ||
+              schemeStep.relationships?.group?.data) as RecordIdentity;
+          }
           item.discussionCount = item.passage.id
             ? getDiscussionCount(item.passage.id, item.stepId)
             : 0;
