@@ -783,8 +783,10 @@ export const usePlanSheetFill = ({
               onUpload={onUpload}
               onAssign={onAssign}
               onFirstMovement={onFirstMovement}
-              canAssign={userIsAdmin && !movement && !book}
-              canDelete={userIsAdmin && (!offline || offlineOnly)}
+              canAssign={(userIsAdmin || canEditSheet) && !movement && !book}
+              canDelete={
+                (userIsAdmin || canEditSheet) && (!offline || offlineOnly)
+              }
               active={active - 1 === rowIndex}
               onDisableFilter={filtered ? disableFilter : undefined}
               showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
