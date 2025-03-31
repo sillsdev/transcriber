@@ -174,9 +174,10 @@ function AssignSection(props: IProps) {
               )
             );
           }
-          if (curId === '') {
-            // changing the type user <=> group, remove old type
-            const otherType = actorType === 'u' ? 'group' : 'user';
+          // changing the type user <=> group, remove old type
+          const otherType = actorType === 'u' ? 'group' : 'user';
+          const otherId = related(stepRec, otherType);
+          if (otherId !== '') {
             ops.push(
               ...UpdateRelatedRecord(t, stepRec, otherType, otherType, '', user)
             );
