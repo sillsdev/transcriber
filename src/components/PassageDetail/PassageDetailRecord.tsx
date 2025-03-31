@@ -28,6 +28,7 @@ import { sharedSelector } from '../../selector';
 import { RecordButtons } from './RecordButtons';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 interface IProps {
   ready?: () => boolean;
@@ -86,6 +87,7 @@ export function PassageDetailRecord(props: IProps) {
   const [resetMedia, setResetMedia] = useState(false);
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
+  const { canDoVernacular } = useStepPermissions();
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -207,14 +209,23 @@ export function PassageDetailRecord(props: IProps) {
       <RecordButtons
         onVersions={hasExistingVersion ? handleVersions : undefined}
         onReload={hasExistingVersion ? handleReload : undefined}
-        onUpload={handleUpload}
-        onAudacity={isElectron ? handleAudacity : undefined}
+        onUpload={
+          canDoVernacular(related(passage, 'section'))
+            ? handleUpload
+            : undefined
+        }
+        onAudacity={
+          isElectron && canDoVernacular(related(passage, 'section'))
+            ? handleAudacity
+            : undefined
+        }
       />
       <Box sx={{ py: 1 }}>
         <SpeakerName
           name={speaker}
           onChange={handleNameChange}
           onRights={handleRights}
+          disabled={!canDoVernacular(related(passage, 'section'))}
         />
       </Box>
       <MediaRecord
@@ -225,7 +236,7 @@ export function PassageDetailRecord(props: IProps) {
         onReady={onReady}
         onRecording={setRecording}
         defaultFilename={defaultFilename}
-        allowRecord={hasRights}
+        allowRecord={hasRights && canDoVernacular(related(passage, 'section'))}
         allowWave={true}
         showFilename={true}
         showLoad={false}
@@ -252,7 +263,12 @@ export function PassageDetailRecord(props: IProps) {
             <PriButton
               id="rec-save"
               onClick={handleSave}
-              disabled={(ready && !ready()) || !canSave || !hasRights}
+              disabled={
+                (ready && !ready()) ||
+                !canSave ||
+                !hasRights ||
+                !canDoVernacular(related(passage, 'section'))
+              }
             >
               {ts.save}
             </PriButton>

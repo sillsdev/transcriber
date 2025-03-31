@@ -48,6 +48,7 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
 import ArtifactStatus from '../ArtifactStatus';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 export const btDefaultSegParams = {
   silenceThreshold: 0.004,
@@ -138,6 +139,7 @@ export function PassageDetailItem(props: IProps) {
   const [segString, setSegString] = useState('{}');
   const [verses, setVerses] = useState('');
   const cancelled = useRef(false);
+  const { canDoVernacular } = useStepPermissions();
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
@@ -387,6 +389,9 @@ export function PassageDetailItem(props: IProps) {
                             id="pdRecordUpload"
                             onClick={handleUpload}
                             title={ts.uploadMediaSingular}
+                            disabled={
+                              !canDoVernacular(related(passage, 'section'))
+                            }
                           >
                             <AddIcon />
                             {ts.uploadMediaSingular}

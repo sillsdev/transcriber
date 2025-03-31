@@ -26,6 +26,7 @@ interface IProps {
   createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
+  disabled?: boolean;
 }
 
 export function SpeakerName({
@@ -35,6 +36,7 @@ export function SpeakerName({
   createProject,
   team,
   recordingRequired,
+  disabled,
 }: IProps) {
   const ipRecs = useOrbitData<IntellectualProperty[]>('intellectualproperty');
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
@@ -153,6 +155,7 @@ export function SpeakerName({
         value={value}
         onChange={(event, newValue) => handleChoice(newValue)}
         onClose={handleLeave}
+        disabled={disabled}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
