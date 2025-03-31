@@ -10,7 +10,6 @@ import {
   ArtifactType,
   Resource,
   SheetLevel,
-  OrganizationD,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PlayInPlayer } from '../../../context/PassageDetailContext';
@@ -183,9 +182,9 @@ export function PassageDetailArtifacts() {
     shallowEqual
   );
   const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
   const [findTabsClose, setFindTabsClose] = useState(false);
   const getGlobal = useGetGlobal();
-  const organizations = useOrbitData<OrganizationD[]>('organization');
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -463,11 +462,6 @@ export function PassageDetailArtifacts() {
     if (level === SheetLevel.Book) return 'BOOK';
     if (level === SheetLevel.Movement) return 'MOVE';
   };
-  const hasPermission = useMemo(
-    () => canDoSectionStep(currentstep, section),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentstep, section, organizations]
-  );
 
   const sectDesc = useMemo(
     () =>

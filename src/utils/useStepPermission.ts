@@ -16,7 +16,8 @@ export const useStepPermissions = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const { userIsAdmin } = useRole();
-  const [permissionsOn, setPermissionsOn] = useState(false);
+  // default to true so canDOSectionStep doesn't falsely return true
+  const [permissionsOn, setPermissionsOn] = useState(true);
   const { myGroups } = usePeerGroups();
   const { getOrgDefault } = useOrgDefaults();
   const [org] = useGlobal('organization');
@@ -36,12 +37,12 @@ export const useStepPermissions = () => {
 
   const canDoSectionStep = (stepId: string, section: SectionD) => {
     if (userIsAdmin || !permissionsOn) return true;
-    var scheme = related(section, 'organizationscheme');
+    var scheme = related(section, 'organizationScheme');
     if (!scheme) return false;
     var assigned = steps.find(
       (s) =>
         related(s, 'organizationscheme') === scheme &&
-        related(s, 'orgworkflowstep') === stepId
+        related(s, 'orgWorkflowStep') === stepId
     );
     if (!assigned) return false;
     var assignedgroup = related(assigned, 'group');

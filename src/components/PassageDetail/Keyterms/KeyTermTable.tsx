@@ -26,6 +26,7 @@ import Confirm from '../../AlertDialog';
 import MediaPlayer from '../../MediaPlayer';
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback } from 'react';
+import { useStepPermissions } from '../../../utils/useStepPermission';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -99,6 +100,7 @@ export default function KeyTermTable({
   const deleteId = React.useRef<string>();
   const [adding, setAdding] = React.useState<number[]>([]);
   const { saveCompleted } = React.useContext(UnsavedContext).state;
+  const { canDoSectionStep } = useStepPermissions();
   const {
     setSelected,
     commentPlaying,
@@ -106,7 +108,10 @@ export default function KeyTermTable({
     commentPlayId,
     handleCommentPlayEnd,
     handleCommentTogglePlay,
+    currentstep,
+    section,
   } = React.useContext(PassageDetailContext).state;
+  const hasPermission = canDoSectionStep(currentstep, section);
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   const reset = () => {
@@ -271,8 +276,14 @@ export default function KeyTermTable({
                         onPlay={
                           t.mediaId ? handleChipPlay(t.mediaId) : undefined
                         }
-                        onClick={handleChipClick(t.label)}
-                        onDelete={handleChipDelete(t, row.source)}
+                        onClick={
+                          hasPermission ? handleChipClick(t.label) : undefined
+                        }
+                        onDelete={
+                          hasPermission
+                            ? handleChipDelete(t, row.source)
+                            : undefined
+                        }
                       />
                       {commentPlayId &&
                         mediaId === commentPlayId &&
@@ -292,7 +303,9 @@ export default function KeyTermTable({
                         )}
                     </Box>
                   ))}
-                  {row.target.length > 0 && adding.indexOf(row.index) === -1 ? (
+                  {row.target.length > 0 &&
+                  adding.indexOf(row.index) === -1 &&
+                  hasPermission ? (
                     <IconButton
                       sx={{ height: '24px' }}
                       aria-label="add another translation"
@@ -310,7 +323,7 @@ export default function KeyTermTable({
                       onCancel={onCancel}
                       cancelOnlyIfChanged
                       setCanSaveRecording={setCanSaveRecording}
-                      onTextChange={onTextChange}
+                      onTextChange={hasPermission ? onTextChange : undefined}
                       onSetRecordRow={onSetRecordRow}
                     />
                   ) : (

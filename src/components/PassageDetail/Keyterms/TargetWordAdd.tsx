@@ -60,7 +60,7 @@ interface IProps {
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
-  onTextChange: (txt: string, row: IKeyTermRow) => void;
+  onTextChange?: (txt: string, row: IKeyTermRow) => void;
   onSetRecordRow: (row: IKeyTermRow | undefined) => void;
 }
 
@@ -128,7 +128,7 @@ export default function TargetWordAdd(props: IProps) {
       return;
     }
     setCurText(e.target.value);
-    onTextChange(e.target.value, row);
+    onTextChange && onTextChange(e.target.value, row);
     toolChanged(toolId, true);
   };
 
@@ -224,6 +224,7 @@ export default function TargetWordAdd(props: IProps) {
           id="outlined-adornment-term"
           sx={{ borderRadius: '24px', py: 0, mb: 1 }}
           value={curText}
+          disabled={!onTextChange}
           onChange={handleTextChange}
           size="small"
           multiline
