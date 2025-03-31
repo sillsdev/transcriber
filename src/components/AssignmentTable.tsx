@@ -296,6 +296,9 @@ export function AssignmentTable(props: IProps) {
 
   const handleFilter = () => setFilter(!filter);
 
+  const sortSchemes = (a: OrganizationSchemeD, b: OrganizationSchemeD) =>
+    a.attributes?.name.localeCompare(b.attributes?.name);
+
   useEffect(() => {
     setData(getAssignments());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -388,7 +391,7 @@ export function AssignmentTable(props: IProps) {
         open={Boolean(assignMenu)}
         onClose={handleClose}
       >
-        {orgSchemes.map((scheme) => (
+        {orgSchemes.sort(sortSchemes).map((scheme) => (
           <MenuItem
             key={scheme.id}
             onClick={handleAssignSection(scheme.id)}
