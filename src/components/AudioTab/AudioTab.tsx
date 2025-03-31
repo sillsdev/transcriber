@@ -337,7 +337,7 @@ export function AudioTab() {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {userIsAdmin && (!isOffline || offlineOnly) && (
+            {(userIsAdmin || canEditSheet) && (!isOffline || offlineOnly) && (
               <>
                 <AltButton
                   id="audUpload"
@@ -386,7 +386,7 @@ export function AudioTab() {
               playItem={playItem}
               setPlayItem={setPlayItem}
               onAttach={onAttach}
-              readonly={canEditSheet}
+              readonly={!userIsAdmin && !canEditSheet}
               sectionArr={sectionArr}
               shared={shared}
               canSetDestination={!isOffline && canPublish}
