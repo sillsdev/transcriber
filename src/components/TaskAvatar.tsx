@@ -24,7 +24,11 @@ export const TaskAvatar = ({
   const groupAbbr = makeAbbr(groupRec?.attributes?.name || groupRec?.id || '');
   if (!groupAbbr) return <></>;
   return (
-    <Avatar id="assignGroup" variant="square" sx={{ width: 24, height: 24 }}>
+    <Avatar
+      id="assignGroup"
+      variant="square"
+      sx={{ width: 24, height: 24, fontSize: 'small' }}
+    >
       {groupAbbr}
     </Avatar>
   );

@@ -18,7 +18,7 @@ import {
 } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
-import { Avatar, Badge } from '@mui/material';
+import { Avatar, Badge, Typography } from '@mui/material';
 import PlanPublishActions from './PlanPublishActions';
 import PlanAudioActions from './PlanAudioActions';
 import {
@@ -303,7 +303,18 @@ export const usePlanSheetFill = ({
       value: rowInfo[rowIndex].assign ? (
         <TaskAvatar assigned={rowInfo[rowIndex].assign || null} />
       ) : (
-        schemeName(rowInfo[rowIndex].scheme?.id || '')
+        <Typography
+          sx={{
+            maxWidth: '80px',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textAlign: 'center',
+            fontSize: 'small',
+          }}
+        >
+          {schemeName(rowInfo[rowIndex].scheme?.id || '')}
+        </Typography>
       ),
       readOnly: true,
       className: calcClassName,
