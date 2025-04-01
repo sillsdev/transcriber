@@ -63,6 +63,7 @@ function AssignSection(props: IProps) {
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [org] = useGlobal('organization');
   const [open, setOpen] = useState(visible);
   const [schemeName, setSchemeName] = useState('');
   const [assignArr, setAssignArr] = useState<[string, string][]>([]);
@@ -84,9 +85,9 @@ function AssignSection(props: IProps) {
 
   const isNameDuplicate = useMemo(() => {
     return schemes
-      .filter((s) => s.id !== scheme)
+      .filter((s) => s.id !== scheme && related(s, 'organization') === org)
       .some((s) => s.attributes?.name === schemeName.trim());
-  }, [scheme, schemeName, schemes]);
+  }, [scheme, schemeName, schemes, org]);
 
   interface IStepProps {
     t: RecordTransformBuilder;
