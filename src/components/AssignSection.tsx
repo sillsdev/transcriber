@@ -281,6 +281,7 @@ function AssignSection(props: IProps) {
       await memory.update((t) =>
         t.removeRecord({ type: 'organizationscheme', id: scheme })
       );
+      setSchemeName('');
     }
     refresh?.();
     if (closeMethod) {
@@ -359,7 +360,6 @@ function AssignSection(props: IProps) {
       setSchemeName('');
       setAssignArr([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [steps, schemes, scheme]);
 
   useEffect(() => {
