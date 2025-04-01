@@ -835,6 +835,11 @@ export function ScriptureTable(props: IProps) {
     return false;
   };
 
+  const getScheme = (where: number[]) => {
+    const { ws } = getByIndex(sheetRef.current, where[0]);
+    return ws?.scheme?.id;
+  };
+
   const getSectionsWhere = (where: number[]) => {
     let selected = Array<Section>();
     where.forEach((c) => {
@@ -1920,6 +1925,7 @@ export function ScriptureTable(props: IProps) {
       />
       {assignSectionVisible && (
         <AssignSection
+          scheme={getScheme(assignSections)}
           sections={getSectionsWhere(assignSections)}
           visible={assignSectionVisible}
           closeMethod={handleAssignClose()}
