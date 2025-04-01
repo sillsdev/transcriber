@@ -44,7 +44,7 @@ export const useStepPermissions = () => {
         related(s, 'organizationscheme') === scheme &&
         related(s, 'orgWorkflowStep') === stepId
     );
-    if (!assigned) return false;
+    if (!assigned) return true;
     var assignedgroup = related(assigned, 'group');
     var assigneduser = related(assigned, 'user');
 

@@ -547,6 +547,7 @@ const initialState = {
 			"invalidReferences": "{0} passage(s) have invalid book or reference.",
 			"no": "No",
 			"noProject": "You are not a member of a {lang0} {0} Project.",
+			"notPermitted": "You're not permitted to sync to Paratext",
 			"offline": "Offline",
 			"onestory": "One Story",
 			"paratextLocal": "{0} Local",

@@ -104,6 +104,7 @@ interface IProps {
     psgCompleted?: any[]
   ) => Promise<void>;
   gotoNextStep?: () => void;
+  isPermitted?: boolean;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -115,6 +116,7 @@ export function IntegrationPanel(props: IProps) {
     sectionArr,
     setStepComplete,
     gotoNextStep,
+    isPermitted,
   } = props;
   const t: IIntegrationStrings = useSelector(integrationSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
@@ -912,7 +914,8 @@ export function IntegrationPanel(props: IProps) {
                       !hasPtProj ||
                       !hasParatext ||
                       !hasPermission ||
-                      !paratext_count
+                      !paratext_count ||
+                      !isPermitted
                     }
                     onClick={handleSync}
                   >
@@ -922,7 +925,9 @@ export function IntegrationPanel(props: IProps) {
                 }
                 label=""
               />
-              <FormHelperText>{t.allCriteria}</FormHelperText>
+              <FormHelperText>
+                {!isPermitted ? t.notPermitted : t.allCriteria}
+              </FormHelperText>
             </FormGroup>
           </FormControl>
         </AccordionDetails>
@@ -1050,7 +1055,8 @@ export function IntegrationPanel(props: IProps) {
                       syncing.current ||
                       !ptPath ||
                       !hasPtProj ||
-                      !paratext_count
+                      !paratext_count ||
+                      !isPermitted
                     }
                     onClick={handleLocalSync}
                   >
@@ -1060,7 +1066,9 @@ export function IntegrationPanel(props: IProps) {
                 }
                 label=""
               />
-              <FormHelperText>{t.allCriteria}</FormHelperText>
+              <FormHelperText>
+                {!isPermitted ? t.notPermitted : t.allCriteria}
+              </FormHelperText>
             </FormGroup>
           </FormControl>
         </AccordionDetails>

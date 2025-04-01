@@ -513,6 +513,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "invalidReferences": string;
     "no": string;
     "noProject": string;
+    "notPermitted": string;
     "offline": string;
     "onestory": string;
     "paratextLocal": string;

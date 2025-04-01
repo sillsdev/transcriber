@@ -2993,6 +2993,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="integration.notPermitted">
+            <source>You're not permitted to sync to Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="integration.offline">
             <source>Offline</source>
             <target/>

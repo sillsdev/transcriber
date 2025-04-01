@@ -2566,6 +2566,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.notPermitted">
+         <segment>
+            <source>You're not permitted to sync to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.offline">
          <segment>
             <source>Offline</source>
