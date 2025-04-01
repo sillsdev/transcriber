@@ -52,7 +52,7 @@ export const usePermissions = () => {
     if (typeof p === 'string') {
       p = getPermissionFromJson(p);
     }
-    if (!p) return t.nsp;
+    if (!p) return '';
     return t.hasOwnProperty(p)
       ? t.getString(p)
       : Object.keys(PermissionName)

@@ -1012,7 +1012,6 @@ const initialState = {
 			"consultantTip": "Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.",
 			"consultantInTraining": "Consultant In Training",
 			"consultantInTrainingTip": "CITs comments will only be visible to Mentors until a mentor approves the comment.",
-			"nsp": "General",
 			"mentor": "Mentor",
 			"mentorTip": "Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.",
 			"nspTip": "General Peer Group with no special permissions.  Use to assign discussions to team groups.",

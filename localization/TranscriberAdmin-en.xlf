@@ -4876,12 +4876,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="permission.nsp">
-         <segment>
-            <source>General</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="permission.mentor">
          <segment>
             <source>Mentor</source>

@@ -5689,13 +5689,6 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="permission.nsp">
-      		<source>General</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
          <trans-unit id="permission.mentor">
       		<source>Mentor</source>
       		<target/>

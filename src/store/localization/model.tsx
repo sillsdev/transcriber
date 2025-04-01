@@ -958,7 +958,6 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "consultantTip": string;
     "consultantInTraining": string;
     "consultantInTrainingTip": string;
-    "nsp": string;
     "mentor": string;
     "mentorTip": string;
     "nspTip": string;
