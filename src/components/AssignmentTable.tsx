@@ -388,15 +388,22 @@ export function AssignmentTable(props: IProps) {
         open={Boolean(assignMenu)}
         onClose={handleClose}
       >
-        {orgSchemes.sort(sortSchemes).map((scheme) => (
-          <MenuItem
-            key={scheme.id}
-            onClick={handleAssignSection(scheme.id)}
-            id={'assign-' + scheme.id}
-          >
-            {scheme.attributes?.name}
-          </MenuItem>
-        ))}
+        {orgSchemes
+          .filter(
+            (s) =>
+              related(s, 'organization') === org &&
+              Boolean(s?.attributes?.name?.trim())
+          )
+          .sort(sortSchemes)
+          .map((scheme) => (
+            <MenuItem
+              key={scheme.id}
+              onClick={handleAssignSection(scheme.id)}
+              id={'assign-' + scheme.id}
+            >
+              {scheme.attributes?.name}
+            </MenuItem>
+          ))}
         <MenuItem id="add-assign" onClick={handleAssignSection('')}>
           {t.addScheme}
         </MenuItem>
