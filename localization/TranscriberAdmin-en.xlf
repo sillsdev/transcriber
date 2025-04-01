@@ -354,7 +354,7 @@
       </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Assign {0}</source>
+            <source>Configure Scheme</source>
             <target/>
          </segment>
       </unit>
@@ -372,7 +372,7 @@
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
-            <source>Remove Assignment</source>
+            <source>Remove Scheme</source>
             <target/>
          </segment>
       </unit>
@@ -390,7 +390,7 @@
       </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
-            <source>Please select row(s) to assign.</source>
+            <source>Please select row(s) to configure.</source>
             <target/>
          </segment>
       </unit>
@@ -474,7 +474,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0}</source>
+            <source>Configure Scheme</source>
             <target/>
          </segment>
       </unit>

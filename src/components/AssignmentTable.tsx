@@ -114,7 +114,6 @@ export function AssignmentTable(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const [organizedByPlural] = useState(getOrganizedBy(false));
   const [refresh, setRefresh] = useState(0);
   const { getSharedResource } = useSharedResRead();
   const columnDefs = useMemo(
@@ -340,9 +339,8 @@ export function AssignmentTable(props: IProps) {
                   key="assign"
                   aria-label={t.assignSec}
                   onClick={handleMenu}
-                  title={t.assignSec.replace('{0}', organizedByPlural)}
                 >
-                  {t.assignSec.replace('{0}', organizedByPlural)}
+                  {t.assignSec}
                   <DropDownIcon sx={iconMargin} />
                 </AltButton>
                 <AltButton
@@ -350,7 +348,6 @@ export function AssignmentTable(props: IProps) {
                   key="remove"
                   aria-label={t.removeSec}
                   onClick={handleRemoveAssignments}
-                  title={t.removeSec}
                 >
                   {t.removeSec}
                 </AltButton>

@@ -409,7 +409,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
-            <source>Assign {0}</source>
+            <source>Configure Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -430,7 +430,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.removeSec">
-            <source>Remove Assignment</source>
+            <source>Remove Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -451,7 +451,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.selectRowsToAssign">
-            <source>Please select row(s) to assign.</source>
+            <source>Please select row(s) to configure.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -549,7 +549,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignSection.title">
-            <source>Assign {0}</source>
+            <source>Configure Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>

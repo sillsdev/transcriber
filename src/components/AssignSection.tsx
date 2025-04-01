@@ -31,6 +31,7 @@ import { waitForIt } from '../utils/waitForIt';
 import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import Confirm from './AlertDialog';
+import { useWfLabel } from '../utils/useWfLabel';
 
 enum ConfirmType {
   delete,
@@ -69,6 +70,7 @@ function AssignSection(props: IProps) {
   const [organizedBy, setOrganizedBy] = useState('');
   const [confirm, setConfirm] = useState<ConfirmType>();
   const [confirmMsg, setConfirmMsg] = useState('');
+  const getWfLabel = useWfLabel();
   const orgSteps = useMemo(() => {
     return allOrgSteps?.filter(
       (s) => related(s, 'organization') === organization
@@ -389,9 +391,7 @@ function AssignSection(props: IProps) {
         aria-labelledby="assignDlg"
         disableEnforceFocus
       >
-        <DialogTitle id="assignDlg">
-          {t.title.replace('{0}', organizedBy)}
-        </DialogTitle>
+        <DialogTitle id="assignDlg">{t.title}</DialogTitle>
         <DialogContent>
           <TextField
             id="scheme-name"
@@ -415,7 +415,10 @@ function AssignSection(props: IProps) {
               <GroupOrUserAssignment
                 listAdmins={true}
                 key={s.id}
-                label={t.assignment.replace('{0}', s?.attributes?.name ?? '')}
+                label={t.assignment.replace(
+                  '{0}',
+                  getWfLabel(s?.attributes?.name ?? '')
+                )}
                 initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
                 onChange={(value) => handleAssign(s.id, value)}
                 disabled={readOnly}
