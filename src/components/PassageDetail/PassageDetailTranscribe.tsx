@@ -19,6 +19,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { useGlobal } from '../../context/GlobalContext';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -53,6 +54,7 @@ export function PassageDetailTranscribe({
 }: IProps) {
   const {
     mediafileId,
+    section,
     currentstep,
     orgWorkflowSteps,
     setStepComplete,
@@ -63,6 +65,8 @@ export function PassageDetailTranscribe({
   } = usePassageDetailContext();
   const { waitForSave } = useContext(UnsavedContext).state;
   const { setState } = useContext(PassageDetailContext);
+  const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
   const { localizedArtifactTypeFromId } = useArtifactType();
@@ -134,13 +138,12 @@ export function PassageDetailTranscribe({
   }, [currentstep, parsedSteps]);
 
   const curRole = useMemo(() => {
-    if (!currentstep) return undefined;
-
+    if (!currentstep || !hasPermission) return undefined;
     if (!hasChecking) return 'transcriber';
     if (JSON.parse(stepSettings).artifactTypeId) return 'transcriber';
     if (vernacularSteps[0].id === currentstep) return 'transcriber';
     return 'editor';
-  }, [currentstep, vernacularSteps, stepSettings, hasChecking]);
+  }, [currentstep, vernacularSteps, stepSettings, hasChecking, hasPermission]);
 
   const handleComplete = (complete: boolean) => {
     waitForSave(undefined, 200).finally(async () => {
