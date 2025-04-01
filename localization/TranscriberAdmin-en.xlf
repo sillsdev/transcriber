@@ -354,7 +354,7 @@
       </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Configure Scheme</source>
+            <source>Configure Permissions</source>
             <target/>
          </segment>
       </unit>
@@ -372,7 +372,7 @@
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
-            <source>Remove Scheme</source>
+            <source>Remove Permissions</source>
             <target/>
          </segment>
       </unit>
@@ -474,7 +474,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Configure Scheme</source>
+            <source>Configure Permission Scheme</source>
             <target/>
          </segment>
       </unit>

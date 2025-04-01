@@ -409,7 +409,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
-            <source>Configure Scheme</source>
+            <source>Configure Permissions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -430,7 +430,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.removeSec">
-            <source>Remove Scheme</source>
+            <source>Remove Permissions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -549,7 +549,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignSection.title">
-            <source>Configure Scheme</source>
+            <source>Configure Permission Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>

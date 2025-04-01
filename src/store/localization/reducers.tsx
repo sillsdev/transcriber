@@ -86,10 +86,10 @@ const initialState = {
 	"assignmentTable": new LocalizedStrings({
 		"en": {
 			"addScheme": "Add Permission Scheme",
-			"assignSec": "Configure Scheme",
+			"assignSec": "Configure Permissions",
 			"delete": "Delete",
 			"filter": "Filter",
-			"removeSec": "Remove Scheme",
+			"removeSec": "Remove Permissions",
 			"role": "Role",
 			"sectionstate": "State",
 			"selectRowsToAssign": "Please select row(s) to configure.",
@@ -110,7 +110,7 @@ const initialState = {
 			"modifySections": "{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme",
 			"role": "Role",
 			"schemeName": "Permission Scheme Name",
-			"title": "Configure Scheme",
+			"title": "Configure Permission Scheme",
 			"users": "Members",
 		}
 	}),
