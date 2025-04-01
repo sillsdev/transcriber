@@ -270,7 +270,8 @@ function AssignSection(props: IProps) {
     }
   };
 
-  const handleCancel = () => {
+  const justClose = () => {
+    refresh?.();
     if (closeMethod) {
       closeMethod();
     }
@@ -284,11 +285,7 @@ function AssignSection(props: IProps) {
       );
       setSchemeName('');
     }
-    refresh?.();
-    if (closeMethod) {
-      closeMethod();
-    }
-    setOpen(false);
+    justClose();
   };
 
   const handleDelete = async () => {
@@ -308,16 +305,12 @@ function AssignSection(props: IProps) {
   const confirmClose = async () => {
     const schemeId = await handleAdd();
     await doAssign(schemeId);
-    refresh?.();
-    if (closeMethod) {
-      closeMethod();
-    }
-    setOpen(false);
+    justClose();
   };
 
   const handleClose = async () => {
     const nImp = impactedSections.length;
-    if (nImp > sections.length) {
+    if (nImp > sections.length && !readOnly) {
       const nSecs = sections.length;
       setConfirmMsg(
         t.modifySections
@@ -433,7 +426,7 @@ function AssignSection(props: IProps) {
             </AltButton>
           )}
           <GrowingSpacer />
-          <AltButton onClick={handleCancel}>
+          <AltButton onClick={justClose}>
             {readOnly ? ts.close : ts.cancel}
           </AltButton>
           {!readOnly && (
