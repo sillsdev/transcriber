@@ -138,7 +138,8 @@ export function PassageDetailTranscribe({
   }, [currentstep, parsedSteps]);
 
   const curRole = useMemo(() => {
-    if (!currentstep || !hasPermission) return undefined;
+    if (!currentstep) return undefined;
+    if (!hasPermission) return 'view';
     if (!hasChecking) return 'transcriber';
     if (JSON.parse(stepSettings).artifactTypeId) return 'transcriber';
     if (vernacularSteps[0].id === currentstep) return 'transcriber';
