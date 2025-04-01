@@ -10,9 +10,7 @@ export const useSectionCounts = (
     ? sections.filter((s) => related(s, 'plan') === plan)
     : ([] as Section[]);
   const planSectionIds = planSections.map((p) => p.id);
-  const assigned = planSections.filter(
-    (s) => related(s, 'transcriber') || related(s, 'editor')
-  );
+  const assigned = planSections.filter((s) => related(s, 'organizationScheme'));
   const planPassages = passages.filter((p) =>
     planSectionIds.includes(related(p, 'section'))
   );
