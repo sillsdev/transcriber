@@ -53,6 +53,8 @@ import {
   useSharedResRead,
   PublishDestinationEnum,
   usePublishDestination,
+  useOrgDefaults,
+  orgDefaultPermissions,
 } from '../../crud';
 import {
   lookupBook,
@@ -126,6 +128,7 @@ import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
 import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
+import { usePeerGroups } from '../Peers/usePeerGroups';
 
 const SaveWait = 500;
 
@@ -262,6 +265,7 @@ export function ScriptureTable(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStepD[]>([]);
+  const { myGroups } = usePeerGroups();
   const {
     getProjectDefault,
     setProjectDefault,
@@ -277,13 +281,14 @@ export function ScriptureTable(props: IProps) {
     groupmemberships,
   });
   const { getPublishTo, publishStatus } = usePublishDestination();
+  const { getOrgDefault } = useOrgDefaults();
   const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
     hideDone: false,
     minSection: 1,
     maxSection: -1,
-    assignedToMe: false,
+    assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions)),
     disabled: false,
     canHideDone: true,
   });
@@ -1398,6 +1403,8 @@ export function ScriptureTable(props: IProps) {
         getPublishTo,
         publishStatus,
         getSharedResource,
+        user,
+        myGroups,
       });
       setSheet(newWorkflow);
 
@@ -1468,8 +1475,19 @@ export function ScriptureTable(props: IProps) {
 
     if (!updateRef.current) {
       setUpdate(true);
+      let sectionIndex = -1;
+      let sectionScheme: RecordIdentity | undefined;
+      let hasOnePassage = false;
       sheetRef.current.forEach((s, index) => {
         if (isSectionRow(s)) {
+          if (sectionIndex >= 0) {
+            if (!hasOnePassage) {
+              newWork[sectionIndex].filtered = true;
+            }
+          }
+          sectionIndex = index;
+          sectionScheme = s.scheme;
+          hasOnePassage = false;
           sectionfiltered = isSectionFiltered(
             filterState,
             minSection,
@@ -1498,7 +1516,7 @@ export function ScriptureTable(props: IProps) {
             sectionfiltered = allMyPassagesArePublishing;
           }
         }
-        if (isPassageRow(s))
+        if (isPassageRow(s)) {
           filtered =
             sectionfiltered ||
             isPassageFiltered(
@@ -1507,15 +1525,26 @@ export function ScriptureTable(props: IProps) {
               minSection,
               hidePublishing,
               orgSteps,
-              doneStepId
+              doneStepId,
+              sectionScheme,
+              s.assign,
+              user,
+              myGroups
             );
-        else filtered = sectionfiltered;
+        } else filtered = sectionfiltered;
+        hasOnePassage ||= s.kind === IwsKind.Passage && filtered === false;
         if (filtered !== s.filtered) changed = true;
         newWork.push({
           ...s,
           filtered,
         });
       });
+      if (sectionIndex >= 0) {
+        if (!hasOnePassage) {
+          newWork[sectionIndex].filtered = true;
+        }
+      }
+
       if (changed) {
         setSheet(newWork);
       }

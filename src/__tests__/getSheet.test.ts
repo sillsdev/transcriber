@@ -340,6 +340,8 @@ var gsDefaults = {
   readSharedResource,
   current: curSheet,
   getSharedResource,
+  user: 'u0',
+  myGroups: [],
 };
 
 var secResult = {
@@ -349,15 +351,15 @@ var secResult = {
   passageSeq: 0,
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
-  filtered: false,
+  filtered: true,
   published: [] as PublishDestinationEnum[],
-  editor: undefined,
   graphicUri: undefined,
   graphicFullSizeUrl: undefined,
   graphicRights: undefined,
   reference: '',
   titleMediaId: undefined,
   transcriber: undefined,
+  scheme: undefined,
 } as ISheet;
 
 var pasResult = {

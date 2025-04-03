@@ -1267,7 +1267,7 @@ const initialState = {
 	"scriptureTableFilter": new LocalizedStrings({
 		"en": {
 			"apply": "Apply",
-			"assignedToMe": "Only rows with discussions assigned to me",
+			"assignedToMe": "Only rows assigned to me",
 			"clear": "Clear",
 			"disable": "Disable filter to add rows",
 			"hideDone": "Hide Done rows",
