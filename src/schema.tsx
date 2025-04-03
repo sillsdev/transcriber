@@ -699,6 +699,7 @@ if (requestedSchema > 3 && schemaDefinition.models) {
       mediafile: { kind: 'hasOne', type: 'mediafile' },
       user: { kind: 'hasOne', type: 'user' },
       lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+      creatorUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.sectionresource = {

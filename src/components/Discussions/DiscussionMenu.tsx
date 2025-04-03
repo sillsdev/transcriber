@@ -17,11 +17,14 @@ interface IProps {
   action?: (what: string) => void;
   resolved?: boolean;
   canSet?: boolean;
+  canResolve: boolean;
+  canEdit: boolean;
   stopPlayer?: () => void;
 }
 
 export function DiscussionMenu(props: IProps) {
-  const { id, action, resolved, canSet, stopPlayer } = props;
+  const { id, action, resolved, canSet, canResolve, canEdit, stopPlayer } =
+    props;
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -62,7 +65,7 @@ export function DiscussionMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!resolved && (
+        {!resolved && canEdit && (
           <StyledMenuItem
             id="commentEdit"
             aria-hidden={!Boolean(anchorEl)}
@@ -74,7 +77,7 @@ export function DiscussionMenu(props: IProps) {
             <ListItemText primary={t.edit} />
           </StyledMenuItem>
         )}
-        {(!offline || offlineOnly) && (
+        {(!offline || offlineOnly) && canResolve && (
           <StyledMenuItem
             id="commentMenudelete"
             aria-hidden={!Boolean(anchorEl)}
@@ -86,7 +89,7 @@ export function DiscussionMenu(props: IProps) {
             <ListItemText primary={t.delete} />
           </StyledMenuItem>
         )}
-        {resolved === false && (
+        {resolved === false && canResolve && (
           <StyledMenuItem
             id="resolve"
             aria-hidden={!Boolean(anchorEl)}

@@ -110,7 +110,7 @@ export const usePermissions = () => {
     return { ...json, approved };
   };
 
-  const getAuthor = (perms: string) => {
+  const getMentorAuthor = (perms: string) => {
     if (!perms) return undefined;
     var json = JSON.parse(perms);
     if (Object.keys(json).length === 0) return undefined;
@@ -119,6 +119,7 @@ export const usePermissions = () => {
       json['author']
     );
   };
+
   //given one permission "mentor"
   const hasPermission = (perm: PermissionName) => permissions.includes(perm);
 
@@ -134,7 +135,7 @@ export const usePermissions = () => {
     localizePermission,
     localizedPermissions,
     permissionTip,
-    getAuthor,
+    getMentorAuthor,
     getPermissionFromJson,
   };
 };

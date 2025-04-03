@@ -255,8 +255,13 @@ export const DiscussionCard = (props: IProps) => {
     discussion.attributes?.subject
   );
   const assignedToMeRef = useRef(false);
-  const { permissions, canAccess, approvalStatus, getAuthor, hasPermission } =
-    usePermissions();
+  const {
+    permissions,
+    canAccess,
+    approvalStatus,
+    getMentorAuthor,
+    hasPermission,
+  } = usePermissions();
   const { myGroups, citGroup, mentorGroup } = usePeerGroups();
   const {
     assignedGroup,
@@ -274,7 +279,21 @@ export const DiscussionCard = (props: IProps) => {
   const [comment, setComment] = useState('');
   const commentMediaId = useRef('');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const { userIsAdmin } = useRole();
 
+  const CommentAuthor = (comment: CommentD) =>
+    getMentorAuthor(comment.attributes.visible) ??
+    related(comment, 'creatorUser') ??
+    related(comment, 'lastModifiedByUser');
+
+  const DiscussionAuthor = (discussion: DiscussionD) =>
+    related(discussion, 'creatorUser') ??
+    related(discussion, 'lastModifiedByUser');
+
+  const canResolve: boolean = useMemo(
+    () => userIsAdmin || DiscussionAuthor(discussion) === user,
+    [discussion, user, userIsAdmin]
+  );
   const mediafileId = useMemo(() => {
     return playerMediafile?.id ?? '';
   }, [playerMediafile]);
@@ -313,7 +332,6 @@ export const DiscussionCard = (props: IProps) => {
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
-  const { userIsAdmin } = useRole();
 
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
@@ -836,15 +854,11 @@ export const DiscussionCard = (props: IProps) => {
           for (
             var ix = 0;
             ix < sortedByUpdatedDesc.length &&
-            (getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-              related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')) === user;
+            CommentAuthor(sortedByUpdatedDesc[ix]) === user;
             ix++
           );
           if (ix < sortedByUpdatedDesc.length) {
-            handleUserChange(
-              getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-                related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')
-            );
+            handleUserChange(CommentAuthor(sortedByUpdatedDesc[ix]));
             setChangeAssignment(false);
           }
         }
@@ -894,6 +908,7 @@ export const DiscussionCard = (props: IProps) => {
                   placeholder={t.topic}
                   required
                   fullWidth
+                  disabled={!canResolve}
                 />
                 {!isPersonal && (
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -915,6 +930,7 @@ export const DiscussionCard = (props: IProps) => {
                   required={false}
                   scripture={ScriptureEnum.hide}
                   type={ArtifactCategoryType.Discussion}
+                  disabled={!canResolve}
                 />
                 {onAddComplete && (
                   <CommentEditor
@@ -1016,7 +1032,7 @@ export const DiscussionCard = (props: IProps) => {
                       label={t.assign}
                     />
                   )}
-                  {!discussion.attributes.resolved && (
+                  {!discussion.attributes.resolved && canResolve && (
                     <IconButton
                       id={`resolveDiscussion-${discussion.id}`}
                       sx={lightButton}
@@ -1031,6 +1047,8 @@ export const DiscussionCard = (props: IProps) => {
                     action={handleDiscussionAction}
                     resolved={discussion.attributes.resolved || false}
                     canSet={Boolean(currentSegment)}
+                    canResolve={canResolve}
+                    canEdit={canResolve || !isPersonal} //can only assign
                   />
                 </Grid>
               </Grid>

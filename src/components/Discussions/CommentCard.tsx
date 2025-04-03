@@ -133,7 +133,12 @@ export const CommentCard = (props: IProps) => {
     setApprovedx(value);
     approvedRef.current = value;
   };
-  const { getAuthor, hasPermission } = usePermissions();
+  const { getMentorAuthor, hasPermission } = usePermissions();
+
+  const CommentAuthor = (comment: CommentD) =>
+    getMentorAuthor(comment.attributes.visible) ??
+    related(comment, 'creatorUser') ??
+    related(comment, 'lastModifiedByUser');
 
   const reset = () => {
     setEditing(false);
@@ -255,12 +260,7 @@ export const CommentCard = (props: IProps) => {
 
   useEffect(() => {
     if (users) {
-      var u = users.filter(
-        (u) =>
-          u.id ===
-          (getAuthor(comment.attributes.visible) ??
-            related(comment, 'lastModifiedByUser'))
-      );
+      var u = users.filter((u) => u.id === CommentAuthor(comment));
       if (u.length > 0) setAuthor(u[0]);
     }
     setMediaId(related(comment, 'mediafile'));
@@ -330,7 +330,11 @@ export const CommentCard = (props: IProps) => {
             ))}
           {mediaId !== commentPlayId && author?.id === user && !oldVernVer && (
             <Grid item>
-              <DiscussionMenu action={handleCommentAction} />
+              <DiscussionMenu
+                action={handleCommentAction}
+                canResolve={true}
+                canEdit={true}
+              />
             </Grid>
           )}
         </GridContainerSpread>
