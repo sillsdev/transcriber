@@ -237,7 +237,7 @@ export default function TargetWordAdd(props: IProps) {
                   aria-label="record target term"
                   onClick={handleRecord}
                   onMouseDown={handleMouseDownSave}
-                  disabled={commentRecording || recording}
+                  disabled={commentRecording || recording || !onTextChange}
                   edge="start"
                 >
                   <MicIcon fontSize="small" />
