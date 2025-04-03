@@ -8,4 +8,5 @@ export const ObtHelps = 'OBT Helps';
 export const Paratext = 'Paratext';
 export const Render = 'Render';
 export const TranslatorsNotes = "Translator's Notes";
+export const TranslatorsWorkplace = "Translator's Workplace";
 export const UbsResources = 'UBS Resources';
