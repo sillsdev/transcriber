@@ -42,6 +42,7 @@ const routes = createRoutesFromElements([
     />
     <Route path="/detail/:prjId/:pasId" element={<Auth el={<Detail />} />} />
     <Route path="/" element={<Welcome />} />
+    <Route path="*" element={<Team />} />
   </Route>,
 ]);
 
