@@ -54,6 +54,7 @@ export interface ISheet {
   graphicFullSizeUrl?: string;
   color?: string;
   titleMediaId?: RecordIdentity;
+  myWork?: boolean;
 }
 
 export const flatScrColNames = [

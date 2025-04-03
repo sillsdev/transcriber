@@ -6120,7 +6120,7 @@
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
-            <source>Only rows with discussions assigned to me</source>
+            <source>Only rows assigned to me</source>
             <target/>
          </segment>
       </unit>

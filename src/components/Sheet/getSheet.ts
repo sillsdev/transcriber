@@ -10,6 +10,7 @@ import {
   OrgWorkflowStepD,
   SharedResourceD,
   MediaFileD,
+  GroupD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -117,7 +118,11 @@ export const isPassageFiltered = (
   minSection: number,
   hidePublishing: boolean,
   orgWorkflowSteps: OrgWorkflowStep[],
-  doneStepId: string
+  doneStepId: string,
+  sectionScheme: RecordIdentity | undefined,
+  assign: RecordIdentity | undefined,
+  user: string,
+  myGroups: GroupD[]
 ) => {
   const stepIndex = (stepId: string) =>
     orgWorkflowSteps.findIndex((s) => s.id === stepId);
@@ -125,7 +130,6 @@ export const isPassageFiltered = (
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
-      (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
         stepIndex(w.stepId) > stepIndex(filterState.maxStep)) ||
@@ -134,7 +138,13 @@ export const isPassageFiltered = (
         stepIndex(w.stepId) < stepIndex(filterState.minStep)) ||
       (filterState.minSection > minSection &&
         w.sectionSeq < filterState.minSection) ||
-      (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
+      (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection) ||
+      (filterState.assignedToMe &&
+        w.discussionCount === 0 &&
+        sectionScheme !== undefined &&
+        (!assign ||
+          (assign.id !== user &&
+            myGroups.findIndex((g) => g.id === assign.id) < 0))))
   );
 };
 
@@ -167,6 +177,8 @@ export interface GetSheetProps {
   publishStatus: (destinations: PublishDestinationEnum[]) => string;
   getSharedResource: (p: PassageD) => SharedResourceD | undefined;
   current?: ISheet[];
+  user: string;
+  myGroups: GroupD[];
 }
 
 export const getSheet = ({
@@ -190,6 +202,8 @@ export const getSheet = ({
   publishStatus,
   getSharedResource,
   current,
+  user,
+  myGroups,
 }: GetSheetProps) => {
   const myWork = current || Array<ISheet>();
   let plansections = sections
@@ -202,6 +216,7 @@ export const getSheet = ({
     let curSection = 1;
     let curSectionPublished = false;
     let sectionIndex: number | undefined;
+    let sectionScheme: RecordIdentity | undefined;
     if (section.attributes) {
       item.level = section.attributes.level || SheetLevel.Section;
       item.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
@@ -226,6 +241,7 @@ export const getSheet = ({
       item.scheme = schemeId
         ? { type: 'organizationscheme', id: schemeId }
         : undefined;
+      sectionScheme = item.scheme;
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
@@ -255,6 +271,7 @@ export const getSheet = ({
       curSection = item.sectionSeq;
     }
     let first = true;
+    let hasOnePassage = false;
     if (item.kind === IwsKind.Section) {
       sectionIndex = shtSectionAdd(myWork, item);
       item = { ...initItem };
@@ -337,7 +354,11 @@ export const getSheet = ({
             minSection,
             hidePublishing,
             orgWorkflowSteps,
-            doneStepId
+            doneStepId,
+            sectionScheme,
+            item.assign,
+            user,
+            myGroups
           );
         if (
           [PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
@@ -354,7 +375,14 @@ export const getSheet = ({
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       shtPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
+      hasOnePassage ||= item.filtered === false;
     });
+    if (myWork[sectionIndex!]) {
+      const rec = myWork[sectionIndex!];
+      if (rec) {
+        rec.filtered ||= !hasOnePassage;
+      }
+    }
   });
   return myWork;
 };

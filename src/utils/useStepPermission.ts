@@ -28,7 +28,7 @@ export const useStepPermissions = () => {
   const organizations = useOrbitData<OrganizationD[]>('organization');
 
   useEffect(() => {
-    var on = getOrgDefault(orgDefaultPermissions);
+    const on = Boolean(getOrgDefault(orgDefaultPermissions));
     //leave this here until we figure out why it's getting reset often
     console.log('org permissions turned on?', on);
     setPermissionsOn(on);
