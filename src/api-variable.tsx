@@ -64,4 +64,7 @@ export const API_CONFIG = {
   notify: process.env.REACT_APP_NOTIFY
     ? process.env.REACT_APP_NOTIFY
     : 'https://notify.bugsnag.com',
+  training: process.env.REACT_APP_TRAINING
+    ? process.env.REACT_APP_TRAINING
+    : '',
 };

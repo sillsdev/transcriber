@@ -133,7 +133,9 @@ export function Access() {
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<UserD>();
   const [whichUsers, setWhichUsers] = useState(
-    localStorage.getItem('mode') ?? pathname.substring('/access/'.length)
+    API_CONFIG.training
+      ? 'online-local'
+      : localStorage.getItem('mode') ?? pathname.substring('/access/'.length)
   );
   const [selectedUser, setSelectedUser] = useState('');
   const offlineProjRead = useOfflnProjRead();
@@ -155,6 +157,9 @@ export function Access() {
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
       setOffline(true);
+      if (API_CONFIG.training) {
+        setOfflineOnly(true);
+      }
       logout();
       localStorage.setItem(LocalKey.userId, selected[0].id);
       setSelectedUser(uId);

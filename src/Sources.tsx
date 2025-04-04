@@ -183,7 +183,7 @@ export const Sources = async (
   let remote: JSONAPISource = {} as JSONAPISource;
   let datachangeremote: JSONAPISource = {} as JSONAPISource;
 
-  const offline = !tokenCtx.state.accessToken;
+  const offline = !tokenCtx.state.accessToken || API_CONFIG.training;
 
   if (!offline) {
     remote = coordinator.sourceNames.includes('remote')
