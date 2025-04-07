@@ -1,5 +1,5 @@
 {
-  "name": "audio-project-manager",
+  "name": "audio-project-manager-training",
   "version": "4.1.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
@@ -191,8 +191,8 @@
     "url": "http://sil.org"
   },
   "build": {
-    "appId": "sil.lsdev.audio-project-manager",
-    "productName": "Audio Project Manager",
+    "appId": "sil.lsdev.audio-project-manager-training",
+    "productName": "Audio Project Manager Training",
     "copyright": "Copyright © 2020-2025 ${author}",
     "win": {
       "icon": "public/icon.png"

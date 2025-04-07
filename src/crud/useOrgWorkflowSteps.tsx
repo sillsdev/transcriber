@@ -24,6 +24,7 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { addPt } from '../utils/addPt';
+import { API_CONFIG } from '../api-variable';
 
 export const defaultWorkflow = 'draft';
 
@@ -114,7 +115,8 @@ export const useOrgWorkflowSteps = () => {
         (s) =>
           (process === 'ANY' || s.attributes.process === process) &&
           related(s, 'organization') === org &&
-          Boolean(s.keys?.remoteId) !== getGlobal('offlineOnly')
+          Boolean(s.keys?.remoteId) !==
+            (getGlobal('offlineOnly') && !Boolean(API_CONFIG.training))
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
