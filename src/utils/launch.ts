@@ -2,7 +2,7 @@ const ipc = (window as any)?.electron;
 const path = require('path-browserify');
 
 export const launch = async (target: string, online: boolean) => {
-  if (/\.pdf$/i.test(target)) target = target.slice(18);
+  if (/\.pdf|\.jpg|\.jpeg|\.png$/i.test(target)) target = target.slice(18);
   if (online) ipc?.openExternal(target);
   else if (await ipc?.isWindows()) ipc?.openPath('file:///' + target);
   else {
