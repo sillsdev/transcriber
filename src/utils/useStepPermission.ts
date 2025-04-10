@@ -69,7 +69,7 @@ export const useStepPermissions = () => {
     var step = orgsteps.find(
       (s) =>
         related(s, 'organization') === org &&
-        s.attributes.tool === '{"tool": "record"}'
+        /"tool":\s*"record"/.test(s.attributes.tool)
     );
     if (!step?.id) return false;
     return canDoStep(step.id, sectionId);
