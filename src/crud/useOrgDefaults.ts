@@ -3,7 +3,7 @@ import { useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
-import { useJsonParams } from '../utils';
+import { useJsonParams } from '../utils/useJsonParams';
 
 export const orgDefaultWorkflowProgression = 'WorkflowProgression';
 export const orgDefaultDiscussionFilter = 'discussionFilter';

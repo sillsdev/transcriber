@@ -2,8 +2,9 @@ import React, { useMemo } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { Role, RoleD, RoleNames, User } from '../model';
 import { InitializedRecord } from '@orbit/records';
-import { findRecord, related } from '../crud';
-import { logError, Severity } from '../utils';
+import { findRecord } from '../crud/tryFindRecord';
+import { related } from './related';
+import { logError, Severity } from '../utils/logErrorService';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const useRole = () => {

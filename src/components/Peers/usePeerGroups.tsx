@@ -1,7 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from '../../context/GlobalContext';
 import { User, GroupD, GroupMembership } from '../../model';
-import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
+import { useUser } from '../../crud/useUser';
+import { PermissionName } from '../../crud/usePermissions';
+import { useAllUserGroup } from '../../crud/useAllUserGroup';
+import { related } from '../../crud/related';
 import { useOrbitData } from '../../hoc/useOrbitData';
 
 export interface IUserName {

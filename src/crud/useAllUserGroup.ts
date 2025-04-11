@@ -1,6 +1,6 @@
 import { useGlobal } from '../context/GlobalContext';
 import { Group } from '../model';
-import { related } from '.';
+import { related } from './related';
 
 export const useAllUserGroup = () => {
   const [memory] = useGlobal('memory');

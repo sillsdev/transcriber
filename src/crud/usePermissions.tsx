@@ -4,7 +4,7 @@ import { useGlobal } from '../context/GlobalContext';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { IPermissionStrings } from '../model';
 import { permissionsSelector } from '../selector';
-import { onlyUnique } from '../utils';
+import { onlyUnique } from '../utils/onlyUnique';
 import remoteId, { remoteIdGuid } from './remoteId';
 import { RecordKeyMap } from '@orbit/records';
 
