@@ -7139,7 +7139,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.assignedToMe">
-            <source>Only rows assigned to me</source>
+            <source>Hide rows not assigned to others</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
