@@ -39,8 +39,9 @@ export const useProjectPermissions = (team?: string, proj?: string) => {
     setCanEditSheet(
       (!(isOffline && !offlineOnly) &&
         (isAdmin ||
-          (editgroup && myGroups.findIndex((g) => g.id === editgroup) > -1) ||
-          (edituser && edituser === user))) ??
+          (Boolean(editgroup) &&
+            myGroups.findIndex((g) => g.id === editgroup) > -1) ||
+          (Boolean(edituser) && edituser === user))) ??
         false
     );
 
@@ -49,9 +50,9 @@ export const useProjectPermissions = (team?: string, proj?: string) => {
 
     setCanPublish(
       (isAdmin ||
-        (publishgroup &&
+        (Boolean(publishgroup) &&
           myGroups.findIndex((g) => g.id === publishgroup) > -1) ||
-        (publishuser && publishuser === user)) ??
+        (Boolean(publishuser) && publishuser === user)) ??
         false
     );
   }, [projectRec, myGroups, isAdmin, user, isOffline, offlineOnly]);

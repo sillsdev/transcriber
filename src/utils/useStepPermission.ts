@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useGlobal } from '../context/GlobalContext';
-import {
-  findRecord,
-  orgDefaultPermissions,
-  related,
-  useOrgDefaults,
-  useRole,
-} from '../crud';
+import { useRole } from '../crud/useRole';
+import { findRecord } from '../crud/tryFindRecord';
+import { orgDefaultPermissions, useOrgDefaults } from '../crud/useOrgDefaults';
+import { related } from '../crud/related';
 import { useOrbitData } from '../hoc/useOrbitData';
-import { OrganizationD, OrgWorkflowStep, SectionD } from '../model';
-import OrganizationSchemeStep from '../model/organizationSchemeStep';
+import { OrganizationD, OrgWorkflowStepD, SectionD } from '../model';
+import OrganizationSchemeStepD from '../model/organizationSchemeStep';
 
 export const useStepPermissions = () => {
   const [memory] = useGlobal('memory');
@@ -21,8 +18,8 @@ export const useStepPermissions = () => {
   const { myGroups } = usePeerGroups();
   const { getOrgDefault } = useOrgDefaults();
   const [org] = useGlobal('organization');
-  const orgsteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
-  const steps = useOrbitData<OrganizationSchemeStep[]>(
+  const orgsteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
+  const steps = useOrbitData<OrganizationSchemeStepD[]>(
     'organizationschemestep'
   );
   const organizations = useOrbitData<OrganizationD[]>('organization');
@@ -37,21 +34,21 @@ export const useStepPermissions = () => {
 
   const canDoSectionStep = (stepId: string, section: SectionD) => {
     if (userIsAdmin || !permissionsOn) return true;
-    var scheme = related(section, 'organizationScheme');
+    const scheme = related(section, 'organizationScheme');
     if (!scheme) return false;
-    var assigned = steps.find(
-      (s) =>
+    const assigned = steps.find(
+      (s: OrganizationSchemeStepD) =>
         related(s, 'organizationscheme') === scheme &&
         related(s, 'orgWorkflowStep') === stepId
     );
     if (!assigned) return true;
-    var assignedgroup = related(assigned, 'group');
-    var assigneduser = related(assigned, 'user');
+    const assignedgroup = related(assigned as OrgWorkflowStepD, 'group');
+    const assigneduser = related(assigned as OrgWorkflowStepD, 'user');
 
     return (
-      ((assignedgroup &&
+      ((Boolean(assignedgroup) &&
         myGroups.findIndex((g) => g.id === assignedgroup) > -1) ||
-        (assigneduser && assigneduser === user)) ??
+        (Boolean(assigneduser) && assigneduser === user)) ??
       false
     );
   };
@@ -66,10 +63,10 @@ export const useStepPermissions = () => {
 
   const canDoVernacular = (sectionId: string) => {
     if (userIsAdmin || !permissionsOn) return true;
-    var step = orgsteps.find(
+    const step = orgsteps.find(
       (s) =>
         related(s, 'organization') === org &&
-        s.attributes.tool === '{"tool": "record"}'
+        /"tool":\s*"record"/.test(s.attributes.tool)
     );
     if (!step?.id) return false;
     return canDoStep(step.id, sectionId);

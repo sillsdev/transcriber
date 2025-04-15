@@ -40,6 +40,7 @@ import {
   useRole,
   AcceptInvitation,
   useProjectType,
+  findRecord,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -245,9 +246,7 @@ export function Loading() {
     planId: string,
     fromUrl: string | null
   ) => {
-    const projRec = memory.cache.query((q) =>
-      q.findRecord({ type: 'project', id: projectId })
-    );
+    const projRec = findRecord(memory, 'project', projectId);
     if (projRec) {
       setProject(projectId);
       const orgId = related(projRec, 'organization') as string;
@@ -279,8 +278,7 @@ export function Loading() {
     }
     let fromUrl = getGotoUrl();
     let waitToNavigate = false;
-    if (fromUrl && !/^\/plan|^\/detail/.test(fromUrl))
-      fromUrl = null;
+    if (fromUrl && !/^\/plan|^\/detail/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {

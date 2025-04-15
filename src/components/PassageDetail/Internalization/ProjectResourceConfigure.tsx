@@ -201,7 +201,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (items?.length > 0) {
       let newData: ICell[][] = emptyTable();
       const newInfo = items.map((v) => {
-        const rec = memory?.cache.query((q) => q.findRecord(v));
+        const rec = findRecord(memory, v.type, v.id);
         if (!rec) return {} as IInfo;
         if (v?.type === 'passage') {
           const section = findRecord(

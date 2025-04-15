@@ -1,21 +1,19 @@
 import Memory from '@orbit/memory';
-import { Organization, OrganizationMembership } from '../model';
+import { Organization, OrganizationD, OrganizationMembershipD } from '../model';
 import { related } from '.';
 
 export function getOrgs(memory: Memory, currentUser: string): Organization[] {
-  let orgs: Organization[] = memory?.cache.query((q) =>
+  let orgs = memory?.cache.query((q) =>
     q.findRecords('organization')
-  ) as any;
+  ) as OrganizationD[];
   if (process.env.REACT_APP_MODE === 'electron') {
-    let oms: OrganizationMembership[] = memory?.cache.query((q) =>
+    let oms = memory?.cache.query((q) =>
       q.findRecords('organizationmembership')
-    ) as any;
-    orgs = orgs.filter((o) =>
-      oms
-        .filter((om) => related(om, 'user') === currentUser)
-        .map((om) => related(om, 'organization'))
-        .includes(o.id)
-    );
+    ) as OrganizationMembershipD[];
+    const userOrgIds = oms
+      .filter((om) => related(om, 'user') === currentUser)
+      .map((om) => related(om, 'organization')) as string[];
+    orgs = orgs.filter((o) => userOrgIds.includes(o.id));
   }
   return orgs;
 }
