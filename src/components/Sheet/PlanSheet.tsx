@@ -217,7 +217,7 @@ interface IProps {
   onHistory: (i: number) => () => void;
   onGraphic: (i: number) => void;
   onFilterChange: (
-    newstate: ISTFilterState | undefined,
+    newstate: ISTFilterState | undefined | null,
     isDefault: boolean
   ) => void;
   onFirstMovement: (newFM: number) => void;

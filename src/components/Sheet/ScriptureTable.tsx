@@ -312,9 +312,11 @@ export function ScriptureTable(props: IProps) {
     action: t.extras,
   };
   const onFilterChange = (
-    filter: ISTFilterState | undefined,
+    filter: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
+    if (filter === null)
+      filter = { ...defaultFilterState, assignedToMe: false };
     setLocalDefault(projDefFilterParam, filter);
     if (projDefault) {
       var def;
@@ -336,7 +338,7 @@ export function ScriptureTable(props: IProps) {
       }
       setProjectDefault(projDefFilterParam, def);
     }
-    if (filter) setFilterState(() => filter);
+    if (filter) setFilterState(() => filter as ISTFilterState);
     else setFilterState(getFilter(defaultFilterState));
   };
   const setSheet = (ws: ISheet[]) => {
@@ -1250,14 +1252,23 @@ export function ScriptureTable(props: IProps) {
   const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
 
   useEffect(() => {
-    setFilterState((fs) => ({
-      ...fs,
-      assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions, organization)),
-    }));
+    const assignedToMe = Boolean(
+      getOrgDefault(orgDefaultPermissions, organization)
+    );
+    if (assignedToMe !== defaultFilterState.assignedToMe) {
+      setFilterState((fs) => ({
+        ...fs,
+        assignedToMe,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getOrgDefault, organization]);
 
   useEffect(() => {
-    setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    if (minSection !== defaultFilterState.minSection) {
+      setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minSection]);
 
   const doneStepId = useMemo(() => {

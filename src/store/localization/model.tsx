@@ -1210,6 +1210,7 @@ export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsM
     "step": string;
     "minimum": string;
     "maximum": string;
+    "reset": string;
     "saveFilter": string;
 };
 

@@ -1276,6 +1276,7 @@ const initialState = {
 			"step": "Workflow Step",
 			"minimum": "Minimum",
 			"maximum": "Maximum",
+			"reset": "Reset",
 			"saveFilter": "Save as project default",
 		}
 	}),
