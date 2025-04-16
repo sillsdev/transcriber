@@ -186,7 +186,6 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [org] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
@@ -288,7 +287,7 @@ export function ScriptureTable(props: IProps) {
     hideDone: false,
     minSection: 1,
     maxSection: -1,
-    assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions)),
+    assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions, organization)),
     disabled: false,
     canHideDone: true,
   });
@@ -1245,10 +1244,17 @@ export function ScriptureTable(props: IProps) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowSteps, orgWorkflowSteps, org]);
+  }, [workflowSteps, orgWorkflowSteps, organization]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
+
+  useEffect(() => {
+    setFilterState((fs) => ({
+      ...fs,
+      assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions, organization)),
+    }));
+  }, [getOrgDefault, organization]);
 
   useEffect(() => {
     setDefaultFilterState((fs) => ({ ...fs, minSection }));
