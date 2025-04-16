@@ -22,6 +22,7 @@ import {
   useArtifactType,
   ArtifactTypeSlug,
   useFetchUrlNow,
+  IPlanMedia,
 } from '../crud';
 import { isElectron } from '../api-variable';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -56,6 +57,7 @@ import {
 } from '../crud/useProjectDefaults';
 import { ISTFilterState } from './Sheet/filterMenu';
 import stringReplace from 'react-string-replace';
+import { MarkDownType, UriLinkType } from './MediaUpload';
 
 interface PlanProject {
   [planId: string]: string;
@@ -117,7 +119,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
       ? getLocalDefault(projDefFilterParam, proj.id) ??
         getProjectDefault(projDefFilterParam, proj) ??
         {}
-      : {};
+      : ({} as ISTFilterState);
 
   const getSectionArr = (project: string) => {
     let projRec = findRecord(memory, 'project', project) as ProjectD;
@@ -132,6 +134,10 @@ export const ProjectDownloadAlert = (props: IProps) => {
     const sectionMap = new Map(arr);
     return sectionMap?.get(sectionId) || sectionId.toString();
   };
+
+  const isDownloadable = (m: IPlanMedia) =>
+    m.media.attributes.contentType !== MarkDownType &&
+    m.media.attributes.contentType !== UriLinkType;
 
   const getNeedyRemoteIds = async () => {
     if (downloadingRef.current) return [];
@@ -161,7 +167,10 @@ export const ProjectDownloadAlert = (props: IProps) => {
     let newFilteredIds = [];
     let missingSize = 0;
     for (const m of mediaInfo) {
-      if (related(m.media, 'artifactType') || related(m.media, 'passage')) {
+      if (
+        isDownloadable(m) &&
+        (related(m.media, 'artifactType') || related(m.media, 'passage'))
+      ) {
         var local = { localname: '' };
         var path = await dataPath(
           m.media.attributes?.audioUrl ||
@@ -174,7 +183,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         const fileName = local.localname;
         if (fileNames.has(fileName)) continue;
         fileNames.add(fileName);
-        const fileSize = m.media?.attributes?.filesize || 0;
+        const fileSize = m.media?.attributes?.filesize || 5000;
         const proj = planProject[m.plan];
         const projRec = projects.find((p) => p.id === proj);
         const filterState = getFilterState(projRec);
@@ -325,7 +334,6 @@ export const ProjectDownloadAlert = (props: IProps) => {
     const size = needyIds.reduce((p, c) => p + szOfVal(c, value), 0);
     setDownloadSize(size);
   };
-
   return (
     <div>
       {alert && (
