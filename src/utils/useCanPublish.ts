@@ -10,11 +10,8 @@ import { UpdateRecord } from '../model/baseModel';
 import { addPt } from './addPt';
 import { useProjectPermissions } from './useProjectPermissions';
 
-export const useCanPublish = () => {
+export const useUserCanPublish = () => {
   const [userCanPublish, setUserCanPublish] = useState<boolean | undefined>();
-  const [canAddPublishing, setCanAddPublishing] = useState<
-    boolean | undefined
-  >(); //allowed to turn it on (paratext)
 
   const askingRef = useRef(false);
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -22,7 +19,6 @@ export const useCanPublish = () => {
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
-  const { canEditSheet, canPublish } = useProjectPermissions();
 
   const users = useOrbitData<User[]>('user');
   const paratext_canPublish = useSelector(
@@ -41,11 +37,8 @@ export const useCanPublish = () => {
     if (user && users) {
       const u = users.find((u) => u.id === user);
       setUserCanPublish(u?.attributes?.canPublish ?? false);
-      setCanAddPublishing(
-        (u?.attributes?.canPublish as boolean) && (canEditSheet || canPublish)
-      );
     }
-  }, [user, users, canEditSheet, canPublish]);
+  }, [user, users]);
 
   useEffect(() => {
     if (!isOffline) {
@@ -67,9 +60,6 @@ export const useCanPublish = () => {
           //showMessage(translateParatextError(paratext_canPublishStatus, ts));
           console.error(paratext_canPublishStatus.errMsg);
         } else if (paratext_canPublishStatus.complete) {
-          setCanAddPublishing(
-            (paratext_canPublish as boolean) && (canEditSheet || canPublish)
-          );
           const u = users.find((u) => u.id === user);
           if (
             u !== undefined &&
@@ -81,16 +71,23 @@ export const useCanPublish = () => {
           resetCanPublish();
         }
       }
-    } else {
-      setCanAddPublishing(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    accessToken,
-    isOffline,
-    canAddPublishing,
-    paratext_canPublish,
-    paratext_canPublishStatus,
-  ]);
+  }, []);
+  return { userCanPublish };
+};
+
+export const useCanPublish = () => {
+  const { userCanPublish } = useUserCanPublish();
+  const [canAddPublishing, setCanAddPublishing] = useState<
+    boolean | undefined
+  >(); //allowed to turn it on (paratext)
+
+  const { canEditSheet, canPublish } = useProjectPermissions();
+
+  useEffect(() => {
+    setCanAddPublishing(userCanPublish && (canEditSheet || canPublish));
+  }, [userCanPublish, canEditSheet, canPublish]);
+
   return { canAddPublishing };
 };
