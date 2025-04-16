@@ -659,7 +659,6 @@ export function TranscriptionTab(props: IProps) {
     }
     return <Table.Cell {...props} />;
   };
-  console.log('planColumn', planColumn, 'floatTop', floatTop);
   return (
     <Box id="TranscriptionTab" sx={{ display: 'flex' }}>
       <div>
