@@ -11,7 +11,7 @@ import { addPt } from './addPt';
 import { useProjectPermissions } from './useProjectPermissions';
 
 export const useUserCanPublish = () => {
-  const [userCanPublish, setUserCanPublish] = useState<boolean | undefined>();
+  const [canUserPublish, setCanUserPublish] = useState<boolean | undefined>();
 
   const askingRef = useRef(false);
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -36,14 +36,14 @@ export const useUserCanPublish = () => {
   useEffect(() => {
     if (user && users) {
       const u = users.find((u) => u.id === user);
-      setUserCanPublish(u?.attributes?.canPublish ?? false);
+      setCanUserPublish(u?.attributes?.canPublish ?? false);
     }
   }, [user, users]);
 
   useEffect(() => {
     if (!isOffline) {
       if (
-        userCanPublish === false && //if it's still undefined...wait for it to be set from user...requery if it's false
+        canUserPublish === false && //if it's still undefined...wait for it to be set from user...requery if it's false
         !askingRef.current &&
         accessToken &&
         !paratext_canPublishStatus
@@ -74,11 +74,11 @@ export const useUserCanPublish = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return { userCanPublish };
+  return { canUserPublish };
 };
 
 export const useCanPublish = () => {
-  const { userCanPublish } = useUserCanPublish();
+  const { canUserPublish } = useUserCanPublish();
   const [canAddPublishing, setCanAddPublishing] = useState<
     boolean | undefined
   >(); //allowed to turn it on (paratext)
@@ -86,8 +86,8 @@ export const useCanPublish = () => {
   const { canEditSheet, canPublish } = useProjectPermissions();
 
   useEffect(() => {
-    setCanAddPublishing(userCanPublish && (canEditSheet || canPublish));
-  }, [userCanPublish, canEditSheet, canPublish]);
+    setCanAddPublishing(canUserPublish && (canEditSheet || canPublish));
+  }, [canUserPublish, canEditSheet, canPublish]);
 
   return { canAddPublishing };
 };
