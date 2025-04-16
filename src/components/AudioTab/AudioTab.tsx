@@ -391,7 +391,6 @@ export function AudioTab() {
               shared={shared}
               canSetDestination={!isOffline && canPublish}
               hasPublishing={publishingOn}
-              canPublish={canPublish}
             />
             {attachVisible && (
               <BigDialog

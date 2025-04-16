@@ -35,10 +35,9 @@ interface IProps {
   passId: string;
   canSetDestination: boolean;
   hasPublishing: boolean;
-  canPublish: boolean;
 }
 export const VersionDlg = (props: IProps) => {
-  const { passId, canSetDestination, hasPublishing, canPublish } = props;
+  const { passId, canSetDestination, hasPublishing } = props;
   const mediaFiles = useOrbitData<MediaFile[]>('mediafile');
   const sections = useOrbitData<Section[]>('section');
   const passages = useOrbitData<Passage[]>('passage');
@@ -127,7 +126,6 @@ export const VersionDlg = (props: IProps) => {
         shared={shared}
         canSetDestination={canSetDestination}
         hasPublishing={hasPublishing}
-        canPublish={canPublish}
       />
       <ActionRow>
         <GrowingDiv />

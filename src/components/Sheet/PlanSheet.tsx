@@ -1021,7 +1021,6 @@ export function PlanSheet(props: IProps) {
                     onCopy={handleSheetCopy}
                     onPaste={handleTablePaste}
                     onReseq={handleResequence}
-                    canPublish={canPublish}
                   />
                 )}
               </>

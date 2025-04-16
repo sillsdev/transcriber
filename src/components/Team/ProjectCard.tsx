@@ -494,7 +494,6 @@ export const ProjectCard = (props: IProps) => {
           projectPlans={projectPlans(projectId)}
           planColumn={true}
           sectionArr={getProjectDefault(projDefSectionMap) ?? []}
-          canPublish={canPublish}
         />
       </BigDialog>
       <BigDialog
