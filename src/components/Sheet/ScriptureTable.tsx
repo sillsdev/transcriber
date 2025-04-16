@@ -312,9 +312,11 @@ export function ScriptureTable(props: IProps) {
     action: t.extras,
   };
   const onFilterChange = (
-    filter: ISTFilterState | undefined,
+    filter: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
+    if (filter === null)
+      filter = { ...defaultFilterState, assignedToMe: false };
     setLocalDefault(projDefFilterParam, filter);
     if (projDefault) {
       var def;
@@ -336,7 +338,7 @@ export function ScriptureTable(props: IProps) {
       }
       setProjectDefault(projDefFilterParam, def);
     }
-    if (filter) setFilterState(() => filter);
+    if (filter) setFilterState(() => filter as ISTFilterState);
     else setFilterState(getFilter(defaultFilterState));
   };
   const setSheet = (ws: ISheet[]) => {

@@ -39,7 +39,7 @@ interface IProps {
   maximumSection: number;
   hidePublishing: boolean;
   onFilterChange: (
-    newstate: ISTFilterState | undefined,
+    newstate: ISTFilterState | undefined | null,
     isDefault: boolean
   ) => void;
   filtered: boolean;
@@ -98,7 +98,7 @@ export function FilterMenu(props: IProps) {
   };
 
   const apply = (
-    filterState: ISTFilterState | undefined,
+    filterState: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
     setApplying(true);
@@ -109,12 +109,12 @@ export function FilterMenu(props: IProps) {
   const handleApply = () => {
     apply(localState, defaultRef.current);
   };
-  const handleClear = () => {
+  const handleReset = (clear?: boolean) => {
     setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : undefined);
     setMapMax(!hidePublishing ? sectionMap.get(-1) : undefined);
     setMinHelp('');
     setMaxHelp('');
-    apply(undefined, defaultRef.current);
+    apply(clear ? null : undefined, defaultRef.current);
     setAnchorEl(null);
   };
   const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -330,10 +330,13 @@ export function FilterMenu(props: IProps) {
             />
           </Box>
         )}
+        <PriButton autoFocus sx={btnProp} onClick={() => handleReset()}>
+          {t.reset}
+        </PriButton>
         <PriButton
           autoFocus
           sx={btnProp}
-          onClick={handleClear}
+          onClick={() => handleReset(true)}
           disabled={applyingRef.current || !filtered}
         >
           {t.clear}

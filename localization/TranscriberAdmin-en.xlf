@@ -6172,6 +6172,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTableFilter.reset">
+         <segment>
+            <source>Reset</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTableFilter.saveFilter">
          <segment>
             <source>Save as project default</source>
