@@ -309,8 +309,12 @@ function AssignSection(props: IProps) {
   };
 
   const handleClose = async () => {
+    if (readOnly || !schemeName.trim() || isNameDuplicate) {
+      justClose();
+      return;
+    }
     const nImp = impactedSections.length;
-    if (nImp > sections.length && !readOnly) {
+    if (nImp > sections.length) {
       const nSecs = sections.length;
       setConfirmMsg(
         t.modifySections
