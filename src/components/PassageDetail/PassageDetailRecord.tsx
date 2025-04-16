@@ -60,14 +60,8 @@ export function PassageDetailRecord(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const memory = coordinator?.getSource('memory') as Memory;
-  const {
-    passage,
-    sharedResource,
-    mediafileId,
-    chooserSize,
-    setRecording,
-    canPublish,
-  } = usePassageDetailContext();
+  const { passage, sharedResource, mediafileId, chooserSize, setRecording } =
+    usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onSaving = () => {
@@ -313,7 +307,6 @@ export function PassageDetailRecord(props: IProps) {
           passId={passageId}
           canSetDestination={false}
           hasPublishing={false}
-          canPublish={canPublish}
         />
       </BigDialog>
     </Stack>

@@ -32,7 +32,6 @@ interface IProps {
   onCopy: () => void;
   onPaste: () => void;
   onReseq: () => void;
-  canPublish: boolean;
 }
 
 export const ProjButtons = (props: IProps) => {
@@ -46,7 +45,6 @@ export const ProjButtons = (props: IProps) => {
     onLeft,
     onPaste,
     onReseq,
-    canPublish,
   } = props;
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
@@ -161,7 +159,6 @@ export const ProjButtons = (props: IProps) => {
           projectPlans={projectPlans(project)}
           planColumn={true}
           sectionArr={sectionArr}
-          canPublish={canPublish}
         />
       </BigDialog>
       {openImport && (

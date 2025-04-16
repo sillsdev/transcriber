@@ -106,19 +106,11 @@ interface IProps {
   step?: string;
   orgSteps?: OrgWorkflowStepD[];
   sectionArr: [number, string][];
-  canPublish: boolean;
 }
 
 export function TranscriptionTab(props: IProps) {
-  const {
-    projectPlans,
-    planColumn,
-    floatTop,
-    step,
-    orgSteps,
-    sectionArr,
-    canPublish,
-  } = props;
+  const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
+    props;
 
   const { pasId } = useParams();
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
@@ -288,12 +280,9 @@ export function TranscriptionTab(props: IProps) {
     var offline = getGlobal('offline');
 
     if (offline) {
-      if (canPublish) setOpenExport(true);
-      else doProjectExport(ExportType.ITF);
+      setOpenExport(true);
     } else {
-      if (canPublish) doProjectExport(ExportType.PTF);
-      //this should have been disabled so I don't think we'll get here
-      else showMessage(t.nopermission);
+      doProjectExport(ExportType.PTF);
     }
   };
 
@@ -598,7 +587,6 @@ export function TranscriptionTab(props: IProps) {
     column: any;
     tableRow: any;
     tableColumn: any;
-    canPublish: boolean;
   }
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
@@ -616,13 +604,7 @@ export function TranscriptionTab(props: IProps) {
     </Table.Cell>
   );
 
-  const ActionCell = ({
-    value,
-    style,
-    mediaId,
-    canPublish,
-    ...restProps
-  }: ICell) => (
+  const ActionCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <IconButton
@@ -639,7 +621,7 @@ export function TranscriptionTab(props: IProps) {
 
           {t.export}
         </IconButton>
-        {canPublish && <AudioDownload mediaId={mediaId} title={t.download} />}
+        <AudioDownload mediaId={mediaId} title={t.download} />
       </Box>
     </Table.Cell>
   );
@@ -671,19 +653,13 @@ export function TranscriptionTab(props: IProps) {
         ) as MediaFileD[];
         const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
-          return (
-            <ActionCell
-              {...props}
-              mediaId={latest[0].id as string}
-              canPublish={canPublish}
-            />
-          );
+          return <ActionCell {...props} mediaId={latest[0].id as string} />;
         else return <Table.Cell {...props} value=""></Table.Cell>;
       }
     }
     return <Table.Cell {...props} />;
   };
-
+  console.log('planColumn', planColumn, 'floatTop', floatTop);
   return (
     <Box id="TranscriptionTab" sx={{ display: 'flex' }}>
       <div>
@@ -693,7 +669,7 @@ export function TranscriptionTab(props: IProps) {
           color="default"
         >
           <TabActions>
-            {(canPublish || offline) && (planColumn || floatTop) && (
+            {(planColumn || floatTop) && (
               <AltButton
                 id="transExp"
                 key="export"
