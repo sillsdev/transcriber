@@ -36,7 +36,7 @@ import {
 } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
+import { useUserCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
 import TeamSettings from './TeamSettings';
@@ -55,7 +55,7 @@ export interface ITeamDialog {
   noNoise?: boolean;
   deltaVoice?: boolean;
   aiTranscribe?: boolean;
-  resetProjectPermissions:boolean
+  resetProjectPermissions: boolean;
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -95,7 +95,7 @@ export function TeamDialog(props: IProps) {
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
-  const { canAddPublishing } = useCanPublish();
+  const { canUserPublish } = useUserCanPublish();
 
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
@@ -396,7 +396,7 @@ export function TeamDialog(props: IProps) {
             values={{ features, workflowProgression, permissions }}
             setValue={setValue}
           />
-          {mode !== DialogMode.add && canAddPublishing && (
+          {mode !== DialogMode.add && canUserPublish && (
             <PublishExpansion
               t={t}
               team={values?.team}
