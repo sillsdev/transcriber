@@ -1250,14 +1250,23 @@ export function ScriptureTable(props: IProps) {
   const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
 
   useEffect(() => {
-    setFilterState((fs) => ({
-      ...fs,
-      assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions, organization)),
-    }));
+    const assignedToMe = Boolean(
+      getOrgDefault(orgDefaultPermissions, organization)
+    );
+    if (assignedToMe !== defaultFilterState.assignedToMe) {
+      setFilterState((fs) => ({
+        ...fs,
+        assignedToMe,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getOrgDefault, organization]);
 
   useEffect(() => {
-    setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    if (minSection !== defaultFilterState.minSection) {
+      setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minSection]);
 
   const doneStepId = useMemo(() => {

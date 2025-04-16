@@ -121,9 +121,9 @@ export function FilterMenu(props: IProps) {
     apply({ ...localState, disabled: event.target.checked }, false);
   };
   useEffect(() => {
-    setLocalState({ ...props.state });
+    if (!changed) setLocalState({ ...props.state });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.state]);
+  }, [props.state, changed]);
 
   const filterChange = (what: string, value: any) => {
     var newstate = { ...localState } as any;
