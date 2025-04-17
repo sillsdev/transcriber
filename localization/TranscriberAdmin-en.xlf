@@ -8292,7 +8292,7 @@
       </unit>
       <unit id="vProject.permissionPublish">
          <segment>
-            <source>Can Publish and Export</source>
+            <source>Can Publish</source>
             <target/>
          </segment>
       </unit>
