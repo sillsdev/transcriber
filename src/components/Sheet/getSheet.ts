@@ -380,7 +380,10 @@ export const getSheet = ({
     if (myWork[sectionIndex!]) {
       const rec = myWork[sectionIndex!];
       if (rec) {
-        rec.filtered ||= !hasOnePassage;
+        const seq = rec.sectionSeq;
+        if (!hasOnePassage && seq > 0 && seq === Math.floor(seq)) {
+          rec.filtered ||= true;
+        }
       }
     }
   });

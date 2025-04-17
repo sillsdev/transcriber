@@ -1498,7 +1498,8 @@ export function ScriptureTable(props: IProps) {
       sheetRef.current.forEach((s, index) => {
         if (isSectionRow(s)) {
           if (sectionIndex >= 0) {
-            if (!hasOnePassage) {
+            const seq = newWork[sectionIndex].sectionSeq;
+            if (!hasOnePassage && seq > 0 && seq === Math.floor(seq)) {
               newWork[sectionIndex].filtered = true;
             }
           }
@@ -1557,7 +1558,8 @@ export function ScriptureTable(props: IProps) {
         });
       });
       if (sectionIndex >= 0) {
-        if (!hasOnePassage) {
+        const seq = newWork[sectionIndex].sectionSeq;
+        if (!hasOnePassage && seq > 0 && seq === Math.floor(seq)) {
           newWork[sectionIndex].filtered = true;
         }
       }
