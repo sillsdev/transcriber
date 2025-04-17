@@ -1737,7 +1737,7 @@ const initialState = {
 			"pericopes": "Pericope/Pericopes",
 			"permissionSettings": "Permissions",
 			"permissionEditSheet": "Spreadsheet Editor",
-			"permissionPublish": "Can Publish and Export",
+			"permissionPublish": "Can Publish",
 			"preview": "Preview",
 			"projectName": "Audio Project Name",
 			"renderCustomize": "including {0} customization",

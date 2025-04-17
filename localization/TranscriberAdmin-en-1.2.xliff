@@ -9676,7 +9676,7 @@
             </context-group>
          </trans-unit>           
          <trans-unit id="vProject.permissionPublish">
-            <source>Can Publish and Export</source>
+            <source>Can Publish</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>
