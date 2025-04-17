@@ -1,5 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
+import {
+  IScriptureTableFilterStrings,
+  ISharedStrings,
+  OrgWorkflowStep,
+} from '../../model';
 import {
   IconButton,
   Badge,
@@ -13,8 +17,11 @@ import {
   Switch,
 } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
-import { iconMargin, PriButton, StyledMenu } from '../../control';
-import { scriptureTableFilterMenuSelector } from '../../selector';
+import { AltButton, iconMargin, PriButton, StyledMenu } from '../../control';
+import {
+  scriptureTableFilterMenuSelector,
+  sharedSelector,
+} from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { OrgWorkflowStepList } from './OrgWorkflowStepList';
 import { useOrganizedBy } from '../../crud';
@@ -81,6 +88,8 @@ export function FilterMenu(props: IProps) {
     scriptureTableFilterMenuSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
   const [changed, setChanged] = useState(false);
 
   const { getOrganizedBy } = useOrganizedBy();
@@ -104,6 +113,7 @@ export function FilterMenu(props: IProps) {
     setApplying(true);
     onFilterChange(filterState, projDefault);
     setApplying(false);
+    handleDefaultCheck(false);
     setChanged(false);
   };
   const handleApply = () => {
@@ -330,19 +340,17 @@ export function FilterMenu(props: IProps) {
             />
           </Box>
         )}
-        <PriButton autoFocus sx={btnProp} onClick={() => handleReset()}>
+        <AltButton autoFocus sx={btnProp} onClick={() => handleReset()}>
           {t.reset}
-        </PriButton>
-        <PriButton
-          autoFocus
+        </AltButton>
+        <AltButton
           sx={btnProp}
           onClick={() => handleReset(true)}
           disabled={applyingRef.current || !filtered}
         >
           {t.clear}
-        </PriButton>
-        <PriButton
-          autoFocus
+        </AltButton>
+        <AltButton
           sx={btnProp}
           onClick={handleApply}
           disabled={
@@ -353,6 +361,9 @@ export function FilterMenu(props: IProps) {
           }
         >
           {t.apply}
+        </AltButton>
+        <PriButton autoFocus sx={btnProp} onClick={handleClose}>
+          {ts.close}
         </PriButton>
       </StyledMenu>
     </Badge>

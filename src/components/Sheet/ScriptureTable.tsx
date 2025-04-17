@@ -53,8 +53,6 @@ import {
   useSharedResRead,
   PublishDestinationEnum,
   usePublishDestination,
-  useOrgDefaults,
-  orgDefaultPermissions,
 } from '../../crud';
 import {
   lookupBook,
@@ -280,14 +278,13 @@ export function ScriptureTable(props: IProps) {
     groupmemberships,
   });
   const { getPublishTo, publishStatus } = usePublishDestination();
-  const { getOrgDefault } = useOrgDefaults();
   const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
     hideDone: false,
     minSection: 1,
     maxSection: -1,
-    assignedToMe: Boolean(getOrgDefault(orgDefaultPermissions, organization)),
+    assignedToMe: false,
     disabled: false,
     canHideDone: true,
   });
@@ -315,8 +312,7 @@ export function ScriptureTable(props: IProps) {
     filter: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
-    if (filter === null)
-      filter = { ...defaultFilterState, assignedToMe: false };
+    if (filter === null) filter = defaultFilterState;
     setLocalDefault(projDefFilterParam, filter);
     if (projDefault) {
       var def;
@@ -1250,19 +1246,6 @@ export function ScriptureTable(props: IProps) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
-
-  useEffect(() => {
-    const assignedToMe = Boolean(
-      getOrgDefault(orgDefaultPermissions, organization)
-    );
-    if (assignedToMe !== defaultFilterState.assignedToMe) {
-      setFilterState((fs) => ({
-        ...fs,
-        assignedToMe,
-      }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getOrgDefault, organization]);
 
   useEffect(() => {
     if (minSection !== defaultFilterState.minSection) {
