@@ -334,11 +334,7 @@ export function PassageDetailItem(props: IProps) {
   };
 
   const editStep = useMemo(
-    () => {
-      const value = canDoSectionStep(currentstep, section);
-      console.log('editStep', value);
-      return value;
-    },
+    () => canDoSectionStep(currentstep, section),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentstep, section]
   );
@@ -371,15 +367,17 @@ export function PassageDetailItem(props: IProps) {
                         allowSegment={segments}
                         allowAutoSegment={segments !== undefined}
                         saveSegments={
-                          segments !== undefined
+                          segments !== undefined && editStep
                             ? SaveSegments.showSaveButton
                             : undefined
                         }
                         defaultSegParams={segParams}
                         suggestedSegments={segString}
                         verses={verses}
-                        canSetDefaultParams={canSetOrgDefault}
-                        onSegmentParamChange={onSegmentParamChange}
+                        canSetDefaultParams={editStep && canSetOrgDefault}
+                        onSegmentParamChange={
+                          editStep ? onSegmentParamChange : undefined
+                        }
                         chooserReduce={chooserSize}
                       />
                     </Pane>
@@ -388,7 +386,7 @@ export function PassageDetailItem(props: IProps) {
                       <Paper
                         sx={{
                           ...paperProps,
-                          display: editStep ? 'none' : 'block',
+                          display: editStep ? 'block' : 'none',
                         }}
                       >
                         <Box sx={rowProp}>
