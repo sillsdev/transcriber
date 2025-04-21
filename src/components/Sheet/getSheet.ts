@@ -380,7 +380,12 @@ export const getSheet = ({
       const rec = myWork[sectionIndex!];
       if (rec) {
         const seq = rec.sectionSeq;
-        if (!hasOnePassage && seq > 0 && seq === Math.floor(seq)) {
+        if (
+          !hasOnePassage &&
+          seq > 0 &&
+          seq === Math.floor(seq) &&
+          filterState.assignedToMe
+        ) {
           rec.filtered = true;
         }
       }
