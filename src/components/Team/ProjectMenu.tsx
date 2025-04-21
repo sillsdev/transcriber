@@ -185,7 +185,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={tpb.import} />
           </StyledMenuItem>
         )}
-        {!justFilter && (isOffline || canPublish) && (
+        {!justFilter && (
           <StyledMenuItem id="projMenuExp" onClick={handle('export')}>
             <ListItemIcon>
               <ExportIcon />
