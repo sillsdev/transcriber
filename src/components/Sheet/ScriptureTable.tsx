@@ -825,7 +825,6 @@ export function ScriptureTable(props: IProps) {
       await waitForIt(
         'saving before delete',
         () => {
-          console.log('waiting for save before deleting.');
           return !savingRef.current;
         },
         () => false,

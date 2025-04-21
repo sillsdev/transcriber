@@ -372,17 +372,16 @@ export const getSheet = ({
           item.color = gr?.color;
         }
       }
-      //console.log(`item ${JSON.stringify(item, null, 2)}`);
       shtPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
-      hasOnePassage ||= item.filtered === false;
+      if (!item.filtered) hasOnePassage = true;
     });
     if (myWork[sectionIndex!]) {
       const rec = myWork[sectionIndex!];
       if (rec) {
         const seq = rec.sectionSeq;
         if (!hasOnePassage && seq > 0 && seq === Math.floor(seq)) {
-          rec.filtered ||= true;
+          rec.filtered = true;
         }
       }
     }
