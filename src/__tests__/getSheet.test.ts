@@ -351,7 +351,7 @@ var secResult = {
   passageSeq: 0,
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
-  filtered: true,
+  filtered: false,
   published: [] as PublishDestinationEnum[],
   graphicUri: undefined,
   graphicFullSizeUrl: undefined,
@@ -413,11 +413,12 @@ test('empty input with plan id gives empty output', () => {
   expect(getSheet({ ...gsDefaults, plan: 'pl1' })).toEqual([]);
 });
 
-test('one section gives output', () => {
+test('one section filters output', () => {
   expect(getSheet({ ...gsDefaults, plan: 'pl1', sections: [s1] })).toEqual([
     {
       ...secResult,
       title: 'Intro',
+      filtered: true,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
     },
