@@ -288,10 +288,12 @@ export const DiscussionCard = (props: IProps) => {
 
   const DiscussionAuthor = (discussion: DiscussionD) =>
     related(discussion, 'creatorUser') ??
-    related(discussion, 'lastModifiedByUser');
+    related(discussion, 'lastModifiedByUser') ??
+    user;
 
   const canResolve: boolean = useMemo(
     () => userIsAdmin || DiscussionAuthor(discussion) === user,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [discussion, user, userIsAdmin]
   );
   const mediafileId = useMemo(() => {
@@ -715,7 +717,16 @@ export const DiscussionCard = (props: IProps) => {
       var t = new RecordTransformBuilder();
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
-
+        ops.push(
+          ...UpdateRelatedRecord(
+            t,
+            discussion,
+            'creatorUser',
+            'user',
+            assignedUser?.id ?? '',
+            user
+          )
+        );
         ops.push(
           ...UpdateRelatedRecord(
             t,
