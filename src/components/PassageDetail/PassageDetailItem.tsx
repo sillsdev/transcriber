@@ -128,6 +128,8 @@ export function PassageDetailItem(props: IProps) {
     handleItemTogglePlay,
     handleItemPlayEnd,
     setRecording,
+    currentstep,
+    section,
   } = usePassageDetailContext();
   const { toolChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
@@ -139,7 +141,7 @@ export function PassageDetailItem(props: IProps) {
   const [segString, setSegString] = useState('{}');
   const [verses, setVerses] = useState('');
   const cancelled = useRef(false);
-  const { canDoVernacular } = useStepPermissions();
+  const { canDoSectionStep } = useStepPermissions();
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
@@ -331,6 +333,16 @@ export function PassageDetailItem(props: IProps) {
     if (teamDefault && segments) setOrgDefault(segments, params);
   };
 
+  const editStep = useMemo(
+    () => {
+      const value = canDoSectionStep(currentstep, section);
+      console.log('editStep', value);
+      return value;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentstep, section]
+  );
+
   return (
     <div>
       <Paper sx={paperProps}>
@@ -373,7 +385,12 @@ export function PassageDetailItem(props: IProps) {
                     </Pane>
 
                     <Pane>
-                      <Paper sx={paperProps}>
+                      <Paper
+                        sx={{
+                          ...paperProps,
+                          display: editStep ? 'none' : 'block',
+                        }}
+                      >
                         <Box sx={rowProp}>
                           <ArtifactStatus
                             recordType={recordType}
@@ -389,9 +406,6 @@ export function PassageDetailItem(props: IProps) {
                             id="pdRecordUpload"
                             onClick={handleUpload}
                             title={ts.uploadMediaSingular}
-                            disabled={
-                              !canDoVernacular(related(passage, 'section'))
-                            }
                           >
                             <AddIcon />
                             {ts.uploadMediaSingular}
