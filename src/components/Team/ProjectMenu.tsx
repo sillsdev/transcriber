@@ -51,7 +51,6 @@ export function ProjectMenu(props: IProps) {
     project,
     justFilter,
     stopPlayer,
-    canPublish,
   } = props;
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
