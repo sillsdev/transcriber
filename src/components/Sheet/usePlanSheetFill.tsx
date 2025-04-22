@@ -785,9 +785,7 @@ export const usePlanSheetFill = ({
               onUpload={onUpload}
               onAssign={onAssign}
               onFirstMovement={onFirstMovement}
-              canAssign={
-                (userIsAdmin || canEditSheet) && !movement && !book && !offline
-              }
+              canAssign={(userIsAdmin || canEditSheet) && !book && !offline}
               canDelete={
                 (userIsAdmin || canEditSheet) && (!offline || offlineOnly)
               }
