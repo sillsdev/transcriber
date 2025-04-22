@@ -1413,6 +1413,7 @@ export function ScriptureTable(props: IProps) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    organizationSchemeSteps,
     plan,
     sections,
     passages,
@@ -1424,7 +1425,6 @@ export function ScriptureTable(props: IProps) {
     orgSteps,
     lastSaved,
     hidePublishing,
-    organizationSchemeSteps,
   ]);
 
   interface ILocal {

@@ -373,8 +373,8 @@ export const getSheet = ({
         }
       }
       shtPassageAdd(myWork, item, sectionIndex);
-      item = { ...initItem };
       if (!item.filtered) hasOnePassage = true;
+      item = { ...initItem };
     });
     if (myWork[sectionIndex!]) {
       const rec = myWork[sectionIndex!];
