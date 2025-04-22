@@ -54,7 +54,6 @@ import {
   assignmentSelector,
   sharedSelector,
 } from '../selector';
-import { positiveWholeOnly } from '../utils';
 import { GetReference } from './AudioTab/GetReference';
 import { OrganizationSchemeD } from '../model/organizationScheme';
 
@@ -181,8 +180,7 @@ export function AssignmentTable(props: IProps) {
         (s) =>
           related(s, 'plan') === plan &&
           s.attributes &&
-          positiveWholeOnly(s.attributes.sequencenum) ===
-            s.attributes.sequencenum.toString()
+          s.attributes.sequencenum > 0
       )
       .sort(sectionCompare);
 
