@@ -20,6 +20,11 @@ jest.mock('../../context/GlobalContext', () => ({
   useGlobal: (token: string) => [null, jest.fn()], // memory
   useGetGlobal: () => (arg: string) => false, // remoteBusy
 }));
+jest.mock('../../utils/useStepPermission', () => ({
+  useStepPermissions: () => ({
+    canDoSectionStep: jest.fn(() => true),
+  }),
+}));
 jest.mock('../../crud', () => ({
   useArtifactType: () => ({
     localizedArtifactType: (slug: ArtifactTypeSlug) => {

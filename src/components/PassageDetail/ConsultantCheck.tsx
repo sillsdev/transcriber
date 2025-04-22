@@ -30,6 +30,7 @@ import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 import MediaPlayer from '../MediaPlayer';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +73,10 @@ export function ConsultantCheck({ width }: IProps) {
     stepComplete,
     currentstep,
     passage,
+    section,
   } = usePassageDetailContext();
+  const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
   const [memory] = useGlobal('memory');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
@@ -318,7 +322,11 @@ export function ConsultantCheck({ width }: IProps) {
                 {t.furtherReview}
               </AltButton>
             ) : (
-              <PriButton data-testid="pri-button" onClick={handleChecked(item)}>
+              <PriButton
+                data-testid="pri-button"
+                onClick={handleChecked(item)}
+                disabled={!hasPermission}
+              >
                 {t.checked}
               </PriButton>
             )}
