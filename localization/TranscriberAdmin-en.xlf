@@ -352,9 +352,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.addScheme2">
+         <segment>
+            <source>Add Assignment Scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
             <source>Configure Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec2">
+         <segment>
+            <source>Configure Assignments</source>
             <target/>
          </segment>
       </unit>
@@ -373,6 +385,12 @@
       <unit id="assignmentTable.removeSec">
          <segment>
             <source>Remove Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.removeSec2">
+         <segment>
+            <source>Remove Assignments</source>
             <target/>
          </segment>
       </unit>
@@ -454,6 +472,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.duplicateName2">
+         <segment>
+            <source>Duplicate Assignment Scheme name</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.modifySections">
          <segment>
             <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
@@ -472,9 +496,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.schemeName2">
+         <segment>
+            <source>Assignment Scheme Name</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.title">
          <segment>
             <source>Configure Permission Scheme</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.title2">
+         <segment>
+            <source>Configure Assignment Scheme</source>
             <target/>
          </segment>
       </unit>
@@ -6574,6 +6610,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.scheme2">
+         <segment>
+            <source>Assignment Scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.select">
          <segment>
             <source>Select</source>
@@ -8286,7 +8328,7 @@
       </unit>
       <unit id="vProject.permissionEditSheet">
          <segment>
-            <source>Spreadsheet Editor</source>
+            <source>Can Edit Spreadsheet</source>
             <target/>
          </segment>
       </unit>

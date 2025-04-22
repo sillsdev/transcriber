@@ -408,8 +408,22 @@
                <context context-type="sourcefile">assignmentTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignmentTable.addScheme2">
+            <source>Add Assignment Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
             <source>Configure Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignmentTable.assignSec2">
+            <source>Configure Assignments</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -431,6 +445,13 @@
          </trans-unit>
          <trans-unit id="assignmentTable.removeSec">
             <source>Remove Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignmentTable.removeSec2">
+            <source>Remove Assignments</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -527,6 +548,13 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.duplicateName2">
+            <source>Duplicate Assignment Scheme name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.modifySections">
             <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
             <target/>
@@ -548,8 +576,22 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.schemeName2">
+            <source>Assignment Scheme Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.title">
             <source>Configure Permission Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.title2">
+            <source>Configure Assignment Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>
@@ -7671,6 +7713,13 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.scheme2">
+            <source>Assignment Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">drawer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.select">
             <source>Select</source>
             <target/>
@@ -9669,7 +9718,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.permissionEditSheet">
-            <source>Spreadsheet Editor</source>
+            <source>Can Edit Spreadsheet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>

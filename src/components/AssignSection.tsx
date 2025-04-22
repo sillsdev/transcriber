@@ -15,7 +15,12 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { related, useOrganizedBy } from '../crud';
+import {
+  orgDefaultPermissions,
+  related,
+  useOrganizedBy,
+  useOrgDefaults,
+} from '../crud';
 import {
   AddRecord,
   UpdateLastModifiedBy,
@@ -72,6 +77,12 @@ function AssignSection(props: IProps) {
   const [confirm, setConfirm] = useState<ConfirmType>();
   const [confirmMsg, setConfirmMsg] = useState('');
   const getWfLabel = useWfLabel();
+  const { getOrgDefault } = useOrgDefaults();
+  const isPermission = useMemo(
+    () => Boolean(getOrgDefault(orgDefaultPermissions)),
+    [getOrgDefault]
+  );
+
   const orgSteps = useMemo(() => {
     return allOrgSteps?.filter(
       (s) => related(s, 'organization') === organization
@@ -389,14 +400,20 @@ function AssignSection(props: IProps) {
         aria-labelledby="assignDlg"
         disableEnforceFocus
       >
-        <DialogTitle id="assignDlg">{t.title}</DialogTitle>
+        <DialogTitle id="assignDlg">
+          {isPermission ? t.title : t.title2}
+        </DialogTitle>
         <DialogContent>
           <TextField
             id="scheme-name"
-            label={t.schemeName}
+            label={isPermission ? t.schemeName : t.schemeName2}
             value={schemeName}
             helperText={
-              isNameDuplicate && schemeName.trim() !== '' ? t.duplicateName : ''
+              isNameDuplicate && schemeName.trim() !== ''
+                ? isPermission
+                  ? t.duplicateName
+                  : t.duplicateName2
+                : ''
             }
             onChange={(e) => setSchemeName(e.target.value)}
             disabled={readOnly}

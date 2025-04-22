@@ -35,6 +35,8 @@ import {
   usePassageState,
   useRole,
   useSharedResRead,
+  useOrgDefaults,
+  orgDefaultPermissions,
 } from '../crud';
 import {
   TabAppBar,
@@ -116,6 +118,11 @@ export function AssignmentTable(props: IProps) {
   const [organizedBy] = useState(getOrganizedBy(true));
   const [refresh, setRefresh] = useState(0);
   const { getSharedResource } = useSharedResRead();
+  const { getOrgDefault } = useOrgDefaults();
+  const isPermission = useMemo(
+    () => Boolean(getOrgDefault(orgDefaultPermissions)),
+    [getOrgDefault]
+  );
   const columnDefs = useMemo(
     () =>
       !flat
@@ -123,14 +130,15 @@ export function AssignmentTable(props: IProps) {
             { name: 'name', title: organizedBy },
             { name: 'state', title: t.sectionstate },
             { name: 'passages', title: ts.passages },
-            { name: 'scheme', title: ts.scheme },
+            { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ]
         : [
             { name: 'name', title: organizedBy },
             { name: 'state', title: t.sectionstate },
-            { name: 'scheme', title: ts.scheme },
+            { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ],
-    [flat, organizedBy, ts.passages, t.sectionstate, ts.scheme]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [flat, organizedBy, ts.passages, t.sectionstate, isPermission]
   );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState<string>();
@@ -340,7 +348,7 @@ export function AssignmentTable(props: IProps) {
                   aria-label={t.assignSec}
                   onClick={handleMenu}
                 >
-                  {t.assignSec}
+                  {isPermission ? t.assignSec : t.assignSec2}
                   <DropDownIcon sx={iconMargin} />
                 </AltButton>
                 <AltButton
@@ -349,7 +357,7 @@ export function AssignmentTable(props: IProps) {
                   aria-label={t.removeSec}
                   onClick={handleRemoveAssignments}
                 >
-                  {t.removeSec}
+                  {isPermission ? t.removeSec : t.removeSec2}
                 </AltButton>
               </>
             )}
@@ -405,7 +413,7 @@ export function AssignmentTable(props: IProps) {
             </MenuItem>
           ))}
         <MenuItem id="add-assign" onClick={handleAssignSection('')}>
-          {t.addScheme}
+          {isPermission ? t.addScheme : t.addScheme2}
         </MenuItem>
       </Menu>
       <AssignSection

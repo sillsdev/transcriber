@@ -75,10 +75,13 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
     "addScheme": string;
+    "addScheme2": string;
     "assignSec": string;
+    "assignSec2": string;
     "delete": string;
     "filter": string;
     "removeSec": string;
+    "removeSec2": string;
     "role": string;
     "sectionstate": string;
     "selectRowsToAssign": string;
@@ -95,10 +98,13 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "delete": string;
     "deleteSections": string;
     "duplicateName": string;
+    "duplicateName2": string;
     "modifySections": string;
     "role": string;
     "schemeName": string;
+    "schemeName2": string;
     "title": string;
+    "title2": string;
     "users": string;
 };
 
@@ -1292,6 +1298,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "saving": string;
     "scheme": string;
+    "scheme2": string;
     "select": string;
     "teamrole": string;
     "transcriber": string;
