@@ -418,7 +418,6 @@ test('one section filters output', () => {
     {
       ...secResult,
       title: 'Intro',
-      filtered: true,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
     },
