@@ -32,7 +32,6 @@ import {
   sectionCompare,
   passageCompare,
   useOrganizedBy,
-  usePassageState,
   useRole,
   useSharedResRead,
   useOrgDefaults,
@@ -67,7 +66,6 @@ const AssignmentDiv = styled('div')(() => ({
 interface IRow {
   id: string;
   name: React.ReactNode;
-  state: string;
   scheme: React.ReactNode;
   passages: string;
   parentId: string;
@@ -127,13 +125,11 @@ export function AssignmentTable(props: IProps) {
       !flat
         ? [
             { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
             { name: 'passages', title: ts.passages },
             { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ]
         : [
             { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
             { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -141,11 +137,9 @@ export function AssignmentTable(props: IProps) {
   );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState<string>();
-  const getPassageState = usePassageState();
   const columnWidths = useMemo(
     () => [
       { columnName: 'name', width: 300 },
-      { columnName: 'state', width: 150 },
       { columnName: 'passages', width: flat ? 1 : 100 },
       { columnName: 'scheme', width: 200 },
     ],
@@ -188,7 +182,6 @@ export function AssignmentTable(props: IProps) {
       sectionRow = {
         id: section.id as string,
         name: sectionDescription(section, sectionMap),
-        state: '',
         scheme: getSchemeName(section),
         passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
         parentId: '',
@@ -211,7 +204,6 @@ export function AssignmentTable(props: IProps) {
               sr={sr}
             />
           ),
-          state: activityState.getString(getPassageState(passage)),
           scheme: '',
           passages: '',
           parentId: section.id,
