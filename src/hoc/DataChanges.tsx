@@ -137,6 +137,7 @@ export const processDataChanges = async (pdc: {
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
+    isUser: boolean,
     fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
     cb?: () => void
   ) => {
@@ -197,7 +198,8 @@ export const processDataChanges = async (pdc: {
       const ops = myOps.filter(
         (o) =>
           o.op !== 'updateRecord' ||
-          Boolean((o as UpdateRecordOperation).record.relationships)
+          Boolean((o as UpdateRecordOperation).record.relationships) ||
+          ((o as UpdateRecordOperation).record.type === 'user' && isUser) //user doesn't have any
       );
       await backup.sync((t) => ops);
       await memory.sync((t) => ops);
@@ -206,10 +208,13 @@ export const processDataChanges = async (pdc: {
       for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
-          if (!upRec.record.relationships)
+          if (
+            !upRec.record.relationships &&
+            !(isUser && upRec.record.type !== 'user')
+          )
             //this is just an included record and wasn't changed
             continue;
-          switch (upRec.record?.type) {
+          switch (upRec.record.type) {
             case 'section':
               if (upRec.record.relationships?.transcriber === undefined)
                 resetRelated(localOps, tb, 'transcriber', upRec.record);
@@ -316,7 +321,12 @@ export const processDataChanges = async (pdc: {
           { fullResponse: true }
         );
         if (results?.transforms)
-          await processTableChanges(results.transforms, fetchUrl, cb);
+          await processTableChanges(
+            results.transforms,
+            table.type === 'user',
+            fetchUrl,
+            cb
+          );
       }
     }
     setDataChangeCount(deletes.length);
