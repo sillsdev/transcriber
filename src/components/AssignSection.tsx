@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
   Section,
-  SectionD,
   IAssignSectionStrings,
   ISharedStrings,
   OrgWorkflowStepD,
+  SectionD,
 } from '../model';
 import {
   Dialog,
@@ -17,15 +17,13 @@ import {
 } from '@mui/material';
 import {
   orgDefaultPermissions,
+  pullTableList,
   related,
+  remoteId,
   useOrganizedBy,
   useOrgDefaults,
 } from '../crud';
-import {
-  AddRecord,
-  UpdateLastModifiedBy,
-  UpdateRelatedRecord,
-} from '../model/baseModel';
+import { AddRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { AltButton, GrowingSpacer, PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
@@ -34,9 +32,17 @@ import GroupOrUserAssignment from '../control/GroupOrUserAssignment';
 import { OrganizationSchemeD } from '../model/organizationScheme';
 import { waitForIt } from '../utils/waitForIt';
 import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
-import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import {
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import Confirm from './AlertDialog';
 import { useWfLabel } from '../utils/useWfLabel';
+import { axiosPatch } from '../utils/axios';
+import { TokenContext } from '../context/TokenProvider';
+import IndexedDBSource from '@orbit/indexeddb';
+import JSONAPISource from '@orbit/jsonapi';
 
 enum ConfirmType {
   delete,
@@ -44,7 +50,7 @@ enum ConfirmType {
 }
 
 interface IProps {
-  sections: Array<Section>;
+  sections: Array<SectionD>;
   scheme?: string; // id of scheme to edit
   visible: boolean;
   closeMethod?: () => void;
@@ -67,11 +73,17 @@ function AssignSection(props: IProps) {
   const allSections = useOrbitData<Section[]>('section');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [open, setOpen] = useState(visible);
   const [schemeName, setSchemeName] = useState('');
   const [assignArr, setAssignArr] = useState<[string, string][]>([]);
+  const [changed, setChanged] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = useState('');
   const [confirm, setConfirm] = useState<ConfirmType>();
@@ -82,6 +94,7 @@ function AssignSection(props: IProps) {
     () => Boolean(getOrgDefault(orgDefaultPermissions)),
     [getOrgDefault]
   );
+  const token = useContext(TokenContext).state.accessToken ?? '';
 
   const orgSteps = useMemo(() => {
     return allOrgSteps?.filter(
@@ -256,32 +269,33 @@ function AssignSection(props: IProps) {
     return schemeRec.id as string;
   };
 
-  const assign = async (section: Section, schemeId: string) => {
-    if (related(section, 'organizationScheme') === schemeId) return;
-    await memory.update((t) => [
-      ...UpdateRelatedRecord(
-        t,
-        section as SectionD,
-        'organizationScheme',
-        'organizationscheme',
-        schemeId,
-        user
-      ),
-      ...UpdateLastModifiedBy(
-        t,
-        { type: 'plan', id: related(section, 'plan') },
-        user
-      ),
-    ]);
-  };
-
   const doAssign = async (schemeId: string) => {
-    for (let s of sections) {
-      await assign(s, schemeId);
-    }
+    var ids = sections.map(
+      (s) => remoteId('section', s.id, memory.keyMap as RecordKeyMap) as string
+    );
+    var list = ids.join('|');
+    var id = remoteId(
+      'organizationscheme',
+      schemeId,
+      memory.keyMap as RecordKeyMap
+    );
+    try {
+      await axiosPatch(`sections/assign/${id}/${list}`, undefined, token);
+      await pullTableList(
+        'section',
+        ids,
+        memory,
+        remote,
+        backup,
+        errorReporter
+      );
+    } catch (err) {}
   };
 
   const justClose = () => {
+    setChanged(false);
+    setSaving(false);
+    setConfirm(undefined);
     refresh?.();
     if (closeMethod) {
       closeMethod();
@@ -314,6 +328,7 @@ function AssignSection(props: IProps) {
   };
 
   const confirmClose = async () => {
+    setSaving(true);
     const schemeId = await handleAdd();
     await doAssign(schemeId);
     justClose();
@@ -325,7 +340,7 @@ function AssignSection(props: IProps) {
       return;
     }
     const nImp = impactedSections.length;
-    if (nImp > sections.length) {
+    if (changed && nImp > sections.length) {
       const nSecs = sections.length;
       setConfirmMsg(
         t.modifySections
@@ -384,10 +399,15 @@ function AssignSection(props: IProps) {
   }, [visible]);
 
   const handleAssign = (step: string, value: string) => {
-    console.log('handleAssign', step, value);
     const assignMap = new Map<string, string>(assignArr);
     assignMap.set(step, value);
     setAssignArr(Array.from(assignMap.entries()));
+    setChanged(true);
+  };
+
+  const handleNameChange = (name: string) => {
+    setSchemeName(name);
+    setChanged(true);
   };
 
   return (
@@ -415,8 +435,8 @@ function AssignSection(props: IProps) {
                   : t.duplicateName2
                 : ''
             }
-            onChange={(e) => setSchemeName(e.target.value)}
-            disabled={readOnly}
+            onChange={(e) => handleNameChange(e.target.value)}
+            disabled={readOnly || saving}
             sx={{ m: 1, width: '40ch' }}
           />
           {orgSteps
@@ -436,25 +456,27 @@ function AssignSection(props: IProps) {
                 )}
                 initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
                 onChange={(value) => handleAssign(s.id, value)}
-                disabled={readOnly}
+                disabled={readOnly || saving}
               />
             ))}
         </DialogContent>
         <DialogActions>
-          {scheme && !readOnly && (
+          {scheme && !readOnly && !saving && (
             <AltButton color="warning" onClick={handleDelete}>
               {t.delete}
             </AltButton>
           )}
           <GrowingSpacer />
-          <AltButton onClick={justClose}>
-            {readOnly ? ts.close : ts.cancel}
-          </AltButton>
+          {!saving && (
+            <AltButton onClick={justClose}>
+              {readOnly ? ts.close : ts.cancel}
+            </AltButton>
+          )}
           {!readOnly && (
             <PriButton
               id="assignClose"
               onClick={handleClose}
-              disabled={!schemeName.trim() || isNameDuplicate}
+              disabled={!schemeName.trim() || isNameDuplicate || saving}
             >
               {ts.save}
             </PriButton>
