@@ -17,6 +17,7 @@ import {
   Role,
   ISharedStrings,
   MediaFile,
+  SectionD,
 } from '../model';
 import { RecordIdentity } from '@orbit/records';
 import { Button, Menu, MenuItem, styled } from '@mui/material';
@@ -111,7 +112,7 @@ export function AssignmentTable(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [assignMenu, setAssignMenu] = useState<HTMLButtonElement>();
   const sectionMap = new Map<number, string>(sectionArr);
-  const [selectedSections, setSelectedSections] = useState<Section[]>([]);
+  const [selectedSections, setSelectedSections] = useState<SectionD[]>([]);
   const [readOnly, setReadOnly] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
@@ -322,7 +323,7 @@ export function AssignmentTable(props: IProps) {
   ]);
 
   useEffect(() => {
-    let selected = Array<Section>();
+    let selected = Array<SectionD>();
     let one: any;
     check.forEach((c) => {
       one = sections.find(function (s) {

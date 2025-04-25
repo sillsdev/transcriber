@@ -842,7 +842,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const getSectionsWhere = (where: number[]) => {
-    let selected = Array<Section>();
+    let selected = Array<SectionD>();
     where.forEach((c) => {
       const { ws } = getByIndex(sheetRef.current, c);
       let one = sections.find((s) => s.id === ws?.sectionId?.id);
