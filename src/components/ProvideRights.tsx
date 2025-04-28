@@ -80,6 +80,7 @@ export function ProvideRights(props: IProps) {
   const [state, setState] = useState<IVoicePerm>({});
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
+  const canSaveRef = useRef(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
@@ -247,7 +248,8 @@ export function ProvideRights(props: IProps) {
   };
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSave) {
+    if (valid !== canSaveRef.current) {
+      canSaveRef.current = valid;
       setCanSave(valid);
     }
   };
