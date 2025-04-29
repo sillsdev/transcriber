@@ -17,6 +17,7 @@ interface IProps {
   voice?: string;
   team: Organization;
   state: IVoicePerm;
+  saving: boolean;
   setState?: React.Dispatch<React.SetStateAction<IVoicePerm>>;
   setStatement?: (statement: string) => void;
 }
@@ -25,6 +26,7 @@ export const VoiceStatement = ({
   voice,
   team,
   state,
+  saving,
   setState,
   setStatement,
 }: IProps) => {
@@ -62,7 +64,9 @@ export const VoiceStatement = ({
             <ContentCopyIcon color="primary" fontSize="small" />
           </IconButton>
           <GrowingSpacer />
-          <AltButton onClick={handlePersonalize}>{t.personalize}</AltButton>
+          <AltButton onClick={handlePersonalize} disabled={saving}>
+            {t.personalize}
+          </AltButton>
         </ActionRow>
       </Stack>
       <BigDialog
