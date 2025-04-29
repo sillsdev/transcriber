@@ -88,6 +88,7 @@ export function ProvideRights(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [statement, setStatement] = useState<string>('');
+  const [saving, setSaving] = useState(false);
   const {
     toolChanged,
     toolsChanged,
@@ -228,6 +229,7 @@ export function ProvideRights(props: IProps) {
       setUploadVisible(false);
       setResetMedia(true);
     }
+    setSaving(false);
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -278,6 +280,7 @@ export function ProvideRights(props: IProps) {
           voice={speaker}
           team={teamRec}
           state={state}
+          saving={saving}
           setState={setState}
           setStatement={handleStatement}
         />
@@ -293,6 +296,7 @@ export function ProvideRights(props: IProps) {
           doReset={resetMedia}
           setDoReset={setResetMedia}
           size={200}
+          onSaving={() => setSaving(true)}
         />
         <Box sx={rowProp}>
           {!recordingRequired && (
