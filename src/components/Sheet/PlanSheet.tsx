@@ -18,6 +18,7 @@ import {
   OrgWorkflowStep,
   SheetLevel,
   IPassageTypeStrings,
+  OrganizationD,
 } from '../../model';
 import { Box, IconButton, debounce, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -48,6 +49,7 @@ import {
   Severity,
 } from '../../utils';
 import {
+  isPersonalTeam,
   PublishDestinationEnum,
   remoteIdGuid,
   useBible,
@@ -76,6 +78,7 @@ import { RecordKeyMap } from '@orbit/records';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
 import { addPt } from '../../utils/addPt';
 import { Akuo } from '../../assets/brands';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -340,7 +343,12 @@ export function PlanSheet(props: IProps) {
   const [hasBible, setHasBible] = useState(false);
   const { getOrgBible } = useBible();
   const getGlobal = useGetGlobal();
+  const teams = useOrbitData<OrganizationD[]>('organization');
 
+  const showAssign = useMemo(
+    () => !isPersonalTeam(org, teams) && !offlineOnly,
+    [org, teams, offlineOnly]
+  );
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
@@ -565,7 +573,8 @@ export function PlanSheet(props: IProps) {
     if (recording) toolChanged(toolId);
   };
 
-  const PrefixedCols = 4;
+  const PrefixedCols = showAssign ? 4 : 3;
+  
   const readonly = useMemo(
     () => !canEditSheet && !canPublish,
     [canEditSheet, canPublish]

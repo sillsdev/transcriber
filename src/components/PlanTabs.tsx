@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import {
@@ -11,6 +11,7 @@ import {
   levScrColNames,
   levGenColNames,
   MediaFileD,
+  OrganizationD,
 } from '../model';
 import { AppBar, Tabs, Tab, Box } from '@mui/material';
 import grey from '@mui/material/colors/grey';
@@ -20,7 +21,12 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { PlanContext } from '../context/PlanContext';
-import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
+import {
+  useOrganizedBy,
+  useMediaCounts,
+  useSectionCounts,
+  isPersonalTeam,
+} from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -58,6 +64,13 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     plan,
     sections,
     passages
+  );
+  const [team] = useGlobal('organization');
+  const teams = useOrbitData<OrganizationD[]>('organization');
+
+  const showAssign = useMemo(
+    () => !isPersonalTeam(team, teams) && !offlineOnly,
+    [team, teams, offlineOnly]
   );
 
   const colNames = React.useMemo(() => {
@@ -150,20 +163,22 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
               />
             }
           />
-          <Tab
-            id="assignments"
-            label={
-              <Title
-                text={t.assignments}
-                status={statusMessage(
-                  t.sectionStatus.replace('{0}', organizedBy),
-                  assigned.length,
-                  planSectionIds.length
-                )}
-              />
-            }
-            disabled={isOffline && !offlineOnly}
-          />
+          {showAssign && (
+            <Tab
+              id="assignments"
+              label={
+                <Title
+                  text={t.assignments}
+                  status={statusMessage(
+                    t.sectionStatus.replace('{0}', organizedBy),
+                    assigned.length,
+                    planSectionIds.length
+                  )}
+                />
+              }
+              disabled={isOffline}
+            />
+          )}
           <Tab
             id="transcriptions"
             label={
@@ -184,8 +199,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <ScriptureTable {...props} colNames={colNames} />
         )}
         {tab === tabs.media && <AudioTab />}
-        {tab === tabs.assignment && <AssignmentTable />}
-        {tab === tabs.transcription && (
+        {showAssign && tab === tabs.assignment && <AssignmentTable />}
+        {(tab === tabs.transcription ||
+          (!showAssign && tab === tabs.assignment)) && (
           <TranscriptionTab
             {...props}
             projectPlans={plans.filter((p) => p.id === plan)}

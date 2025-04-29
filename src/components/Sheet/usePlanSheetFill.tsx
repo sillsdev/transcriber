@@ -5,6 +5,7 @@ import {
   IViewModeStrings,
   IwsKind,
   OptionType,
+  OrganizationD,
 } from '../../model';
 import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
@@ -15,6 +16,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   findRecord,
+  isPersonalTeam,
 } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
@@ -43,6 +45,7 @@ import { getPubRefs } from './getPubRefs';
 import { PublishButton } from './PublishButton';
 import { NoteIcon } from '../../control/PlanIcons';
 import { OrganizationSchemeD } from '../../model/organizationScheme';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -160,6 +163,14 @@ export const usePlanSheetFill = ({
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { userIsAdmin } = useRole();
+  const [team] = useGlobal('organization');
+  const teams = useOrbitData<OrganizationD[]>('organization');
+
+  const showAssign = useMemo(
+    () => !isPersonalTeam(team, teams) && !offlineOnly,
+    [teams, team, offlineOnly]
+  );
+
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
   const showIcon = useShowIcon({
@@ -223,24 +234,23 @@ export const usePlanSheetFill = ({
         value: t.step,
         readOnly: true,
       } as ICell,
-      {
+    ];
+    if (showAssign)
+      titles.push({
         value: t.assigned,
         readOnly: true,
-      } as ICell,
-      {
-        value:
-          shared || (publishingOn && !hidePublishing)
-            ? t.published
-            : t.versions,
-        readOnly: true,
-        width: 20,
-      } as ICell,
-      {
-        value: t.action,
-        readOnly: true,
-        width: 50,
-      } as ICell,
-    ];
+      } as ICell);
+    titles.push({
+      value:
+        shared || (publishingOn && !hidePublishing) ? t.published : t.versions,
+      readOnly: true,
+      width: 20,
+    } as ICell);
+    titles.push({
+      value: t.action,
+      readOnly: true,
+      width: 50,
+    } as ICell);
     if (!hidePublishing && publishingOn)
       titles.push({
         value: localizedArtifactType(ArtifactTypeSlug.Graphic),
@@ -785,7 +795,9 @@ export const usePlanSheetFill = ({
               onUpload={onUpload}
               onAssign={onAssign}
               onFirstMovement={onFirstMovement}
-              canAssign={(userIsAdmin || canEditSheet) && !book && !offline}
+              canAssign={
+                showAssign && (userIsAdmin || canEditSheet) && !book && !offline
+              }
               canDelete={
                 (userIsAdmin || canEditSheet) && (!offline || offlineOnly)
               }
@@ -841,14 +853,18 @@ export const usePlanSheetFill = ({
           calcClassName,
           readonly: sharedOffline || anyRecording,
         }),
-        assignmentCell(rowIndex, calcClassName),
+      ];
+      if (showAssign) sheetRow.push(assignmentCell(rowIndex, calcClassName));
+      sheetRow.push(
         publishedCell({
           passage,
           rowIndex,
           calcClassName:
             calcClassName + (beta && !hidePublishing ? ' beta' : ''),
           canEdit: canPublish,
-        }),
+        })
+      );
+      sheetRow.push(
         actionCell({
           passage,
           rowIndex,
@@ -861,8 +877,8 @@ export const usePlanSheetFill = ({
           canEdit: !sharedOffline && !anyRecording,
           readonly:
             !canEditSheet && (!canPublish || hidePublishing || !publishingOn),
-        }),
-      ];
+        })
+      );
       if (!hidePublishing && publishingOn)
         sheetRow.push(graphicCell(rowIndex, calcClassName, !canPublish));
       row
