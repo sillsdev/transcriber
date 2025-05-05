@@ -573,8 +573,8 @@ export function PlanSheet(props: IProps) {
     if (recording) toolChanged(toolId);
   };
 
-  const PrefixedCols = showAssign ? 4 : 3;
-  
+  const PrefixedCols = useMemo(() => (showAssign ? 4 : 3), [showAssign]);
+
   const readonly = useMemo(
     () => !canEditSheet && !canPublish,
     [canEditSheet, canPublish]
