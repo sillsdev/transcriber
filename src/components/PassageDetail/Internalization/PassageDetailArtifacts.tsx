@@ -927,7 +927,12 @@ export function PassageDetailArtifacts() {
           onTextChange={(text) => {
             textRef.current = text;
             const validUrl = isUrl(text);
-            if (allowEditSave !== validUrl) setAllowEditSave(validUrl);
+            if (
+              mediaContentType(mediaRef.current) === UriLinkType &&
+              allowEditSave !== validUrl
+            ) {
+              setAllowEditSave(validUrl);
+            }
           }}
           sectDesc={sectDesc}
           passDesc={passDesc}
