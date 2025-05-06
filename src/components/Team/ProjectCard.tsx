@@ -482,7 +482,11 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab />
+        <IntegrationTab
+          isPermitted={true}
+          projectId={related(project, 'project')}
+          planId={project.id}
+        />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
