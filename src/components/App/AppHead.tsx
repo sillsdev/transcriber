@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import {
@@ -155,6 +155,7 @@ export const AppHead = (props: IProps) => {
   const [isChanged] = useGlobal('changed'); //verified this is only used in a useEffect
   const [lang] = useGlobal('lang');
   const getGlobal = useGetGlobal();
+  const [doExit, setDoExit] = useState(false);
   const [exitAlert, setExitAlert] = useState(false);
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
@@ -304,9 +305,13 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenCtx.state]);
 
+  const doingDone = useRef(false);
+
   const downDone = (cancel?: boolean) => {
+    if (doingDone.current) return;
+    doingDone.current = true;
     setDownloadAlert(false);
-    if (cancel) {
+    if (cancel && !doExit) {
       const userId = localStorage.getItem(LocalKey.onlineUserId);
       if (userId) localStorage.setItem(LocalKey.userId, userId);
       return;
@@ -326,7 +331,10 @@ export const AppHead = (props: IProps) => {
   const handleUnload = (e: any) => {
     if (pathname === '/') return true;
     if (pathname.startsWith('/access')) return true;
-    if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
+    if (!exitAlert && isElectron && isMounted() && !doingDone.current) {
+      setDoExit(true);
+      setExitAlert(true);
+    }
     if (!getGlobal('enableOffsite')) {
       e.preventDefault();
       e.returnValue = '';
