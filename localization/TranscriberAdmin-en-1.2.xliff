@@ -1103,21 +1103,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizePrompt">
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizeSpeech">
-            <source>Recognize Speech</source>
+            <source>Auto Transcription</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizeSpeechSettings">
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
@@ -8414,7 +8414,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.beginRecognize">
-            <source>Begin Recognition</source>
+            <source>Begin Auto Transcription</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -10383,28 +10383,28 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeProgress">
-            <source>Recognize Speech in Progress</source>
+            <source>Auto Transcription in Progress</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizePrompt">
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeSpeech">
-            <source>Recognize Speech {0}</source>
+            <source>Auto Transcription {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeSpeechSettings">
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>

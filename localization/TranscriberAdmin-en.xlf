@@ -948,19 +948,19 @@
       </unit>
       <unit id="cards.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeech">
          <segment>
-            <source>Recognize Speech</source>
+            <source>Auto Transcription</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
          </segment>
       </unit>
@@ -7212,7 +7212,7 @@
       </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
-            <source>Begin Recognition</source>
+            <source>Begin Auto Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -8898,25 +8898,25 @@
       </unit>
       <unit id="wsAudioPlayer.recognizeProgress">
          <segment>
-            <source>Recognize Speech in Progress</source>
+            <source>Auto Transcription in Progress</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
          <segment>
-            <source>Recognize Speech {0}</source>
+            <source>Auto Transcription {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
          </segment>
       </unit>
