@@ -725,13 +725,13 @@ export const usePlanSheetFill = ({
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
           cellIndex === passageSeqCol ||
           (sharedRes && getGlobal('offline')) ||
-          inlinePassages
+          (inlinePassages
             ? false
             : passage
             ? cellIndex <= 1
             : section
             ? cellIndex > 1
-            : cellIndex <= 1,
+            : cellIndex <= 1),
         className:
           (cellIndex === SectionSeqCol || cellIndex === passageSeqCol
             ? 'num '
