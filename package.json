@@ -4,7 +4,7 @@
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
-    "@auth0/auth0-react": "^2.2.4",
+    "@auth0/auth0-react": "^2.3.0",
     "@bugsnag/js": "^8.1.2",
     "@bugsnag/plugin-react": "^8.1.1",
     "@devexpress/dx-react-chart": "^4.0.10",
