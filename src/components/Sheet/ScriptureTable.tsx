@@ -1018,8 +1018,10 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleAssign = (where: number[]) => () => {
-    setAssignSections(where);
-    setAssignSectionVisible(true);
+    saveIfChanged(() => {
+      setAssignSections(where);
+      setAssignSectionVisible(true);
+    });
   };
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
