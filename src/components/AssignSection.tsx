@@ -450,7 +450,7 @@ function AssignSection(props: IProps) {
               <GroupOrUserAssignment
                 listAdmins={true}
                 key={s.id}
-                label={t.assignment.replace(
+                label={(isPermission ? t.assignment : t.assignment2).replace(
                   '{0}',
                   getWfLabel(s?.attributes?.name ?? '')
                 )}

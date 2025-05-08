@@ -500,6 +500,13 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignSection.assignment">
+            <source>{0} Permission</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.assignment2">
             <source>{0} Assignment</source>
             <target/>
             <context-group>

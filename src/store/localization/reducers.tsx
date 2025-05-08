@@ -103,7 +103,8 @@ const initialState = {
 	}),
 	"assignSection": new LocalizedStrings({
 		"en": {
-			"assignment": "{0} Assignment",
+			"assignment": "{0} Permission",
+			"assignment2": "{0} Assignment",
 			"close": "Close",
 			"confirmDelete": "Confirm Delete",
 			"confirmModify": "Confirm Modify",

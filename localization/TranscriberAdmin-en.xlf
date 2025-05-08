@@ -432,6 +432,12 @@
       </unit>
       <unit id="assignSection.assignment">
          <segment>
+            <source>{0} Permission</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.assignment2">
+         <segment>
             <source>{0} Assignment</source>
             <target/>
          </segment>
