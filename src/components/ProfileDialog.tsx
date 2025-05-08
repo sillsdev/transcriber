@@ -1294,7 +1294,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)
                 }
-                altLabel={mode === 'create' ? tp.logout : tp.cancel}
+                altLabel={
+                  mode === 'create' && !Boolean(currentUser)
+                    ? tp.logout
+                    : tp.cancel
+                }
                 altOnClick={handleCancel}
                 altKey={'cancel'}
                 altAria={tp.cancel}
