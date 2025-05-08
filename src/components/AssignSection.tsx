@@ -53,7 +53,7 @@ interface IProps {
   sections: Array<SectionD>;
   scheme?: string; // id of scheme to edit
   visible: boolean;
-  closeMethod?: () => void;
+  closeMethod?: (cancel?: boolean) => void;
   refresh?: () => void;
   readOnly?: boolean;
 }
@@ -292,14 +292,12 @@ function AssignSection(props: IProps) {
     } catch (err) {}
   };
 
-  const justClose = () => {
+  const justClose = (cancel?: boolean) => {
     setChanged(false);
     setSaving(false);
     setConfirm(undefined);
     refresh?.();
-    if (closeMethod) {
-      closeMethod();
-    }
+    closeMethod?.(cancel);
     setOpen(false);
   };
 
@@ -468,7 +466,7 @@ function AssignSection(props: IProps) {
           )}
           <GrowingSpacer />
           {!saving && (
-            <AltButton onClick={justClose}>
+            <AltButton onClick={() => justClose(true)}>
               {readOnly ? ts.close : ts.cancel}
             </AltButton>
           )}

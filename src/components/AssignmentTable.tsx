@@ -284,9 +284,19 @@ export function AssignmentTable(props: IProps) {
     setConfirmAction('');
     for (let i = 0; i < selectedSections.length; i += 1)
       await RemoveOneAssignment(selectedSections[i]);
+    setCheck([]);
+    setSelectedSections([]);
     setRefresh(refresh + 1);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
+
+  const handleCloseAssignSection = (cancel?: boolean) => {
+    setAssignSectionVisible(undefined);
+    if (!cancel) {
+      setCheck([]);
+      setSelectedSections([]);
+    }
+  };
 
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
@@ -411,7 +421,7 @@ export function AssignmentTable(props: IProps) {
         sections={selectedSections}
         scheme={assignSectionVisible}
         visible={assignSectionVisible !== undefined}
-        closeMethod={() => setAssignSectionVisible(undefined)}
+        closeMethod={handleCloseAssignSection}
         refresh={() => setRefresh(refresh + 1)}
         readOnly={readOnly}
       />
