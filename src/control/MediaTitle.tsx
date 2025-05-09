@@ -655,6 +655,7 @@ export default function MediaTitle(props: IProps) {
         srcMediaId={srcMediaId}
         requestPlay={playing}
         onEnded={playEnded}
+        onCancel={playEnded}
       />
       <StatusMessage variant="caption">{statusText}</StatusMessage>
     </ColumnDiv>

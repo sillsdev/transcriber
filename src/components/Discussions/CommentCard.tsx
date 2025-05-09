@@ -281,6 +281,7 @@ export const CommentCard = (props: IProps) => {
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
                   requestPlay={commentPlaying}
                   onEnded={handleCommentPlayEnd}
+                  onCancel={handleCommentPlayEnd}
                   onTogglePlay={handleCommentTogglePlay}
                   controls={mediaId === commentPlayId}
                 />

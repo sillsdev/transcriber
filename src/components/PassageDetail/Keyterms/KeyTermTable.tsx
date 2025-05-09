@@ -295,6 +295,7 @@ export default function KeyTermTable({
                               }
                               requestPlay={commentPlaying}
                               onEnded={handlePlayEnd}
+                              onCancel={handlePlayEnd}
                               onTogglePlay={handleTogglePlay}
                               controls={mediaId === commentPlayId}
                               sx={{ mb: 1 }}
