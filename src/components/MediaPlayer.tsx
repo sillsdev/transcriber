@@ -14,15 +14,18 @@ import {
   TooltipProps,
   styled,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { LightTooltip } from '../control/LightTooltip';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SkipPrevious from '@mui/icons-material/SkipPrevious';
 
-const StyledTip = styled(LightTooltip)<TooltipProps>(({ theme }) => ({
+const StyledTip = styled(LightTooltip)<TooltipProps>(() => ({
   backgroundColor: 'transparent',
 }));
 
-const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
+const StyledStack = styled(Stack)<StackProps>(() => ({
+  display: 'flex',
+  alignItems: 'center',
   width: '100%',
   '& audio': {
     width: '100%',
@@ -34,6 +37,7 @@ interface IProps {
   requestPlay: boolean;
   onEnded: () => void;
   onTogglePlay?: () => void;
+  onCancel?: () => void;
   controls?: boolean;
   onLoaded?: () => void;
   sx?: SxProps;
@@ -192,7 +196,7 @@ export function MediaPlayer(props: IProps) {
           <StyledTip title={t.resourceStart}>
             <IconButton
               data-testid="segment-start"
-              sx={{ alignSelf: 'center' }}
+              sx={{ p: 0 }}
               onClick={handleSegmentStart}
             >
               <SkipPrevious fontSize="small" />
@@ -201,7 +205,7 @@ export function MediaPlayer(props: IProps) {
           <StyledTip title={t.back3Seconds}>
             <IconButton
               data-testid="skip-back"
-              sx={{ alignSelf: 'center' }}
+              sx={{ p: 0, pl: 1 }}
               onClick={handleSkipBack}
             >
               <ReplayIcon fontSize="small" />
@@ -219,6 +223,13 @@ export function MediaPlayer(props: IProps) {
         onPause={pause}
         onPlay={play}
       />
+      {controls && props.onCancel && (
+        <StyledTip title={ts.close}>
+          <IconButton onClick={props.onCancel} sx={{ p: 0 }}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </StyledTip>
+      )}
     </StyledStack>
   ) : (
     <></>

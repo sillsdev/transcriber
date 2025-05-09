@@ -266,6 +266,11 @@ export function PassageDetailItem(props: IProps) {
     }
   };
 
+  const handleCancel = () => {
+    handleItemPlayEnd();
+    setPlayItem('');
+  };
+
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
   };
@@ -514,6 +519,7 @@ export function PassageDetailItem(props: IProps) {
                                 srcMediaId={playItem}
                                 requestPlay={itemPlaying}
                                 onEnded={handleItemPlayEnd}
+                                onCancel={handleCancel}
                                 onTogglePlay={handleItemTogglePlay}
                                 controls={true}
                               />
