@@ -280,7 +280,9 @@ export function Loading() {
     let waitToNavigate = false;
     if (fromUrl && !/^\/plan|^\/detail/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
-      const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
+      const m = /^\/[workplandetail]+\/([0-9a-f-]+)\/?([0-9a-f-]*)/.exec(
+        fromUrl
+      );
       if (m) {
         const planId =
           remoteIdGuid('plan', m[1], memory?.keyMap as RecordKeyMap) || m[1];
@@ -299,6 +301,12 @@ export function Loading() {
           if (projectId) {
             waitToNavigate = true;
             LoadProjData(projectId, () => {
+              if (
+                fromUrl?.startsWith('/detail/') &&
+                !remoteIdGuid('passage', m[2], memory?.keyMap as RecordKeyMap)
+              ) {
+                fromUrl = `/plan/${m[1]}/0`;
+              }
               loadDone(projectId, planId, fromUrl);
               navigate(fromUrl || '/team');
             });
