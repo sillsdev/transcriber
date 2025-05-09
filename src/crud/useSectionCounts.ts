@@ -1,5 +1,8 @@
 import { Section, Passage } from '../model';
 import { related } from '.';
+import { positiveWholeOnly } from '../utils';
+import { passageTypeFromRef } from '../control/RefRender';
+import { PassageTypeEnum } from '../model/passageType';
 
 export const useSectionCounts = (
   plan: string,
@@ -9,10 +12,15 @@ export const useSectionCounts = (
   const planSections = plan
     ? sections.filter((s) => related(s, 'plan') === plan)
     : ([] as Section[]);
-  const planSectionIds = planSections.map((p) => p.id);
+  const planSectionIds = planSections
+    .filter((s) => s.attributes.sequencenum > 0)
+    .map((p) => p.id);
   const assigned = planSections.filter((s) => related(s, 'organizationScheme'));
-  const planPassages = passages.filter((p) =>
-    planSectionIds.includes(related(p, 'section'))
+  const planPassages = passages.filter(
+    (p) =>
+      planSectionIds.includes(related(p, 'section')) &&
+      passageTypeFromRef(p.attributes.reference) !==
+        PassageTypeEnum.CHAPTERNUMBER
   );
 
   return [planSectionIds, assigned, planPassages];
