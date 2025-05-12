@@ -1364,7 +1364,6 @@ const initialState = {
 			"passages": "Passages",
 			"peerreviewer": "Peer Reviewer",
 			"recordingInProgress": "Recording in progress...",
-			"reset": "Reset",
 			"bookNotFound": "{Pt} project does not contain book.",
 			"referenceNotFound": "Reference does not exist in {Pt} chapter, or reference is within a larger verse range.",
 			"role": "Role",

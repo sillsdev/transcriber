@@ -22,7 +22,6 @@ import { Duration } from '../control/Duration';
 import HiddenPlayer from './HiddenPlayer';
 import { BlobStatus, useFetchMediaBlob } from '../crud/useFetchMediaBlob';
 import CloseIcon from '@mui/icons-material/Close';
-import SetBackIcon from '@mui/icons-material/SettingsBackupRestore';
 
 const StyledDiv = styled('div')({
   '& #hiddenplayer': {
@@ -57,7 +56,7 @@ interface IProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
-  setBack?: boolean;
+  noClose?: boolean;
   onTogglePlay?: () => void;
   controls?: boolean;
   limits: IMediaLimits;
@@ -71,7 +70,7 @@ export function LimitedMediaPlayer(props: IProps) {
     requestPlay,
     onLoaded,
     onEnded,
-    setBack,
+    noClose,
     onTogglePlay,
     controls,
     limits,
@@ -304,21 +303,17 @@ export function LimitedMediaPlayer(props: IProps) {
                   </IconButton>
                 </StyledTip>
               )}
-              {
-                <StyledTip title={setBack ? ts.reset : ts.close}>
+              {!noClose && (
+                <StyledTip title={ts.close}>
                   <IconButton
                     data-testid="close"
                     sx={{ alignSelf: 'center' }}
                     onClick={ended}
                   >
-                    {setBack ? (
-                      <SetBackIcon fontSize="small" />
-                    ) : (
-                      <CloseIcon fontSize="small" />
-                    )}
+                    <CloseIcon fontSize="small" />
                   </IconButton>
                 </StyledTip>
-              }
+              )}
             </>
           }
           onDelete={handleSkipNext}

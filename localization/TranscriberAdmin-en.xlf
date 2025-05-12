@@ -6580,12 +6580,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.reset">
-         <segment>
-            <source>Reset</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.bookNotFound">
          <segment>
             <source>{Pt} project does not contain book.</source>

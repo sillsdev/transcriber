@@ -94,7 +94,7 @@ export function TeamCheckReference() {
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}
           onEnded={handleEnded}
-          setBack={true}
+          noClose={true}
           controls={true}
           limits={{ start: mediaStart, end: mediaEnd }}
         />
