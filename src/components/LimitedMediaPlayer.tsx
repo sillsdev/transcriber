@@ -56,6 +56,7 @@ interface IProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
+  endText?: string;
   onTogglePlay?: () => void;
   controls?: boolean;
   limits: IMediaLimits;
@@ -69,6 +70,7 @@ export function LimitedMediaPlayer(props: IProps) {
     requestPlay,
     onLoaded,
     onEnded,
+    endText,
     onTogglePlay,
     controls,
     limits,
@@ -302,7 +304,7 @@ export function LimitedMediaPlayer(props: IProps) {
                 </StyledTip>
               )}
               {
-                <StyledTip title={ts.close}>
+                <StyledTip title={endText ?? ts.close}>
                   <IconButton
                     data-testid="close"
                     sx={{ alignSelf: 'center' }}

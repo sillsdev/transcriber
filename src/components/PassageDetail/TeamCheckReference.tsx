@@ -5,6 +5,9 @@ import { LimitedMediaPlayer } from '../LimitedMediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, NamedRegions } from '../../utils';
 import { storedCompareKey } from '../../utils/storedCompareKey';
+import { ISharedStrings } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../../selector';
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   margin: theme.spacing(2),
@@ -35,6 +38,7 @@ export function TeamCheckReference() {
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [resource, setResource] = useState('');
   const [resetCount, setResetCount] = useState(0);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { removeStoredKeys, saveKey, storeKey, SecSlug } = storedCompareKey(
     passage,
     section
@@ -94,6 +98,7 @@ export function TeamCheckReference() {
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}
           onEnded={handleEnded}
+          endText={ts.reset}
           controls={true}
           limits={{ start: mediaStart, end: mediaEnd }}
         />

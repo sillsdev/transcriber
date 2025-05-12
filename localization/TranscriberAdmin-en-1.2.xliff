@@ -7677,6 +7677,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.reset">
+            <source>Reset</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.bookNotFound">
             <source>{Pt} project does not contain book.</source>
             <target/>
