@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { API_CONFIG, isElectron } from '../../api-variable';
+import { API_CONFIG } from '../../api-variable';
 import {
   UPLOAD_LIST,
   UPLOAD_ITEM_PENDING,
@@ -69,51 +69,57 @@ export const writeFileLocal = async (file: File, remoteName?: string) => {
   }
   return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };
-const isTextContent = (content: string) => /^text/.test(content);
+const isNotDownloadable = (content: string) => /^text/.test(content); //Links also start with text/
+
+const deleteMediaAfterFailedUpload = (
+  id: number,
+  token: string,
+  errorReporter: any
+) => {
+  Axios.delete(API_CONFIG.host + '/api/mediafiles/' + id, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  }).catch((err) => {
+    logError(
+      Severity.error,
+      errorReporter,
+      infoMsg(err, `unable to remove orphaned mediafile ${id}`)
+    );
+  });
+};
+
 export const uploadFile = (
   data: any,
   file: File,
-  errorReporter: any,
-  token: string,
-  cb?: (
-    success: boolean,
-    data: any,
-    statusNum: number,
-    statusText: string
-  ) => void
-) => {
-  if (isTextContent(data.contentType)) {
-    if (cb) cb(true, data, 0, '');
-    return;
-  }
-  const xhr = new XMLHttpRequest();
-  xhr.open('PUT', data.audioUrl, true);
-  xhr.setRequestHeader('Content-Type', data.contentType);
-  xhr.send(file.slice());
-  xhr.onload = () => {
-    if (xhr.status < 300) {
-      if (cb) cb(true, data, 0, '');
-    } else {
-      logError(
-        Severity.error,
-        errorReporter,
-        `upload ${file.name}: (${xhr.status}) ${xhr.responseText}`
-      );
-      Axios.delete(API_CONFIG.host + '/api/mediafiles/' + data.id, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      }).catch((err) => {
+  errorReporter: any
+): Promise<{ statusNum: number; statusText: string }> => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', data.audioUrl, true);
+    xhr.setRequestHeader('Content-Type', data.contentType);
+    xhr.send(file.slice());
+    xhr.onload = () => {
+      if (xhr.status < 300) {
+        resolve({ statusNum: 0, statusText: '' });
+      } else {
         logError(
           Severity.error,
           errorReporter,
-          infoMsg(err, `unable to remove orphaned mediafile ${data.id}`)
+          `upload ${file.name}: (${xhr.status}) ${xhr.responseText}`
         );
-      });
-      if (cb) cb(false, data, xhr.status, xhr.statusText);
-    }
-  };
+        reject({ statusNum: 500, statusText: 'upload failed' });
+      }
+    };
+    xhr.onerror = (evt: any) => {
+      reject({ statusNum: 500, statusText: 'upload failed' });
+    };
+    xhr.onabort = (evt: any) => {
+      reject({ statusNum: 500, statusText: 'upload aborted' });
+    };
+  });
 };
+
 export interface NextUploadProps {
   record: any;
   files: File[];
@@ -137,49 +143,48 @@ export const nextUpload =
   }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-    const isText = isTextContent(files[n]?.type);
-    const acceptExtPat =
-      /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
-    if (!isText && !acceptExtPat.test(record.originalFile)) {
+    const sendError = (n: number, message: string, mediaid?: any) => {
       dispatch({
         payload: {
           current: n,
-          error: `${files[n].name}:unsupported`,
+          error: message,
+          mediaid,
         },
         type: UPLOAD_ITEM_FAILED,
       });
       if (cb) cb(n, false);
+    };
+    const isDownloadable = !isNotDownloadable(files[n]?.type);
+
+    const acceptExtPat =
+      /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
+    if (isDownloadable && !acceptExtPat.test(record.originalFile)) {
+      sendError(n, `${files[n].name}:unsupported`);
       return;
     }
     if (files[n].size > SIZELIMIT(uploadType) * 1000000) {
-      dispatch({
-        payload: {
-          current: n,
-          error: `${files[n].name}:toobig:${(files[n].size / 1000000).toFixed(
-            2
-          )}`,
-        },
-        type: UPLOAD_ITEM_FAILED,
-      });
-      if (cb) cb(n, false);
+      sendError(
+        n,
+        `${files[n].name}:toobig:${(files[n].size / 1000000).toFixed(2)}`
+      );
       return;
     }
-    if (offline && !isText) {
-      try {
-        writeFileLocal(files[n]).then((filename: string) => {
-          if (cb) cb(n, true, { ...record, audioUrl: filename });
-        });
-      } catch (err: any) {
-        logError(
-          Severity.error,
-          errorReporter,
-          infoMsg(err, `failed getting name: ${files.length}`)
-        );
-        if (cb) cb(n, false);
-      }
-      return;
-    } else if (offline) {
-      if (cb) cb(n, true, { ...record });
+    if (offline) {
+      if (!isDownloadable) {
+        if (cb) cb(n, true, { ...record });
+      } else
+        try {
+          writeFileLocal(files[n]).then((filename: string) => {
+            if (cb) cb(n, true, { ...record, audioUrl: filename });
+          });
+        } catch (err: any) {
+          logError(
+            Severity.error,
+            errorReporter,
+            infoMsg(err, `failed getting name: ${files.length}`)
+          );
+          sendError(n, `${files[n].name} failed local write`);
+        }
       return;
     }
     const completeCB = (
@@ -202,6 +207,7 @@ export const nextUpload =
         if (cb) cb(n, false, data);
       }
     };
+
     const toVnd = (record: any) => {
       var vnd = {
         data: {
@@ -254,52 +260,72 @@ export const nextUpload =
       json.stringId = json.id.toString();
       return json;
     };
+
+    const postIt = async () => {
+      var iTries = 5;
+      while (iTries > 0) {
+        try {
+          //we have to use an axios call here because orbit is asynchronous
+          //(even if you await)
+          var response = await Axios.post(
+            API_CONFIG.host + '/api/mediafiles',
+            vndRecord,
+            {
+              headers: {
+                'Content-Type': 'application/vnd.api+json',
+                Authorization: 'Bearer ' + token,
+              },
+            }
+          );
+          dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
+          return fromVnd(response.data);
+        } catch (err: any) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          iTries--;
+        }
+      }
+      sendError(n, `Upload ${files[n].name} failed.`);
+      return undefined;
+    };
     var vndRecord = toVnd(record);
-    //we have to use an axios call here because orbit is asynchronous
-    //(even if you await)
-    Axios.post(API_CONFIG.host + '/api/mediafiles', vndRecord, {
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-        Authorization: 'Bearer ' + token,
-      },
-    })
-      .then(async (response) => {
-        dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
-        var json = fromVnd(response.data);
-        uploadFile(json, files[n], errorReporter, token, completeCB);
-        if (isElectron) {
+
+    postIt().then(async (json) => {
+      if (json) {
+        if (isNotDownloadable(json.contentType)) {
+          if (completeCB) completeCB(true, json, 0, '');
+          return;
+        }
+        let statusNum = 0;
+        let statusText = '';
+        for (let iTries = 5; iTries; iTries--) {
           try {
-            await writeFileLocal(
-              files[n],
-              response.data.data.attributes['audio-url']
-            );
+            let status = await uploadFile(json, files[n], errorReporter);
+            if (status.statusNum === 0) {
+              completeCB(true, json, status.statusNum, status.statusText);
+              return;
+            }
+            statusNum = status.statusNum;
+            statusText = status.statusText;
           } catch (err) {
+            console.log('err', err);
             logError(
               Severity.error,
               errorReporter,
-              `failed copying ${(files[n] as any).path} to ${writeName}`
+              infoMsg(err as Error, `Upload ${files[n].name} failed.`)
             );
+            statusNum = 500;
+            statusText = (err as Error).message;
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+          } finally {
+            if (iTries === 1) {
+              deleteMediaAfterFailedUpload(json.id, token, errorReporter);
+              completeCB(false, undefined, statusNum, statusText);
+            }
           }
         }
-      })
-      .catch((err) => {
-        logError(
-          Severity.error,
-          errorReporter,
-          infoMsg(err, `Upload ${files[n].name} failed.`)
-        );
-        dispatch({
-          payload: {
-            current: n,
-            error: `upload ${files[n].name}: (${err})`,
-            mediaid: record.id,
-          },
-          type: UPLOAD_ITEM_FAILED,
-        });
-        if (cb) cb(n, false);
-      });
+      }
+    });
   };
-
 export const uploadComplete = () => {
   return { type: UPLOAD_COMPLETE };
 };

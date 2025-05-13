@@ -72,7 +72,8 @@ export function PassageDetailRecord(props: IProps) {
   };
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
-  const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
+  const [uploadVisible, setUploadVisiblex] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
   const [preload, setPreload] = useState(0);
@@ -82,6 +83,14 @@ export function PassageDetailRecord(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
   const { canDoVernacular } = useStepPermissions();
+
+  const setUploadVisible = (value: boolean) => {
+    if (value) {
+      setUploadSuccess(undefined);
+      cancelled.current = false;
+    } else setUploadSuccess(!cancelled.current);
+    setUploadVisiblex(value);
+  };
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -147,7 +156,6 @@ export function PassageDetailRecord(props: IProps) {
       setUploadVisible(false);
       setAudacityVisible(false);
     }
-    setPreload(preload + 1);
   };
 
   const saveIfChanged = (cb: () => void) => {
@@ -162,6 +170,7 @@ export function PassageDetailRecord(props: IProps) {
     setImportList(files);
     setUploadVisible(true);
   };
+
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
       setImportList(list);
@@ -226,6 +235,7 @@ export function PassageDetailRecord(props: IProps) {
         toolId={toolId}
         mediaId={mediafileId}
         uploadMethod={uploadMedia}
+        uploadSuccess={uploadSuccess}
         onSaving={onSaving}
         onReady={onReady}
         onRecording={setRecording}

@@ -5,23 +5,30 @@ import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
-import { PassageDetailContext } from '../context/PassageDetailContext';
 import { IndexedDBSource } from '@orbit/indexeddb';
 import { UploadType } from '../components/MediaUpload';
 import { RecordKeyMap } from '@orbit/records';
 import { getContentType } from '../utils/contentType';
 
 interface IProps {
-  artifactId: string;
+  artifactId: string | null;
+  passageId: string | undefined;
+  planId?: string;
   afterUploadCb: (mediaId: string) => Promise<void>;
+  setUploadSuccess: (success: boolean | undefined) => void;
 }
-export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
+export const useMediaUpload = ({
+  artifactId,
+  passageId,
+  planId,
+  afterUploadCb,
+  setUploadSuccess,
+}: IProps) => {
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
   const nextUpload = (props: actions.NextUploadProps) =>
     dispatch(actions.nextUpload(props));
   const uploadComplete = () => dispatch(actions.uploadComplete);
-  const { passage } = useContext(PassageDetailContext).state;
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -36,6 +43,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;
+    setUploadSuccess(success);
     if (!uploadList) return; // This should never happen
     if (data?.stringId) {
       mediaIdRef.current = data?.stringId;
@@ -47,13 +55,13 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
           data,
           num,
           uploadList[n].size,
-          passage.id,
+          passageId ?? '',
           artifactId,
           '',
           user
         )
       ).id;
-    }
+    } else mediaIdRef.current = '';
     if (!getGlobal('offline') && mediaIdRef.current) {
       pullTableList(
         'mediafile',
@@ -74,14 +82,26 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
 
   return async (files: File[]) => {
     const getPlanId = () =>
-      remoteIdNum('plan', getGlobal('plan'), memory?.keyMap as RecordKeyMap) ||
-      getGlobal('plan');
+      planId
+        ? remoteIdNum('plan', planId, memory?.keyMap as RecordKeyMap) || planId
+        : remoteIdNum(
+            'plan',
+            getGlobal('plan'),
+            memory?.keyMap as RecordKeyMap
+          ) || getGlobal('plan');
     const getArtifactId = () =>
-      remoteIdNum('artifacttype', artifactId, memory?.keyMap as RecordKeyMap) ||
-      artifactId;
+      artifactId === null
+        ? null
+        : remoteIdNum(
+            'artifacttype',
+            artifactId,
+            memory?.keyMap as RecordKeyMap
+          ) || artifactId;
     const getPassageId = () =>
-      remoteIdNum('passage', passage.id, memory?.keyMap as RecordKeyMap) ||
-      passage.id;
+      passageId
+        ? remoteIdNum('passage', passageId, memory?.keyMap as RecordKeyMap) ||
+          passageId
+        : '';
     const getUserId = () =>
       remoteIdNum('user', user, memory?.keyMap as RecordKeyMap) || user;
 
@@ -97,6 +117,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       recordedbyUserId: getUserId(),
       userId: getUserId(),
     };
+    setUploadSuccess(undefined);
     nextUpload({
       record: mediaFile,
       files,

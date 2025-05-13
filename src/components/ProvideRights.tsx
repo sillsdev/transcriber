@@ -85,7 +85,9 @@ export function ProvideRights(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
   const [importList, setImportList] = useState<File[]>();
-  const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadVisible, setUploadVisiblex] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
+  const uploadVisibleRef = useRef(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [statement, setStatement] = useState<string>('');
   const [saving, setSaving] = useState(false);
@@ -109,6 +111,14 @@ export function ProvideRights(props: IProps) {
 
   const toolId = 'RecordArtifactTool';
 
+  const setUploadVisible = (value: boolean) => {
+    setUploadVisiblex(value);
+    uploadVisibleRef.current = value;
+    if (value) {
+      cancelled.current = false;
+      setUploadSuccess(undefined);
+    } else setUploadSuccess(cancelled.current);
+  };
   const teamRec = React.useMemo(
     () =>
       findRecord(
@@ -287,6 +297,7 @@ export function ProvideRights(props: IProps) {
         <MediaRecord
           toolId={toolId}
           uploadMethod={uploadMedia}
+          uploadSuccess={uploadSuccess}
           defaultFilename={defaultFilename}
           allowWave={false}
           showFilename={false}

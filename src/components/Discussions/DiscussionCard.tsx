@@ -325,10 +325,11 @@ export const DiscussionCard = (props: IProps) => {
       commentMediaId.current = '';
     }
   };
-  const { uploadMedia, fileName } = useRecordComment({
+
+  const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
     mediafileId: mediafileId,
     commentNumber: -1,
-    afterUploadcb: saveMyComment,
+    afterUploadCb: saveMyComment,
   });
 
   const [changeAssignment, setChangeAssignment] = useState<
@@ -953,6 +954,7 @@ export const DiscussionCard = (props: IProps) => {
                     uploadMethod={uploadMedia}
                     onTextChange={handleTextChange}
                     cancelOnlyIfChanged={true}
+                    uploadSuccess={uploadSuccess}
                   />
                 )}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>

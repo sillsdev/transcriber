@@ -5,6 +5,7 @@ import {
   useContext,
   useMemo,
   PropsWithChildren,
+  useCallback,
 } from 'react';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
@@ -559,6 +560,7 @@ export function DataChanges(props: PropsWithChildren) {
           : defaultDataDelay
         : null;
     setDataDelay(newDelay);
+
     if (!remote) setBusy(false);
     // the busy delay is increased by 10 times if we aren't connected yet
     // but should be because we have authenticated.
@@ -567,20 +569,25 @@ export function DataChanges(props: PropsWithChildren) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remote, ctx, loadComplete, connected, firstRun, userDataDelay]);
-  const updateBusy = () => {
+
+  const updateBusy = useCallback(() => {
     const checkBusy =
-      user === '' || (remote && remote.requestQueue.length !== 0);
+      user === '' ||
+      (remote && remote.requestQueue.length !== 0) ||
+      getGlobal('orbitRetries') < OrbitNetworkErrorRetries;
     //we know we're offline, or we've retried something so maybe we're offline
-    if (
-      !getGlobal('connected') ||
-      (checkBusy && getGlobal('orbitRetries') < OrbitNetworkErrorRetries)
-    ) {
+    if (!getGlobal('connected') || checkBusy) {
       checkOnline((result) => {
-        if ((checkBusy && result) !== getGlobal('remoteBusy'))
+        if ((checkBusy && result) !== getGlobal('remoteBusy')) {
+          console.log('datachanges checkBusy && result', checkBusy, result);
           setBusy(checkBusy && result);
+        }
       });
-    } else if (checkBusy !== getGlobal('remoteBusy')) setBusy(checkBusy);
-  };
+    } else if (checkBusy !== getGlobal('remoteBusy')) {
+      setBusy(checkBusy);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remote, user]);
 
   const updateData = async () => {
     if (

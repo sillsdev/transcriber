@@ -43,7 +43,8 @@ interface IProps {
   metaData?: JSX.Element;
   defaultFilename?: string;
   ready?: () => boolean;
-  uploadMethod?: (files: File[]) => Promise<void>;
+  uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   allowWave?: boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
@@ -58,6 +59,7 @@ function PassageRecordDlg(props: IProps) {
     mediaId,
     defaultFilename,
     uploadMethod,
+    uploadSuccess,
     onCancel,
     ready,
     metaData,
@@ -141,6 +143,7 @@ function PassageRecordDlg(props: IProps) {
           toolId={myToolId}
           mediaId={mediaId}
           uploadMethod={uploadMethod}
+          uploadSuccess={uploadSuccess}
           onSaving={onSaving}
           onReady={onReady}
           defaultFilename={defaultFilename}

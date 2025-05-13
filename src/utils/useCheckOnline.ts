@@ -61,7 +61,7 @@ export const useCheckOnline = (label: string) => {
         if (result) {
           dispatch(resetOrbitError());
           if (getGlobal('orbitRetries') < OrbitNetworkErrorRetries) {
-            remote.requestQueue.retry();
+            remote.requestQueue?.retry();
             setOrbitRetries(OrbitNetworkErrorRetries);
           }
         }

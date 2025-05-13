@@ -103,7 +103,7 @@ export function PassageDetailItem(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
-  const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadVisible, setUploadVisiblex] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const { userIsAdmin } = useRole();
@@ -140,11 +140,20 @@ export function PassageDetailItem(props: IProps) {
   const [currentVersion, setCurrentVersion] = useState(1);
   const [segString, setSegString] = useState('{}');
   const [verses, setVerses] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const cancelled = useRef(false);
   const { canDoSectionStep } = useStepPermissions();
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
+
+  const setUploadVisible = (value: boolean) => {
+    if (value) {
+      setUploadSuccess(undefined);
+      cancelled.current = false;
+    } else setUploadSuccess(!cancelled.current);
+    setUploadVisiblex(value);
+  };
 
   const mediafileId = useMemo(() => {
     return playerMediafile?.id ?? '';
@@ -464,6 +473,7 @@ export function PassageDetailItem(props: IProps) {
                         <MediaRecord
                           toolId={toolId}
                           uploadMethod={uploadMedia}
+                          uploadSuccess={uploadSuccess}
                           defaultFilename={defaultFilename}
                           allowWave={false}
                           showFilename={false}

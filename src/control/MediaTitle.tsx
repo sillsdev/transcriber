@@ -25,8 +25,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material';
-import { useSelector, shallowEqual, useDispatch } from 'react-redux';
-import * as actions from '../store';
+import { useSelector, shallowEqual } from 'react-redux';
 import { IMediaTitleStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
 import { mediaTitleSelector, pickerSelector } from '../selector';
@@ -35,22 +34,16 @@ import MediaRecord from '../components/MediaRecord';
 import MediaPlayer from '../components/MediaPlayer';
 import {
   ArtifactTypeSlug,
-  pullTableList,
   remoteId,
   remoteIdGuid,
-  remoteIdNum,
   useArtifactType,
-  useOfflnMediafileCreate,
+  useMediaUpload,
   VernacularTag,
 } from '../crud';
-import { useGetGlobal, useGlobal } from '../context/GlobalContext';
-import { TokenContext } from '../context/TokenProvider';
-import { UploadType } from '../components/MediaUpload';
+import { useGlobal } from '../context/GlobalContext';
 import { LangTag, LanguagePicker } from 'mui-language-picker';
 import { ILanguage } from './Language';
 import { UnsavedContext } from '../context/UnsavedContext';
-import JSONAPISource from '@orbit/jsonapi';
-import IndexedDBSource from '@orbit/indexeddb';
 import { RecordKeyMap } from '@orbit/records';
 
 interface IStartProps {
@@ -232,21 +225,7 @@ export default function MediaTitle(props: IProps) {
     required,
     passageId,
   } = props;
-  const dispatch = useDispatch();
-  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
-  const nextUpload = (props: actions.NextUploadProps) =>
-    dispatch(actions.nextUpload(props));
-  const uploadComplete = () => {
-    setShowRecorder(false);
-    dispatch(actions.uploadComplete);
-  };
-  const [plan] = useGlobal('plan'); //will be constant here
   const [memory] = useGlobal('memory');
-  const [reporter] = useGlobal('errorReporter');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator?.getSource('remote') as JSONAPISource;
-  const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const canSaveRef = useRef(false);
@@ -254,22 +233,19 @@ export default function MediaTitle(props: IProps) {
   const [startRecord, setStartRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
   const [helperText, setHelperText] = useState('');
-  const fileList = useRef<File[]>();
   const [showRecorder, setShowRecorder] = useState(false);
   const langRef = useRef(language);
   const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
   const [srcMediaId, setSrcMediaId] = useState('');
   // const [myChanged, setMyChanged] = useState(false);
   const { getTypeId } = useArtifactType();
-  const tokenCtx = useContext(TokenContext);
-  const { accessToken } = tokenCtx.state;
   const langEl = useRef<any>();
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
   const saving = useRef(false);
   const lt = useSelector(pickerSelector, shallowEqual);
   const { showMessage } = useSnackBar();
-  const getGlobal = useGetGlobal();
   const {
     toolChanged,
     toolsChanged,
@@ -280,8 +256,40 @@ export default function MediaTitle(props: IProps) {
     clearCompleted,
     // isChanged,
   } = useContext(UnsavedContext).state;
-  const mediaIdRef = useRef<string>();
-  const { createMedia } = useOfflnMediafileCreate();
+
+  const afterUploadCb = async (mediaId: string) => {
+    setShowRecorder(false);
+    if (mediaId) {
+      waitForIt(
+        'mediaId',
+        () =>
+          offlineOnly ||
+          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) !==
+            undefined,
+        () => false,
+        100
+      ).then(() => {
+        onMediaIdChange(
+          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
+            mediaId
+        );
+        reset();
+      });
+    } else reset();
+  };
+  const TitleId = useMemo(() => {
+    var id = getTypeId(ArtifactTypeSlug.Title) as string;
+    return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
+  const uploadMedia = useMediaUpload({
+    artifactId: passageId !== undefined ? VernacularTag : TitleId,
+    passageId: passageId,
+    planId: useplan,
+    afterUploadCb,
+    setUploadSuccess,
+  });
 
   useEffect(() => setHelperText(helper ?? ''), [helper]);
 
@@ -297,20 +305,6 @@ export default function MediaTitle(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSaveRecording]);
-
-  const getPlanId = () => {
-    if (useplan)
-      return (
-        remoteIdNum('plan', useplan, memory?.keyMap as RecordKeyMap) || useplan
-      );
-    return remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
-  };
-
-  const TitleId = useMemo(() => {
-    var id = getTypeId(ArtifactTypeSlug.Title) as string;
-    return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
 
   const toolId = useMemo(() => 'MediaTitle-' + titlekey, [titlekey]);
   const recToolId = useMemo(() => toolId + 'rec', [toolId]);
@@ -332,26 +326,6 @@ export default function MediaTitle(props: IProps) {
       setCanSaveRecording(valid);
       //if (valid) onChanged(true);
     }
-  };
-
-  const afterUploadCb = async (mediaId: string) => {
-    if (mediaId) {
-      waitForIt(
-        'mediaId',
-        () =>
-          offlineOnly ||
-          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) !==
-            undefined,
-        () => false,
-        100
-      ).then(() => {
-        onMediaIdChange(
-          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
-            mediaId
-        );
-        reset();
-      });
-    } else reset();
   };
 
   const onMyRecording = (r: boolean) => {
@@ -458,73 +432,6 @@ export default function MediaTitle(props: IProps) {
     onMediaIdChange(mediaId);
     e.stopPropagation();
     reset();
-  };
-  const getUserId = () =>
-    remoteIdNum('user', user || '', memory?.keyMap as RecordKeyMap) || user;
-  const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory?.keyMap as RecordKeyMap) ||
-    passageId;
-  const itemComplete = async (n: number, success: boolean, data?: any) => {
-    const uploadList = fileList.current;
-    if (!uploadList) return; // This should never happen
-    if (data?.stringId) {
-      mediaIdRef.current = data?.stringId;
-    } else if (success && data) {
-      // offlineOnly
-      var num = 1;
-      mediaIdRef.current = (
-        await createMedia(
-          data,
-          num,
-          uploadList[n].size,
-          passageId ?? '',
-          TitleId,
-          '',
-          user
-        )
-      ).id;
-    }
-    if (!getGlobal('offline') && mediaIdRef.current) {
-      pullTableList(
-        'mediafile',
-        Array(mediaIdRef.current),
-        memory,
-        remote,
-        backup,
-        reporter
-      ).then(() => {
-        uploadComplete();
-        afterUploadCb(mediaIdRef.current ?? '');
-      });
-    } else {
-      uploadComplete();
-      afterUploadCb(mediaIdRef.current ?? '');
-    }
-  };
-
-  const uploadMedia = async (files: File[]) => {
-    uploadFiles(files);
-    fileList.current = files;
-    const mediaFile = {
-      planId: getPlanId(),
-      versionNumber: 1,
-      originalFile: files[0].name,
-      contentType: files[0]?.type,
-      artifactTypeId: passageId !== undefined ? VernacularTag : TitleId,
-      recordedbyUserId: getUserId(),
-      userId: getUserId(),
-      passageId: getPassageId(),
-    };
-    nextUpload({
-      record: mediaFile,
-      files,
-      n: 0,
-      token: accessToken || '',
-      offline: getGlobal('offline'),
-      errorReporter: undefined, //TODO
-      uploadType: UploadType.Media,
-      cb: itemComplete,
-    });
   };
 
   useEffect(() => {
@@ -642,6 +549,7 @@ export default function MediaTitle(props: IProps) {
           toolId={recToolId}
           onRecording={onMyRecording}
           uploadMethod={uploadMedia}
+          uploadSuccess={uploadSuccess}
           defaultFilename={defaultFilename}
           allowWave={false}
           showFilename={false}
