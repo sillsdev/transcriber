@@ -8,6 +8,8 @@ import {
   useMemo,
 } from 'react';
 import {
+  Box,
+  BoxProps,
   IconButton,
   InputLabel,
   InputAdornment,
@@ -170,9 +172,20 @@ const TitleEnd = ({
   );
 };
 
-const ColumnDiv = styled('div')(() => ({
+// see: https://mui.com/material-ui/customization/how-to-customize/
+export interface ColumnDivProps extends BoxProps {
+  noLabel?: boolean;
+}
+export const ColumnDiv = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'noLabel',
+})<ColumnDivProps>(({ noLabel }) => ({
   display: 'flex',
   flexDirection: 'column',
+  ...(noLabel
+    ? {
+        '& legend': { display: 'none' },
+      }
+    : {}),
 }));
 
 const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -515,7 +528,7 @@ export default function MediaTitle(props: IProps) {
   );
 
   return (
-    <ColumnDiv>
+    <ColumnDiv noLabel={label === '\uFEFF'}>
       <FormControl
         sx={{ width: 'max-content', py: 1 }}
         variant="outlined"
