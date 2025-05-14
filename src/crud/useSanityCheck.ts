@@ -175,7 +175,18 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         ) as BaseModel[];
       const organizationmembershipRows = () =>
         filterByOrg('organizationmembership');
-
+      const orgSchemeStepRows = () => {
+        var schemes = filterByOrg('organizationscheme');
+        return (
+          memory?.cache.query((q) =>
+            q.findRecords('organizationschemestep')
+          ) as BaseModel[]
+        ).filter(
+          (ss) =>
+            schemes.find((id) => id === related(ss, 'organizationscheme')) !==
+            undefined
+        );
+      };
       switch (table) {
         case 'activitystate':
         case 'artifacttype':
@@ -239,12 +250,15 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
 
         case 'organizationbible':
         case 'organizationmembership':
+        case 'organizationscheme':
         case 'orgkeyterm':
         case 'orgkeytermreference':
         case 'orgkeytermtarget':
         case 'orgworkflowstep':
           return filterByOrg(table);
 
+        case 'organizationschemestep':
+          return orgSchemeStepRows();
         case 'passage':
           return passageRows();
         case 'passagestatechange':
