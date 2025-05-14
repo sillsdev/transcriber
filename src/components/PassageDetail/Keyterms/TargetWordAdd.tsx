@@ -56,6 +56,7 @@ interface IProps {
   fileName: string;
   cancelOnlyIfChanged?: boolean;
   uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   row: IKeyTermRow;
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
@@ -71,6 +72,7 @@ export default function TargetWordAdd(props: IProps) {
     word,
     fileName,
     uploadMethod,
+    uploadSuccess,
     onOk,
     onCancel,
     setCanSaveRecording,
@@ -96,6 +98,7 @@ export default function TargetWordAdd(props: IProps) {
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
   // const [myChanged, setMyChanged] = useState(false);
+
   const {
     toolsChanged,
     toolChanged,
@@ -155,6 +158,14 @@ export default function TargetWordAdd(props: IProps) {
     setStatusText(t.saving);
     if (doRecordRef.current) setCommentRecording(false);
   };
+
+  useEffect(() => {
+    //ignore undefined - true will call reset
+    if (uploadSuccess === false) {
+      setStatusText('');
+      saving.current = false;
+    }
+  }, [uploadSuccess]);
 
   const reset = () => {
     if (doRecordRef.current) setCommentRecording(false);
@@ -288,6 +299,7 @@ export default function TargetWordAdd(props: IProps) {
           toolId={toolId}
           onRecording={onRecording}
           uploadMethod={uploadMethod}
+          uploadSuccess={uploadSuccess}
           defaultFilename={fileName}
           allowWave={false}
           showFilename={false}

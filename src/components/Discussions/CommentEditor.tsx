@@ -42,6 +42,7 @@ interface IProps extends IStateProps {
   fileName: string;
   cancelOnlyIfChanged?: boolean;
   uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   refresh: number;
   onOk?: () => void;
   onCancel?: () => void;
@@ -58,6 +59,7 @@ export const CommentEditor = (props: IProps) => {
     fileName,
     cancelOnlyIfChanged,
     uploadMethod,
+    uploadSuccess,
     refresh,
     onOk,
     onCancel,
@@ -85,6 +87,7 @@ export const CommentEditor = (props: IProps) => {
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
   const [myChanged, setMyChanged] = useState(false);
+
   const {
     toolsChanged,
     toolChanged,
@@ -199,6 +202,7 @@ export const CommentEditor = (props: IProps) => {
           toolId={toolId}
           onRecording={onRecording}
           uploadMethod={uploadMethod}
+          uploadSuccess={uploadSuccess}
           defaultFilename={fileName}
           allowWave={false}
           showFilename={false}

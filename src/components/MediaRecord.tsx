@@ -44,7 +44,8 @@ interface IProps {
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
-  uploadMethod?: (files: File[]) => Promise<void>;
+  uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   cancelMethod?: () => void;
   allowRecord?: boolean;
   oneTryOnly?: boolean;
@@ -71,6 +72,7 @@ function MediaRecord(props: IProps) {
     defaultFilename,
     allowDeltaVoice,
     uploadMethod,
+    uploadSuccess,
     setCanSave,
     setCanCancel,
     setStatusText,
@@ -214,15 +216,18 @@ function MediaRecord(props: IProps) {
           type: mimeType,
         }),
       ];
-      if (uploadMethod && files) {
-        await uploadMethod(files);
-      }
-      setUploading(false);
-      setFilechanged(false);
+      await uploadMethod(files);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name, filetype, mimeType]
   );
+
+  useEffect(() => {
+    if (uploadSuccess !== undefined) {
+      setUploading(false);
+      setFilechanged(!uploadSuccess);
+    }
+  }, [uploadSuccess]);
 
   useEffect(() => {
     //was it me who asked for this?

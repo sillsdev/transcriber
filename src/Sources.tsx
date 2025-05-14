@@ -22,7 +22,11 @@ import { NetworkError } from '@orbit/jsonapi';
 import { Bucket, Exception } from '@orbit/core';
 import Memory from '@orbit/memory';
 import { ITokenContext } from './context/TokenProvider';
-import { API_CONFIG, isElectron } from './api-variable';
+import {
+  API_CONFIG,
+  isElectron,
+  OrbitNetworkErrorRetries,
+} from './api-variable';
 import {
   logError,
   infoMsg,
@@ -54,23 +58,27 @@ interface QueryStratErrProps {
   tokenCtx: ITokenContext;
   orbitError: (ex: IApiError) => void;
   remote: JSONAPISource;
+  setOrbitRetries: (r: number) => void;
 }
+const networkError = (ex: any) =>
+  ex instanceof NetworkError ||
+  (ex instanceof Error &&
+    (ex.message === 'Failed to fetch' || ex.message === 'Network Error'));
 
 const queryError =
-  ({ tokenCtx, orbitError, remote }: QueryStratErrProps) =>
+  ({ tokenCtx, orbitError, remote, setOrbitRetries }: QueryStratErrProps) =>
   (transform: RecordTransform, ex: any) => {
     console.log('***** api query fail', transform, ex);
     if (ex instanceof Exception && (ex as IApiError).response?.status === 401) {
       tokenCtx?.state.logout();
-    } else if (
-      ex instanceof NetworkError ||
-      (ex instanceof Error &&
-        (ex.message === 'Failed to fetch' || ex.message === 'Network Error'))
-    ) {
+    } else if (networkError(ex)) {
       orbitError(ex as IApiError);
+      //signal to datachanges that we've had a network error
+      setOrbitRetries(OrbitNetworkErrorRetries - 1);
     }
     return remote.requestQueue.retry;
   };
+
 const updateError =
   ({
     tokenCtx,
@@ -85,11 +93,7 @@ const updateError =
     console.log('***** api update fail', transform, ex);
     if (ex instanceof Exception && (ex as IApiError).response?.status === 401) {
       tokenCtx?.state.logout();
-    } else if (
-      ex instanceof NetworkError ||
-      (ex instanceof Error &&
-        (ex.message === 'Network Error' || ex.message === 'Failed to fetch'))
-    ) {
+    } else if (networkError(ex)) {
       if (orbitRetries > 0) {
         setOrbitRetries(orbitRetries - 1);
         // When network errors are encountered, try again in 3s
@@ -223,6 +227,7 @@ export const Sources = async (
             tokenCtx,
             orbitError,
             remote,
+            setOrbitRetries,
           }) as unknown as StategyError,
           blocking: true,
         })
