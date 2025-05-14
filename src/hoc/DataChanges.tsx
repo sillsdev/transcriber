@@ -579,7 +579,6 @@ export function DataChanges(props: PropsWithChildren) {
     if (!getGlobal('connected') || checkBusy) {
       checkOnline((result) => {
         if ((checkBusy && result) !== getGlobal('remoteBusy')) {
-          console.log('datachanges checkBusy && result', checkBusy, result);
           setBusy(checkBusy && result);
         }
       });

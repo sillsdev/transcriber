@@ -307,7 +307,6 @@ export const nextUpload =
             statusNum = status.statusNum;
             statusText = status.statusText;
           } catch (err) {
-            console.log('err', err);
             logError(
               Severity.error,
               errorReporter,
