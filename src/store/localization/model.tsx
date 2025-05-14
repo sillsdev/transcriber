@@ -1379,6 +1379,11 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "templateCodes": string;
 };
 
+export interface ITitleStrings extends Localize.LocalizedStringsMethods {
+    "record": string;
+    "upload": string;
+};
+
 export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "assigned": string;
@@ -1871,6 +1876,7 @@ export interface ILocalizedStrings {
 	taskItem: ITaskItemStrings;
 	teamCheckReference: ITeamCheckReferenceStrings;
 	template: ITemplateStrings;
+	title: ITitleStrings;
 	toDoTable: IToDoTableStrings;
 	tool: IToolStrings;
 	transcribe: ITranscribeStrings;

@@ -6976,6 +6976,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="title.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="title.upload">
+         <segment>
+            <source>Upload</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.action">
          <segment>
             <source>Action</source>

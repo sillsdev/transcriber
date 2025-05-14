@@ -8140,6 +8140,20 @@
                <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="title.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="title.upload">
+            <source>Upload</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="toDoTable.action">
             <source>Action</source>
             <target/>
