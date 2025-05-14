@@ -186,45 +186,32 @@ export const useAudioAi = () => {
     uploadFile(
       { id: 0, audioUrl: response, contentType: 'audio/wav' },
       file,
-      reporter,
-      token,
-      (success: boolean, data: any, statusNum: number, statusText: string) => {
-        if (success)
+      reporter
+    ).then((status) => {
+      if (status.statusNum === 0)
+        if (!cancelRef.current)
           if (!cancelRef.current)
-            axiosGet(`S3Files/get/AI/${file.name}/wav`, undefined, token)
-              .then((response) => {
-                if (!cancelRef.current)
-                  axiosSendSignedUrl(
-                    `aero/${fn}/fromfile`,
-                    response,
-                    targetVoice
-                  )
-                    .then((nrresponse) => {
-                      if (nrresponse.status === HttpStatusCode.Ok) {
-                        var taskId = nrresponse.data ?? '';
-                        returnAsS3List.push({
-                          taskId,
-                          cb,
-                          cancelRef,
-                        });
-                        if (!taskTimer.current) launchTimer(fn);
-                      } else cb(new Error(response.statusText));
-                    })
-                    .catch((err) => {
-                      logError(Severity.error, errorReporter, err);
-                      cb(err as Error);
-                    })
-                    .finally(() => deleteS3File(file.name));
-                else doCancel(fn, cb);
+            axiosSendSignedUrl(`aero/${fn}/fromfile`, file.name, targetVoice)
+              .then((nrresponse) => {
+                if (nrresponse.status === HttpStatusCode.Ok) {
+                  var taskId = nrresponse.data ?? '';
+                  returnAsS3List.push({
+                    taskId,
+                    cb,
+                    cancelRef,
+                  });
+                  if (!taskTimer.current) launchTimer(fn);
+                } else cb(new Error(response.statusText));
               })
               .catch((err) => {
                 logError(Severity.error, errorReporter, err);
                 cb(err as Error);
-                deleteS3File(file.name);
-              });
-          else deleteS3File(file.name);
-      }
-    );
+              })
+              .finally(() => console.log('done', file.name));
+          //deleteS3File(file.name));
+          else doCancel(fn, cb);
+        else deleteS3File(file.name);
+    });
   };
 
   const requestAudioAi = async ({
