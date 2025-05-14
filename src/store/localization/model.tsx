@@ -772,9 +772,12 @@ export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "playPause": string;
     "record": string;
+    "recordOrUpload": string;
     "recording": string;
     "save": string;
     "saving": string;
+    "supplyAudio": string;
+    "upload": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -1379,11 +1382,6 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "templateCodes": string;
 };
 
-export interface ITitleStrings extends Localize.LocalizedStringsMethods {
-    "record": string;
-    "upload": string;
-};
-
 export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "assigned": string;
@@ -1876,7 +1874,6 @@ export interface ILocalizedStrings {
 	taskItem: ITaskItemStrings;
 	teamCheckReference: ITeamCheckReferenceStrings;
 	template: ITemplateStrings;
-	title: ITitleStrings;
 	toDoTable: IToDoTableStrings;
 	tool: IToolStrings;
 	transcribe: ITranscribeStrings;

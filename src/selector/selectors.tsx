@@ -207,9 +207,6 @@ export const templateSelector = (state: IState) =>
 export const teamCheckRefSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'teamCheckReference' });
 
-export const titleSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'title' });
-
 export const toDoTableSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'toDoTable' });
 

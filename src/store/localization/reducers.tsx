@@ -814,9 +814,12 @@ const initialState = {
 			"cancel": "Cancel Recording",
 			"playPause": "Play / Pause",
 			"record": "Record",
+			"recordOrUpload": "Record or Upload",
 			"recording": "Recording...",
 			"save": "Save Recording",
 			"saving": "Saving...",
+			"supplyAudio": "Supply audio for '{0}'",
+			"upload": "Upload",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({
@@ -1456,12 +1459,6 @@ const initialState = {
 			"templateCodes": "Template Codes",
 		}
 	}),
-	"title": new LocalizedStrings({
-		"en": {
-			"record": "Record",
-			"upload": "Upload",
-		}
-	}),
 	"toDoTable": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -1980,7 +1977,6 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 				"teamCheckReference" : new LocalizedStrings(action.payload.data.teamCheckReference),
 				"template" : new LocalizedStrings(action.payload.data.template),
-				"title" : new LocalizedStrings(action.payload.data.title),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"tool" : new LocalizedStrings(action.payload.data.tool),
 				"transcribe" : new LocalizedStrings(action.payload.data.transcribe),

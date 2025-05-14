@@ -24,6 +24,7 @@ import {
 import MicIcon from '@mui/icons-material/MicOutlined';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import ChangeIcon from '@mui/icons-material/ChangeHistory';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IMediaTitleStrings } from '../model';
@@ -35,6 +36,7 @@ import { LangTag, LanguagePicker } from 'mui-language-picker';
 import { ILanguage } from './Language';
 import { UnsavedContext } from '../context/UnsavedContext';
 import TitleTabs from '../components/TitleTabs';
+import BigDialog from '../hoc/BigDialog';
 
 interface IStartProps {
   titlekey: string;
@@ -82,7 +84,7 @@ const TitleStart = ({
           </Tooltip>
         )}
         {onRecording && !disabled && (
-          <Tooltip title={t.record}>
+          <Tooltip title={t.recordOrUpload}>
             <IconButton
               id={`${titlekey}record`}
               aria-label="record"
@@ -91,7 +93,11 @@ const TitleStart = ({
               disabled={recording}
               edge="start"
             >
-              <MicIcon fontSize="small" />
+              {mediaId ? (
+                <ChangeIcon fontSize="small" />
+              ) : (
+                <MicIcon fontSize="small" />
+              )}
             </IconButton>
           </Tooltip>
         )}
@@ -416,16 +422,22 @@ export default function MediaTitle(props: IProps) {
         )}
       </FormControl>
       {showRecorder && (
-        <TitleTabs
-          onRecording={onMyRecording}
-          defaultFilename={defaultFilename}
-          titlekey={titlekey}
-          onMediaIdChange={onMediaIdChange}
-          onDialogVisible={() => setShowRecorder(false)}
-          myPlanId={useplan}
-          passageId={passageId}
-          playing={playing}
-        />
+        <BigDialog
+          title={t.supplyAudio.replace('{0}', curText)}
+          isOpen={showRecorder}
+          onOpen={setShowRecorder}
+        >
+          <TitleTabs
+            onRecording={onMyRecording}
+            defaultFilename={defaultFilename}
+            titlekey={titlekey}
+            onMediaIdChange={onMediaIdChange}
+            onDialogVisible={() => setShowRecorder(false)}
+            myPlanId={useplan}
+            passageId={passageId}
+            playing={playing}
+          />
+        </BigDialog>
       )}
       <MediaPlayer
         srcMediaId={srcMediaId}

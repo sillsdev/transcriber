@@ -3976,6 +3976,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.recordOrUpload">
+         <segment>
+            <source>Record or Upload</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTitle.recording">
          <segment>
             <source>Recording...</source>
@@ -3991,6 +3997,18 @@
       <unit id="mediaTitle.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.supplyAudio">
+         <segment>
+            <source>Supply audio for '{0}'</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.upload">
+         <segment>
+            <source>Upload</source>
             <target/>
          </segment>
       </unit>
@@ -6973,18 +6991,6 @@
       <unit id="template.templateCodes">
          <segment>
             <source>Template Codes</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="title.record">
-         <segment>
-            <source>Record</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="title.upload">
-         <segment>
-            <source>Upload</source>
             <target/>
          </segment>
       </unit>

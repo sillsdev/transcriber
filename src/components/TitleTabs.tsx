@@ -11,8 +11,8 @@ import { TabBox } from '../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import TitleRecord from './TitleRecord';
 import { TitleUploader } from './TitleUploader';
-import { IMediaTitleStrings, ITitleStrings } from '../model';
-import { mediaTitleSelector, titleSelector } from '../selector';
+import { IMediaTitleStrings } from '../model';
+import { mediaTitleSelector } from '../selector';
 import { useMediaSave } from './useMediaSave';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -54,10 +54,10 @@ const TitleTabs = (props: IProps) => {
   const canSaveRef = useRef(false);
   const [recording, setRecording] = useState(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const [statusText, setStatusText] = useState('');
   const saving = useRef(false);
-  const mt: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
-  const t: ITitleStrings = useSelector(titleSelector, shallowEqual);
+  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
   const {
     toolChanged,
     toolsChanged,
@@ -99,19 +99,20 @@ const TitleTabs = (props: IProps) => {
     onMediaIdChange,
     onDialogVisible,
     reset,
+    setUploadSuccess,
   });
 
   const handleSave = (e?: any) => {
     e?.stopPropagation();
     if (saving.current) {
-      showMessage(mt.saving);
+      showMessage(t.saving);
       return;
     }
     saving.current = true;
     if (onRecording && !saveRequested(recToolId)) {
       startSave(recToolId);
     }
-    setStatusText(mt.saving);
+    setStatusText(t.saving);
     onMyRecording(false);
   };
 
@@ -206,7 +207,7 @@ const TitleTabs = (props: IProps) => {
           handleSetCanSave={handleSetCanSave}
           uploadMedia={uploadMedia}
           setStatusText={setStatusText}
-          onReset={reset}
+          uploadSuccess={uploadSuccess}
           onCancel={handleClose}
           onSave={handleSave}
         />
@@ -217,8 +218,7 @@ const TitleTabs = (props: IProps) => {
           isOpen={tab === 1}
           onOpen={handleClose}
           cancelled={cancelled}
-          onReset={reset}
-          onCancel={handleClose}
+          uploadMethod={uploadMedia}
           onSave={handleSave}
         />
       )}
