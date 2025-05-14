@@ -116,30 +116,30 @@ export const AudioTable = (props: IProps) => {
     shared || sectionArr.length > 0
       ? [
           { columnName: 'planName', width: 150 },
-          { columnName: 'actions', width: onAttach ? 120 : 70 },
-          { columnName: 'version', width: 100 },
+          { columnName: 'actions', width: onAttach ? 120 : 60 },
+          { columnName: 'version', width: 30 },
           { columnName: 'publishTo', width: 100 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
           { columnName: 'reference', width: 150 },
           { columnName: 'user', width: 30 },
-          { columnName: 'duration', width: 100 },
-          { columnName: 'size', width: 100 },
-          { columnName: 'date', width: 100 },
-          { columnName: 'detach', width: 120 },
+          { columnName: 'duration', width: 50 },
+          { columnName: 'size', width: 50 },
+          { columnName: 'date', width: 80 },
+          { columnName: 'detach', width: 50 },
         ]
       : [
           { columnName: 'planName', width: 150 },
-          { columnName: 'actions', width: onAttach ? 120 : 70 },
-          { columnName: 'version', width: 100 },
+          { columnName: 'actions', width: onAttach ? 120 : 60 },
+          { columnName: 'version', width: 30 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
           { columnName: 'reference', width: 150 },
           { columnName: 'user', width: 30 },
-          { columnName: 'duration', width: 100 },
-          { columnName: 'size', width: 100 },
-          { columnName: 'date', width: 100 },
-          { columnName: 'detach', width: 120 },
+          { columnName: 'duration', width: 50 },
+          { columnName: 'size', width: 50 },
+          { columnName: 'date', width: 80 },
+          { columnName: 'detach', width: 50 },
         ];
 
   const columnFormatting = [
