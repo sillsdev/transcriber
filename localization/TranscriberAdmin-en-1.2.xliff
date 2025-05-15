@@ -4666,8 +4666,8 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTitle.supplyAudio">
-            <source>Supply audio for '{0}'</source>
+         <trans-unit id="mediaTitle.provideAudio">
+            <source>Provide audio for '{0}'</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>

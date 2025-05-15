@@ -1,9 +1,9 @@
 import { Stack } from '@mui/material';
 import MediaRecord from './MediaRecord';
 import { ActionRow, AltButton, PriButton } from './StepEditor';
-import { IMediaUploadStrings, ISharedStrings } from '../model';
+import { ISharedStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { mediaUploadSelector, sharedSelector } from '../selector';
+import { sharedSelector } from '../selector';
 
 interface IProps {
   recToolId: string;
@@ -31,7 +31,6 @@ export default function TitleRecord(props: IProps) {
     onSave,
   } = props;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
 
   return (
     <Stack direction="column" spacing={2}>
@@ -50,7 +49,7 @@ export default function TitleRecord(props: IProps) {
       />
       <ActionRow>
         <AltButton onClick={onCancel}>{ts.cancel}</AltButton>
-        <PriButton onClick={onSave}>{t.upload}</PriButton>
+        <PriButton onClick={onSave}>{ts.save}</PriButton>
       </ActionRow>
     </Stack>
   );

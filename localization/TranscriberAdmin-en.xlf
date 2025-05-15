@@ -4000,9 +4000,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTitle.supplyAudio">
+      <unit id="mediaTitle.provideAudio">
          <segment>
-            <source>Supply audio for '{0}'</source>
+            <source>Provide audio for '{0}'</source>
             <target/>
          </segment>
       </unit>

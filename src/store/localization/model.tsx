@@ -776,7 +776,7 @@ export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "recording": string;
     "save": string;
     "saving": string;
-    "supplyAudio": string;
+    "provideAudio": string;
     "upload": string;
     "uploadFailed": string;
     "uploadFailStatus": string;

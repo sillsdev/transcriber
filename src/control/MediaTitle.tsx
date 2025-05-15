@@ -65,24 +65,6 @@ const TitleStart = ({
   return (
     <InputAdornment position="start">
       <>
-        {mediaId && (
-          <Tooltip title={t.playPause}>
-            <IconButton
-              id={`${titlekey}play`}
-              aria-label="play"
-              onClick={handlePlay}
-              onMouseDown={handleMouseDownSave}
-              disabled={false}
-              edge="start"
-            >
-              {playing ? (
-                <PauseIcon fontSize="small" />
-              ) : (
-                <PlayIcon fontSize="small" />
-              )}
-            </IconButton>
-          </Tooltip>
-        )}
         {onRecording && !disabled && (
           <Tooltip title={t.recordOrUpload}>
             <IconButton
@@ -97,6 +79,24 @@ const TitleStart = ({
                 <ChangeIcon fontSize="small" />
               ) : (
                 <MicIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Tooltip>
+        )}
+        {mediaId && (
+          <Tooltip title={t.playPause}>
+            <IconButton
+              id={`${titlekey}play`}
+              aria-label="play"
+              onClick={handlePlay}
+              onMouseDown={handleMouseDownSave}
+              disabled={false}
+              edge="start"
+            >
+              {playing ? (
+                <PauseIcon fontSize="small" />
+              ) : (
+                <PlayIcon fontSize="small" />
               )}
             </IconButton>
           </Tooltip>
@@ -423,7 +423,7 @@ export default function MediaTitle(props: IProps) {
       </FormControl>
       {showRecorder && (
         <BigDialog
-          title={t.supplyAudio.replace('{0}', curText)}
+          title={t.provideAudio.replace('{0}', curText)}
           isOpen={showRecorder}
           onOpen={setShowRecorder}
         >

@@ -1,6 +1,9 @@
+import { shallowEqual, useSelector } from 'react-redux';
+import { ISharedStrings } from '../model';
 import { restoreScroll } from '../utils';
 import { UploadType } from './MediaUpload';
 import MediaUploadContent from './MediaUploadContent';
+import { sharedSelector } from '../selector';
 
 interface IProps {
   defaultFilename?: string;
@@ -25,6 +28,7 @@ export function TitleUploader(props: IProps) {
     uploadMethod,
     metadata,
   } = props;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const uploadCancel = () => {
     onOpen(false);
@@ -40,6 +44,7 @@ export function TitleUploader(props: IProps) {
       uploadMethod={uploadMethod}
       cancelMethod={uploadCancel}
       metaData={metadata}
+      saveText={ts.save}
     />
   ) : (
     <></>

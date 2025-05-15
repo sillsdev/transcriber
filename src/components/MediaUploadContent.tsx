@@ -124,6 +124,7 @@ interface IProps {
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
   setCancelCb?: (cancelCb: () => void) => void;
+  saveText?: string;
 }
 
 function MediaUploadContent(props: IProps) {
@@ -143,6 +144,7 @@ function MediaUploadContent(props: IProps) {
     onValue,
     onNonAudio,
     setCancelCb,
+    saveText,
   } = props;
   const [name, setName] = useState('');
   const [files, setFilesx] = useState<File[]>([]);
@@ -345,7 +347,7 @@ function MediaUploadContent(props: IProps) {
             (uploadType === UploadType.Link && !isUrl(files[0].name))
           }
         >
-          {t.upload}
+          {saveText || t.upload}
         </Button>
       </DialogActions>
     </>

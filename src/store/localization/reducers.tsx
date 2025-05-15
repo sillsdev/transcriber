@@ -818,7 +818,7 @@ const initialState = {
 			"recording": "Recording...",
 			"save": "Save Recording",
 			"saving": "Saving...",
-			"supplyAudio": "Supply audio for '{0}'",
+			"provideAudio": "Provide audio for '{0}'",
 			"upload": "Upload",
 			"uploadFailed": "Upload Failed!",
 			"uploadFailStatus": "{0} Upload Failed!",
