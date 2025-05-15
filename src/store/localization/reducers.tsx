@@ -996,9 +996,12 @@ const initialState = {
 	}),
 	"peer": new LocalizedStrings({
 		"en": {
+			"assignment": "assignment",
 			"peerDescription": "Peer Groups allow you to assign tasks to a group rather than an individual.",
 			"editPeerGroup": "Edit Peer Group",
+			"inSchemeUse": "This group is referenced in {0} {2} steps in {1} {2} schemes",
 			"inUse": "Name already in use",
+			"permission": "permission",
 			"permissions": "Special permission",
 			"noSpecialPermission": "No special permission",
 			"member": "Member",

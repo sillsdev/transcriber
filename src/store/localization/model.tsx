@@ -944,9 +944,12 @@ export interface IPassageTypeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPeerStrings extends Localize.LocalizedStringsMethods {
+    "assignment": string;
     "peerDescription": string;
     "editPeerGroup": string;
+    "inSchemeUse": string;
     "inUse": string;
+    "permission": string;
     "permissions": string;
     "noSpecialPermission": string;
     "member": string;

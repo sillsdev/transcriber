@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { GroupD, IPeerStrings, ISharedStrings } from '../../model';
 import {
   Button,
@@ -21,6 +21,14 @@ import { peerSelector, sharedSelector } from '../../selector';
 import Confirm from '../AlertDialog';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { usePermissions } from '../../crud/usePermissions';
+import { AltButton, PriButton } from '../../control';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
+import related from '../../crud/related';
+import {
+  orgDefaultPermissions,
+  useOrgDefaults,
+} from '../../crud/useOrgDefaults';
 
 interface IProps {
   cur?: GroupD;
@@ -31,8 +39,13 @@ interface IProps {
 }
 
 export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
+  const orgSchemeSteps = useOrbitData<OrganizationSchemeStepD[]>(
+    'organizationschemestep'
+  );
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const [inUseSteps, setInUseSteps] = useState(0);
+  const [inUseSchemes, setInUseSchemes] = useState(0);
   const [confirm, setConfirm] = useState<string>();
   const { showMessage } = useSnackBar();
   const {
@@ -44,6 +57,12 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
   const [permissions, setPermissions] = React.useState('');
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
+  const { getOrgDefault } = useOrgDefaults();
+  const isPermission = useMemo(
+    () => Boolean(getOrgDefault(orgDefaultPermissions)),
+    [getOrgDefault]
+  );
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -69,6 +88,15 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     setName('');
     setOpen(false);
   };
+
+  const inSchemeUseMsg = useMemo(
+    () =>
+      t.inSchemeUse
+        .replace('{0}', inUseSteps.toString())
+        .replace('{1}', inUseSchemes.toString())
+        .replace(/\{2\}/g, isPermission ? t.permission : t.assignment),
+    [inUseSteps, inUseSchemes, isPermission, t]
+  );
 
   const handleRemove = () => {
     setConfirm(t.removeConfirm);
@@ -98,6 +126,20 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     );
     if (permissions !== newPermissions) {
       setPermissions(newPermissions);
+    }
+
+    const newInUseSteps = orgSchemeSteps.filter(
+      (step) => related(step, 'group') === cur?.id
+    );
+    if (newInUseSteps.length !== inUseSteps) {
+      setInUseSteps(newInUseSteps.length);
+    }
+    const newInUseSchemes = new Set<string>();
+    newInUseSteps.forEach((step) => {
+      newInUseSchemes.add(related(step, 'organizationscheme'));
+    });
+    if (newInUseSchemes.size !== inUseSchemes) {
+      setInUseSchemes(newInUseSchemes.size);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,7 +191,7 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
             label={t.name}
             value={name}
             onChange={handleNameChange}
-            helperText={showInUse() && t.inUse}
+            helperText={showInUse() ? t.inUse : inSchemeUseMsg}
           />
 
           <FormLabel component="legend" sx={{ mt: 3 }}>
@@ -178,26 +220,27 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
         </DialogContent>
         <DialogActions>
           {cur && (
-            <Button id="peerRemove" onClick={handleRemove} color="primary">
+            <AltButton id="peerRemove" onClick={handleRemove} color="primary">
               {t.remove}
-            </Button>
+            </AltButton>
           )}
-          <Button id="peerCancel" onClick={handleCancel} color="primary">
+          <AltButton id="peerCancel" onClick={handleCancel} color="primary">
             {ts.cancel}
-          </Button>
-          <Button
+          </AltButton>
+          <PriButton
             id="peerSave"
             onClick={handleSave}
             color="primary"
-            disabled={!name}
+            disabled={!name || name === cur?.attributes.name}
           >
             {ts.save}
-          </Button>
+          </PriButton>
         </DialogActions>
       </Dialog>
       {confirm && (
         <Confirm
           text={confirm}
+          jsx={<p>{inSchemeUseMsg}</p>}
           yesResponse={handleRemoveConfirmed}
           noResponse={handleRemoveRefused}
         />

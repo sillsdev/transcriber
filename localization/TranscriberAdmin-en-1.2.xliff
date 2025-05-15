@@ -5633,13 +5633,20 @@
       			<context context-type="sourcefile">passageType.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="peer.peerDescription">
-      		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+      	<trans-unit id="peer.assignment">
+      		<source>assignment</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.peerDescription">
+            <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="peer.editPeerGroup">
       		<source>Edit Peer Group</source>
       		<target/>
@@ -5647,20 +5654,34 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="peer.inUse">
-      		<source>Name already in use</source>
+      	<trans-unit id="peer.inSchemeUse">
+      		<source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.inUse">
+            <source>Name already in use</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="peer.permission">
+      		<source>permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+         </trans-unit>
          <trans-unit id="peer.permissions">
-      		<source>Special permission</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
+            <source>Special permission</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="peer.noSpecialPermission">
       		<source>No special permission</source>
       		<target/>
