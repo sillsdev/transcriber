@@ -13,7 +13,7 @@ import TitleRecord from './TitleRecord';
 import { TitleUploader } from './TitleUploader';
 import { IMediaTitleStrings } from '../model';
 import { mediaTitleSelector } from '../selector';
-import { useMediaSave } from './useMediaSave';
+import { useTitleSave } from './useTitleSave';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -93,7 +93,7 @@ const TitleTabs = (props: IProps) => {
     toolChanged(recToolId, false);
   };
 
-  const { uploadMedia } = useMediaSave({
+  const { uploadMedia } = useTitleSave({
     myPlanId,
     passageId,
     onMediaIdChange,

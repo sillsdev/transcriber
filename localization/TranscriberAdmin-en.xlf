@@ -4012,6 +4012,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.uploadFailed">
+         <segment>
+            <source>Upload Failed!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.uploadFailStatus">
+         <segment>
+            <source>{0} Upload Failed!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>

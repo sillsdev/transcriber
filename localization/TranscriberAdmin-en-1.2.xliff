@@ -4680,6 +4680,20 @@
                <context context-type="sourcefile">TitleTabs.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTitle.uploadFailed">
+            <source>Upload Failed!</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.uploadFailStatus">
+            <source>{0} Upload Failed!</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.cancel">
             <source>Cancel</source>
             <target/>

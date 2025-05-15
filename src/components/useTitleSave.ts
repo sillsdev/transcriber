@@ -9,7 +9,12 @@ import {
 } from '../crud';
 import { useGlobal } from '../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
-import { waitForIt } from '../utils';
+import { logError, Severity } from '../utils/logErrorService';
+import { waitForIt } from '../utils/waitForIt';
+import { useSnackBar } from '../hoc/SnackBar';
+import { IMediaTitleStrings } from '../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { mediaTitleSelector } from '../selector';
 
 interface IProps {
   myPlanId?: string;
@@ -20,7 +25,7 @@ interface IProps {
   setUploadSuccess: (success: boolean | undefined) => void;
 }
 
-export const useMediaSave = (props: IProps) => {
+export const useTitleSave = (props: IProps) => {
   const {
     myPlanId,
     passageId,
@@ -30,8 +35,11 @@ export const useMediaSave = (props: IProps) => {
     setUploadSuccess,
   } = props;
   const [memory] = useGlobal('memory');
+  const [errorReporter] = useGlobal('errorReporter');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { getTypeId } = useArtifactType();
+  const { showMessage } = useSnackBar();
+  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
 
   const TitleId = useMemo(() => {
     var id = getTypeId(ArtifactTypeSlug.Title) as string;
@@ -39,8 +47,17 @@ export const useMediaSave = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
+  const uploadFailedMessage = (mediaId: string) => {
+    logError(
+      Severity.info,
+      errorReporter,
+      t.uploadFailStatus.replace('{0}', mediaId)
+    );
+    showMessage(t.uploadFailed);
+    setUploadSuccess(false);
+  };
+
   const afterUploadCb = async (mediaId: string) => {
-    onDialogVisible?.(false);
     if (mediaId) {
       waitForIt(
         'mediaId',
@@ -50,14 +67,22 @@ export const useMediaSave = (props: IProps) => {
             undefined,
         () => false,
         100
-      ).then(() => {
-        onMediaIdChange(
-          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
-            mediaId
-        );
-        reset?.();
-      });
-    } else reset?.();
+      )
+        .then(() => {
+          onDialogVisible?.(false);
+          onMediaIdChange(
+            remoteIdGuid(
+              'mediafile',
+              mediaId,
+              memory?.keyMap as RecordKeyMap
+            ) ?? mediaId
+          );
+          reset?.();
+        })
+        .catch(() => {
+          uploadFailedMessage(mediaId);
+        });
+    } else uploadFailedMessage(mediaId);
   };
 
   const uploadMedia = useMediaUpload({

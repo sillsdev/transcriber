@@ -778,6 +778,8 @@ export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "saving": string;
     "supplyAudio": string;
     "upload": string;
+    "uploadFailed": string;
+    "uploadFailStatus": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {

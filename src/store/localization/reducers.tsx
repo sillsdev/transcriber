@@ -820,6 +820,8 @@ const initialState = {
 			"saving": "Saving...",
 			"supplyAudio": "Supply audio for '{0}'",
 			"upload": "Upload",
+			"uploadFailed": "Upload Failed!",
+			"uploadFailStatus": "{0} Upload Failed!",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({
