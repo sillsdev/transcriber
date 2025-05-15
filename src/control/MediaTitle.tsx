@@ -8,6 +8,8 @@ import {
   useMemo,
 } from 'react';
 import {
+  Box,
+  BoxProps,
   IconButton,
   InputLabel,
   InputAdornment,
@@ -22,29 +24,19 @@ import {
 import MicIcon from '@mui/icons-material/MicOutlined';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import CancelIcon from '@mui/icons-material/CancelOutlined';
-import CheckIcon from '@mui/icons-material/Check';
+import ChangeIcon from '@mui/icons-material/ChangeHistory';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IMediaTitleStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
 import { mediaTitleSelector, pickerSelector } from '../selector';
 import { waitForIt } from '../utils';
-import MediaRecord from '../components/MediaRecord';
 import MediaPlayer from '../components/MediaPlayer';
-import {
-  ArtifactTypeSlug,
-  remoteId,
-  remoteIdGuid,
-  useArtifactType,
-  useMediaUpload,
-  VernacularTag,
-} from '../crud';
-import { useGlobal } from '../context/GlobalContext';
 import { LangTag, LanguagePicker } from 'mui-language-picker';
 import { ILanguage } from './Language';
 import { UnsavedContext } from '../context/UnsavedContext';
-import { RecordKeyMap } from '@orbit/records';
+import TitleTabs from '../components/TitleTabs';
+import BigDialog from '../hoc/BigDialog';
 
 interface IStartProps {
   titlekey: string;
@@ -92,7 +84,7 @@ const TitleStart = ({
           </Tooltip>
         )}
         {onRecording && !disabled && (
-          <Tooltip title={t.record}>
+          <Tooltip title={t.recordOrUpload}>
             <IconButton
               id={`${titlekey}record`}
               aria-label="record"
@@ -101,7 +93,11 @@ const TitleStart = ({
               disabled={recording}
               edge="start"
             >
-              <MicIcon fontSize="small" />
+              {mediaId ? (
+                <ChangeIcon fontSize="small" />
+              ) : (
+                <MicIcon fontSize="small" />
+              )}
             </IconButton>
           </Tooltip>
         )}
@@ -110,69 +106,20 @@ const TitleStart = ({
   );
 };
 
-interface EndProps {
-  titlekey: string;
-  handleOk: (e?: any) => void;
-  handleMouseDownSave: (event: MouseEvent<HTMLButtonElement>) => void;
-  handleCancel: (e: any) => void;
-  canSaveRecording: boolean;
-  recording: boolean;
-  showRecorder: boolean;
+// see: https://mui.com/material-ui/customization/how-to-customize/
+export interface ColumnDivProps extends BoxProps {
+  noLabel?: boolean;
 }
-const TitleEnd = ({
-  titlekey,
-  handleOk,
-  handleMouseDownSave,
-  handleCancel,
-  canSaveRecording,
-  recording,
-  showRecorder,
-}: EndProps) => {
-  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
-
-  return (
-    <InputAdornment position="end">
-      <>
-        {canSaveRecording && (
-          <Tooltip title={t.save}>
-            <span>
-              <IconButton
-                id={`${titlekey}save`}
-                aria-label="save title"
-                onClick={handleOk}
-                onMouseDown={handleMouseDownSave}
-                disabled={recording}
-                edge="end"
-              >
-                <CheckIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
-        {showRecorder && (
-          <Tooltip title={t.cancel}>
-            <span>
-              <IconButton
-                id={`${titlekey}cancel`}
-                aria-label="cancel title"
-                onClick={handleCancel}
-                onMouseDown={handleMouseDownSave}
-                disabled={recording}
-                edge="end"
-              >
-                <CancelIcon fontSize="small" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
-      </>
-    </InputAdornment>
-  );
-};
-
-const ColumnDiv = styled('div')(() => ({
+export const ColumnDiv = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'noLabel',
+})<ColumnDivProps>(({ noLabel }) => ({
   display: 'flex',
   flexDirection: 'column',
+  ...(noLabel
+    ? {
+        '& legend': { display: 'none' },
+      }
+    : {}),
 }));
 
 const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -193,12 +140,6 @@ interface IProps {
   useplan?: string;
   helper?: string;
   canRecord?: () => boolean;
-  /*
-  onOk: (row: ITitle) => void;
-  onCancel: () => void;
-  setCanSaveRecording: (canSave: boolean) => void;
-  onSetRecordRow: (row: ITitle | undefined) => void;
-  */
   onRecording?: (recording: boolean) => void;
   onMediaIdChange: (mediaId: string) => void;
   disabled?: boolean;
@@ -225,8 +166,6 @@ export default function MediaTitle(props: IProps) {
     required,
     passageId,
   } = props;
-  const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const canSaveRef = useRef(false);
   const [curText, setCurText] = useState(title ?? '');
@@ -237,10 +176,7 @@ export default function MediaTitle(props: IProps) {
   const langRef = useRef(language);
   const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
   const [srcMediaId, setSrcMediaId] = useState('');
-  // const [myChanged, setMyChanged] = useState(false);
-  const { getTypeId } = useArtifactType();
   const langEl = useRef<any>();
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
   const saving = useRef(false);
@@ -256,40 +192,6 @@ export default function MediaTitle(props: IProps) {
     clearCompleted,
     // isChanged,
   } = useContext(UnsavedContext).state;
-
-  const afterUploadCb = async (mediaId: string) => {
-    setShowRecorder(false);
-    if (mediaId) {
-      waitForIt(
-        'mediaId',
-        () =>
-          offlineOnly ||
-          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) !==
-            undefined,
-        () => false,
-        100
-      ).then(() => {
-        onMediaIdChange(
-          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
-            mediaId
-        );
-        reset();
-      });
-    } else reset();
-  };
-  const TitleId = useMemo(() => {
-    var id = getTypeId(ArtifactTypeSlug.Title) as string;
-    return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
-  const uploadMedia = useMediaUpload({
-    artifactId: passageId !== undefined ? VernacularTag : TitleId,
-    passageId: passageId,
-    planId: useplan,
-    afterUploadCb,
-    setUploadSuccess,
-  });
 
   useEffect(() => setHelperText(helper ?? ''), [helper]);
 
@@ -319,14 +221,6 @@ export default function MediaTitle(props: IProps) {
     if (language) setLanguageTitle(language);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
-
-  const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSaveRef.current) {
-      canSaveRef.current = valid;
-      setCanSaveRecording(valid);
-      //if (valid) onChanged(true);
-    }
-  };
 
   const onMyRecording = (r: boolean) => {
     if (r) {
@@ -428,12 +322,6 @@ export default function MediaTitle(props: IProps) {
     toolChanged(recToolId, false);
   };
 
-  const handleCancel = (e: any) => {
-    onMediaIdChange(mediaId);
-    e.stopPropagation();
-    reset();
-  };
-
   useEffect(() => {
     if (startRecord)
       waitForIt(
@@ -488,17 +376,6 @@ export default function MediaTitle(props: IProps) {
               onRecording={onRecording}
             />
           ),
-          endAdornment: (
-            <TitleEnd
-              titlekey={titlekey}
-              handleOk={handleOk}
-              handleMouseDownSave={handleMouseDownSave}
-              handleCancel={handleCancel}
-              canSaveRecording={canSaveRecording}
-              recording={recording}
-              showRecorder={showRecorder}
-            />
-          ),
         }}
       />
     ),
@@ -515,7 +392,7 @@ export default function MediaTitle(props: IProps) {
   );
 
   return (
-    <ColumnDiv>
+    <ColumnDiv noLabel={label === '\uFEFF'}>
       <FormControl
         sx={{ width: 'max-content', py: 1 }}
         variant="outlined"
@@ -545,19 +422,22 @@ export default function MediaTitle(props: IProps) {
         )}
       </FormControl>
       {showRecorder && (
-        <MediaRecord
-          toolId={recToolId}
-          onRecording={onMyRecording}
-          uploadMethod={uploadMedia}
-          uploadSuccess={uploadSuccess}
-          defaultFilename={defaultFilename}
-          allowWave={false}
-          showFilename={false}
-          setCanSave={handleSetCanSave}
-          setStatusText={setStatusText}
-          size={200}
-          autoStart={true}
-        />
+        <BigDialog
+          title={t.supplyAudio.replace('{0}', curText)}
+          isOpen={showRecorder}
+          onOpen={setShowRecorder}
+        >
+          <TitleTabs
+            onRecording={onMyRecording}
+            defaultFilename={defaultFilename}
+            titlekey={titlekey}
+            onMediaIdChange={onMediaIdChange}
+            onDialogVisible={() => setShowRecorder(false)}
+            myPlanId={useplan}
+            passageId={passageId}
+            playing={playing}
+          />
+        </BigDialog>
       )}
       <MediaPlayer
         srcMediaId={srcMediaId}

@@ -57,7 +57,7 @@ export function TitleEdit({
       {(!readonly || showpublish) && (
         <MediaTitle
           titlekey={`title-${ws.sectionSeq}_${ws.passageSeq}`}
-          label={'\u200B'} // zero-width space
+          label={'\uFEFF'} // zero-width space
           mediaId={titleMediafile}
           title={titlex}
           defaultFilename={getDefaultName(ws, 'title', memory, planId)}

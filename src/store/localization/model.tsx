@@ -772,9 +772,14 @@ export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "playPause": string;
     "record": string;
+    "recordOrUpload": string;
     "recording": string;
     "save": string;
     "saving": string;
+    "supplyAudio": string;
+    "upload": string;
+    "uploadFailed": string;
+    "uploadFailStatus": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {

@@ -814,9 +814,14 @@ const initialState = {
 			"cancel": "Cancel Recording",
 			"playPause": "Play / Pause",
 			"record": "Record",
+			"recordOrUpload": "Record or Upload",
 			"recording": "Recording...",
 			"save": "Save Recording",
 			"saving": "Saving...",
+			"supplyAudio": "Supply audio for '{0}'",
+			"upload": "Upload",
+			"uploadFailed": "Upload Failed!",
+			"uploadFailStatus": "{0} Upload Failed!",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({

@@ -1,0 +1,57 @@
+import { Stack } from '@mui/material';
+import MediaRecord from './MediaRecord';
+import { ActionRow, AltButton, PriButton } from './StepEditor';
+import { IMediaUploadStrings, ISharedStrings } from '../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { mediaUploadSelector, sharedSelector } from '../selector';
+
+interface IProps {
+  recToolId: string;
+  defaultFilename: string;
+  autoStart?: boolean;
+  uploadSuccess?: boolean;
+  onMyRecording: (recording: boolean) => void;
+  handleSetCanSave: (canSave: boolean) => void;
+  uploadMedia: (files: File[]) => Promise<void>;
+  setStatusText: (status: string) => void;
+  onCancel?: () => void;
+  onSave?: () => void;
+}
+
+export default function TitleRecord(props: IProps) {
+  const {
+    recToolId,
+    defaultFilename,
+    uploadSuccess,
+    onMyRecording,
+    uploadMedia,
+    handleSetCanSave,
+    setStatusText,
+    onCancel,
+    onSave,
+  } = props;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
+
+  return (
+    <Stack direction="column" spacing={2}>
+      <MediaRecord
+        toolId={recToolId}
+        onRecording={onMyRecording}
+        uploadMethod={uploadMedia}
+        defaultFilename={defaultFilename}
+        allowWave={false}
+        showFilename={false}
+        setCanSave={handleSetCanSave}
+        setStatusText={setStatusText}
+        uploadSuccess={uploadSuccess}
+        size={200}
+        autoStart={false}
+      />
+      <ActionRow>
+        <AltButton onClick={onCancel}>{ts.cancel}</AltButton>
+        <PriButton onClick={onSave}>{t.upload}</PriButton>
+      </ActionRow>
+    </Stack>
+  );
+}
