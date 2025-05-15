@@ -4828,6 +4828,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.assignment">
+         <segment>
+            <source>assignment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4840,9 +4846,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.inSchemeUse">
+         <segment>
+            <source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.inUse">
          <segment>
             <source>Name already in use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.permission">
+         <segment>
+            <source>permission</source>
             <target/>
          </segment>
       </unit>
