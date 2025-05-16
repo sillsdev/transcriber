@@ -28,31 +28,35 @@ export const loadBlob = async (
   setBlob: (urlorError: string, blob: Blob | undefined) => void
 ) => {
   if (!url) return;
-  if (url.startsWith('http')) {
-    fetch(url)
-      .then(async (r) => setBlob(url, await r.blob()))
-      .catch((e) => setBlob(e?.message || e.toString(), undefined));
-  } else {
-    try {
-      const source = await ipc?.read(
-        decodeURIComponent(url.replace(`transcribe-safe://`, ``))
-      );
-      setBlob(url, new Blob([source], { type: urlType(url) }));
-    } catch (e: any) {
-      setBlob(e.message, undefined);
-    }
-  }
+  loadBlobAsync(url)
+    .then((blob) => setBlob(url, blob))
+    .catch((e) => setBlob(e?.message || e.toString(), undefined));
 };
 export const loadBlobAsync = async (url: string) => {
   if (!url) return;
-  if (url.startsWith('http')) {
-    var r = await fetch(url);
-    return await r.blob();
-  } else {
-    const source = await ipc?.read(
-      decodeURIComponent(url.replace(`transcribe-safe://`, ``))
-    );
-    return new Blob([source], { type: urlType(url) });
+  let iTries = 5;
+  let lastErr = '';
+  while (iTries) {
+    try {
+      if (url.startsWith('http')) {
+        var r = await fetch(url);
+        return await r.blob();
+      } else {
+        console.log('here3');
+        const source = await ipc?.read(
+          decodeURIComponent(url.replace(`transcribe-safe://`, ``))
+        );
+        console.log('here4');
+        return new Blob([source], { type: urlType(url) });
+      }
+    } catch (err: any) {
+      if (err.message.includes('403')) throw err;
+      //wait
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      lastErr = err.message;
+    }
+    iTries--;
   }
+  throw lastErr;
 };
 export default loadBlob;
