@@ -42,11 +42,9 @@ export const loadBlobAsync = async (url: string) => {
         var r = await fetch(url);
         return await r.blob();
       } else {
-        console.log('here3');
         const source = await ipc?.read(
           decodeURIComponent(url.replace(`transcribe-safe://`, ``))
         );
-        console.log('here4');
         return new Blob([source], { type: urlType(url) });
       }
     } catch (err: any) {
