@@ -21,10 +21,9 @@ import {
   FormControlLabel,
 } from '@mui/material';
 // import SendIcon from '@mui/icons-material/Send';
-import MicIcon from '@mui/icons-material/MicOutlined';
+import RecordOrUploadIcon from '../control/RecordOrUpload';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import ChangeIcon from '@mui/icons-material/ChangeHistory';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IMediaTitleStrings } from '../model';
@@ -75,11 +74,7 @@ const TitleStart = ({
               disabled={recording}
               edge="start"
             >
-              {mediaId ? (
-                <ChangeIcon fontSize="small" />
-              ) : (
-                <MicIcon fontSize="small" />
-              )}
+              <RecordOrUploadIcon />
             </IconButton>
           </Tooltip>
         )}
