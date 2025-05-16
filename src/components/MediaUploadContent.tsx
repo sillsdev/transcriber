@@ -123,7 +123,6 @@ interface IProps {
   onFiles?: (files: File[]) => void;
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
-  setCancelCb?: (cancelCb: () => void) => void;
   saveText?: string;
 }
 
@@ -143,7 +142,6 @@ function MediaUploadContent(props: IProps) {
     onFiles,
     onValue,
     onNonAudio,
-    setCancelCb,
     saveText,
   } = props;
   const [name, setName] = useState('');
@@ -253,7 +251,6 @@ function MediaUploadContent(props: IProps) {
   };
 
   useEffect(() => {
-    setCancelCb && setCancelCb(handleCancel);
     setAcceptExtension(
       [
         '.mp3, .m4a, .wav, .ogg',

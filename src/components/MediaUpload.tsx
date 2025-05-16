@@ -84,9 +84,11 @@ function MediaUpload(props: IProps) {
     t.linkTitle,
     t.markdownTitle,
   ];
-  const [CancelCb, setCancelCb] = useState<() => void>();
   const handleCancel = () => {
-    if (CancelCb) CancelCb();
+    if (cancelMethod) {
+      cancelMethod();
+    }
+    onVisible(false);
   };
 
   return (
@@ -111,7 +113,6 @@ function MediaUpload(props: IProps) {
         onFiles={onFiles}
         onValue={onValue}
         onNonAudio={onNonAudio}
-        setCancelCb={setCancelCb}
       />
     </BigDialog>
   );
