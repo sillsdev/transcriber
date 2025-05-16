@@ -1,7 +1,5 @@
 import { Section, Passage } from '../model';
 import { related } from '.';
-import { positiveWholeOnly } from '../utils';
-import { passageTypeFromRef } from '../control/RefRender';
 import { PassageTypeEnum } from '../model/passageType';
 
 export const useSectionCounts = (
@@ -19,8 +17,7 @@ export const useSectionCounts = (
   const planPassages = passages.filter(
     (p) =>
       planSectionIds.includes(related(p, 'section')) &&
-      passageTypeFromRef(p.attributes.reference) !==
-        PassageTypeEnum.CHAPTERNUMBER
+      !p.attributes.reference.startsWith(PassageTypeEnum.CHAPTERNUMBER)
   );
 
   return [planSectionIds, assigned, planPassages];
