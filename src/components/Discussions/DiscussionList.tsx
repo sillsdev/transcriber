@@ -130,6 +130,7 @@ export function DiscussionList() {
     lastUpdated: false,
   });
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
+  const [initCatFilter, setInitCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
   const [confirmAction, setConfirmAction] = useState<string>('');
   const discussionOrg = useDiscussionOrg();
@@ -375,6 +376,7 @@ export function DiscussionList() {
         setCollapsed(true);
         break;
       case WaitSave.category:
+        setInitCatFilter(catFilter.map((d) => ({ ...d })));
         setCategoryOpen(true);
         break;
     }
@@ -447,7 +449,10 @@ export function DiscussionList() {
       if (!checkChanged(WaitSave.filter + what))
         setFilterState({ ...filterState, [what]: nextState(what) });
     } else {
-      if (!checkChanged(WaitSave.category)) setCategoryOpen(true);
+      if (!checkChanged(WaitSave.category)) {
+        setInitCatFilter(catFilter.map((d) => ({ ...d })));
+        setCategoryOpen(true);
+      }
     }
   };
   const handleSortAction = (what: string) => {
@@ -539,6 +544,11 @@ export function DiscussionList() {
           title={t.categoryList}
           isOpen={categoryOpen}
           onOpen={handleCategory}
+          onCancel={() => {
+            handleCatFilter(initCatFilter);
+            setCategoryOpen(false);
+          }}
+          onSave={handleCategory}
         >
           <CategoryList catFilter={catFilter} onCatFilter={handleCatFilter} />
         </BigDialog>

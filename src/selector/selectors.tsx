@@ -11,10 +11,10 @@ export const alertSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'alert' });
 
 export const artifactCategorySelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'selectArtifactCategory' });
+  localStrings(state as IState, { layout: 'artifactCategory' });
 
 export const artifactTypeSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'selectArtifactType' });
+  localStrings(state as IState, { layout: 'artifactType' });
 
 export const assignmentSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'assignmentTable' });
