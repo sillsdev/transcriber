@@ -32,8 +32,10 @@ export const useStepPermissions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations]);
 
+  const canAlwaysDoStep = () => userIsAdmin || !permissionsOn;
+
   const canDoSectionStep = (stepId: string, section: SectionD) => {
-    if (userIsAdmin || !permissionsOn) return true;
+    if (canAlwaysDoStep()) return true;
     const scheme = related(section, 'organizationScheme');
     if (!scheme) return false;
     const assigned = steps.find(
@@ -54,7 +56,7 @@ export const useStepPermissions = () => {
   };
 
   const canDoStep = (stepId: string, sectionId: string) => {
-    if (userIsAdmin || !permissionsOn) return true;
+    if (canAlwaysDoStep()) return true;
     return canDoSectionStep(
       stepId,
       findRecord(memory, 'section', sectionId) as SectionD
@@ -62,7 +64,7 @@ export const useStepPermissions = () => {
   };
 
   const canDoVernacular = (sectionId: string) => {
-    if (userIsAdmin || !permissionsOn) return true;
+    if (canAlwaysDoStep()) return true;
     const step = orgsteps.find(
       (s) =>
         related(s, 'organization') === org &&
@@ -71,5 +73,5 @@ export const useStepPermissions = () => {
     if (!step?.id) return false;
     return canDoStep(step.id, sectionId);
   };
-  return { canDoVernacular, canDoSectionStep };
+  return { canDoVernacular, canDoSectionStep, canAlwaysDoStep };
 };
