@@ -199,7 +199,9 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
             label={t.name}
             value={name}
             onChange={handleNameChange}
-            helperText={showInUse() ? t.inUse : inSchemeUseMsg}
+            helperText={
+              showInUse() ? t.inUse : cur ? inSchemeUseMsg : undefined
+            }
           />
 
           <FormLabel component="legend" sx={{ mt: 3 }}>
