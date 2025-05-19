@@ -724,7 +724,7 @@ export const DiscussionCard = (props: IProps) => {
             discussion,
             'creatorUser',
             'user',
-            assignedUser?.id ?? '',
+            assignedUser?.id ?? user ?? '',
             user
           )
         );
