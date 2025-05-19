@@ -1059,7 +1059,7 @@ export const DiscussionCard = (props: IProps) => {
                     id={`menu-${discussion.id}`}
                     action={handleDiscussionAction}
                     resolved={discussion.attributes.resolved || false}
-                    canSet={Boolean(currentSegment)}
+                    canSet={Boolean(currentSegment) && canResolve}
                     canResolve={canResolve}
                     canEdit={canResolve || !isPersonal} //can only assign
                   />
