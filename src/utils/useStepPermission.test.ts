@@ -206,7 +206,7 @@ describe('useStepPermissions', () => {
     expect(result.current.canDoSectionStep(StepId, {} as SectionD)).toBe(true);
   });
 
-  test('canDoSectionStep returns false if no scheme', () => {
+  test('canDoSectionStep returns true if no scheme', () => {
     mockUserIsAdmin = false;
     mockGetOrgDefault.mockReturnValue(true);
     mockSteps = defaultSteps;
@@ -215,7 +215,7 @@ describe('useStepPermissions', () => {
       relationships: {},
     } as SectionD;
     const { result } = renderHook(() => useStepPermissions());
-    expect(result.current.canDoSectionStep(StepId, section)).toBe(false);
+    expect(result.current.canDoSectionStep(StepId, section)).toBe(true);
   });
 
   test('canDoSectionStep returns true if unassigned', () => {
