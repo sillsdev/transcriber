@@ -225,9 +225,9 @@ function MediaRecord(props: IProps) {
   useEffect(() => {
     if (uploadSuccess !== undefined) {
       setUploading(false);
-      setFilechanged(!uploadSuccess);
+      if (filechanged && uploadSuccess) setFilechanged(false);
     }
-  }, [uploadSuccess]);
+  }, [uploadSuccess, filechanged]);
 
   useEffect(() => {
     //was it me who asked for this?
