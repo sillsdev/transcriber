@@ -28,6 +28,7 @@ import { ArtifactTypeSlug } from '../crud/artifactTypeSlug';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector, transcriptionShowSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { fontSpace } from './FontSize';
 
 interface IProps {
   id: string;
@@ -53,6 +54,7 @@ function TranscriptionShow(props: IProps) {
   const [url, setUrl] = useState('');
   const [size, setSize] = useState('');
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
+  const [lineHeight, setLineHeight] = useState('1.5');
   const getTranscription = useTranscription(true, undefined, version);
   const t: ITranscriptionShowStrings = useSelector(
     transcriptionShowSelector,
@@ -82,6 +84,8 @@ function TranscriptionShow(props: IProps) {
     setFamily(data?.fontConfig?.custom?.families[0] || '');
     setUrl(data?.fontConfig?.custom?.urls[0] || '');
     setSize(data.fontSize);
+    const space = new Map<string, number>(fontSpace as [string, number][]);
+    setLineHeight(`${(space.get(data.fontSize) as number) * 1.6}px` || '1.5');
     setDir(data.fontDir as 'ltr' | 'rtl');
   };
 
@@ -142,6 +146,7 @@ function TranscriptionShow(props: IProps) {
                 fontFamily: family || 'charissil',
                 direction: dir || 'ltr',
                 fontSize: size || 'large',
+                lineHeight: lineHeight || '1.5',
               },
               readOnly: true,
             }}
