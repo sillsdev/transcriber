@@ -35,7 +35,7 @@ export const useStepPermissions = () => {
   const canDoSectionStep = (stepId: string, section: SectionD) => {
     if (userIsAdmin || !permissionsOn) return true;
     const scheme = related(section, 'organizationScheme');
-    if (!scheme) return false;
+    if (!scheme) return true;
     const assigned = steps.find(
       (s: OrganizationSchemeStepD) =>
         related(s, 'organizationscheme') === scheme &&
