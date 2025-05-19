@@ -24,7 +24,7 @@ export const PassageDetailStepComplete = () => {
     section,
     passage,
   } = usePassageDetailContext();
-  const { canDoSectionStep } = useStepPermissions();
+  const { canDoSectionStep, canAlwaysDoStep } = useStepPermissions();
   const { pathname } = useLocation();
   const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
@@ -91,7 +91,7 @@ export const PassageDetailStepComplete = () => {
         sx={{ color: 'primary.light' }}
         title={t.setNext}
         onClick={handleSetCompleteTo}
-        disabled={!hasPermission || view !== ''}
+        disabled={!canAlwaysDoStep() || view !== ''}
       >
         <ChecklistIcon id="step-next" />
       </IconButton>
