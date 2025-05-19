@@ -474,7 +474,9 @@ function AssignSection(props: IProps) {
             <PriButton
               id="assignClose"
               onClick={handleClose}
-              disabled={!schemeName.trim() || isNameDuplicate || saving}
+              disabled={
+                !schemeName.trim() || isNameDuplicate || !changed || saving
+              }
             >
               {ts.save}
             </PriButton>
