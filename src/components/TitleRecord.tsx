@@ -10,6 +10,7 @@ interface IProps {
   defaultFilename: string;
   autoStart?: boolean;
   uploadSuccess?: boolean;
+  canSave: boolean;
   onMyRecording: (recording: boolean) => void;
   handleSetCanSave: (canSave: boolean) => void;
   uploadMedia: (files: File[]) => Promise<void>;
@@ -25,6 +26,7 @@ export default function TitleRecord(props: IProps) {
     uploadSuccess,
     onMyRecording,
     uploadMedia,
+    canSave,
     handleSetCanSave,
     setStatusText,
     onCancel,
@@ -49,7 +51,9 @@ export default function TitleRecord(props: IProps) {
       />
       <ActionRow>
         <AltButton onClick={onCancel}>{ts.cancel}</AltButton>
-        <PriButton onClick={onSave}>{ts.save}</PriButton>
+        <PriButton disabled={!canSave} onClick={onSave}>
+          {ts.save}
+        </PriButton>
       </ActionRow>
     </Stack>
   );

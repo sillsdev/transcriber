@@ -204,6 +204,7 @@ const TitleTabs = (props: IProps) => {
           defaultFilename={defaultFilename}
           recToolId={recToolId}
           onMyRecording={handleMyRecording}
+          canSave={canSaveRecording}
           handleSetCanSave={handleSetCanSave}
           uploadMedia={uploadMedia}
           setStatusText={setStatusText}
