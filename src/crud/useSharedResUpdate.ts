@@ -6,7 +6,7 @@ import { findRecord } from '.';
 import { useArtifactCategory } from '.';
 
 interface ShResUpdProps {
-  onUpdRef?: (id: string, val: string) => void;
+  onUpdRef?: (id: string, val: string, sr: SharedResourceD) => void;
 }
 
 export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
@@ -47,7 +47,7 @@ export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
         );
         const passage = sharedResource.relationships.passage
           .data as RecordIdentity;
-        onUpdRef(passage.id, `NOTE|${catText}`);
+        onUpdRef(passage.id, `NOTE|${catText}`, sharedResource);
       }
     }
     await memory.update(ops);

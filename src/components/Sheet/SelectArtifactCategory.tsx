@@ -72,10 +72,11 @@ export const SelectArtifactCategory = (props: IProps) => {
   const [artifactCategorys, setArtifactCategorys] = useState<
     IArtifactCategory[]
   >([]);
+  const [gettingCategories, setGettingCategories] = useState(true);
 
   useEffect(() => {
-    setCategoryId(initCategory);
-  }, [initCategory]);
+    if (!gettingCategories) setCategoryId(initCategory);
+  }, [initCategory, gettingCategories]);
 
   const getCategorys = async () => {
     var cats = await getArtifactCategorys(type);
@@ -85,7 +86,10 @@ export const SelectArtifactCategory = (props: IProps) => {
   };
 
   useEffect(() => {
-    getCategorys().then((cats) => setArtifactCategorys(cats));
+    getCategorys().then((cats) => {
+      setArtifactCategorys(cats);
+      setGettingCategories(false);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactCategories, scripture, org, type]);
 
