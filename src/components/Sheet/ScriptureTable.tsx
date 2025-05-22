@@ -494,15 +494,17 @@ export function ScriptureTable(props: IProps) {
   const isPassageOrNote = (ws: ISheet[], i: number) =>
     [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(ws[i].passageType);
 
-  const updatePassageRef = (id: string, val: string) => {
+  const updatePassageRef = (id: string, val: string, sr: SharedResourceD) => {
     const index = sheet.findIndex((s) => s?.passage?.id === id);
     if (index < 0) return;
     const passageRow = { ...sheet[index] };
-    if (passageRow.reference === val) return;
+    if (passageRow.reference === val && passageRow.sharedResource?.id === sr.id)
+      return;
     if (updateRef.current) return;
     setUpdate(true);
     passageRow.reference = val;
     passageRow.passageUpdated = currentDateTime();
+    passageRow.sharedResource = sr;
     setSheet(updateRowAt(sheet, passageRow, index));
     setUpdate(false);
     setChanged(true);

@@ -84,7 +84,7 @@ interface IProps {
   ws: ISheet | undefined;
   hasPublishing: boolean;
   onOpen: () => void;
-  onUpdRef?: (id: string, val: string) => void;
+  onUpdRef?: (id: string, val: string, sr: SharedResourceD) => void;
 }
 
 export function ResourceTabs({
@@ -130,7 +130,7 @@ export function ResourceTabs({
       else return readSharedResource(passId);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passId, value]
+    [passId, value, ws?.passage]
   );
 
   const isNote = React.useMemo(
@@ -174,7 +174,7 @@ export function ResourceTabs({
       } as IResourceDialog;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sharedResources, passId, isNote]);
+  }, [sharedResources, passId, isNote, sharedResRec]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -278,6 +278,7 @@ export function ResourceTabs({
     }
     const typeRec = getPassageTypeRec(PassageTypeEnum.NOTE);
     await updatePassage(passage, undefined, typeRec?.id, sr.id);
+    if (onUpdRef) onUpdRef(passage.id, passage.attributes.reference, sr);
   };
 
   const copyGraphic = async (sr: SharedResourceD, passage: PassageD) => {

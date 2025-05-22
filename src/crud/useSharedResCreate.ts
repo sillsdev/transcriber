@@ -1,6 +1,6 @@
 import { useGlobal } from '../context/GlobalContext';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
-import { ArtifactCategory, SharedResource } from '../model';
+import { ArtifactCategory, SharedResource, SharedResourceD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
 import { useArtifactCategory } from '.';
@@ -20,7 +20,7 @@ interface IProps {
 interface RefProps {
   passage: RecordIdentity;
   cluster?: RecordIdentity;
-  onUpdRef?: (id: string, val: string) => void;
+  onUpdRef?: (id: string, val: string, sr: SharedResourceD) => void;
 }
 
 export const useSharedResCreate = ({
@@ -99,6 +99,8 @@ export const useSharedResCreate = ({
         )
       );
     }
+
+    await memory.update(ops);
     if (note && onUpdRef) {
       const catRec = findRecord(memory, 'artifactcategory', category) as
         | ArtifactCategory
@@ -107,9 +109,8 @@ export const useSharedResCreate = ({
         const catText = localizedArtifactCategory(
           catRec.attributes?.categoryname
         );
-        onUpdRef(passage.id, `NOTE|${catText}`);
+        onUpdRef(passage.id, `NOTE|${catText}`, sharedRes as SharedResourceD);
       }
     }
-    await memory.update(ops);
   };
 };

@@ -220,6 +220,7 @@ export const SelectSharedResource = (props: IProps) => {
       termsOfUse={termsOfUse}
       onOpen={onOpen}
       onBookCd={setBookCd}
+      initFindRef={findRef}
       onFindRef={setFindRef}
       onRefLevel={setRefLevel}
       scope={scope}
