@@ -340,6 +340,9 @@ export const AppHead = (props: IProps) => {
       e.returnValue = '';
       return true;
     }
+    if (localStorage.getItem(localUserKey(LocalKey.url)) === '/team') {
+      localStorage.setItem(localUserKey(LocalKey.url), '/');
+    }
   };
 
   useEffect(() => {
