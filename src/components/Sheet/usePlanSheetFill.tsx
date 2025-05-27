@@ -185,6 +185,7 @@ export const usePlanSheetFill = ({
     isPassageType,
     isSectionType,
     isMovement,
+    isChapter,
     isBook,
     isAltBook,
     isBeta,
@@ -603,6 +604,7 @@ export const usePlanSheetFill = ({
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
       const descCol = colSlugs.indexOf('comment');
+      const chapter = isChapter(rowIndex);
       const canEditTitle =
         !anyRecording &&
         (canEditSheet || (canPublish && !hidePublishing && publishingOn));
@@ -658,7 +660,7 @@ export const usePlanSheetFill = ({
         } else if (cellIndex === descCol) {
           return {
             value: '',
-            readOnly: !canEditSheet,
+            readOnly: !canEditSheet || chapter,
             className: calcClassName,
           };
         }
