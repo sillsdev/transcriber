@@ -7832,6 +7832,13 @@
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="shared.uploadSuccess">
+            <source>Upload Successful</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="shared.user">
             <source>Team Member</source>
             <target/>

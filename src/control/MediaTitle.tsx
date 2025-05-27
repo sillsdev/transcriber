@@ -26,9 +26,13 @@ import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IMediaTitleStrings } from '../model';
+import { IMediaTitleStrings, ISharedStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
-import { mediaTitleSelector, pickerSelector } from '../selector';
+import {
+  mediaTitleSelector,
+  pickerSelector,
+  sharedSelector,
+} from '../selector';
 import { waitForIt } from '../utils';
 import MediaPlayer from '../components/MediaPlayer';
 import { LangTag, LanguagePicker } from 'mui-language-picker';
@@ -174,6 +178,7 @@ export default function MediaTitle(props: IProps) {
   const [srcMediaId, setSrcMediaId] = useState('');
   const langEl = useRef<any>();
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const saving = useRef(false);
   const lt = useSelector(pickerSelector, shallowEqual);
   const { showMessage } = useSnackBar();
@@ -386,6 +391,11 @@ export default function MediaTitle(props: IProps) {
     ]
   );
 
+  const handleMediaIdChange = (mediaId: string) => {
+    showMessage(ts.uploadSuccess);
+    onMediaIdChange(mediaId);
+  };
+
   return (
     <ColumnDiv noLabel={label === '\uFEFF'}>
       <FormControl
@@ -426,7 +436,7 @@ export default function MediaTitle(props: IProps) {
             onRecording={onMyRecording}
             defaultFilename={defaultFilename}
             titlekey={titlekey}
-            onMediaIdChange={onMediaIdChange}
+            onMediaIdChange={handleMediaIdChange}
             onDialogVisible={() => setShowRecorder(false)}
             myPlanId={useplan}
             passageId={passageId}

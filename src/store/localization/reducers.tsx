@@ -1386,6 +1386,7 @@ const initialState = {
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
 			"uploadRights": "Upload Rights File",
+			"uploadSuccess": "Upload Successful",
 			"user": "Team Member",
 			"versionHistory": "Versions",
 			"wait": "Please wait for action to finish.",
