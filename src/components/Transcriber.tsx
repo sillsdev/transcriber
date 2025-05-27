@@ -49,7 +49,6 @@ import {
   useArtifactType,
   findRecord,
   useOrgDefaults,
-  useRole,
   GetUser,
   saveFontData,
   loadFontData,
@@ -118,6 +117,7 @@ interface IProps {
   defaultWidth: number;
   stepSettings?: string;
   hasChecking?: boolean;
+  hasPermission?: boolean;
   setComplete?: (complete: boolean) => void;
   onReopen?: () => void;
   onReject?: (reason: string) => void;
@@ -133,6 +133,7 @@ export function Transcriber(props: IProps) {
   const {
     stepSettings,
     hasChecking,
+    hasPermission,
     setComplete,
     onReopen,
     onReject,
@@ -290,7 +291,6 @@ export function Transcriber(props: IProps) {
     timeThreshold: 0.02,
     segLenThreshold: 0.5,
   };
-  const { userIsAdmin } = useRole();
   const [segParams, setSegParams] = useState(transcribeDefaultParams);
 
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
@@ -1310,8 +1310,7 @@ export function Transcriber(props: IProps) {
                           !transSelected ||
                           !previous.hasOwnProperty(state) ||
                           playing ||
-                          (user !== related(section, 'transcriber') &&
-                            !userIsAdmin)
+                          !hasPermission
                         }
                       >
                         {t.reopen}

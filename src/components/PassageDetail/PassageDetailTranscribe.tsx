@@ -223,6 +223,7 @@ export function PassageDetailTranscribe({
                 <Transcriber
                   defaultWidth={width - TaskTableWidth}
                   stepSettings={stepSettings}
+                  hasPermission={hasPermission}
                   onReject={handleReject}
                   onReopen={handleReopen}
                   onReloadPlayer={handleReloadPlayer}
@@ -236,6 +237,7 @@ export function PassageDetailTranscribe({
             defaultWidth={width}
             hasChecking={hasChecking}
             setComplete={handleComplete}
+            hasPermission={hasPermission}
             onReject={handleReject}
             onReopen={handleReopen}
             onReloadPlayer={handleReloadPlayer}
