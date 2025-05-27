@@ -2872,6 +2872,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.newInviteTask2">
+         <segment>
+            <source>Separate multiple email addresses with a semicolon (';').</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.noProjects">
          <segment>
             <source>This team has no audio projects.</source>

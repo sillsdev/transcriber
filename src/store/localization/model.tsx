@@ -570,6 +570,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "join": string;
     "member": string;
     "newInviteTask": string;
+    "newInviteTask2": string;
     "noProjects": string;
     "organization": string;
     "questions": string;

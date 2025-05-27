@@ -3350,6 +3350,13 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="invite.newInviteTask2">
+            <source>Separate multiple email addresses with a semicolon (';').</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Invite.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="invite.noProjects">
             <source>This team has no audio projects.</source>
             <target/>

@@ -606,6 +606,7 @@ const initialState = {
 			"join": "Join",
 			"member": "Member",
 			"newInviteTask": "Enter the email address of the person to invite.",
+			"newInviteTask2": "Separate multiple email addresses with a semicolon (';').",
 			"noProjects": "This team has no audio projects.",
 			"organization": "Team",
 			"questions": "Questions? Contact",

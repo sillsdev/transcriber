@@ -24,7 +24,7 @@ import {
   styled,
 } from '@mui/material';
 import { related, useRole, getUserById } from '../crud';
-import { validateEmail } from '../utils';
+import { validateEmail, validateMultipleEmails } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
@@ -89,40 +89,45 @@ function Invite(props: IProps) {
       Join: t.join,
     };
     const invitedBy = currentUser;
-    let invitation: Invitation = {
-      type: 'invitation',
-      attributes: {
-        email: email,
-        accepted: false,
-        loginLink: API_CONFIG.endpoint,
-        invitedBy: invitedBy,
-        strings: JSON.stringify(strings),
-      },
-    } as any;
-    await memory.update((t) => [
-      ...AddRecord(t, invitation, user, memory),
-      ...ReplaceRelatedRecord(
-        t,
-        invitation as InitializedRecord,
-        'organization',
-        'organization',
-        organization
-      ),
-      ...ReplaceRelatedRecord(
-        t,
-        invitation as InitializedRecord,
-        'role',
-        'role',
-        role
-      ),
-      ...ReplaceRelatedRecord(
-        t,
-        invitation as InitializedRecord,
-        'allUsersRole',
-        'role',
-        role
-      ),
-    ]);
+    let invitations: Invitation[] = email.split(';').map(
+      (emailPart) =>
+        ({
+          type: 'invitation',
+          attributes: {
+            email: emailPart.trim().toLowerCase(),
+            accepted: false,
+            loginLink: API_CONFIG.endpoint,
+            invitedBy: invitedBy,
+            strings: JSON.stringify(strings),
+          },
+        } as any)
+    );
+    for (const invitation of invitations) {
+      await memory.update((t) => [
+        ...AddRecord(t, invitation, user, memory),
+        ...ReplaceRelatedRecord(
+          t,
+          invitation as InitializedRecord,
+          'organization',
+          'organization',
+          organization
+        ),
+        ...ReplaceRelatedRecord(
+          t,
+          invitation as InitializedRecord,
+          'role',
+          'role',
+          role
+        ),
+        ...ReplaceRelatedRecord(
+          t,
+          invitation as InitializedRecord,
+          'allUsersRole',
+          'role',
+          role
+        ),
+      ]);
+    }
   };
   const handleEdit = async () => {
     /* not implemented */
@@ -133,10 +138,12 @@ function Invite(props: IProps) {
       if (!inviteIn) {
         handleAdd();
         if (addCompleteMethod) {
-          addCompleteMethod({
-            email,
-            role,
-          });
+          for (const emailPart of email.split(';')) {
+            addCompleteMethod({
+              email: emailPart.trim().toLowerCase(),
+              role,
+            });
+          }
         }
         resetFields();
       } else {
@@ -248,7 +255,9 @@ function Invite(props: IProps) {
         <DialogContent>
           <Grid container spacing={0}>
             <Grid item xs={12}>
-              <FormLabel>{t.newInviteTask}</FormLabel>
+              <FormLabel>
+                {t.newInviteTask} {!inviteIn ? t.newInviteTask2 : ''}
+              </FormLabel>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -314,7 +323,9 @@ function Invite(props: IProps) {
             disabled={
               email === '' ||
               role === '' ||
-              !validateEmail(email) ||
+              !(!inviteIn
+                ? validateMultipleEmails(email)
+                : validateEmail(email)) ||
               (hasInvite(email) && !allowMultiple)
             }
           >
