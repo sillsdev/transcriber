@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
-  Section,
   IAssignSectionStrings,
   ISharedStrings,
   OrgWorkflowStepD,
@@ -70,7 +69,7 @@ function AssignSection(props: IProps) {
   const steps = useOrbitData<OrganizationSchemeStepD[]>(
     'organizationschemestep'
   );
-  const allSections = useOrbitData<Section[]>('section');
+  const allSections = useOrbitData<SectionD[]>('section');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -303,6 +302,19 @@ function AssignSection(props: IProps) {
 
   const confirmDelete = async () => {
     if (scheme) {
+      //remove scheme assignment on sections
+      await memory.update((t) =>
+        impactedSections.map((s) =>
+          t.replaceRelatedRecord(s, 'organizationScheme', null)
+        )
+      );
+      //remove steps used by scheme
+      await memory.update((t) =>
+        steps
+          .filter((s) => related(s, 'organizationscheme') === scheme)
+          .map((s) => t.removeRecord(s))
+      );
+      //remove scheme
       await memory.update((t) =>
         t.removeRecord({ type: 'organizationscheme', id: scheme })
       );
