@@ -2,6 +2,7 @@ import { ExtraIcon } from '.';
 import { rowTypes } from './rowTypes';
 import { ISheet } from '../../model';
 import { useStepPermissions } from '../../utils/useStepPermission';
+import { related } from '../../crud/related';
 
 interface IExtraMap {
   [key: number]: boolean;
@@ -112,8 +113,11 @@ export const useShowIcon = ({
             isAltBook(rowIndex + 1)),
         [ExtraIcon.FirstMovement]: isFirstMovement(rowIndex),
         [ExtraIcon.VernacularRecord]:
-          canDoVernacular(rowInfo[rowIndex + 1]?.sectionId?.id ?? '') &&
-          isPassageType(rowIndex),
+          canDoVernacular(
+            rowInfo[rowIndex]?.sectionId?.id ??
+              related(rowInfo[rowIndex]?.passage, 'section') ??
+              ''
+          ) && isPassageType(rowIndex),
         [ExtraIcon.Delete]: canEditSheet,
       };
       return !offline && !filtered && extraMap[icon];
