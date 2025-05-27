@@ -183,6 +183,9 @@ export const projButtonsSelector = (state: IState) =>
 export const scriptureTableFilterMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'scriptureTableFilter' });
 
+export const selectArtifactCategory = (state: IState) =>
+  localStrings(state as IState, { layout: 'selectArtifactCategory' });
+
 export const sharedSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'shared' });
 

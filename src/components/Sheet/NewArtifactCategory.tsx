@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { ISelectArtifactCategoryStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { artifactCategorySelector } from '../../selector';
+import { selectArtifactCategory } from '../../selector';
 import { ArtifactCategoryType, useArtifactCategory } from '../../crud';
 import { useState } from 'react';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -18,7 +18,7 @@ export const NewArtifactCategory = (props: IProps) => {
   const { type, onAdded, onCancelled } = props;
 
   const t: ISelectArtifactCategoryStrings = useSelector(
-    artifactCategorySelector,
+    selectArtifactCategory,
     shallowEqual
   );
   const { addNewArtifactCategory } = useArtifactCategory();

@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 import { shallowEqual, useSelector } from 'react-redux';
 import { LightTooltip, StyledMenuItem } from '../../control';
-import { artifactCategorySelector } from '../../selector';
+import { selectArtifactCategory } from '../../selector';
 import { NewArtifactCategory } from './NewArtifactCategory';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { useGlobal } from '../../context/GlobalContext';
@@ -64,7 +64,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   const [showNew, setShowNew] = useState(false);
   const [org] = useGlobal('organization');
   const t: ISelectArtifactCategoryStrings = useSelector(
-    artifactCategorySelector,
+    selectArtifactCategory,
     shallowEqual
   );
   const { getArtifactCategorys, scriptureTypeCategory } =
