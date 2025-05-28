@@ -55,6 +55,7 @@ interface IProps {
   closeMethod?: (cancel?: boolean) => void;
   refresh?: () => void;
   readOnly?: boolean;
+  inChange?: boolean; // if true, the dialog is opened from a change request
 }
 
 function AssignSection(props: IProps) {
@@ -175,7 +176,7 @@ function AssignSection(props: IProps) {
         );
       }
       for (let [step, value] of assignArr) {
-        if (!step || !value) continue;
+        if (!step) continue;
         const [actorType, actorId] = value.split(':');
         const relateType = actorType === 'u' ? 'user' : 'group';
         let t = new RecordTransformBuilder();
@@ -269,6 +270,8 @@ function AssignSection(props: IProps) {
   };
 
   const doAssign = async (schemeId: string) => {
+    if (!sections.some((s) => related(s, 'organizationScheme') !== schemeId))
+      return;
     var ids = sections.map(
       (s) => remoteId('section', s.id, memory.keyMap as RecordKeyMap) as string
     );
@@ -376,16 +379,11 @@ function AssignSection(props: IProps) {
         for (let s of steps.filter(
           (s) => related(s, 'organizationscheme') === scheme
         )) {
+          const step = related(s, 'orgWorkflowStep');
           if (related(s, 'group')) {
-            assignMap.set(
-              related(s, 'orgWorkflowStep'),
-              'g:' + related(s, 'group')
-            );
+            assignMap.set(step, 'g:' + related(s, 'group'));
           } else if (related(s, 'user')) {
-            assignMap.set(
-              related(s, 'orgWorkflowStep'),
-              'u:' + related(s, 'user')
-            );
+            assignMap.set(step, 'u:' + related(s, 'user'));
           }
         }
         setAssignArr(Array.from(assignMap.entries()));
@@ -487,7 +485,10 @@ function AssignSection(props: IProps) {
               id="assignClose"
               onClick={handleClose}
               disabled={
-                !schemeName.trim() || isNameDuplicate || !changed || saving
+                !schemeName.trim() ||
+                isNameDuplicate ||
+                !(props.inChange || changed) ||
+                saving
               }
             >
               {ts.save}

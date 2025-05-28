@@ -1774,6 +1774,13 @@
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.none">
+            <source>None of the above</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.onlyAdmin">
             <source>Only Admins</source>
             <target/>

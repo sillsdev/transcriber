@@ -306,6 +306,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "confirmDelete": string;
     "locate": string;
     "move": string;
+    "none": string;
     "onlyAdmin": string;
     "or": string;
     "playOrStop": string;

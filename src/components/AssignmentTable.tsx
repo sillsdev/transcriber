@@ -280,6 +280,14 @@ export function AssignmentTable(props: IProps) {
     ]);
   };
 
+  const hasAssignmentChange = (schemeId: string | undefined) => {
+    if (schemeId === undefined) return false;
+    const value = selectedSections.some(
+      (s) => related(s, 'organizationScheme') !== schemeId
+    );
+    return value;
+  };
+
   const handleRemoveAssignmentsConfirmed = async () => {
     setConfirmAction('');
     for (let i = 0; i < selectedSections.length; i += 1)
@@ -424,6 +432,7 @@ export function AssignmentTable(props: IProps) {
         closeMethod={handleCloseAssignSection}
         refresh={() => setRefresh(refresh + 1)}
         readOnly={readOnly}
+        inChange={hasAssignmentChange(assignSectionVisible)}
       />
       {confirmAction !== '' ? (
         <Confirm

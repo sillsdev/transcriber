@@ -1522,6 +1522,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.none">
+         <segment>
+            <source>None of the above</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.onlyAdmin">
          <segment>
             <source>Only Admins</source>

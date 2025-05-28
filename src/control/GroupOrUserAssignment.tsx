@@ -80,9 +80,13 @@ export const GroupOrUserAssignment = (props: IProps) => {
           } ${option.attributes.email?.toLowerCase()}`}
         </MenuItem>
       ))}
-      {!listAdmins && (
+      {!listAdmins ? (
         <MenuItem key="only-admin" value={OnlyAdmin}>
           {t.onlyAdmin}
+        </MenuItem>
+      ) : (
+        <MenuItem key="empty" value="">
+          {t.none}
         </MenuItem>
       )}
     </TextField>

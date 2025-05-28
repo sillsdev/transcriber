@@ -329,6 +329,7 @@ const initialState = {
 			"confirmDelete": "Delete this discussion and all comments?",
 			"locate": "Locate discussion subject in audio recording",
 			"move": "Select step for discussion",
+			"none": "None of the above",
 			"onlyAdmin": "Only Admins",
 			"or": "or",
 			"playOrStop": "Play or Stop",
