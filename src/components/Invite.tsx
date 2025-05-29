@@ -8,6 +8,8 @@ import {
   RoleNames,
   User,
   Project,
+  InvitationD,
+  OrganizationMembershipD,
 } from '../model';
 import {
   Button,
@@ -60,6 +62,10 @@ function Invite(props: IProps) {
   const projects = useOrbitData<Project[]>('project');
   const groups = useOrbitData<Group[]>('group');
   const users = useOrbitData<User[]>('user');
+  const invitations = useOrbitData<InvitationD[]>('invitation');
+  const members = useOrbitData<OrganizationMembershipD[]>(
+    'organizationmembership'
+  );
   const [isDeveloper] = useGlobal('developer');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
@@ -172,14 +178,41 @@ function Invite(props: IProps) {
   const handleRoleChange = (e: string, rowid?: string) => {
     setRole(e);
   };
-  const hasInvite = (email: string) => {
-    const selectInvite: Invitation[] = memory?.cache.query((q) =>
-      q.findRecords('invitation').filter({ attribute: 'email', value: email })
-    ) as any;
-    const checkOrg =
-      selectInvite &&
-      selectInvite.filter((i) => related(i, 'organization') === organization);
-    return checkOrg && checkOrg.length > 0;
+
+  const orgEmails = React.useMemo(() => {
+    const orgUserIds = members
+      .filter((m) => related(m, 'organization') === organization)
+      .map((m) => related(m, 'user'));
+    return users
+      .filter((u) => orgUserIds.includes(u.id))
+      .map((u) => u.attributes.email.trim().toLowerCase());
+  }, [members, users, organization]);
+
+  const hasInviteForEmail = (email: string) => {
+    return (
+      invitations.some(
+        (invitation) =>
+          invitation.attributes.email.trim().toLowerCase() === email &&
+          related(invitation, 'organization') === organization
+      ) ||
+      orgEmails.includes(email) ||
+      false
+    );
+  };
+
+  const hasInvite = (emails: string) => {
+    const emailList = emails.split(';').map((e) => e.trim().toLowerCase());
+    const emailSet = new Set(emailList);
+    if (emailSet.size !== emailList.length) {
+      // Duplicate emails found
+      return true;
+    }
+    for (const email of emailList) {
+      if (hasInviteForEmail(email)) {
+        return true;
+      }
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -227,7 +260,8 @@ function Invite(props: IProps) {
 
   useEffect(() => {
     setEmailHelp(
-      email === '' || validateEmail(email) ? (
+      email === '' ||
+        (!inviteIn ? validateMultipleEmails(email) : validateEmail(email)) ? (
         hasInvite(email) ? (
           <Typography color="secondary">{t.alreadyInvited}</Typography>
         ) : (
