@@ -490,6 +490,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.noAssignment">
+         <segment>
+            <source>Unassigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.noRestriction">
+         <segment>
+            <source>No Restriction</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>

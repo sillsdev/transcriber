@@ -462,6 +462,7 @@ function AssignSection(props: IProps) {
                   '{0}',
                   getWfLabel(s?.attributes?.name ?? '')
                 )}
+                emptyValue={isPermission ? t.noRestriction : t.noAssignment}
                 initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
                 onChange={(value) => handleAssign(s.id, value)}
                 disabled={readOnly || saving}

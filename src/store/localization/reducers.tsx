@@ -113,6 +113,8 @@ const initialState = {
 			"duplicateName": "Duplicate Permission Scheme name",
 			"duplicateName2": "Duplicate Assignment Scheme name",
 			"modifySections": "{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme",
+			"noAssignment": "Unassigned",
+			"noRestriction": "No Restriction",
 			"role": "Role",
 			"schemeName": "Permission Scheme Name",
 			"schemeName2": "Assignment Scheme Name",

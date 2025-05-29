@@ -101,6 +101,8 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "duplicateName": string;
     "duplicateName2": string;
     "modifySections": string;
+    "noAssignment": string;
+    "noRestriction": string;
     "role": string;
     "schemeName": string;
     "schemeName2": string;

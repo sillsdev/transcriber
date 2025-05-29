@@ -16,6 +16,7 @@ interface IProps {
   required?: boolean;
   disabled?: boolean;
   label?: string;
+  emptyValue?: string;
   team?: string;
   onChange: (value: string) => void;
 }
@@ -27,6 +28,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
     required,
     disabled,
     label,
+    emptyValue,
     id: idIn,
     listAdmins,
     team,
@@ -40,7 +42,9 @@ export const GroupOrUserAssignment = (props: IProps) => {
   ) as IDiscussionCardStrings;
 
   const handleAssigmentChange = (e: any) => {
-    const value = e.target.value !== OnlyAdmin ? e.target.value : '';
+    const value = ![OnlyAdmin, 'none'].includes(e.target.value)
+      ? e.target.value
+      : '';
     setValue(value);
     onChange && onChange(value);
   };
@@ -55,7 +59,7 @@ export const GroupOrUserAssignment = (props: IProps) => {
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={label || t.groupuser.replace('{0}', '')}
-      value={value || (!listAdmins ? OnlyAdmin : '')}
+      value={value || (!listAdmins ? OnlyAdmin : 'none')}
       onChange={handleAssigmentChange}
       helperText={t.groupuser.replace(
         '{0}',
@@ -81,12 +85,12 @@ export const GroupOrUserAssignment = (props: IProps) => {
         </MenuItem>
       ))}
       {!listAdmins ? (
-        <MenuItem key="only-admin" value={OnlyAdmin}>
+        <MenuItem key={OnlyAdmin} value={OnlyAdmin}>
           {t.onlyAdmin}
         </MenuItem>
       ) : (
-        <MenuItem key="empty" value="">
-          {t.none}
+        <MenuItem key="none" value="none">
+          {emptyValue || t.none}
         </MenuItem>
       )}
     </TextField>

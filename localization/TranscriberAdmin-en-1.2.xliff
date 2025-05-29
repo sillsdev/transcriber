@@ -569,6 +569,20 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.noAssignment">
+            <source>Unassigned</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.noRestriction">
+            <source>No Restriction</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.role">
             <source>Role</source>
             <target/>
