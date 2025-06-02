@@ -6957,7 +6957,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishTo.Internalization">
-            <source>Internalization Resources for other projects</source>
+            <source>Internalization Resources for other APM projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>

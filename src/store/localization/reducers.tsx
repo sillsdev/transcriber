@@ -1229,7 +1229,7 @@ const initialState = {
 	}),
 	"publishTo": new LocalizedStrings({
 		"en": {
-			"Internalization": "Internalization Resources for other projects",
+			"Internalization": "Internalization Resources for other APM projects",
 		}
 	}),
 	"resource": new LocalizedStrings({

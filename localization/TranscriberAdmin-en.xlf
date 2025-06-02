@@ -5964,7 +5964,7 @@
       </unit>
       <unit id="publishTo.Internalization">
          <segment>
-            <source>Internalization Resources for other projects</source>
+            <source>Internalization Resources for other APM projects</source>
             <target/>
          </segment>
       </unit>
