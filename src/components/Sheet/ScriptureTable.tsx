@@ -1079,7 +1079,7 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
-  const handleUploadGraphicVisible = (v: boolean) => {
+  const graphicsClosed = (v: boolean) => {
     setUploadType(v ? UploadType.Graphic : undefined);
     setUploadGraphicVisible(v);
   };
@@ -1116,25 +1116,44 @@ export function ScriptureTable(props: IProps) {
       ws?.kind === IwsKind.Section
         ? parseInt(secRec?.keys?.remoteId ?? '0')
         : parseInt(ws?.passage?.keys?.remoteId ?? '0');
-    const infoData: IGraphicInfo = { [Rights]: ws?.graphicRights };
-    images.forEach((image) => {
-      infoData[image.dimension.toString()] = image;
-    });
-    const info = JSON.stringify(infoData);
     const graphicRec = graphics.find(
       (g) =>
         g.attributes.resourceType === resourceType &&
         g.attributes.resourceId === resourceId
     );
-    if (graphicRec) {
-      await graphicUpdate({
-        ...graphicRec,
-        attributes: { ...graphicRec.attributes, info },
+    const curData = JSON.parse(
+      graphicRec?.attributes?.info || '{}'
+    ) as IGraphicInfo;
+    if (curData[Rights] !== ws?.graphicRights || images.length > 0) {
+      showMessage(ts.saving);
+      const infoData: IGraphicInfo = {
+        ...curData,
+        [Rights]: ws?.graphicRights,
+      };
+      images.forEach((image) => {
+        infoData[image.dimension.toString()] = image;
       });
-    } else {
-      await graphicCreate({ resourceType, resourceId, info });
+      const info = JSON.stringify(infoData);
+      if (graphicRec) {
+        await graphicUpdate({
+          ...graphicRec,
+          attributes: { ...graphicRec.attributes, info },
+        });
+      } else {
+        await graphicCreate({ resourceType, resourceId, info });
+      }
     }
     setUploadType(undefined);
+  };
+
+  const handleUploadGraphicVisible = (v: boolean) => {
+    if (!v && Boolean(uploadType)) {
+      afterConvert([]).then(() => {
+        graphicsClosed(false);
+      });
+    } else {
+      graphicsClosed(v);
+    }
   };
 
   const handleAudacityImport = (i: number, list: File[]) => {

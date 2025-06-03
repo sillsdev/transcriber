@@ -63,6 +63,19 @@ export function SpeakerName({
     nameReset();
   };
 
+  const getOptionLabel = (option: string | NameOptionType) => {
+    // Value selected with enter, right from the input
+    if (typeof option === 'string') {
+      return option;
+    }
+    // Add "xxx" option created dynamically
+    if (option.inputValue) {
+      return option.inputValue;
+    }
+    // Regular option
+    return option.name;
+  };
+
   const handleRightsChange = (hasRights: boolean) => {
     onRights && onRights(hasRights);
     setShowDialog(false);
@@ -133,7 +146,11 @@ export function SpeakerName({
         ...orgIp.map((r) => ({ name: r.attributes.rightsHolder }))
       );
     }
-    setSpeakers(newSpeakers);
+    setSpeakers(
+      newSpeakers.sort((a, b) =>
+        getOptionLabel(a).localeCompare(getOptionLabel(b))
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipRecs, team, organization, recordingRequired]);
 
@@ -178,18 +195,7 @@ export function SpeakerName({
         handleHomeEndKeys
         id="speaker-name"
         options={speakers}
-        getOptionLabel={(option) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option;
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          // Regular option
-          return option.name;
-        }}
+        getOptionLabel={getOptionLabel}
         renderOption={(props, option) => <li {...props}>{option.name}</li>}
         sx={{ width: 300, marginTop: '5px' }}
         freeSolo
