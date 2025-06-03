@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  LinearProgress,
 } from '@mui/material';
 import {
   orgDefaultPermissions,
@@ -77,6 +78,7 @@ function AssignSection(props: IProps) {
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [open, setOpen] = useState(visible);
@@ -342,8 +344,10 @@ function AssignSection(props: IProps) {
 
   const confirmClose = async () => {
     setSaving(true);
+    setBusy(true);
     const schemeId = await handleAdd();
     await doAssign(schemeId);
+    setBusy(false);
     justClose();
   };
 
@@ -469,6 +473,7 @@ function AssignSection(props: IProps) {
               />
             ))}
         </DialogContent>
+        {busy && <LinearProgress variant="indeterminate" />}
         <DialogActions>
           {scheme && !readOnly && !saving && (
             <AltButton color="warning" onClick={handleDelete}>
