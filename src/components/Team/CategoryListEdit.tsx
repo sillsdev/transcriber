@@ -47,11 +47,8 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
-  const [typeCategories, setTypeCategories] = useState<IArtifactCategory[]>([]);
-  const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
-    new Map()
-  );
-  const editRef = React.useRef<Map<string, IArtifactCategory>>(new Map());
+  const [orgCategories, setOrgCategories] = useState<IArtifactCategory[]>([]);
+  const [edited, setEdited] = useState<[string, IArtifactCategory][]>([]);
   const [canSave, setCanSave] = useState(false);
   const [deleted, setDeleted] = useState<string[]>([]);
   const [builtIn, setBuiltIn] = useState<IArtifactCategory[]>([]);
@@ -95,28 +92,29 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   //without useCallback edited was always empty
   //even after useCallback edited was always one behind the ref value.
   //so I took it back out and just used the ref
-  const handleChange = async (c: IArtifactCategory) => {
-    editRef.current.set(c.id, { ...c });
-    const editMap = new Map<string, IArtifactCategory>(editRef.current);
-    setEdited(editMap);
-    setCanSave(!(await hasDuplicates()));
+  const handleChange = (c: IArtifactCategory) => {
+    const editMap = new Map(edited);
+    editMap.set(c.id, { ...c });
+    setEdited(Array.from(editMap));
+    setCanSave(!hasDuplicates());
   };
 
   const handleDelete = (c: IArtifactCategory) => async () => {
     setDeleted((deleted) => deleted.concat(c.id));
-    setCanSave(!(await hasDuplicates()));
+    setCanSave(!hasDuplicates());
   };
 
   useEffect(() => {
     getArtifactCategorys(type).then((cats) => {
-      setTypeCategories(cats);
+      setOrgCategories(cats);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, refresh]);
 
-  const hasDuplicates = async () => {
-    const unedited = typeCategories.filter((c) => !edited.has(c.id));
-    const recs = unedited.concat(Array.from(edited.values()));
+  const hasDuplicates = () => {
+    const editMap = new Map(edited);
+    const unedited = orgCategories.filter((c) => !editMap.has(c.id));
+    const recs = unedited.concat(edited.map((e) => e[1]));
     const items = new Set<string>(recs.map((r) => r.category));
     return items.size < recs.length;
   };
@@ -124,11 +122,12 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const handleClose = () => onClose && onClose();
 
   const handleSave = async () => {
+    const editMap = new Map(edited);
     deleted.forEach((d) => {
-      edited.delete(d);
+      editMap.delete(d);
     });
-    const recs = Array.from(edited.values());
-    if (await hasDuplicates()) {
+    const recs = edited.map((e) => e[1]);
+    if (hasDuplicates()) {
       showMessage(tc.duplicate);
       return;
     }
@@ -164,11 +163,11 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   };
 
   React.useEffect(() => {
-    setCategories(typeCategories.filter((c) => c.org !== '').sort(sortCats));
-    setBuiltIn(typeCategories.filter((c) => c.org === '').sort(sortCats));
+    setCategories(orgCategories.filter((c) => c.org !== '').sort(sortCats));
+    setBuiltIn(orgCategories.filter((c) => c.org === '').sort(sortCats));
     const inUseMap = new Map<string, number>();
 
-    typeCategories.forEach((c) => {
+    orgCategories.forEach((c) => {
       let count = 0;
       if (type === ArtifactCategoryType.Resource)
         count = media.filter(
@@ -185,7 +184,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       inUseMap.set(c.id, count);
       setInUse(Array.from(inUseMap));
     });
-  }, [refresh, typeCategories, media, discussions, sharedResources, type]);
+  }, [refresh, orgCategories, media, discussions, sharedResources, type]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
     i.specialuse < j.specialuse
@@ -233,7 +232,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                 teamId={teamId}
                 disabled={recording !== '' && c.id !== recording}
                 type={type}
-                category={editRef.current.get(c.id) ?? c}
+                category={edited.find((e) => e[0] === c.id)?.[1] ?? c}
               />
             </ListItem>
           ))}

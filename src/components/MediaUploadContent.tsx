@@ -114,6 +114,7 @@ interface IProps {
   uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
+  cancelLabel?: string;
   metaData?: JSX.Element;
   ready?: () => boolean;
   speaker?: string;
@@ -133,6 +134,7 @@ function MediaUploadContent(props: IProps) {
     multiple,
     uploadMethod,
     cancelMethod,
+    cancelLabel,
     metaData,
     ready,
     speaker,
@@ -328,7 +330,7 @@ function MediaUploadContent(props: IProps) {
           variant="outlined"
           color="primary"
         >
-          {t.cancel}
+          {cancelLabel || t.cancel}
         </Button>
         <Button
           id="uploadSave"

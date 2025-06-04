@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IMediaUploadStrings } from '../model';
 import { mediaUploadSelector } from '../selector';
@@ -42,6 +41,7 @@ interface IProps {
   uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
+  cancelLabel?: string;
   metaData?: JSX.Element;
   ready?: () => boolean;
   speaker?: string;
@@ -61,6 +61,7 @@ function MediaUpload(props: IProps) {
     multiple,
     uploadMethod,
     cancelMethod,
+    cancelLabel,
     metaData,
     ready,
     speaker,
@@ -104,6 +105,7 @@ function MediaUpload(props: IProps) {
         multiple={multiple}
         uploadMethod={uploadMethod}
         cancelMethod={cancelMethod}
+        cancelLabel={cancelLabel}
         metaData={metaData}
         ready={ready}
         speaker={speaker}
