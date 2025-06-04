@@ -367,6 +367,10 @@ export const Uploader = (props: IProps) => {
     } else if (plan !== '') planIdRef.current = plan;
   }, [plan, passageId, memory]);
 
+  useEffect(() => {
+    if (isOpen) setUploadSuccess(undefined);
+  }, [isOpen]);
+
   return (
     <>
       {recordAudio && ready && !importList && (
