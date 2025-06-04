@@ -1503,7 +1503,7 @@ export function ScriptureTable(props: IProps) {
       sheetRef.current.forEach((s, index) => {
         if (isSectionRow(s)) {
           if (sectionIndex >= 0) {
-            if (!hasOnePassage && filterState.assignedToMe) {
+            if (!hasOnePassage && filterState.assignedToMe && !flat) {
               newWork[sectionIndex].filtered = true;
             }
           }
@@ -1573,7 +1573,7 @@ export function ScriptureTable(props: IProps) {
       setUpdate(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSteps, filterState, doneStepId, hidePublishing]);
+  }, [orgSteps, filterState, doneStepId, hidePublishing, flat]);
 
   const firstBook = useMemo(
     () =>
