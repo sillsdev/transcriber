@@ -1,8 +1,8 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { restoreScroll } from '../utils';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
-import { mediaTabSelector } from '../selector';
-import { GraphicD, IMediaTabStrings } from '../model';
+import { mediaTabSelector, sharedSelector } from '../selector';
+import { GraphicD, IMediaTabStrings, ISharedStrings } from '../model';
 import imageCompression from 'browser-image-compression';
 import { useGlobal } from '../context/GlobalContext';
 import { logError, Severity } from '../utils';
@@ -72,6 +72,7 @@ export function GraphicUploader(props: IProps) {
     onFiles,
   } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [errorReporter] = useGlobal('errorReporter');
 
   function blobToBase64(blob: Blob) {
@@ -159,6 +160,7 @@ export function GraphicUploader(props: IProps) {
       ready={() => Boolean(hasRights)}
       uploadMethod={uploadMedia}
       cancelMethod={uploadCancel}
+      cancelLabel={ts.close}
       metaData={metadata}
       onFiles={showFile}
     />

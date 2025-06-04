@@ -145,7 +145,7 @@ export function GraphicRights(props: IProps) {
         options={rightsHolderOptions}
         getOptionLabel={getOptionLabel}
         renderOption={(props, option) => <li {...props}>{option.title}</li>}
-        sx={{ width: 300, p: 1 }}
+        sx={{ width: 500, p: 1 }}
         freeSolo
         renderInput={(params) => (
           <TextField
