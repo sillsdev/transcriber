@@ -325,6 +325,7 @@ export function FilterMenu(props: IProps) {
                   value="projDefault"
                 />
               }
+              disabled={localState.disabled}
               label={t.saveFilter}
             />
             <FormControlLabel
