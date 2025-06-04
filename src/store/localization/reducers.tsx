@@ -775,7 +775,7 @@ const initialState = {
 			"choosePassage": "Choose Passage",
 			"cloudSync": "Cloud Sync",
 			"confirmChange": "Confirm Change",
-			"confirmValue": "Replace the current rights statement with {0}?",
+			"confirmValue": "Replace the current rights holder with {0}?",
 			"date": "Date",
 			"delete": "Delete",
 			"deleteConfirm": "Delete {0}? Are you sure?",

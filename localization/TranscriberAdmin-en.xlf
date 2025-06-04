@@ -3768,7 +3768,7 @@
       </unit>
       <unit id="mediaTab.confirmValue">
          <segment>
-            <source>Replace the current rights statement with {0}?</source>
+            <source>Replace the current rights holder with {0}?</source>
             <target/>
          </segment>
       </unit>

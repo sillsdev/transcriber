@@ -4394,7 +4394,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.confirmValue">
-            <source>Replace the current rights statement with {0}?</source>
+            <source>Replace the current rights holder with {0}?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
