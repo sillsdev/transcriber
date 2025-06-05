@@ -131,6 +131,7 @@ interface IProps {
   onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
   onMarkerClick?: (time: number) => void;
   reload?: (blob: Blob) => void;
+  noNewVoice?: boolean;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -198,6 +199,7 @@ function WSAudioPlayer(props: IProps) {
     onCurrentSegment,
     onMarkerClick,
     reload,
+    noNewVoice,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -1425,6 +1427,7 @@ function WSAudioPlayer(props: IProps) {
               bp={BigDialogBp.sm}
             >
               <SelectVoice
+                noNewVoice={noNewVoice}
                 onOpen={handleCloseVoice}
                 begin={applyVoiceChange}
                 refresh={handleRefresh}

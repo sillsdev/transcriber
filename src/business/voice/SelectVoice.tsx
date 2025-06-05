@@ -21,13 +21,20 @@ import { useOrbitData } from '../../hoc/useOrbitData';
 import { IVoicePerm } from './PersonalizeVoicePermission';
 
 interface ISelectVoice {
+  noNewVoice?: boolean;
   onOpen: () => void;
   begin?: () => void;
   refresh?: () => void;
 }
 
-export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
+export default function SelectVoice({
+  noNewVoice,
+  onOpen,
+  begin,
+  refresh,
+}: ISelectVoice) {
   const [voice, setVoice] = React.useState<string>();
+  const [rights, setRights] = React.useState<boolean>(false);
   const [memory] = useGlobal('memory');
   const [org] = useGlobal('organization');
   const ipRecs = useOrbitData<IntellectualPropertyD[]>('intellectualproperty');
@@ -73,14 +80,16 @@ export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
     <Stack sx={{ minWidth: 120, pt: 2 }} spacing={2}>
       <SpeakerName
         name={voice ?? ''}
+        noNewVoice={noNewVoice}
         onChange={handleSetVoice}
+        onRights={(hasRights) => setRights(hasRights)}
         recordingRequired
       />
       <Typography>{statement}</Typography>
       <Divider sx={{ m: 1 }} />
       <ActionRow>
         <AltButton onClick={onOpen}>{ts.cancel}</AltButton>
-        <PriButton onClick={begin} disabled={!voice}>
+        <PriButton onClick={begin} disabled={!voice || !rights}>
           {t.convert}
         </PriButton>
       </ActionRow>

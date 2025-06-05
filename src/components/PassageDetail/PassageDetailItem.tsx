@@ -490,6 +490,7 @@ export function PassageDetailItem(props: IProps) {
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
                           oneTryOnly={oneTryOnly}
+                          noNewVoice={true}
                         />
                         <Box sx={rowProp}>
                           <Typography variant="caption" sx={statusProps}>

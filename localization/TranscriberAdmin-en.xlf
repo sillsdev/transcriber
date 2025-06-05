@@ -1276,6 +1276,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.noVoiceCreation">
+         <segment>
+            <source>New Voice change samples can not be made at this point.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.playTest">
          <segment>
             <source>Play Test</source>
