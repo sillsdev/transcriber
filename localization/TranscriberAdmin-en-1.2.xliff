@@ -1488,7 +1488,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="community.noVoiceCreation">
-            <source>New Voice change samples can not be made at this point.</source>
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

@@ -22,6 +22,7 @@ import { IVoicePerm } from './PersonalizeVoicePermission';
 
 interface ISelectVoice {
   noNewVoice?: boolean;
+  onlySettings?: boolean;
   onOpen: () => void;
   begin?: () => void;
   refresh?: () => void;
@@ -29,6 +30,7 @@ interface ISelectVoice {
 
 export default function SelectVoice({
   noNewVoice,
+  onlySettings = false,
   onOpen,
   begin,
   refresh,
@@ -88,10 +90,14 @@ export default function SelectVoice({
       <Typography>{statement}</Typography>
       <Divider sx={{ m: 1 }} />
       <ActionRow>
-        <AltButton onClick={onOpen}>{ts.cancel}</AltButton>
-        <PriButton onClick={begin} disabled={!voice || !rights}>
-          {t.convert}
-        </PriButton>
+        <AltButton onClick={onOpen}>
+          {onlySettings ? ts.close : ts.cancel}
+        </AltButton>
+        {!onlySettings && (
+          <PriButton onClick={begin} disabled={!voice || !rights}>
+            {t.convert}
+          </PriButton>
+        )}
       </ActionRow>
     </Stack>
   );

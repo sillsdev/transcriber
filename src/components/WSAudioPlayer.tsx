@@ -1046,6 +1046,7 @@ function WSAudioPlayer(props: IProps) {
                               duration === 0 ||
                               waitingForAI
                             }
+                            allowSettings={duration === 0}
                           >
                             <VoiceConversionLogo
                               sx={{
@@ -1427,7 +1428,8 @@ function WSAudioPlayer(props: IProps) {
               bp={BigDialogBp.sm}
             >
               <SelectVoice
-                noNewVoice={noNewVoice}
+                noNewVoice={noNewVoice && duration > 0}
+                onlySettings={duration === 0}
                 onOpen={handleCloseVoice}
                 begin={applyVoiceChange}
                 refresh={handleRefresh}

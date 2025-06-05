@@ -1278,7 +1278,7 @@
       </unit>
       <unit id="community.noVoiceCreation">
          <segment>
-            <source>New Voice change samples can not be made at this point.</source>
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
             <target/>
          </segment>
       </unit>
