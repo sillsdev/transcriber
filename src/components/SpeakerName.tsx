@@ -11,6 +11,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, findRecord, related } from '../crud';
 import { Typography } from '@mui/material';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { useSnackBar } from '../hoc/SnackBar';
 
 interface NameOptionType {
   inputValue?: string;
@@ -21,6 +22,7 @@ const filter = createFilterOptions<NameOptionType>();
 
 interface IProps {
   name: string;
+  noNewVoice?: boolean;
   onChange?: (name: string) => void;
   onRights?: (hasRights: boolean) => void;
   createProject?: (name: string) => Promise<string>;
@@ -31,6 +33,7 @@ interface IProps {
 
 export function SpeakerName({
   name,
+  noNewVoice,
   onChange,
   onRights,
   createProject,
@@ -44,11 +47,16 @@ export function SpeakerName({
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [organization] = useGlobal('organization');
+  const { showMessage } = useSnackBar();
   const [memory] = useGlobal('memory');
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
 
   const handleRights = () => {
     onRights && onRights(false);
+    if (noNewVoice) {
+      showMessage(t.noVoiceCreation);
+      return;
+    }
     setShowDialog(true);
   };
 

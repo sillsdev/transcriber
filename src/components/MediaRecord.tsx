@@ -59,6 +59,7 @@ interface IProps {
   onLoaded?: () => void;
   autoStart?: boolean;
   trackState?: (mediaState: IMediaState) => void;
+  noNewVoice?: boolean;
 }
 
 function MediaRecord(props: IProps) {
@@ -89,6 +90,7 @@ function MediaRecord(props: IProps) {
     preload,
     onLoaded,
     trackState,
+    noNewVoice,
   } = props;
   const t: IPassageRecordStrings = useSelector(passageRecordSelector);
   const convert_status = useSelector(
@@ -448,6 +450,7 @@ function MediaRecord(props: IProps) {
         autoStart={autoStart}
         segments={segments}
         reload={gotTheBlob}
+        noNewVoice={noNewVoice}
       />
       {warning && (
         <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">

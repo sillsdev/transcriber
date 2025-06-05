@@ -6,6 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 export interface IConfButton {
   id?: string;
   disabled?: boolean;
+  allowSettings?: boolean;
   title?: string;
   onClick?: () => void;
   onSettings?: () => void;
@@ -14,6 +15,7 @@ export interface IConfButton {
 export default function ConfButton({
   id,
   disabled,
+  allowSettings = true,
   onClick,
   onSettings,
   title,
@@ -38,18 +40,22 @@ export default function ConfButton({
       <ButtonGroup
         variant="contained"
         color="inherit"
-        disabled={disabled}
         ref={anchorRef}
         aria-label="Button group with a nested menu"
       >
-        <Button onClick={handleClick} id={id} title={title}>
+        <Button onClick={handleClick} id={id} title={title} disabled={disabled}>
           {children}
         </Button>
-        <Button size="small" onClick={handleSettings}>
+        <Button
+          size="small"
+          onClick={handleSettings}
+          disabled={disabled && !allowSettings}
+        >
           <SettingsIcon
             fontSize="small"
             sx={{
-              color: disabled ? 'grey[400]' : 'secondary.light',
+              color:
+                disabled && !allowSettings ? 'grey[400]' : 'secondary.light',
               opacity: 0.7,
             }}
           />

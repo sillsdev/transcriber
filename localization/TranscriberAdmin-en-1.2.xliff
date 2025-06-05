@@ -1487,6 +1487,13 @@
                <context context-type="sourcefile">SpeakerName.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="community.noVoiceCreation">
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>

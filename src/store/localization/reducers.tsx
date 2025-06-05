@@ -272,6 +272,7 @@ const initialState = {
 			"later": "Do later",
 			"loading": "Loading:",
 			"none": "none",
+			"noVoiceCreation": "New Voice change samples must be created before a recording is waiting to be saved.",
 			"playTest": "Play Test",
 			"provideRights": "Provide Rights",
 			"record": "Record",

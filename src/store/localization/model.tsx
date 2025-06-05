@@ -253,6 +253,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "later": string;
     "loading": string;
     "none": string;
+    "noVoiceCreation": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
