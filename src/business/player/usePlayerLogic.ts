@@ -119,8 +119,18 @@ export const usePlayerLogic = (props: PlayerLogicProps) => {
   };
 
   useEffect(() => {
+    //if playing is changed from outside, we need to update the request
+    //the setTimeout is to avoid a race condition
     if (playing !== playingRef.current)
-      setRequestPlay({ play: playing, regionOnly: false, request: new Date() });
+      setTimeout(
+        () =>
+          setRequestPlay({
+            play: playing,
+            regionOnly: false,
+            request: new Date(),
+          }),
+        100
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing]);
 
