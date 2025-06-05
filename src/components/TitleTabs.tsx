@@ -44,7 +44,6 @@ const TitleTabs = (props: IProps) => {
     defaultFilename,
     playing,
     changeTab,
-    // canRecord,
     onRecording,
     onMediaIdChange,
     onDialogVisible,
@@ -57,8 +56,10 @@ const TitleTabs = (props: IProps) => {
   const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const [statusText, setStatusText] = useState('');
   const saving = useRef(false);
+  const [files, setFiles] = useState<File[]>([]);
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
   const {
+    isChanged,
     toolChanged,
     toolsChanged,
     startSave,
@@ -130,6 +131,10 @@ const TitleTabs = (props: IProps) => {
   }, [toolsChanged, canSaveRecording]);
 
   const handleChange = (event: any, value: number) => {
+    if ((isChanged(toolId) && !cancelled.current) || files.length > 0) {
+      showMessage(t.unsavedChanges);
+      return;
+    }
     setTab(value);
     if (changeTab) {
       changeTab(value);
@@ -137,15 +142,6 @@ const TitleTabs = (props: IProps) => {
   };
 
   const last = 1;
-
-  // const handleRecord = (e: any) => {
-  //   e.stopPropagation();
-  //   if (canRecord && !canRecord()) {
-  //     return;
-  //   }
-  //   setPlaying?.(false);
-  //   setStartRecord?.(true);
-  // };
 
   const handleMyRecording = (r: boolean) => {
     if (r) {
@@ -221,6 +217,7 @@ const TitleTabs = (props: IProps) => {
           cancelled={cancelled}
           uploadMethod={uploadMedia}
           onSave={handleSave}
+          onFiles={(files) => setFiles(files)}
         />
       )}
       <StatusMessage variant="caption">{statusText}</StatusMessage>

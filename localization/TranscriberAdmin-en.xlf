@@ -4048,6 +4048,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.unsavedChanges">
+         <segment>
+            <source>Please cancel, save or upload.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTitle.upload">
          <segment>
             <source>Upload</source>

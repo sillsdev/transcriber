@@ -4722,6 +4722,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTitle.unsavedChanges">
+            <source>Please cancel, save or upload.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTitle.upload">
             <source>Upload</source>
             <target/>

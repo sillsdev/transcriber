@@ -16,6 +16,7 @@ interface IProps {
   uploadMethod: (files: File[]) => Promise<void>;
   metadata?: JSX.Element;
   onSave?: () => void;
+  onFiles?: (files: File[]) => void;
 }
 
 export function TitleUploader(props: IProps) {
@@ -27,6 +28,7 @@ export function TitleUploader(props: IProps) {
     hasRights,
     uploadMethod,
     metadata,
+    onFiles,
   } = props;
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
 
@@ -45,6 +47,7 @@ export function TitleUploader(props: IProps) {
       cancelMethod={uploadCancel}
       metaData={metadata}
       saveText={t.upload}
+      onFiles={onFiles}
     />
   ) : (
     <></>

@@ -826,6 +826,7 @@ const initialState = {
 			"save": "Save Recording",
 			"saving": "Saving...",
 			"provideAudio": "Provide audio for '{0}'",
+			"unsavedChanges": "Please cancel, save or upload.",
 			"upload": "Upload",
 			"uploadFailed": "Upload Failed!",
 			"uploadFailStatus": "{0} Upload Failed!",

@@ -396,6 +396,10 @@ export default function MediaTitle(props: IProps) {
     onMediaIdChange(mediaId);
   };
 
+  const handleNoClose = () => {
+    showMessage(t.unsavedChanges);
+  };
+
   return (
     <ColumnDiv noLabel={label === '\uFEFF'}>
       <FormControl
@@ -430,7 +434,7 @@ export default function MediaTitle(props: IProps) {
         <BigDialog
           title={t.provideAudio.replace('{0}', curText)}
           isOpen={showRecorder}
-          onOpen={setShowRecorder}
+          onOpen={handleNoClose}
         >
           <TitleTabs
             onRecording={onMyRecording}
