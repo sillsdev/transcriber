@@ -165,7 +165,7 @@ function PassageRecordDlg(props: IProps) {
         <PriButton
           id="rec-save"
           onClick={handleSave}
-          disabled={busy || (ready && !ready()) || !canSave}
+          disabled={busy || (ready && !ready()) || !canSave || !hasRights}
         >
           {t.save}
         </PriButton>
