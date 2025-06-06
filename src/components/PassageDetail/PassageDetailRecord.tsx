@@ -206,6 +206,12 @@ export function PassageDetailRecord(props: IProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
+  const handleRecording = (recording: boolean) => {
+    setRecording(recording);
+    if (recording) {
+      setUploadSuccess(undefined);
+    }
+  };
 
   return (
     <Stack sx={{ width: props.width }}>
@@ -238,7 +244,7 @@ export function PassageDetailRecord(props: IProps) {
         uploadSuccess={uploadSuccess}
         onSaving={onSaving}
         onReady={onReady}
-        onRecording={setRecording}
+        onRecording={handleRecording}
         defaultFilename={defaultFilename}
         allowRecord={hasRights && canDoVernacular(related(passage, 'section'))}
         allowWave={true}
