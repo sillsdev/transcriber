@@ -4,6 +4,7 @@ import {
   ISharedStrings,
   MediaFile,
   MediaFileD,
+  PassageD,
 } from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
@@ -12,7 +13,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
-import { ToolSlug } from '../../crud';
+import { getStepComplete, ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
@@ -62,6 +63,7 @@ export function PassageDetailTranscribe({
     gotoNextStep,
     rowData,
     psgCompleted,
+    passage,
   } = usePassageDetailContext();
   const { waitForSave } = useContext(UnsavedContext).state;
   const { setState } = useContext(PassageDetailContext);
@@ -147,6 +149,8 @@ export function PassageDetailTranscribe({
   }, [currentstep, vernacularSteps, stepSettings, hasChecking, hasPermission]);
 
   const handleComplete = (complete: boolean) => {
+    const pasRec = findRecord(memory, 'passage', passage.id) as PassageD;
+    const psgCompleted = getStepComplete(pasRec);
     waitForSave(undefined, 200).finally(async () => {
       await setStepComplete(currentstep, complete, psgCompleted);
       //if we're now complete, go to the next step or passage
