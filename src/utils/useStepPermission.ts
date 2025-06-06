@@ -26,8 +26,6 @@ export const useStepPermissions = () => {
 
   useEffect(() => {
     const on = Boolean(getOrgDefault(orgDefaultPermissions));
-    //leave this here until we figure out why it's getting reset often
-    console.log('org permissions turned on?', on);
     setPermissionsOn(on);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations]);
