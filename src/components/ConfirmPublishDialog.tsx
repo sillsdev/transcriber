@@ -232,7 +232,7 @@ function ConfirmPublishDialog(props: IProps) {
       <DialogContent>
         <DialogContent id="alertJsx">
           {hasPublishing && !hasBible && (
-            <Typography variant="h6" id="bible">
+            <Typography variant="h6" id="bible" color={'error'}>
               {l.bibleRequired.replace('{0}', Akuo).replace('{1}', ObtHelps)}
             </Typography>
           )}

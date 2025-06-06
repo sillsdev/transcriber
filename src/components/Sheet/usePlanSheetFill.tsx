@@ -836,6 +836,7 @@ export const usePlanSheetFill = ({
       const sharedRes =
         passage &&
         Boolean(rowInfo[rowIndex].sharedResource) &&
+        Boolean(rowInfo[rowIndex].passage) &&
         related(rowInfo[rowIndex].sharedResource, 'passage') !==
           rowInfo[rowIndex].passage?.id;
       const sharedOffline = sharedRes && getGlobal('offline');

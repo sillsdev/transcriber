@@ -1092,7 +1092,7 @@ const initialState = {
 			"confirmPublish": "Publish {0}",
 			"confirmPublishMovement": "If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.",
 			"confirmPublishMovementNoPropagate": "The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.",
-			"confirmPublishSection": "If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.",
+			"confirmPublishSection": "If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.",
 			"confirmPublishSectionNoPropagate": "If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose not to publish, the {0} will be marked as not published.",
 			"filtered": "Disable filter to add rows.",
 			"firstMovement": "Start At",
