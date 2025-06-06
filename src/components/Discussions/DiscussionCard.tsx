@@ -781,7 +781,6 @@ export const DiscussionCard = (props: IProps) => {
     saveMyComment(commentMediaId.current).then(() => {
       onAddComplete && onAddComplete(discussion.id);
       setEditing(false);
-      setEditAssigned('');
       setChanged(false);
     });
   };
