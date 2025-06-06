@@ -167,7 +167,7 @@ export default function CategoryEdit({
       };
       var newrec = (await graphicUpdate(upd)) as GraphicD;
       setGraphicRec(newrec);
-    } else {
+    } else if (images.length > 0) {
       setGraphicRec(
         await graphicCreate({
           resourceType,

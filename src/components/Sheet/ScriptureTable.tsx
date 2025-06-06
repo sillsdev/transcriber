@@ -1139,7 +1139,7 @@ export function ScriptureTable(props: IProps) {
           ...graphicRec,
           attributes: { ...graphicRec.attributes, info },
         });
-      } else {
+      } else if (images.length > 0) {
         await graphicCreate({ resourceType, resourceId, info });
       }
     }
