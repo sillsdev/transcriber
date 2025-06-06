@@ -794,7 +794,7 @@ function WSAudioPlayer(props: IProps) {
       cancelAIRef.current = false;
       try {
         doingAI(true);
-        const filename = `${Date.now()}nr.wav`;
+        const filename = `${Date.now()}ai.wav`;
         wsRegionBlob().then((blob) => {
           if (blob) {
             requestAudioAi({
