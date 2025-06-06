@@ -959,6 +959,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     setUpdate(false);
+    setTimeout(() => startSave(), 1000);
   };
 
   const saveIfChanged = (cb: () => void) => {
