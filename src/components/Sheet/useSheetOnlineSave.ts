@@ -25,7 +25,12 @@ import {
   isSectionUpdated,
   isPassageUpdated,
 } from '.';
-import { waitForIt, generateUUID, useDataChanges } from '../../utils';
+import {
+  waitForIt,
+  generateUUID,
+  useDataChanges,
+  currentDateTime,
+} from '../../utils';
 import { usePassageType } from '../../crud/usePassageType';
 
 interface SaveRec {
@@ -149,6 +154,7 @@ export const useWfOnlineSave = (props: IProps) => {
       const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
+      let startTime = currentDateTime();
       let rec = await memory.update((t) => t.addRecord(sp), {
         label: 'Update Plan Section and Passages',
         sources: {
@@ -168,7 +174,7 @@ export const useWfOnlineSave = (props: IProps) => {
           memory?.keyMap as RecordKeyMap
         );
         //must wait for these...in case they they navigate away before done
-        await forceDataChanges();
+        await forceDataChanges(startTime);
 
         const anyNew = sheet.reduce(
           (prev, cur) =>
