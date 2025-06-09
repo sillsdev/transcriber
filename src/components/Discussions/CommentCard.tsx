@@ -152,7 +152,8 @@ export const CommentCard = (props: IProps) => {
   };
 
   const saveComment = useSaveComment({ cb: reset });
-  const afterUploadCb = async (mediaId: string) => {
+
+  const doSaveComment = (mediaId: string) => {
     saveComment(
       discussion.id,
       comment.id,
@@ -161,6 +162,9 @@ export const CommentCard = (props: IProps) => {
       approvedRef.current,
       comment.attributes?.visible
     );
+  };
+  const afterUploadCb = async (mediaId: string) => {
+    if (mediaId) doSaveComment(mediaId);
   };
   const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
     mediafileId: related(discussion, 'mediafile'),
@@ -222,7 +226,7 @@ export const CommentCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      if (editComment.length > 0 || approvedChange) afterUploadCb('');
+      if (editComment.length > 0 || approvedChange) doSaveComment('');
       else saveCompleted(comment.id);
     }
   };

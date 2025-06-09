@@ -34,7 +34,7 @@ const controlProps = { m: 1 } as SxProps;
 interface IProps {
   toolId: string;
   onReady?: () => void;
-  onSaving?: () => void;
+  onSaving?: (saving: boolean) => void;
   onRecording?: (r: boolean) => void;
   onPlayStatus?: (p: boolean) => void;
   mediaId?: string;
@@ -42,6 +42,7 @@ interface IProps {
   defaultFilename?: string;
   allowDeltaVoice?: boolean;
   setCanSave: (canSave: boolean) => void;
+  setValidRecording?: (validRecording: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
   uploadMethod: (files: File[]) => Promise<void>;
@@ -75,6 +76,7 @@ function MediaRecord(props: IProps) {
     uploadMethod,
     uploadSuccess,
     setCanSave,
+    setValidRecording,
     setCanCancel,
     setStatusText,
     allowRecord,
@@ -116,6 +118,7 @@ function MediaRecord(props: IProps) {
   const [loading, setLoading] = useState(false);
   const [filechanged, setFilechanged] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [saving, setSavingx] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
   const [compression, setCompression] = useState(20);
@@ -151,11 +154,16 @@ function MediaRecord(props: IProps) {
     ],
     []
   );
+  const setSaving = (value: boolean) => {
+    saveRef.current = value;
+    setSavingx(value);
+    onSaving && onSaving(value);
+  };
 
   useEffect(() => {
     setConverting(false);
     setUploading(false);
-    saveRef.current = false;
+    setSaving(false);
     setAudioBlob(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -183,16 +191,16 @@ function MediaRecord(props: IProps) {
   }, [userHasSetName, defaultFilename, t.defaultFilename]);
 
   useEffect(() => {
-    setCanSave(
+    let readyToSave =
       blobReady &&
-        !tooBig &&
-        name !== '' &&
-        filechanged &&
-        !converting &&
-        !uploading &&
-        !recording &&
-        !saveRef.current
-    );
+      !tooBig &&
+      name !== '' &&
+      filechanged &&
+      !converting &&
+      !uploading &&
+      !recording;
+    setCanSave(readyToSave && !saving);
+    setValidRecording && setValidRecording(readyToSave);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     blobReady,
@@ -203,6 +211,7 @@ function MediaRecord(props: IProps) {
     uploading,
     recording,
     toolsChanged,
+    saving,
   ]);
 
   useEffect(() => {
@@ -228,7 +237,9 @@ function MediaRecord(props: IProps) {
     if (uploadSuccess !== undefined) {
       setUploading(false);
       if (filechanged && uploadSuccess) setFilechanged(false);
+      doneSave(uploadSuccess);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadSuccess, filechanged]);
 
   useEffect(() => {
@@ -243,13 +254,8 @@ function MediaRecord(props: IProps) {
         }
       }
       if (convert_complete) {
-        if (convert_blob)
-          doUpload(convert_blob).then(() => {
-            convertComplete();
-          });
-        else {
-          convertComplete();
-        }
+        convertComplete();
+        if (convert_blob) doUpload(convert_blob).then(() => {});
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -258,9 +264,14 @@ function MediaRecord(props: IProps) {
   const convertComplete = () => {
     resetConvertBlob();
     setConverting(false);
-    saveCompleted(toolId);
-    if (onReady) onReady();
   };
+
+  const doneSave = (success: boolean) => {
+    saveCompleted(toolId, success ? undefined : 'Error');
+    onReady && onReady();
+    setSaving(false);
+  };
+
   useEffect(() => {
     var limit = sizeLimit * compression;
     var big = (audioBlob?.size ?? 0) > limit * 1000000;
@@ -272,8 +283,7 @@ function MediaRecord(props: IProps) {
     else setWarning('');
     if (saveRequested(toolId) && !saveRef.current) {
       if (audioBlob) {
-        onSaving && onSaving();
-        saveRef.current = true;
+        setSaving(true);
         if (mimeType !== 'audio/wav') {
           setConverting(true);
           guidRef.current = generateUUID();
@@ -284,21 +294,19 @@ function MediaRecord(props: IProps) {
             300
           ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
-          doUpload(audioBlob).then(() => {
-            saveCompleted(toolId);
-            onReady && onReady();
-          });
+          doUpload(audioBlob);
         }
         return;
       } else {
-        saveCompleted(toolId);
-        onReady && onReady();
+        doneSave(true);
       }
     } else if (clearRequested(toolId)) {
       reset();
       setDoReset && setDoReset(true);
     }
-    if (!saveRequested(toolId) && saveRef.current) saveRef.current = false;
+    if (!saveRequested(toolId) && saveRef.current) {
+      setSaving(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioBlob, toolsChanged, mimeType, convert_guid, toolId]);
 

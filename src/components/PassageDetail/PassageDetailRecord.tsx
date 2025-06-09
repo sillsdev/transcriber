@@ -64,8 +64,8 @@ export function PassageDetailRecord(props: IProps) {
     usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
-  const onSaving = () => {
-    setBigBusy(true);
+  const onSaving = (saving: boolean) => {
+    if (saving) setBigBusy(true);
   };
   const onReady = () => {
     setBigBusy(false);

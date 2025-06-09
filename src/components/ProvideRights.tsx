@@ -307,7 +307,7 @@ export function ProvideRights(props: IProps) {
           doReset={resetMedia}
           setDoReset={setResetMedia}
           size={200}
-          onSaving={() => setSaving(true)}
+          onSaving={setSaving}
         />
         <Box sx={rowProp}>
           {!recordingRequired && (

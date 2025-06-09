@@ -84,8 +84,8 @@ function PassageRecordDlg(props: IProps) {
 
   const myToolId = 'PassageRecordDlg';
 
-  const onSaving = () => {
-    setBusy(true);
+  const onSaving = (saving: boolean) => {
+    if (saving) setBusy(true);
   };
 
   const onReady = () => {

@@ -116,7 +116,6 @@ export default function TargetWordAdd(props: IProps) {
     if (valid !== canSaveRef.current) {
       canSaveRef.current = valid;
       setCanSave(valid);
-      setCanSaveRecording(valid);
       if (valid) toolChanged(toolId, true);
     }
   };
@@ -304,6 +303,7 @@ export default function TargetWordAdd(props: IProps) {
           allowWave={false}
           showFilename={false}
           setCanSave={handleSetCanSave}
+          setValidRecording={setCanSaveRecording}
           setStatusText={setStatusText}
           size={200}
           autoStart={true}

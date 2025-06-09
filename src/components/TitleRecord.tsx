@@ -44,6 +44,7 @@ export default function TitleRecord(props: IProps) {
         allowWave={false}
         showFilename={false}
         setCanSave={handleSetCanSave}
+        setValidRecording={(valid) => {}}
         setStatusText={setStatusText}
         uploadSuccess={uploadSuccess}
         size={200}

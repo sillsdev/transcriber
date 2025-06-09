@@ -36,9 +36,14 @@ export const ReplyCard = (props: IProps) => {
   };
   const saveComment = useSaveComment({ cb: afterSavecb });
   const commentText = useRef('');
-  const afterUploadCb = async (mediaId: string) => {
+  const doSaveComment = (mediaId: string) => {
     saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
+  };
+  const afterUploadCb = async (mediaId: string) => {
+    if (mediaId) {
+      doSaveComment(mediaId);
+    }
   };
   const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
     mediafileId: related(discussion, 'mediafile'),
@@ -52,7 +57,7 @@ export const ReplyCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      if (commentText.current.length > 0) afterUploadCb('');
+      if (commentText.current.length > 0) doSaveComment('');
       else saveCompleted(myToolId);
     }
   };
