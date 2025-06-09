@@ -14,7 +14,7 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Missing Targets Update-3</String>
+                                        <String>Missing Targets With Id-2</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -889,7 +889,7 @@
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <null/>
+                                    <File>${cf}/${cfn}-2.xlf</File>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>

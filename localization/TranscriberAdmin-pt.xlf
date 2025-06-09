@@ -4,61 +4,61 @@
       <unit id="access.availableUsers">
          <segment>
             <source>Other Users</source>
-            <target/>
+            <target>Otros usuarios</target>
          </segment>
       </unit>
       <unit id="access.back">
          <segment>
             <source>Back</source>
-            <target>Voltar</target>
+            <target>Atrás</target>
          </segment>
       </unit>
       <unit id="access.cancel">
          <segment>
             <source>Cancel</source>
-            <target/>
+            <target>Cancelar</target>
          </segment>
       </unit>
       <unit id="access.createUser">
          <segment>
             <source>Add a new user</source>
-            <target/>
+            <target>Añadir un nuevo usuario</target>
          </segment>
       </unit>
       <unit id="access.currentUser">
          <segment>
             <source>Current User</source>
-            <target/>
+            <target>Usuario Actual</target>
          </segment>
       </unit>
       <unit id="access.importSnapshot">
          <segment>
             <source>Import Audio Project</source>
-            <target/>
+            <target>Importar Proyecto de Audio</target>
          </segment>
       </unit>
       <unit id="access.logIn">
          <segment>
             <source>Log In</source>
-            <target/>
+            <target>Iniciar Sesión</target>
          </segment>
       </unit>
       <unit id="access.logout">
          <segment>
             <source>Log Out</source>
-            <target>Sair</target>
+            <target>Cerrar la sesión</target>
          </segment>
       </unit>
       <unit id="access.mustBeOnline">
          <segment>
             <source>You must be connected to the Internet to Log In!</source>
-            <target/>
+            <target>Debe conectarse a internet para poder iniciar sesión!</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers1">
          <segment>
             <source>To allow offline use:</source>
-            <target>Para permitir o uso off-line:</target>
+            <target>Para permitir el uso sin conexión:</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers2">
@@ -76,55 +76,55 @@
       <unit id="access.noOnlineUsers4">
          <segment>
             <source>Create a personal audio project.</source>
-            <target/>
+            <target>Crear un proyecto de audio personal.</target>
          </segment>
       </unit>
       <unit id="access.offlineUsers">
          <segment>
             <source>Offline Users</source>
-            <target>Usuários offline</target>
+            <target>Usuarios sin conexión</target>
          </segment>
       </unit>
       <unit id="access.title">
          <segment>
             <source>Connection Mode</source>
-            <target>Modo de conexão</target>
+            <target>Modo de conexión</target>
          </segment>
       </unit>
       <unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
-            <target/>
+            <target>Listo para sincronizar</target>
          </segment>
       </unit>
       <unit id="activityState.done">
          <segment>
             <source>Done</source>
-            <target>Concluido</target>
+            <target>Completado</target>
          </segment>
       </unit>
       <unit id="activityState.incomplete">
          <segment>
             <source>Incomplete</source>
-            <target/>
+            <target>Incompleto</target>
          </segment>
       </unit>
       <unit id="activityState.needsNewRecording">
          <segment>
             <source>Recording Needed</source>
-            <target/>
+            <target>Se necesita grabar</target>
          </segment>
       </unit>
       <unit id="activityState.needsNewTranscription">
          <segment>
             <source>Correction Needed</source>
-            <target/>
+            <target>Se necesita corregir</target>
          </segment>
       </unit>
       <unit id="activityState.noMedia">
          <segment>
             <source>No Recording</source>
-            <target/>
+            <target>No existe grabación</target>
          </segment>
       </unit>
       <unit id="activityState.review">
@@ -142,13 +142,13 @@
       <unit id="activityState.synced">
          <segment>
             <source>Synced</source>
-            <target/>
+            <target>Sincronizado</target>
          </segment>
       </unit>
       <unit id="activityState.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>Transcribir</target>
          </segment>
       </unit>
       <unit id="activityState.transcribed">
@@ -160,19 +160,19 @@
       <unit id="activityState.transcribeReady">
          <segment>
             <source>Ready to Transcribe</source>
-            <target/>
+            <target>Listo para transcribir</target>
          </segment>
       </unit>
       <unit id="activityState.transcribing">
          <segment>
             <source>Transcribing</source>
-            <target>Transcrevendo</target>
+            <target>Transcribiendo</target>
          </segment>
       </unit>
       <unit id="alert.areYouSure">
          <segment>
             <source>Are you sure?</source>
-            <target>Você tem certeza?</target>
+            <target>¿Está seguro?</target>
          </segment>
       </unit>
       <unit id="alert.confirmation">
@@ -190,31 +190,31 @@
       <unit id="alert.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target>No</target>
          </segment>
       </unit>
       <unit id="alert.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target>Sí</target>
          </segment>
       </unit>
       <unit id="artifactCategory.activity">
          <segment>
             <source>Activity</source>
-            <target>Atividade</target>
+            <target>Actividad</target>
          </segment>
       </unit>
       <unit id="artifactCategory.biblestory">
          <segment>
             <source>Bible Story</source>
-            <target>História da Bíblia</target>
+            <target>Historia bíblica</target>
          </segment>
       </unit>
       <unit id="artifactCategory.bookintro">
          <segment>
             <source>Book Introduction</source>
-            <target>Introdução ao livro</target>
+            <target>Introducción al libro</target>
          </segment>
       </unit>
       <unit id="artifactCategory.chapter">
@@ -226,19 +226,19 @@
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
-            <target>Sagrada Escritura</target>
+            <target>Escrituras</target>
          </segment>
       </unit>
       <unit id="artifactCategory.translationresource">
          <segment>
             <source>Translation Resource</source>
-            <target>Recurso de tradução</target>
+            <target>Recursos para traduccion</target>
          </segment>
       </unit>
       <unit id="artifactCategory.uncategorized">
          <segment>
             <source>Uncategorized</source>
-            <target>Uncategorized</target>
+            <target>Sin categoría</target>
          </segment>
       </unit>
       <unit id="artifactCategory.retelling">
@@ -280,7 +280,7 @@
       <unit id="artifactType.comment">
          <segment>
             <source>Comment</source>
-            <target>Comentário</target>
+            <target>Comentario</target>
          </segment>
       </unit>
       <unit id="artifactType.graphic">
@@ -316,13 +316,13 @@
       <unit id="artifactType.sharedresource">
          <segment>
             <source>Shared Resource</source>
-            <target>Recurso compartilhado</target>
+            <target>Recurso compartido</target>
          </segment>
       </unit>
       <unit id="artifactType.testing">
          <segment>
             <source>Testing</source>
-            <target>Teste</target>
+            <target>Prueba</target>
          </segment>
       </unit>
       <unit id="artifactType.title">
@@ -334,7 +334,7 @@
       <unit id="artifactType.vernacular">
          <segment>
             <source>Vernacular</source>
-            <target>Vernacular</target>
+            <target>Vernáculo</target>
          </segment>
       </unit>
       <unit id="artifactType.wholebacktranslation">
@@ -343,16 +343,34 @@
             <target>Tradução Inteira</target>
          </segment>
       </unit>
+      <unit id="assignmentTable.addScheme">
+         <segment>
+            <source>Add Permission Scheme</source>
+            <target>Adicionar esquema de permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.addScheme2">
+         <segment>
+            <source>Add Assignment Scheme</source>
+            <target>Adicionar Esquema de Atribuição</target>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Assign {0}</source>
-            <target/>
+            <source>Configure Permissions</source>
+            <target>Configurar permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec2">
+         <segment>
+            <source>Configure Assignments</source>
+            <target>Configurar Atribuições</target>
          </segment>
       </unit>
       <unit id="assignmentTable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Eliminar</target>
          </segment>
       </unit>
       <unit id="assignmentTable.filter">
@@ -363,14 +381,20 @@
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
-            <source>Remove Assignment</source>
-            <target>Remover Atribuição</target>
+            <source>Remove Permissions</source>
+            <target>Remover permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.removeSec2">
+         <segment>
+            <source>Remove Assignments</source>
+            <target>Remover atribuições</target>
          </segment>
       </unit>
       <unit id="assignmentTable.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>Función</target>
          </segment>
       </unit>
       <unit id="assignmentTable.sectionstate">
@@ -381,8 +405,8 @@
       </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
-            <source>Please select row(s) to assign.</source>
-            <target>Por favor, selecione linha(s) para atribuir.</target>
+            <source>Please select row(s) to configure.</source>
+            <target>Selecione a(s) linha(s) a configurar.</target>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToRemove">
@@ -403,28 +427,112 @@
             <target>Atribuições</target>
          </segment>
       </unit>
+      <unit id="assignSection.assignment">
+         <segment>
+            <source>{0} Permission</source>
+            <target>{0} Permissão</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.assignment2">
+         <segment>
+            <source>{0} Assignment</source>
+            <target>{0} Atribuição</target>
+         </segment>
+      </unit>
       <unit id="assignSection.close">
          <segment>
             <source>Close</source>
             <target>Fechar</target>
          </segment>
       </unit>
+      <unit id="assignSection.confirmDelete">
+         <segment>
+            <source>Confirm Delete</source>
+            <target>Confirmar Eliminar</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.confirmModify">
+         <segment>
+            <source>Confirm Modify</source>
+            <target>Confirmar Modificar</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.delete">
+         <segment>
+            <source>Delete</source>
+            <target>Apagar</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.deleteSections">
+         <segment>
+            <source>Delete will remove permissions from {0} {1}</source>
+            <target>Eliminar irá remover as permissões de {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.duplicateName">
+         <segment>
+            <source>Duplicate Permission Scheme name</source>
+            <target>Nome do esquema de permissões duplicado</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.duplicateName2">
+         <segment>
+            <source>Duplicate Assignment Scheme name</source>
+            <target>Nome do esquema de atribuição duplicado</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.modifySections">
+         <segment>
+            <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+            <target>{0} {1} estão selecionados, mas a modificação das permissões irá alterar todos os {2} {3} com este esquema de permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.noAssignment">
+         <segment>
+            <source>Unassigned</source>
+            <target>Não atribuído</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.noRestriction">
+         <segment>
+            <source>No Restriction</source>
+            <target>Sem restrições</target>
+         </segment>
+      </unit>
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>Rol</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.schemeName">
+         <segment>
+            <source>Permission Scheme Name</source>
+            <target>Nome do esquema de permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.schemeName2">
+         <segment>
+            <source>Assignment Scheme Name</source>
+            <target>Nome do esquema de atribuição</target>
          </segment>
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0}</source>
-            <target/>
+            <source>Configure Permission Scheme</source>
+            <target>Configurar esquema de permissões</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.title2">
+         <segment>
+            <source>Configure Assignment Scheme</source>
+            <target>Configurar esquema de atribuição</target>
          </segment>
       </unit>
       <unit id="assignSection.users">
          <segment>
             <source>Members</source>
-            <target>Membros</target>
+            <target>Miembros</target>
          </segment>
       </unit>
       <unit id="audacityManager.audacityProject">
@@ -682,7 +790,7 @@
       <unit id="cards.deleteTeam">
          <segment>
             <source>Delete Team</source>
-            <target/>
+            <target>Eliminar equipo</target>
          </segment>
       </unit>
       <unit id="cards.description">
@@ -844,7 +952,7 @@
       <unit id="cards.projectCreated">
          <segment>
             <source>Audio Project Created</source>
-            <target/>
+            <target>Proyecto de audio creado</target>
          </segment>
       </unit>
       <unit id="cards.projectRequired">
@@ -855,20 +963,20 @@
       </unit>
       <unit id="cards.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target>Escolha a língua a reconhecer. Se o idioma não estiver disponível, escolha um idioma estreitamente relacionado com um sistema de escrita semelhante.</target>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target>Escolha o idioma para transcrição automática. Se a língua não estiver disponível, escolha uma língua relacionada com um sistema de escrita semelhante.</target>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeech">
          <segment>
-            <source>Recognize Speech</source>
-            <target>Reconhecer fala</target>
+            <source>Auto Transcription</source>
+            <target>Transcrição automática</target>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
-            <target>Configurações de reconhecimento de fala</target>
+            <source>Auto Transcription Settings</source>
+            <target>Definições de transcrição automática</target>
          </segment>
       </unit>
       <unit id="cards.reduceNoise">
@@ -886,19 +994,19 @@
       <unit id="cards.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Guardar</target>
          </segment>
       </unit>
       <unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>
-            <target/>
+            <target>{0} {1}</target>
          </segment>
       </unit>
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
-            <target>Configurações</target>
+            <target>Ajustes</target>
          </segment>
       </unit>
       <unit id="cards.notesHelper">
@@ -913,28 +1021,34 @@
             <target>Projeto com notas</target>
          </segment>
       </unit>
+      <unit id="cards.projectPermissions">
+         <segment>
+            <source>Permissions may be set for projects of this team.</source>
+            <target>As permissões podem ser definidas para projectos desta equipa.</target>
+         </segment>
+      </unit>
       <unit id="cards.sync">
          <segment>
             <source>Sync ({0})</source>
-            <target/>
+            <target>Sincronizar ({0})</target>
          </segment>
       </unit>
       <unit id="cards.teamName">
          <segment>
             <source>Team Name</source>
-            <target/>
+            <target>Nombre del equipo</target>
          </segment>
       </unit>
       <unit id="cards.teamSettings">
          <segment>
             <source>Team Settings</source>
-            <target/>
+            <target>Configuración del equipo</target>
          </segment>
       </unit>
       <unit id="cards.transcriber">
          <segment>
             <source>Transcribing</source>
-            <target>Transcrição</target>
+            <target>Transcribiendo</target>
          </segment>
       </unit>
       <unit id="cards.uploadProgress">
@@ -1159,6 +1273,12 @@
             <target>nenhum</target>
          </segment>
       </unit>
+      <unit id="community.noVoiceCreation">
+         <segment>
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
+            <target>Devem ser criadas novas amostras de alteração de voz antes de uma gravação estar à espera de ser guardada.</target>
+         </segment>
+      </unit>
       <unit id="community.playTest">
          <segment>
             <source>Play Test</source>
@@ -1318,7 +1438,7 @@
       <unit id="deleteExpansion.advanced">
          <segment>
             <source>Advanced</source>
-            <target>Avançado</target>
+            <target>Avanzado</target>
          </segment>
       </unit>
       <unit id="deleteExpansion.dangerZone">
@@ -1339,10 +1459,16 @@
             <target>Adicionar</target>
          </segment>
       </unit>
+      <unit id="discussionCard.adminsAlways">
+         <segment>
+            <source>Admins are always allowed.</source>
+            <target>Os administradores são sempre permitidos.</target>
+         </segment>
+      </unit>
       <unit id="discussionCard.assign">
          <segment>
-            <source>Assign to a Group or Team Member</source>
-            <target>Atribuir a um Membro de Grupo ou de Equipa</target>
+            <source>Assign</source>
+            <target>Atribuir</target>
          </segment>
       </unit>
       <unit id="discussionCard.earlierVersion">
@@ -1353,8 +1479,8 @@
       </unit>
       <unit id="discussionCard.groupuser">
          <segment>
-            <source>Group/Team Member</source>
-            <target>Membro do grupo/equipa</target>
+            <source>Peer Group / Member {0}</source>
+            <target>Grupo de pares / Membro {0}</target>
          </segment>
       </unit>
       <unit id="discussionCard.assignGroup">
@@ -1409,6 +1535,18 @@
          <segment>
             <source>Select step for discussion</source>
             <target>Seleccionar passo para discussão</target>
+         </segment>
+      </unit>
+      <unit id="discussionCard.none">
+         <segment>
+            <source>None of the above</source>
+            <target>Nenhuma das anteriores</target>
+         </segment>
+      </unit>
+      <unit id="discussionCard.onlyAdmin">
+         <segment>
+            <source>Only Admins</source>
+            <target>Apenas administradores</target>
          </segment>
       </unit>
       <unit id="discussionCard.or">
@@ -1576,7 +1714,7 @@
       <unit id="electronImport.members">
          <segment>
             <source>Members</source>
-            <target/>
+            <target>Miembros</target>
          </segment>
       </unit>
       <unit id="electronImport.neverExported">
@@ -1618,7 +1756,7 @@
       <unit id="emailUnverified.emailUnverified">
          <segment>
             <source>Your email is unverified.</source>
-            <target/>
+            <target>Su correo electrónico no está verificado.</target>
          </segment>
       </unit>
       <unit id="emailUnverified.logout">
@@ -2254,7 +2392,7 @@
       <unit id="import.family">
          <segment>
             <source>Family Name</source>
-            <target>Nome de Família</target>
+            <target>Apellido(s)</target>
          </segment>
       </unit>
       <unit id="import.filter">
@@ -2284,7 +2422,7 @@
       <unit id="import.importComplete">
          <segment>
             <source>Import Complete</source>
-            <target/>
+            <target>Importación completa</target>
          </segment>
       </unit>
       <unit id="import.imported">
@@ -2380,7 +2518,7 @@
       <unit id="import.phone">
          <segment>
             <source>Phone</source>
-            <target>Telefone</target>
+            <target>Teléfono</target>
          </segment>
       </unit>
       <unit id="import.plan">
@@ -2422,7 +2560,7 @@
       <unit id="import.transcription">
          <segment>
             <source>Transcription</source>
-            <target>Transcrição</target>
+            <target>Transcripción</target>
          </segment>
       </unit>
       <unit id="import.unassigned">
@@ -2434,7 +2572,7 @@
       <unit id="import.username">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>Nombre</target>
          </segment>
       </unit>
       <unit id="integration.allCriteria">
@@ -2482,13 +2620,19 @@
       <unit id="integration.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target>No</target>
          </segment>
       </unit>
       <unit id="integration.noProject">
          <segment>
             <source>You are not a member of a {lang0} {0} Project.</source>
             <target>Não é membro de um projeto {lang0} {0} Projeto.</target>
+         </segment>
+      </unit>
+      <unit id="integration.notPermitted">
+         <segment>
+            <source>You're not permitted to sync to Paratext</source>
+            <target>Não tem permissão para sincronizar com o Paratext</target>
          </segment>
       </unit>
       <unit id="integration.offline">
@@ -2602,7 +2746,7 @@
       <unit id="integration.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target>Sí</target>
          </segment>
       </unit>
       <unit id="invitationTable.accepted">
@@ -2614,7 +2758,7 @@
       <unit id="invitationTable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target>Acción</target>
          </segment>
       </unit>
       <unit id="invitationTable.delete">
@@ -2626,7 +2770,7 @@
       <unit id="invitationTable.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target>Correo electrónico</target>
          </segment>
       </unit>
       <unit id="invitationTable.filter">
@@ -2638,7 +2782,7 @@
       <unit id="invitationTable.invite">
          <segment>
             <source>Invite</source>
-            <target>Convidar</target>
+            <target>Invitar</target>
          </segment>
       </unit>
       <unit id="invitationTable.noData">
@@ -2704,7 +2848,7 @@
       <unit id="invite.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target>Correo electrónico</target>
          </segment>
       </unit>
       <unit id="invite.emailsubject">
@@ -2749,6 +2893,12 @@
             <target>Introduza o endereço de correio electrónico da pessoa a convidar.</target>
          </segment>
       </unit>
+      <unit id="invite.newInviteTask2">
+         <segment>
+            <source>Separate multiple email addresses with a semicolon (';').</source>
+            <target>Separe vários endereços de correio eletrónico com um ponto e vírgula (';').</target>
+         </segment>
+      </unit>
       <unit id="invite.noProjects">
          <segment>
             <source>This team has no audio projects.</source>
@@ -2782,7 +2932,7 @@
       <unit id="invite.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Guardar</target>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
@@ -3046,7 +3196,7 @@
       <unit id="languagePicker.details">
          <segment>
             <source>Details</source>
-            <target>Detalhes</target>
+            <target>Detalles</target>
          </segment>
       </unit>
       <unit id="languagePicker.findALanguage">
@@ -3058,13 +3208,13 @@
       <unit id="languagePicker.font">
          <segment>
             <source>Font</source>
-            <target>Fonte</target>
+            <target>Fuente</target>
          </segment>
       </unit>
       <unit id="languagePicker.inScript">
          <segment>
             <source> in the $1 script</source>
-            <target> no script $1</target>
+            <target> en el script $1</target>
          </segment>
       </unit>
       <unit id="languagePicker.language">
@@ -3118,7 +3268,7 @@
       <unit id="main.about">
          <segment>
             <source>About</source>
-            <target/>
+            <target>Acerca de</target>
          </segment>
       </unit>
       <unit id="main.admin">
@@ -3262,7 +3412,7 @@
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
-            <target>Central de Ajuda</target>
+            <target>Centro de ayuda</target>
          </segment>
       </unit>
       <unit id="main.helpSpreadsheet">
@@ -3328,7 +3478,7 @@
       <unit id="main.myAccount">
          <segment>
             <source>My Account</source>
-            <target>Minha Conta</target>
+            <target>Mi cuenta</target>
          </segment>
       </unit>
       <unit id="main.NoLoadOffline">
@@ -3550,7 +3700,7 @@
       <unit id="mediaTab.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target>Acción</target>
          </segment>
       </unit>
       <unit id="mediaTab.actions">
@@ -3592,7 +3742,7 @@
       <unit id="mediaTab.book">
          <segment>
             <source>Book</source>
-            <target>Livro</target>
+            <target>Libro</target>
          </segment>
       </unit>
       <unit id="mediaTab.cancelling">
@@ -3613,10 +3763,22 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.confirmChange">
+         <segment>
+            <source>Confirm Change</source>
+            <target>Confirmar alteração</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.confirmValue">
+         <segment>
+            <source>Replace the current rights holder with {0}?</source>
+            <target>Substituir o atual detentor de direitos por {0}?</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
-            <target>Data</target>
+            <target>Fecha</target>
          </segment>
       </unit>
       <unit id="mediaTab.delete">
@@ -3853,6 +4015,12 @@
             <target>Registar</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.recordOrUpload">
+         <segment>
+            <source>Record or Upload</source>
+            <target>Gravar ou carregar</target>
+         </segment>
+      </unit>
       <unit id="mediaTitle.recording">
          <segment>
             <source>Recording...</source>
@@ -3869,6 +4037,36 @@
          <segment>
             <source>Saving...</source>
             <target>Salvando...</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.provideAudio">
+         <segment>
+            <source>Provide audio for '{0}'</source>
+            <target>Fornecer áudio para '{0}'</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.unsavedChanges">
+         <segment>
+            <source>Please cancel, save or upload.</source>
+            <target>Cancelar, gravar ou carregar.</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.upload">
+         <segment>
+            <source>Upload</source>
+            <target>Carregar</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.uploadFailed">
+         <segment>
+            <source>Upload Failed!</source>
+            <target>Falha no carregamento!</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.uploadFailStatus">
+         <segment>
+            <source>{0} Upload Failed!</source>
+            <target>{0} Falha no carregamento!</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -4675,6 +4873,12 @@
             <target>Observação</target>
          </segment>
       </unit>
+      <unit id="peer.assignment">
+         <segment>
+            <source>assignment</source>
+            <target>atribuição</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4687,10 +4891,22 @@
             <target>Editar Grupo de Pares</target>
          </segment>
       </unit>
+      <unit id="peer.inSchemeUse">
+         <segment>
+            <source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
+            <target>Este grupo é referenciado em {0} {2} etapas em {1} {2} esquemas</target>
+         </segment>
+      </unit>
       <unit id="peer.inUse">
          <segment>
             <source>Name already in use</source>
             <target>Nome já em uso</target>
+         </segment>
+      </unit>
+      <unit id="peer.permission">
+         <segment>
+            <source>permission</source>
+            <target>permissão</target>
          </segment>
       </unit>
       <unit id="peer.permissions">
@@ -4799,12 +5015,6 @@
          <segment>
             <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
             <target>Os comentários dos CITs só serão visíveis para os Mentores até que um mentor aprove o comentário.</target>
-         </segment>
-      </unit>
-      <unit id="permission.nsp">
-         <segment>
-            <source>General</source>
-            <target>Geral</target>
          </segment>
       </unit>
       <unit id="permission.mentor">
@@ -5002,7 +5212,7 @@
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target>Acción</target>
          </segment>
       </unit>
       <unit id="planSheet.addNote">
@@ -5073,8 +5283,8 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
-            <target>Se você optar por publicar, o {0} e a versão mais recente de todas as passagens e notas desse {0} serão marcados como publicados. Se você tiver publicado anteriormente e agora optar por não publicar, as passagens e notas serão marcadas como não publicadas.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+            <target>Se optar por publicar, o {0} e a versão mais recente de todas as passagens e notas (exceto notas ligadas) neste {0} serão marcados como publicados. Se já tiver publicado anteriormente e agora optar por não publicar, as passagens e notas serão marcadas como não publicadas.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSectionNoPropagate">
@@ -5145,8 +5355,8 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-            <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
-            <target>Para utilizar esta funcionalidade, é necessário ser um utilizador {0} com acesso aos recursos FOBAI.</target>
+            <source>You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</source>
+            <target>É necessário ser um utilizador {0} com acesso aos recursos da FOBAI e com autorização de Editor ou de Publicador do projeto para utilizar esta funcionalidade.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -5326,7 +5536,7 @@
       <unit id="planTabs.transcriptions">
          <segment>
             <source>Transcriptions</source>
-            <target>Transcrições</target>
+            <target>Transcripciones</target>
          </segment>
       </unit>
       <unit id="profile.add">
@@ -5339,6 +5549,12 @@
          <segment>
             <source>Complete User Profile</source>
             <target>Perfil completo do usuário</target>
+         </segment>
+      </unit>
+      <unit id="profile.additionalSettings">
+         <segment>
+            <source>Additional Settings</source>
+            <target>Definições adicionais</target>
          </segment>
       </unit>
       <unit id="profile.cancel">
@@ -5379,14 +5595,20 @@
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
-            <target/>
+            <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
+            <target>A eliminação do seu utilizador impede-o de utilizar o programa e elimina as referências ao seu trabalho. Tem a certeza de que quer fazer isto?</target>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
             <source>Delete User</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="profile.deleteWarning">
+         <segment>
+            <source>The following action cannot be undone:</source>
+            <target>A seguinte ação não pode ser anulada:</target>
          </segment>
       </unit>
       <unit id="profile.discardChanges">
@@ -5401,10 +5623,22 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.edit">
+         <segment>
+            <source>Edit Profile</source>
+            <target>Editar perfil</target>
+         </segment>
+      </unit>
+      <unit id="profile.editMember">
+         <segment>
+            <source>Edit Member Profile</source>
+            <target>Editar perfil de membro</target>
+         </segment>
+      </unit>
       <unit id="profile.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target>Correo electrónico</target>
          </segment>
       </unit>
       <unit id="profile.family">
@@ -5527,10 +5761,22 @@
             <target>Frequência de sincronização de dados em minutos. 0 para desativar a sincronização.</target>
          </segment>
       </unit>
+      <unit id="profile.syncFrequencyEnable">
+         <segment>
+            <source>Enable Data Sync:</source>
+            <target>Ativar a sincronização de dados:</target>
+         </segment>
+      </unit>
+      <unit id="profile.syncFrequencyLabel">
+         <segment>
+            <source>Frequency:</source>
+            <target>Frequência:</target>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
-            <target>Fuso horário</target>
+            <target>Zona horaria</target>
          </segment>
       </unit>
       <unit id="profile.userExists">
@@ -5739,8 +5985,8 @@
       </unit>
       <unit id="publishTo.Internalization">
          <segment>
-            <source>Internalization Resources for other projects</source>
-            <target>Recursos de internalização para outros projetos</target>
+            <source>Internalization Resources for other APM projects</source>
+            <target>Recursos de Internalização para outros projectos APM</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5896,7 +6142,7 @@
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Libro</target>
          </segment>
       </unit>
       <unit id="scriptureTable.chapter">
@@ -5914,7 +6160,7 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
-            <target/>
+            <target>Descripción</target>
          </segment>
       </unit>
       <unit id="scriptureTable.extras">
@@ -5938,7 +6184,7 @@
       <unit id="scriptureTable.passage">
          <segment>
             <source>Passage</source>
-            <target>Passagem</target>
+            <target>Pasaje</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidBooks">
@@ -6009,8 +6255,8 @@
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
-            <source>Only rows with discussions assigned to me</source>
-            <target>Mostrar apenas as etapas atribuídas a mim.</target>
+            <source>Hide rows assigned to others</source>
+            <target>Ocultar linhas atribuídas a outros</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.clear">
@@ -6059,6 +6305,12 @@
          <segment>
             <source>Maximum</source>
             <target>Maksimum</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.reset">
+         <segment>
+            <source>Reset</source>
+            <target>Repor</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
@@ -6451,6 +6703,18 @@
             <target>Guardar...</target>
          </segment>
       </unit>
+      <unit id="shared.scheme">
+         <segment>
+            <source>Permission Scheme</source>
+            <target>Esquema de permissões</target>
+         </segment>
+      </unit>
+      <unit id="shared.scheme2">
+         <segment>
+            <source>Assignment Scheme</source>
+            <target>Esquema de atribuição</target>
+         </segment>
+      </unit>
       <unit id="shared.select">
          <segment>
             <source>Select</source>
@@ -6491,6 +6755,12 @@
          <segment>
             <source>Upload Rights File</source>
             <target>Upload de ficheiros de direitos</target>
+         </segment>
+      </unit>
+      <unit id="shared.uploadSuccess">
+         <segment>
+            <source>Upload Successful</source>
+            <target>Carregamento bem sucedido</target>
          </segment>
       </unit>
       <unit id="shared.user">
@@ -6808,7 +7078,7 @@
       <unit id="toDoTable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target>Acción</target>
          </segment>
       </unit>
       <unit id="toDoTable.assigned">
@@ -6820,7 +7090,7 @@
       <unit id="toDoTable.description">
          <segment>
             <source>Description</source>
-            <target>Descrição</target>
+            <target>Descripción</target>
          </segment>
       </unit>
       <unit id="toDoTable.editor">
@@ -6850,13 +7120,13 @@
       <unit id="toDoTable.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target>No</target>
          </segment>
       </unit>
       <unit id="toDoTable.passage">
          <segment>
             <source>Passage</source>
-            <target>Passagem</target>
+            <target>Pasaje</target>
          </segment>
       </unit>
       <unit id="toDoTable.plan">
@@ -6910,7 +7180,7 @@
       <unit id="toDoTable.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target>Sí</target>
          </segment>
       </unit>
       <unit id="tool.community">
@@ -7047,8 +7317,8 @@
       </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
-            <source>Begin Recognition</source>
-            <target>Iniciar reconhecimento</target>
+            <source>Begin Auto Transcription</source>
+            <target>Iniciar transcrição automática</target>
          </segment>
       </unit>
       <unit id="transcriber.comment">
@@ -7294,7 +7564,7 @@
       <unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
-            <target>Transcrição</target>
+            <target>Transcripción</target>
          </segment>
       </unit>
       <unit id="transcriptionShow.transcriptionDisplay">
@@ -7349,6 +7619,12 @@
          <segment>
             <source>Writing file...It could take up to 6 minutes to resume progress.</source>
             <target>A escrever ficheiro... Pode demorar até 6 minutos a retomar o progresso.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.nopermission">
+         <segment>
+            <source>You do not have permission to download the project.</source>
+            <target>Não tem permissão para descarregar o projeto.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloading">
@@ -7576,7 +7852,7 @@
       <unit id="usertable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target>Acción</target>
          </segment>
       </unit>
       <unit id="usertable.addMember">
@@ -7612,7 +7888,7 @@
       <unit id="usertable.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target>Correo electrónico</target>
          </segment>
       </unit>
       <unit id="usertable.filter">
@@ -7636,7 +7912,7 @@
       <unit id="usertable.name">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>Nombre</target>
          </segment>
       </unit>
       <unit id="usertable.phone">
@@ -7660,7 +7936,7 @@
       <unit id="usertable.timezone">
          <segment>
             <source>Timezone</source>
-            <target>Fuso horário</target>
+            <target>Zona horaria</target>
          </segment>
       </unit>
       <unit id="verse.badReferences">
@@ -7981,6 +8257,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.basic">
+         <segment>
+            <source>Basic</source>
+            <target>Básico</target>
+         </segment>
+      </unit>
       <unit id="vProject.cancel">
          <segment>
             <source>Cancel</source>
@@ -8119,6 +8401,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.newTag">
+         <segment>
+            <source>New Tag</source>
+            <target>Nova etiqueta</target>
+         </segment>
+      </unit>
       <unit id="vProject.organizedBy">
          <segment>
             <source>Term for organizing layout</source>
@@ -8135,6 +8423,24 @@
          <segment>
             <source>Pericope/Pericopes</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionSettings">
+         <segment>
+            <source>Permissions</source>
+            <target>Permissões</target>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionEditSheet">
+         <segment>
+            <source>Can Edit Spreadsheet</source>
+            <target>Pode editar a folha de cálculo</target>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionPublish">
+         <segment>
+            <source>Can Publish</source>
+            <target>Pode publicar</target>
          </segment>
       </unit>
       <unit id="vProject.preview">
@@ -8697,26 +9003,26 @@
       </unit>
       <unit id="wsAudioPlayer.recognizeProgress">
          <segment>
-            <source>Recognize Speech in Progress</source>
-            <target>Reconhecer discurso em curso</target>
+            <source>Auto Transcription in Progress</source>
+            <target>Transcrição automática em andamento</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target>Escolha o idioma a ser reconhecido. Se o idioma não estiver disponível, escolha um idioma estreitamente relacionado com um sistema de escrita semelhante.</target>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target>Escolha a língua a transcrever automaticamente. Se a língua não estiver disponível, escolha uma língua próxima com um sistema de escrita semelhante.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
          <segment>
-            <source>Recognize Speech {0}</source>
-            <target>Reconhecer fala {0}</target>
+            <source>Auto Transcription {0}</source>
+            <target>Transcrição automática {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
-            <target>Reconhecer configurações de fala</target>
+            <source>Auto Transcription Settings</source>
+            <target>Definições de transcrição automática</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.record">
