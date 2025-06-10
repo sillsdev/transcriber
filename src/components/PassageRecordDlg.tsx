@@ -90,6 +90,7 @@ function PassageRecordDlg(props: IProps) {
 
   const onReady = () => {
     setBusy(false);
+    close();
   };
 
   const close = () => {
