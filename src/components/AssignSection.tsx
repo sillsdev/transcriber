@@ -43,6 +43,8 @@ import { axiosPatch } from '../utils/axios';
 import { TokenContext } from '../context/TokenProvider';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
+import logError, { Severity } from '../utils/logErrorService';
+import { useWaitForRemoteQueue } from '../utils/useWaitForRemoteQueue';
 
 enum ConfirmType {
   delete,
@@ -92,6 +94,7 @@ function AssignSection(props: IProps) {
   const [confirmMsg, setConfirmMsg] = useState('');
   const getWfLabel = useWfLabel();
   const { getOrgDefault } = useOrgDefaults();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const isPermission = useMemo(
     () => Boolean(getOrgDefault(orgDefaultPermissions)),
     [getOrgDefault]
@@ -283,6 +286,7 @@ function AssignSection(props: IProps) {
       schemeId,
       memory.keyMap as RecordKeyMap
     );
+    await waitForRemoteQueue('steps created');
     try {
       await axiosPatch(`sections/assign/${id}/${list}`, undefined, token);
       await pullTableList(
@@ -293,7 +297,9 @@ function AssignSection(props: IProps) {
         backup,
         errorReporter
       );
-    } catch (err) {}
+    } catch (err) {
+      logError(Severity.error, errorReporter, err as Error);
+    }
   };
 
   const justClose = (cancel?: boolean) => {
