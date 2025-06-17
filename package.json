@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "4.2.0-alpha.1",
+  "version": "4.2.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -166,7 +166,6 @@
     "@types/request": "^2.48.12",
     "@types/url-parse": "^1.4.11",
     "@types/wavesurfer.js": "^3.3.2",
-    "caniuse-lite": "^1.0.30001690",
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "electron": "^31.3.0",
