@@ -83,7 +83,8 @@ export const useSaveComment = (props: IProps) => {
           'discussion',
           'discussion',
           discussionId
-        )
+        ),
+        ...ReplaceRelatedRecord(t, commentRec, 'creatorUser', 'user', user)
       );
     }
     if (mediafile) {

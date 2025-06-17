@@ -44,7 +44,8 @@ interface IProps {
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
-  uploadMethod?: (files: File[]) => Promise<void>;
+  uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   cancelMethod?: () => void;
   allowRecord?: boolean;
   oneTryOnly?: boolean;
@@ -58,6 +59,7 @@ interface IProps {
   onLoaded?: () => void;
   autoStart?: boolean;
   trackState?: (mediaState: IMediaState) => void;
+  noNewVoice?: boolean;
 }
 
 function MediaRecord(props: IProps) {
@@ -71,6 +73,7 @@ function MediaRecord(props: IProps) {
     defaultFilename,
     allowDeltaVoice,
     uploadMethod,
+    uploadSuccess,
     setCanSave,
     setCanCancel,
     setStatusText,
@@ -87,6 +90,7 @@ function MediaRecord(props: IProps) {
     preload,
     onLoaded,
     trackState,
+    noNewVoice,
   } = props;
   const t: IPassageRecordStrings = useSelector(passageRecordSelector);
   const convert_status = useSelector(
@@ -214,15 +218,18 @@ function MediaRecord(props: IProps) {
           type: mimeType,
         }),
       ];
-      if (uploadMethod && files) {
-        await uploadMethod(files);
-      }
-      setUploading(false);
-      setFilechanged(false);
+      await uploadMethod(files);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name, filetype, mimeType]
   );
+
+  useEffect(() => {
+    if (uploadSuccess !== undefined) {
+      setUploading(false);
+      if (filechanged && uploadSuccess) setFilechanged(false);
+    }
+  }, [uploadSuccess, filechanged]);
 
   useEffect(() => {
     //was it me who asked for this?
@@ -443,6 +450,7 @@ function MediaRecord(props: IProps) {
         autoStart={autoStart}
         segments={segments}
         reload={gotTheBlob}
+        noNewVoice={noNewVoice}
       />
       {warning && (
         <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">

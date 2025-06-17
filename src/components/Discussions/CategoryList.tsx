@@ -42,8 +42,9 @@ export function CategoryList(props: IProps) {
     );
   };
 
-  const getCatName = (slug: string) => {
-    return t.getString(slug) || slug;
+  const getCatName = (slug: string | undefined) => {
+    const key = slug || t.uncategorized;
+    return t.getString(key) || key;
   };
 
   interface CatCount {

@@ -21,7 +21,6 @@ import {
   useSharedResRead,
   useSharedResUpdate,
   useSharedResDelete,
-  useRole,
   findRecord,
   useArtifactCategory,
   remoteIdNum,
@@ -41,6 +40,11 @@ import { remotePullAll } from '../../crud/syncToMemory';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import { usePassageType } from '../../crud/usePassageType';
+import { useProjectPermissions } from '../../utils/useProjectPermissions';
+
+export enum DialogModePartial {
+  'titleOnly' = 4,
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -80,7 +84,7 @@ interface IProps {
   ws: ISheet | undefined;
   hasPublishing: boolean;
   onOpen: () => void;
-  onUpdRef?: (id: string, val: string) => void;
+  onUpdRef?: (id: string, val: string, sr: SharedResourceD) => void;
 }
 
 export function ResourceTabs({
@@ -104,7 +108,6 @@ export function ResourceTabs({
   const updatePassage = usePassageUpdate();
   const graphicUpdate = useGraphicUpdate();
   const graphicCreate = useGraphicCreate();
-  const { userIsAdmin } = useRole();
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
@@ -114,10 +117,11 @@ export function ResourceTabs({
   const { showMessage } = useSnackBar();
   const { localizedArtifactCategory } = useArtifactCategory();
   const { getPassageTypeRec } = usePassageType();
+  const { canEditSheet, canPublish } = useProjectPermissions();
 
   const readOnly = useMemo(
-    () => !userIsAdmin || (offline && !offlineOnly),
-    [userIsAdmin, offline, offlineOnly]
+    () => !canEditSheet || (offline && !offlineOnly),
+    [canEditSheet, offline, offlineOnly]
   );
 
   const sharedResRec = React.useMemo(
@@ -126,7 +130,7 @@ export function ResourceTabs({
       else return readSharedResource(passId);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passId, value]
+    [passId, value, ws?.passage]
   );
 
   const isNote = React.useMemo(
@@ -170,7 +174,7 @@ export function ResourceTabs({
       } as IResourceDialog;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sharedResources, passId, isNote]);
+  }, [sharedResources, passId, isNote, sharedResRec]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -274,6 +278,7 @@ export function ResourceTabs({
     }
     const typeRec = getPassageTypeRec(PassageTypeEnum.NOTE);
     await updatePassage(passage, undefined, typeRec?.id, sr.id);
+    if (onUpdRef) onUpdRef(passage.id, passage.attributes.reference, sr);
   };
 
   const copyGraphic = async (sr: SharedResourceD, passage: PassageD) => {
@@ -339,9 +344,12 @@ export function ResourceTabs({
       </Box>
       <TabPanel value={value} index={0}>
         <ResourceOverview
-          mode={
+          mode={DialogMode.add} //ignored
+          dialogmode={
             readOnly
-              ? DialogMode.view
+              ? canPublish
+                ? DialogModePartial.titleOnly
+                : DialogMode.view
               : values
               ? DialogMode.edit
               : DialogMode.add

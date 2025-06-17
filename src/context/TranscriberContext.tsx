@@ -277,7 +277,7 @@ const TranscriberProvider = (props: IProps) => {
         ) as Section;
         if (secRec) {
           secNum = sectionNumber(secRec, sectionMap);
-          assigned = related(secRec, role);
+          assigned = ''; // previously controlled: related(secRec, role);
           transcriber = related(secRec, 'transcriber');
           editor = related(secRec, 'editor');
           allowed = onlyAvailable

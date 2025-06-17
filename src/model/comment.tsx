@@ -16,6 +16,7 @@ export interface Comment extends BaseModel {
     mediafile: RecordRelationship;
     discussion: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    creatorUser: RecordRelationship;
   };
 }
 

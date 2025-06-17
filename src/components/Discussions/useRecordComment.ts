@@ -1,57 +1,36 @@
-import { useMemo, useRef, useContext } from 'react';
-import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
-import {
-  findRecord,
-  pullTableList,
-  related,
-  remoteIdNum,
-  useArtifactType,
-  useOfflnMediafileCreate,
-} from '../../crud';
-import { MediaFile } from '../../model';
-import * as actions from '../../store';
+import { useEffect, useMemo, useState } from 'react';
+import { useGlobal } from '../../context/GlobalContext';
+import { findRecord, related, useArtifactType } from '../../crud';
+import { ISharedStrings, MediaFile } from '../../model';
+import { useMediaUpload } from '../../crud';
+
 import { cleanFileName } from '../../utils';
-import JSONAPISource from '@orbit/jsonapi';
-import { TokenContext } from '../../context/TokenProvider';
-import { useDispatch } from 'react-redux';
-import { IndexedDBSource } from '@orbit/indexeddb';
-import { UploadType } from '../MediaUpload';
-import { RecordKeyMap } from '@orbit/records';
+import { useSelector, shallowEqual } from 'react-redux';
+import { useSnackBar } from '../../hoc/SnackBar';
+import { sharedSelector } from '../../selector';
 
 interface IProps {
   mediafileId: string;
   commentNumber: number;
-  afterUploadcb: (mediaId: string) => Promise<void>;
+  afterUploadCb: (mediaId: string) => Promise<void>;
 }
 
 export const useRecordComment = ({
   mediafileId,
   commentNumber,
-  afterUploadcb,
+  afterUploadCb,
 }: IProps) => {
-  const dispatch = useDispatch();
-  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
-  const nextUpload = (props: actions.NextUploadProps) =>
-    dispatch(actions.nextUpload(props));
-  const uploadComplete = () => dispatch(actions.uploadComplete);
-  const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator?.getSource('remote') as JSONAPISource;
-  const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan'); //will be constant here
-  const [user] = useGlobal('user');
-
-  const { accessToken } = useContext(TokenContext).state;
   const { commentId } = useArtifactType();
-  const fileList = useRef<File[]>();
-  const mediaIdRef = useRef('');
-  const { createMedia } = useOfflnMediafileCreate();
-  const getGlobal = useGetGlobal();
   const passageId = useMemo(() => {
     const vernRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     return related(vernRec, 'passage') as string;
   }, [mediafileId, memory]);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const { showMessage } = useSnackBar();
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
+
+  const uploadReset = () => setUploadSuccess(undefined);
 
   const fileName = (subject: string, id: string) => {
     return `${cleanFileName(subject)}${(id + 'xxxx').slice(
@@ -60,78 +39,19 @@ export const useRecordComment = ({
     )}-${commentNumber}`;
   };
 
-  const itemComplete = async (n: number, success: boolean, data?: any) => {
-    const uploadList = fileList.current;
-    if (!uploadList) return; // This should never happen
-    if (data?.stringId) {
-      mediaIdRef.current = data?.stringId;
-    } else if (success && data) {
-      // offlineOnly
-      var num = 1;
-      mediaIdRef.current = (
-        await createMedia(
-          data,
-          num,
-          uploadList[n].size,
-          passageId,
-          commentId,
-          '',
-          user
-        )
-      ).id;
-    }
-    if (!getGlobal('offline') && mediaIdRef.current) {
-      pullTableList(
-        'mediafile',
-        Array(mediaIdRef.current),
-        memory,
-        remote,
-        backup,
-        reporter
-      ).then(() => {
-        uploadComplete();
-        afterUploadcb(mediaIdRef.current);
-      });
-    } else {
-      uploadComplete();
-      afterUploadcb(mediaIdRef.current);
-    }
-  };
+  const uploadMedia = useMediaUpload({
+    artifactId: commentId,
+    passageId,
+    afterUploadCb,
+    setUploadSuccess,
+  });
 
-  const uploadMedia = async (files: File[]) => {
-    const getPlanId = () =>
-      remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
-    const getArtifactId = () =>
-      remoteIdNum('artifacttype', commentId, memory?.keyMap as RecordKeyMap) ||
-      commentId;
-    const getPassageId = () =>
-      remoteIdNum('passage', passageId, memory?.keyMap as RecordKeyMap) ||
-      passageId;
-    const getUserId = () =>
-      remoteIdNum('user', user, memory?.keyMap as RecordKeyMap) || user;
+  useEffect(() => {
+    if (uploadSuccess === false)
+      //ignore undefined
+      showMessage(ts.NoSaveOffline);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadSuccess]);
 
-    uploadFiles(files);
-    fileList.current = files;
-    const mediaFile = {
-      planId: getPlanId(),
-      versionNumber: 1,
-      originalFile: files[0].name,
-      contentType: files[0]?.type,
-      artifactTypeId: getArtifactId(),
-      passageId: getPassageId(),
-      recordedbyUserId: getUserId(),
-      userId: getUserId(),
-    } as any;
-    nextUpload({
-      record: mediaFile,
-      files,
-      n: 0,
-      token: accessToken || '',
-      offline: getGlobal('offline'),
-      errorReporter: reporter,
-      uploadType: UploadType.Media,
-      cb: itemComplete,
-    });
-  };
-  return { uploadMedia, fileName };
+  return { uploadMedia, fileName, uploadSuccess, uploadReset };
 };

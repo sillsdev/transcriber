@@ -1,54 +1,20 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  CSSProperties,
-  useContext,
-} from 'react';
+import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
 import { useGlobal } from '../context/GlobalContext';
-import {
-  IconButton,
-  Typography,
-  Box,
-  BoxProps,
-  styled,
-  TableCell,
-} from '@mui/material';
-import PlayIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+import { Typography, Box, BoxProps, styled, TableCell } from '@mui/material';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
-import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
-import BigDialog from '../hoc/BigDialog';
-import IntegrationTab from './Integration';
-import ExportTab from './TranscriptionTab';
-import Visualize from './Visualize';
-// import ProjectMenu from './Team/ProjectMenu';
-import { formatTime, GrowingSpacer, LightTooltip, iconSize } from '../control';
-import { ChipText } from './TaskFlag';
 import {
-  sectionNumber,
-  sectionDescription,
-  taskPassageNumber,
   useOrganizedBy,
   usePlan,
   // useOfflineAvailToggle,
   // useRole,
-  paddedSectionNumber,
 } from '../crud';
-import { numCompare, prettySegmentStart } from '../utils';
-import { useProjectPlans } from '../crud';
+import { numCompare } from '../utils';
 import { debounce } from 'lodash';
-import MediaPlayer from './MediaPlayer';
-import { IMediaActionsStrings } from '../model';
-import { mediaActionsSelector } from '../selector';
-import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
-import { PassageDetailContext } from '../context/PassageDetailContext';
 
 export const TaskItemWidth = 240;
 export const TaskTableWidth = 265;
@@ -140,47 +106,15 @@ interface IProps {
 }
 
 export function TaskTable(props: IProps) {
-  const {
-    onFilter,
-    // isDetail
-  } = props;
-  const {
-    rowData,
-    activityStateStr,
-    todoStr,
-    projButtonStr,
-    expandedGroups,
-    filter,
-    // setFilter,
-    flat,
-  } = useTodo();
-  const {
-    playerMediafile,
-    playing,
-    setPlaying,
-    loading,
-    pdBusy,
-    discussionSize,
-  } = usePassageDetailContext();
-  const { sectionArr } = useContext(PassageDetailContext).state;
+  const { onFilter } = props;
+  const { rowData, todoStr, expandedGroups, filter, flat } = useTodo();
+  const { playerMediafile, loading, pdBusy, discussionSize } =
+    usePassageDetailContext();
   const filterRef = useRef(filter);
   const t = todoStr;
-  const tpb = projButtonStr;
-  const [user] = useGlobal('user');
-  const tm: IMediaActionsStrings = useSelector(
-    mediaActionsSelector,
-    shallowEqual
-  );
   const [width, setWidth] = useState(TaskTableWidth);
-  const { getPlan, getPlanName } = usePlan();
-  // const offlineAvailableToggle = useOfflineAvailToggle();
+  const { getPlan } = usePlan();
   const [planId] = useGlobal('plan'); //will be constant here
-  const [planName, setPlanName] = useState('');
-  const [projectId] = useGlobal('project'); //will be constant here
-  const projectPlans = useProjectPlans();
-  const [openIntegration, setOpenIntegration] = useState(false);
-  const [openExport, setOpenExport] = useState(false);
-  const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const isInline = useRef(false);
@@ -238,20 +172,12 @@ export function TaskTable(props: IProps) {
     overflowY: 'auto',
     cursor: 'default',
   });
-  const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
   // const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
-
-  // const handleToggleFilter = () => {
-  //   handleStopPlayer();
-  //   setPlayItem('');
-  //   if (onFilter) onFilter(!filter);
-  //   setFilter(!filter);
-  // };
 
   const setDimensions = () => {
     const newWidth = filterRef.current
@@ -285,32 +211,6 @@ export function TaskTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
-  const handleStopPlayer = () => {
-    if (playing) setPlaying(false);
-  };
-
-  // const handleProjectMenu = (what: string) => {
-  //   if (what === 'offlineAvail') {
-  //     offlineAvailableToggle(projectId);
-  //   } else if (what === 'integration') {
-  //     setOpenIntegration(true);
-  //   } else if (what === 'export') {
-  //     setOpenExport(true);
-  //   } else if (what === 'reports') {
-  //     setOpenReports(true);
-  //   } else if (what === 'filter') {
-  //     handleToggleFilter();
-  //   }
-  // };
-
-  const handlePlay = (id: string) => () => {
-    if (id !== playItem) {
-      setPlayItem(id);
-    } else {
-      setPlaying(!playing);
-    }
-  };
-
   useEffect(() => {
     busyRef.current = pdBusy || loading;
     setStyle((style) => ({
@@ -327,7 +227,6 @@ export function TaskTable(props: IProps) {
   });
 
   useEffect(() => {
-    setPlanName(getPlanName(planId));
     const planRec = getPlan(planId);
     isInline.current = Boolean(planRec?.attributes?.flat);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -353,86 +252,18 @@ export function TaskTable(props: IProps) {
         { columnName: 'state', width: 0, align: 'left' },
         { columnName: 'assigned', width: 0, align: 'left' },
       ]);
-    } else {
-      let addHead = 50;
-      let addWid = (width - 1237) / 3;
-      if (width < 1283) {
-        addHead = addWid = width > 1237 ? (width - 1237) / 7 : 0;
-      }
-      setColumnFormatting([
-        { columnName: 'composite', width: 1, align: 'left' },
-        { columnName: 'play', width: 65, align: 'left' },
-        {
-          columnName: 'plan',
-          width: 100 + addWid,
-          align: 'left',
-          wordWrapEnabled: true,
-        },
-        { columnName: 'section', width: 65 + addHead, align: 'right' },
-        {
-          columnName: 'title',
-          width: 150 + addWid,
-          align: 'left',
-          wordWrapEnabled: true,
-        },
-        { columnName: 'sectPass', width: 65 + addHead, align: 'left' },
-        {
-          columnName: 'description',
-          width: 150 + addWid,
-          align: 'left',
-          wordWrapEnabled: true,
-        },
-        { columnName: 'topic', width: 65 + addHead, align: 'left' },
-        { columnName: 'speaker', width: 65 + addHead, align: 'left' },
-        { columnName: 'length', width: 100, align: 'left' },
-        { columnName: 'duration', width: 100, align: 'right' },
-        { columnName: 'state', width: 150, align: 'left' },
-        { columnName: 'assigned', width: 150, align: 'left' },
-      ]);
     }
   }, [filter, width]);
 
   useEffect(() => {
     const newRows = rowData.map((r, i) => ({
-      composite:
-        r.state === '' ? (
-          <TaskHead item={i} />
-        ) : (
-          <TaskItem
-            item={i}
-            organizedBy={organizedBy}
-            flat={isInline.current}
-          />
-        ),
-      play: playItem,
-      plan: r.planName,
-      section: Number(sectionNumber(r.section)),
-      sectPass: r.sectPass,
-      title: sectionDescription(r.section),
-      description: r.passage?.attributes?.title,
-      topic: r.mediafile?.attributes?.topic || '',
-      speaker: r.mediafile?.attributes?.performedBy || '',
-      length: r.duration ? formatTime(r.duration) : '',
-      state:
-        r.state !== ''
-          ? ChipText({ state: r.state, ta: activityStateStr })
-          : '',
-      assigned: r.assigned === user ? t.yes : t.no,
-      mediaId: r.mediafile.id,
-      rowKey:
-        paddedSectionNumber(r.section) +
-        (r.mediafile.id ? taskPassageNumber(r.passage) : '   ') +
-        prettySegmentStart(r.mediafile?.attributes?.sourceSegments),
+      composite: (
+        <TaskItem item={i} organizedBy={organizedBy} flat={isInline.current} />
+      ),
     }));
-    setRows(newRows);
+    setRows(newRows as IRow[]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, playItem]);
-
-  useEffect(() => {
-    //if I set playing when I set the mediaId, it plays a bit of the old
-    if (playItem) setPlaying(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playItem]);
+  }, [rowData]);
 
   interface ICell {
     key: string;
@@ -444,28 +275,6 @@ export function TaskTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }
-
-  const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
-    <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        id={`audio-${mediaId}`}
-        key={'audio-' + mediaId}
-        aria-label={'audio-' + mediaId}
-        color="primary"
-        onClick={handlePlay(mediaId || '')}
-      >
-        {value === mediaId && playing ? (
-          <LightTooltip title={tm.pause}>
-            <PauseIcon sx={iconSize} />
-          </LightTooltip>
-        ) : (
-          <LightTooltip title={tm.play}>
-            <PlayIcon sx={iconSize} />
-          </LightTooltip>
-        )}
-      </IconButton>
-    </Table.Cell>
-  );
 
   const selBacking: CSSProperties = { background: 'lightgrey' };
   const noSelBacking: CSSProperties = { background: 'transparent' };
@@ -492,19 +301,9 @@ export function TaskTable(props: IProps) {
     } else {
       if (column.name === 'composite') {
         return <td key={key}>{'\u00a0'}</td>;
-      } else if (column.name === 'play') {
-        // if there is no audio file to play put nothing in the play column
-        return filter && row.mediaId ? (
-          <PlayCell {...props} mediaId={row.mediaId || props.mediaId} />
-        ) : (
-          <Table.Cell {...props} value="" />
-        );
       }
       return <Table.Cell {...props} />;
     }
-  };
-  const playEnded = () => {
-    setPlaying(false);
   };
   return (
     <TaskTableDiv
@@ -517,20 +316,6 @@ export function TaskTable(props: IProps) {
         <StyledPaper>
           <Header filter={filter}>
             <Typography variant="h6">{t.tasks}</Typography>
-            <GrowingSpacer />
-            {/* <ProjectMenu
-              action={handleProjectMenu}
-              stopPlayer={handleStopPlayer}
-              inProject={true}
-              isAdmin={userIsAdmin}
-              project={projectId}
-              justFilter={isDetail}
-            /> */}
-            {/** filter && (
-              <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
-                <CloseIcon />
-              </IconButton>
-            ) **/}
           </Header>
           <ShapingTable
             columns={columns}
@@ -552,37 +337,6 @@ export function TaskTable(props: IProps) {
           />
         </StyledPaper>
       </Box>
-      <MediaPlayer
-        srcMediaId={playItem}
-        requestPlay={playing}
-        onEnded={playEnded}
-      />
-      <BigDialog
-        title={tpb.integrationsTitle.replace('{0}', planName)}
-        isOpen={openIntegration}
-        onOpen={setOpenIntegration}
-      >
-        <IntegrationTab {...props} stopPlayer={handleStopPlayer} />
-      </BigDialog>
-      <BigDialog
-        title={tpb.exportTitle.replace('{0}', planName)}
-        isOpen={openExport}
-        onOpen={setOpenExport}
-      >
-        <ExportTab
-          {...props}
-          projectPlans={projectPlans(projectId)}
-          planColumn={true}
-          sectionArr={sectionArr}
-        />
-      </BigDialog>
-      <BigDialog
-        title={tpb.reportsTitle.replace('{0}', planName)}
-        isOpen={openReports}
-        onOpen={setOpenReports}
-      >
-        <Visualize selectedPlan={planId} />
-      </BigDialog>
     </TaskTableDiv>
   );
 }

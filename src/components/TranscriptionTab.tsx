@@ -39,8 +39,6 @@ import TranscriptionShow from './TranscriptionShow';
 import { TokenContext } from '../context/TokenProvider';
 import {
   related,
-  sectionEditorName,
-  sectionTranscriberName,
   sectionCompare,
   passageCompare,
   passageRefText,
@@ -86,8 +84,6 @@ interface IRow {
   name: React.ReactNode;
   state: string;
   planName: string;
-  transcriber: string;
-  editor: string;
   passages: string;
   updated: string;
   action: string;
@@ -111,6 +107,7 @@ interface IProps {
 export function TranscriptionTab(props: IProps) {
   const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
     props;
+
   const { pasId } = useParams();
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
@@ -180,8 +177,6 @@ export function TranscriptionTab(props: IProps) {
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
     { name: 'passages', title: ts.passages },
-    { name: 'transcriber', title: ts.transcriber },
-    { name: 'editor', title: ts.editor },
     { name: 'action', title: '\u00A0' },
     { name: 'updated', title: t.updated },
   ];
@@ -190,8 +185,6 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'state', width: 150 },
     { columnName: 'planName', width: 150 },
     { columnName: 'passages', width: 120 },
-    { columnName: 'transcriber', width: 120 },
-    { columnName: 'editor', width: 120 },
     { columnName: 'updated', width: 200 },
     { columnName: 'action', width: 150 },
   ];
@@ -276,8 +269,13 @@ export function TranscriptionTab(props: IProps) {
   };
   const handleProjectExport = () => {
     setAlertOpen(false);
-    if (getGlobal('offline')) setOpenExport(true);
-    else doProjectExport(ExportType.PTF);
+    var offline = getGlobal('offline');
+
+    if (offline) {
+      setOpenExport(true);
+    } else {
+      doProjectExport(ExportType.PTF);
+    }
   };
 
   const exportId = useMemo(
@@ -504,8 +502,6 @@ export function TranscriptionTab(props: IProps) {
                 name: getSection([section], sectionMap),
                 state: '',
                 planName: planRec.attributes.name,
-                editor: sectionEditorName(section, users),
-                transcriber: sectionTranscriberName(section, users),
                 passages: sectionpassages.length.toString(),
                 updated: dateOrTime(section?.attributes?.dateUpdated, lang),
                 action: '',
@@ -532,8 +528,6 @@ export function TranscriptionTab(props: IProps) {
                   ),
                   state: state,
                   planName: planRec.attributes.name,
-                  editor: '',
-                  transcriber: '',
                   passages: '',
                   updated: dateOrTime(passage.attributes.dateUpdated, lang),
                   action: passage.id,
@@ -612,6 +606,7 @@ export function TranscriptionTab(props: IProps) {
         >
           {t.elan}
           <br />
+
           {t.export}
         </IconButton>
         <AudioDownload mediaId={mediaId} title={t.download} />
@@ -652,7 +647,6 @@ export function TranscriptionTab(props: IProps) {
     }
     return <Table.Cell {...props} />;
   };
-
   return (
     <Box id="TranscriptionTab" sx={{ display: 'flex' }}>
       <div>

@@ -145,13 +145,15 @@ export const SelectNote = (props: IProps) => {
 
   useEffect(() => {
     const res = getNotes();
-    const filtered = res.filter(
-      (r) =>
-        (refLevel === RefLevel.Verse && refRes.verses.includes(r.id)) ||
-        (refLevel === RefLevel.Chapter && refRes.chapters.includes(r.id)) ||
-        (refLevel === RefLevel.Book && refRes.books.includes(r.id)) ||
-        refLevel === RefLevel.All
-    );
+    const filtered = res
+      .filter(
+        (r) =>
+          (refLevel === RefLevel.Verse && refRes.verses.includes(r.id)) ||
+          (refLevel === RefLevel.Chapter && refRes.chapters.includes(r.id)) ||
+          (refLevel === RefLevel.Book && refRes.books.includes(r.id)) ||
+          refLevel === RefLevel.All
+      )
+      .sort((a, b) => (a.attributes.title > b.attributes.title ? 1 : -1));
     setNotes(filtered);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refLevel, refRes]);
@@ -202,6 +204,7 @@ export const SelectNote = (props: IProps) => {
       termsOfUse={termsOfUse}
       onOpen={onOpen}
       onBookCd={setBookCd}
+      initFindRef={findRef}
       onFindRef={setFindRef}
       onRefLevel={setRefLevel}
       levelIn={refLevel}

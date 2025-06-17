@@ -4,6 +4,7 @@ import { ArtifactTypeD, OrgWorkflowStep, Project } from '../model';
 import { getFamily, getRtl } from 'mui-language-picker';
 import Memory from '@orbit/memory';
 import { findRecord } from './tryFindRecord';
+import { LocalKey } from '../utils';
 
 // const ipc = (window as any)?.electron;
 
@@ -37,30 +38,31 @@ export const getFontUrl = (fontFamily: string) => {
     : '';
 };
 
-export const getFontData = async (r: Project, offline: boolean) => {
+const getFontKey = (key: string) => `${LocalKey.fontData}-${key}`;
+
+export const loadFontData = (exportId: string): FontData | undefined => {
+  const lastFont = localStorage.getItem(getFontKey(exportId));
+  return lastFont ? JSON.parse(lastFont) : undefined;
+};
+
+export const saveFontData = async (data: FontData, exportId: string) => {
+  localStorage.setItem(getFontKey(exportId), JSON.stringify(data));
+};
+
+export const getFontData = async (r: Project, artifactId?: string | null) => {
+  // fontSize and spellCheck are set from last usage
+  const lastFontData = loadFontData(artifactId ?? 'project');
+
   const langTag = r?.attributes?.language;
-  const spellCheck = r?.attributes?.spellCheck;
+  const spellCheck = lastFontData?.spellCheck ?? r?.attributes?.spellCheck;
   const fontFamily = r?.attributes?.defaultFont
     ? r.attributes.defaultFont.split(',')[0].replace(/ /g, '')
     : 'CharisSIL';
-  const fontSize = r?.attributes?.defaultFontSize
-    ? r.attributes.defaultFontSize
-    : 'large';
+  const fontSize =
+    lastFontData?.fontSize ?? r?.attributes?.defaultFontSize ?? 'large';
   const fontDir = r?.attributes?.rtl || getRtl(langTag) ? 'rtl' : 'ltr';
   let url = getFontUrl(fontFamily);
-  // if (isElectron) {
-  //   let local = await dataPath('http', PathType.FONTS, {
-  //     localname: fontFamily + '.css',
-  //   });
-  //   if (local && !local.startsWith('http')) {
-  //     if (await ipc?.exists(local)) {
-  //       url = (await ipc?.isWindows())
-  //         ? new URL(local).toString().slice(8)
-  //         : local;
-  //       url = `transcribe-safe://${url}`;
-  //     }
-  //   }
-  // }
+
   const data: FontData = {
     langTag,
     spellCheck,
@@ -89,6 +91,7 @@ export const getArtTypeFontData = (
     exportId
   ) as ArtifactTypeD;
   let stepSettings = { language: 'English|en', font: 'CharisSIL' };
+
   orgSteps?.find((s) => {
     const toolData = JSON.parse(s.attributes?.tool || '{}');
     if (toolData?.settings) {
@@ -107,11 +110,15 @@ export const getArtTypeFontData = (
   const fontDir = getRtl(langTag) ? 'rtl' : 'ltr';
   const fontFamily = stepSettings?.font || 'CharisSIL';
   let url = getFontUrl(fontFamily);
+
+  // fontSize and spellCheck are set from last usage
+  const lastFontData = loadFontData(exportId);
+
   const data: FontData = {
     langTag,
-    spellCheck: false,
+    spellCheck: lastFontData?.spellCheck ?? false,
     fontFamily,
-    fontSize: 'large',
+    fontSize: lastFontData?.fontSize ?? 'large',
     fontDir,
     url,
     fontConfig: {

@@ -19,6 +19,7 @@ export interface Discussion extends BaseModel {
     artifactCategory: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
     orgWorkflowStep: RecordRelationship;
+    creatorUser: RecordRelationship;
   };
 }
 

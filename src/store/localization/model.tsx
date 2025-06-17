@@ -74,10 +74,14 @@ export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
+    "addScheme": string;
+    "addScheme2": string;
     "assignSec": string;
+    "assignSec2": string;
     "delete": string;
     "filter": string;
     "removeSec": string;
+    "removeSec2": string;
     "role": string;
     "sectionstate": string;
     "selectRowsToAssign": string;
@@ -87,9 +91,23 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
+    "assignment": string;
+    "assignment2": string;
     "close": string;
+    "confirmDelete": string;
+    "confirmModify": string;
+    "delete": string;
+    "deleteSections": string;
+    "duplicateName": string;
+    "duplicateName2": string;
+    "modifySections": string;
+    "noAssignment": string;
+    "noRestriction": string;
     "role": string;
+    "schemeName": string;
+    "schemeName2": string;
     "title": string;
+    "title2": string;
     "users": string;
 };
 
@@ -181,6 +199,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "settings": string;
     "notesHelper": string;
     "notesProject": string;
+    "projectPermissions": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;
@@ -234,6 +253,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "later": string;
     "loading": string;
     "none": string;
+    "noVoiceCreation": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
@@ -276,6 +296,7 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
     "addComment": string;
+    "adminsAlways": string;
     "assign": string;
     "earlierVersion": string;
     "groupuser": string;
@@ -288,6 +309,8 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "confirmDelete": string;
     "locate": string;
     "move": string;
+    "none": string;
+    "onlyAdmin": string;
     "or": string;
     "playOrStop": string;
     "resolved": string;
@@ -501,6 +524,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "invalidReferences": string;
     "no": string;
     "noProject": string;
+    "notPermitted": string;
     "offline": string;
     "onestory": string;
     "paratextLocal": string;
@@ -550,6 +574,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "join": string;
     "member": string;
     "newInviteTask": string;
+    "newInviteTask2": string;
     "noProjects": string;
     "organization": string;
     "questions": string;
@@ -709,6 +734,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "cancelling": string;
     "choosePassage": string;
     "cloudSync": string;
+    "confirmChange": string;
+    "confirmValue": string;
     "date": string;
     "delete": string;
     "deleteConfirm": string;
@@ -752,9 +779,15 @@ export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "playPause": string;
     "record": string;
+    "recordOrUpload": string;
     "recording": string;
     "save": string;
     "saving": string;
+    "provideAudio": string;
+    "unsavedChanges": string;
+    "upload": string;
+    "uploadFailed": string;
+    "uploadFailStatus": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -919,9 +952,12 @@ export interface IPassageTypeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPeerStrings extends Localize.LocalizedStringsMethods {
+    "assignment": string;
     "peerDescription": string;
     "editPeerGroup": string;
+    "inSchemeUse": string;
     "inUse": string;
+    "permission": string;
     "permissions": string;
     "noSpecialPermission": string;
     "member": string;
@@ -946,7 +982,6 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "consultantTip": string;
     "consultantInTraining": string;
     "consultantInTrainingTip": string;
-    "nsp": string;
     "mentor": string;
     "mentorTip": string;
     "nspTip": string;
@@ -1051,6 +1086,7 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addMember": string;
+    "additionalSettings": string;
     "cancel": string;
     "checkingParatext": string;
     "close": string;
@@ -1059,8 +1095,11 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "defaultTimezone": string;
     "deleteExplained": string;
     "deleteUser": string;
+    "deleteWarning": string;
     "discardChanges": string;
     "discardChangesExplained": string;
+    "edit": string;
+    "editMember": string;
     "email": string;
     "family": string;
     "given": string;
@@ -1082,6 +1121,8 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "sendDigest": string;
     "sharedContentCreator": string;
     "syncFrequency": string;
+    "syncFrequencyEnable": string;
+    "syncFrequencyLabel": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;
@@ -1192,6 +1233,7 @@ export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsM
     "step": string;
     "minimum": string;
     "maximum": string;
+    "reset": string;
     "saveFilter": string;
 };
 
@@ -1272,6 +1314,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "role": string;
     "save": string;
     "saving": string;
+    "scheme": string;
+    "scheme2": string;
     "select": string;
     "teamrole": string;
     "transcriber": string;
@@ -1279,6 +1323,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
     "uploadRights": string;
+    "uploadSuccess": string;
     "user": string;
     "versionHistory": string;
     "wait": string;
@@ -1464,6 +1509,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "copyTranscriptions": string;
     "creatingDownloadFile": string;
     "writingDownloadFile": string;
+    "nopermission": string;
     "downloading": string;
     "downloadingProject": string;
     "downloadProject": string;
@@ -1593,6 +1639,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "advanced": string;
     "backtranslation": string;
+    "basic": string;
     "cancel": string;
     "configure": string;
     "cannotChangeLayout": string;
@@ -1616,9 +1663,13 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "movements": string;
     "nameInUse": string;
     "newProject": string;
+    "newTag": string;
     "organizedBy": string;
     "other": string;
     "pericopes": string;
+    "permissionSettings": string;
+    "permissionEditSheet": string;
+    "permissionPublish": string;
     "preview": string;
     "projectName": string;
     "renderCustomize": string;

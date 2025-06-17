@@ -32,10 +32,18 @@ import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ContextHelp } from './ContextHelp';
 import { RecordKeyMap } from '@orbit/records';
-import { Akuo, TranslatorsNotes, UbsResources } from '../assets/brands';
+import {
+  Akuo,
+  Logos,
+  TranslatorsNotes,
+  TranslatorsWorkplace,
+  UbsResources,
+} from '../assets/brands';
+import TwIcon from '../control/twIcon';
 const ipc = (window as any)?.electron;
 
 const logosAppUri = 'https://app.logos.com/';
+const twInstallUri = 'https://www.sil.org/resources/publications/tw';
 
 interface IProps {
   online: boolean;
@@ -329,7 +337,7 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <LogosIcon />
               </ListItemIcon>
-              <ListItemText primary={t.logos} />
+              <ListItemText primary={t.brandedSite.replace('{0}', Logos)} />
             </StyledMenuItem>
           </a>
         )}
@@ -338,7 +346,34 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <LogosIcon />
             </ListItemIcon>
-            <ListItemText primary={t.logos} />
+            <ListItemText primary={t.brandedSite.replace('{0}', Logos)} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={twInstallUri}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpLogosOn">
+              <ListItemIcon>
+                <TwIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={t.brandedSite.replace('{0}', TranslatorsWorkplace)}
+              />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem id="helpLogosOff" onClick={handleSite(twInstallUri)}>
+            <ListItemIcon>
+              <TwIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={t.brandedSite.replace('{0}', TranslatorsWorkplace)}
+            />
           </StyledMenuItem>
         )}
         {!isElectron && (

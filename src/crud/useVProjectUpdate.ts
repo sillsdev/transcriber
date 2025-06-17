@@ -26,6 +26,10 @@ export const useVProjectUpdate = () => {
       tags,
       organizedBy,
       defaultParams,
+      sheetUser,
+      sheetGroup,
+      publishUser,
+      publishGroup,
     } = vProject.attributes;
     await memory.update((t) => [
       ...UpdateRecord(
@@ -59,6 +63,34 @@ export const useVProjectUpdate = () => {
           type.toLowerCase() === 'scripture' ? type : 'generic',
           'project'
         )
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'project', id: id },
+        'editsheetuser',
+        'user',
+        sheetUser
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'project', id: id },
+        'editsheetgroup',
+        'group',
+        sheetGroup
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'project', id: id },
+        'publishuser',
+        'user',
+        publishUser
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        { type: 'project', id: id },
+        'publishgroup',
+        'group',
+        publishGroup
       ),
       //we aren't allowing them to change group, owner or oraganization currently
     ]);

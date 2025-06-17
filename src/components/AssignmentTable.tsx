@@ -1,4 +1,10 @@
-import { useState, useEffect, useContext, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  MouseEventHandler,
+} from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
@@ -11,10 +17,12 @@ import {
   Role,
   ISharedStrings,
   MediaFile,
+  SectionD,
 } from '../model';
 import { RecordIdentity } from '@orbit/records';
-import { styled } from '@mui/material';
-import { AltButton } from '../control';
+import { Button, Menu, MenuItem, styled } from '@mui/material';
+import DropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { AltButton, iconMargin } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
@@ -22,14 +30,13 @@ import AssignSection from './AssignSection';
 import {
   related,
   sectionDescription,
-  sectionEditorName,
-  sectionTranscriberName,
   sectionCompare,
   passageCompare,
   useOrganizedBy,
-  usePassageState,
   useRole,
   useSharedResRead,
+  useOrgDefaults,
+  orgDefaultPermissions,
 } from '../crud';
 import {
   TabAppBar,
@@ -47,8 +54,8 @@ import {
   assignmentSelector,
   sharedSelector,
 } from '../selector';
-import { positiveWholeOnly } from '../utils';
 import { GetReference } from './AudioTab/GetReference';
+import { OrganizationSchemeD } from '../model/organizationScheme';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -60,9 +67,7 @@ const AssignmentDiv = styled('div')(() => ({
 interface IRow {
   id: string;
   name: React.ReactNode;
-  state: string;
-  transcriber: string;
-  editor: string;
+  scheme: React.ReactNode;
   passages: string;
   parentId: string;
   sort: string;
@@ -92,54 +97,75 @@ export function AssignmentTable(props: IProps) {
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const users = useOrbitData<User[]>('user');
   const roles = useOrbitData<Role[]>('role');
+  const schemes = useOrbitData<OrganizationSchemeD[]>('organizationscheme');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan'); //will be constant here
+  const [org] = useGlobal('organization');
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
   const { flat, sectionArr } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
+  const [assignMenu, setAssignMenu] = useState<HTMLButtonElement>();
   const sectionMap = new Map<number, string>(sectionArr);
-  const [selectedSections, setSelectedSections] = useState<Section[]>([]);
+  const [selectedSections, setSelectedSections] = useState<SectionD[]>([]);
+  const [readOnly, setReadOnly] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const [organizedByPlural] = useState(getOrganizedBy(false));
   const [refresh, setRefresh] = useState(0);
   const { getSharedResource } = useSharedResRead();
+  const { getOrgDefault } = useOrgDefaults();
+  const isPermission = useMemo(
+    () => Boolean(getOrgDefault(orgDefaultPermissions)),
+    [getOrgDefault]
+  );
   const columnDefs = useMemo(
     () =>
       !flat
         ? [
             { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
             { name: 'passages', title: ts.passages },
-            { name: 'transcriber', title: ts.transcriber },
-            { name: 'editor', title: ts.editor },
+            { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ]
         : [
             { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
-            { name: 'transcriber', title: ts.transcriber },
-            { name: 'editor', title: ts.editor },
+            { name: 'scheme', title: isPermission ? ts.scheme : ts.scheme2 },
           ],
-    [flat, organizedBy, ts.passages, t.sectionstate, ts.editor, ts.transcriber]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [flat, organizedBy, ts.passages, t.sectionstate, isPermission]
   );
   const [filter, setFilter] = useState(false);
-  const [assignSectionVisible, setAssignSectionVisible] = useState(false);
-  const getPassageState = usePassageState();
+  const [assignSectionVisible, setAssignSectionVisible] = useState<string>();
   const columnWidths = useMemo(
     () => [
       { columnName: 'name', width: 300 },
-      { columnName: 'state', width: 150 },
       { columnName: 'passages', width: flat ? 1 : 100 },
-      { columnName: 'transcriber', width: 200 },
-      { columnName: 'editor', width: 200 },
+      { columnName: 'scheme', width: 200 },
     ],
     [flat]
   );
   const { userIsAdmin } = useRole();
+  const orgSchemes = useMemo(() => {
+    return schemes?.filter((s) => related(s, 'organization') === org);
+  }, [schemes, org]);
+
+  const handleView = (schemeId: string) => () => {
+    setAssignMenu(undefined);
+    setAssignSectionVisible(schemeId);
+    setReadOnly(true);
+  };
+
+  const getSchemeName = (section: Section) => {
+    const schemeId = related(section, 'organizationScheme');
+    const scheme = schemes.find((s) => s.id === schemeId);
+    return (
+      <Button onClick={handleView(schemeId)}>
+        {scheme?.attributes?.name ?? ''}
+      </Button>
+    );
+  };
 
   const getAssignments = () => {
     let sectionRow: IRow;
@@ -149,8 +175,7 @@ export function AssignmentTable(props: IProps) {
         (s) =>
           related(s, 'plan') === plan &&
           s.attributes &&
-          positiveWholeOnly(s.attributes.sequencenum) ===
-            s.attributes.sequencenum.toString()
+          s.attributes.sequencenum > 0
       )
       .sort(sectionCompare);
 
@@ -158,9 +183,7 @@ export function AssignmentTable(props: IProps) {
       sectionRow = {
         id: section.id as string,
         name: sectionDescription(section, sectionMap),
-        state: '',
-        editor: sectionEditorName(section, users),
-        transcriber: sectionTranscriberName(section, users),
+        scheme: getSchemeName(section),
         passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
         parentId: '',
         sort: (section.attributes?.sequencenum || 0).toFixed(2).toString(),
@@ -182,9 +205,7 @@ export function AssignmentTable(props: IProps) {
               sr={sr}
             />
           ),
-          state: activityState.getString(getPassageState(passage)),
-          editor: '',
-          transcriber: '',
+          scheme: '',
           passages: '',
           parentId: section.id,
         } as IRow);
@@ -193,13 +214,28 @@ export function AssignmentTable(props: IProps) {
     return rowData as Array<IRow>;
   };
 
-  const handleAssignSection = (status: boolean) => () => {
+  const handleMenu: MouseEventHandler<HTMLButtonElement> = (e) => {
     if (check.length === 0) {
       showMessage(t.selectRowsToAssign);
     } else {
-      setAssignSectionVisible(status);
+      setAssignMenu(e.currentTarget);
     }
   };
+
+  const handleClose = () => {
+    setAssignMenu(undefined);
+  };
+
+  const handleAssignSection = (schemeId: string) => () => {
+    if (check.length === 0) {
+      showMessage(t.selectRowsToAssign);
+    } else {
+      setAssignMenu(undefined);
+      setAssignSectionVisible(schemeId);
+      setReadOnly(false);
+    }
+  };
+
   const handleRemoveAssignments = () => {
     if (check.length === 0) {
       showMessage(t.selectRowsToRemove);
@@ -207,7 +243,8 @@ export function AssignmentTable(props: IProps) {
       let work = false;
       check.forEach((i) => {
         const row = data[i];
-        if (row.editor !== '' || row.transcriber !== '') work = true;
+        // since scheme is a button, we need to check if it has children
+        if (Boolean((row.scheme as any)?.props?.children)) work = true;
       });
       if (!work) {
         showMessage(t.selectRowsToRemove);
@@ -228,6 +265,13 @@ export function AssignmentTable(props: IProps) {
         ''
       ),
       ...ReplaceRelatedRecord(t, s as RecordIdentity, 'editor', 'user', ''),
+      ...ReplaceRelatedRecord(
+        t,
+        s as RecordIdentity,
+        'organizationScheme',
+        'user',
+        ''
+      ),
       ...UpdateLastModifiedBy(
         t,
         { type: 'plan', id: related(s, 'plan') },
@@ -236,19 +280,40 @@ export function AssignmentTable(props: IProps) {
     ]);
   };
 
+  const hasAssignmentChange = (schemeId: string | undefined) => {
+    if (schemeId === undefined) return false;
+    const value = selectedSections.some(
+      (s) => related(s, 'organizationScheme') !== schemeId
+    );
+    return value;
+  };
+
   const handleRemoveAssignmentsConfirmed = async () => {
     setConfirmAction('');
     for (let i = 0; i < selectedSections.length; i += 1)
       await RemoveOneAssignment(selectedSections[i]);
+    setCheck([]);
+    setSelectedSections([]);
     setRefresh(refresh + 1);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
+
+  const handleCloseAssignSection = (cancel?: boolean) => {
+    setAssignSectionVisible(undefined);
+    if (!cancel) {
+      setCheck([]);
+      setSelectedSections([]);
+    }
+  };
 
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
   };
 
   const handleFilter = () => setFilter(!filter);
+
+  const sortSchemes = (a: OrganizationSchemeD, b: OrganizationSchemeD) =>
+    a.attributes?.name.localeCompare(b.attributes?.name);
 
   useEffect(() => {
     setData(getAssignments());
@@ -266,7 +331,7 @@ export function AssignmentTable(props: IProps) {
   ]);
 
   useEffect(() => {
-    let selected = Array<Section>();
+    let selected = Array<SectionD>();
     let one: any;
     check.forEach((c) => {
       one = sections.find(function (s) {
@@ -290,19 +355,18 @@ export function AssignmentTable(props: IProps) {
                   id="assignAdd"
                   key="assign"
                   aria-label={t.assignSec}
-                  onClick={handleAssignSection(true)}
-                  title={t.assignSec.replace('{0}', organizedByPlural)}
+                  onClick={handleMenu}
                 >
-                  {t.assignSec.replace('{0}', organizedByPlural)}
+                  {isPermission ? t.assignSec : t.assignSec2}
+                  <DropDownIcon sx={iconMargin} />
                 </AltButton>
                 <AltButton
                   id="assignRem"
                   key="remove"
                   aria-label={t.removeSec}
                   onClick={handleRemoveAssignments}
-                  title={t.removeSec}
                 >
-                  {t.removeSec}
+                  {isPermission ? t.removeSec : t.removeSec2}
                 </AltButton>
               </>
             )}
@@ -330,16 +394,45 @@ export function AssignmentTable(props: IProps) {
             showfilters={filter}
             showgroups={filter}
             checks={check}
-            select={handleCheck}
+            select={userIsAdmin ? handleCheck : undefined}
             canSelectRow={(row) => row?.parentId === ''}
           />
         </PaddedBox>
       </div>
+      <Menu
+        id="assign-menu"
+        anchorEl={assignMenu}
+        open={Boolean(assignMenu)}
+        onClose={handleClose}
+      >
+        {orgSchemes
+          .filter(
+            (s) =>
+              related(s, 'organization') === org &&
+              Boolean(s?.attributes?.name?.trim())
+          )
+          .sort(sortSchemes)
+          .map((scheme) => (
+            <MenuItem
+              key={scheme.id}
+              onClick={handleAssignSection(scheme.id)}
+              id={'assign-' + scheme.id}
+            >
+              {scheme.attributes?.name}
+            </MenuItem>
+          ))}
+        <MenuItem id="add-assign" onClick={handleAssignSection('')}>
+          {isPermission ? t.addScheme : t.addScheme2}
+        </MenuItem>
+      </Menu>
       <AssignSection
         sections={selectedSections}
-        visible={assignSectionVisible}
-        closeMethod={handleAssignSection(false)}
+        scheme={assignSectionVisible}
+        visible={assignSectionVisible !== undefined}
+        closeMethod={handleCloseAssignSection}
         refresh={() => setRefresh(refresh + 1)}
+        readOnly={readOnly}
+        inChange={hasAssignmentChange(assignSectionVisible)}
       />
       {confirmAction !== '' ? (
         <Confirm

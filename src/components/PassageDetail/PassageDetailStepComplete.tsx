@@ -10,6 +10,7 @@ import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 export const PassageDetailStepComplete = () => {
   const {
@@ -23,6 +24,7 @@ export const PassageDetailStepComplete = () => {
     section,
     passage,
   } = usePassageDetailContext();
+  const { canDoSectionStep, canAlwaysDoStep } = useStepPermissions();
   const { pathname } = useLocation();
   const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
@@ -34,6 +36,8 @@ export const PassageDetailStepComplete = () => {
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   }, setCurrentStep);
+
+  const hasPermission = canDoSectionStep(currentstep, section);
 
   const complete = useMemo(
     () => stepComplete(currentstep),
@@ -74,7 +78,7 @@ export const PassageDetailStepComplete = () => {
         sx={{ color: 'primary.light' }}
         title={t.title}
         onClick={handleToggleComplete}
-        disabled={view !== ''}
+        disabled={!hasPermission || view !== ''}
       >
         {complete ? (
           <CompleteIcon id="step-yes" />
@@ -87,7 +91,7 @@ export const PassageDetailStepComplete = () => {
         sx={{ color: 'primary.light' }}
         title={t.setNext}
         onClick={handleSetCompleteTo}
-        disabled={view !== ''}
+        disabled={!canAlwaysDoStep() || view !== ''}
       >
         <ChecklistIcon id="step-next" />
       </IconButton>

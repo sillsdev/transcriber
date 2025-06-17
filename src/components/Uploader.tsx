@@ -26,6 +26,7 @@ import path from 'path-browserify';
 import { RecordKeyMap } from '@orbit/records';
 import { AlertSeverity } from '../hoc/SnackBar';
 import { getContentType } from '../utils/contentType';
+import { OrbitNetworkErrorRetries } from '../api-variable';
 
 interface IProps {
   noBusy?: boolean;
@@ -95,6 +96,7 @@ export const Uploader = (props: IProps) => {
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
+  const [, setOrbitRetries] = useGlobal('orbitRetries'); //verified this is not used in a function 2/18/25
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
@@ -106,6 +108,7 @@ export const Uploader = (props: IProps) => {
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate();
   const [, setComplete] = useGlobal('progress');
+  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
   const [errMsgs, setErrMsgs] = useState<string[]>([]);
   const { localizedArtifactTypeFromId } = useArtifactType();
   const getGlobal = useGetGlobal();
@@ -135,6 +138,7 @@ export const Uploader = (props: IProps) => {
       setComplete(0);
       setBusy(false);
       cancelled.current = successCount.current <= 0;
+      setUploadSuccess(!cancelled.current);
       finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
@@ -161,6 +165,7 @@ export const Uploader = (props: IProps) => {
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
+    else setOrbitRetries(OrbitNetworkErrorRetries - 1); //notify of possible network issue
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
@@ -245,7 +250,7 @@ export const Uploader = (props: IProps) => {
         ? ts.mediaAttached
         : localizedArtifactTypeFromId(artifactState?.id), //put psc message here
     } as any;
-
+    setUploadSuccess(undefined);
     nextUpload({
       record: mediaFile,
       files: uploadList,
@@ -311,6 +316,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
+    setUploadSuccess(false);
     restoreScroll();
   };
 
@@ -361,6 +367,10 @@ export const Uploader = (props: IProps) => {
     } else if (plan !== '') planIdRef.current = plan;
   }, [plan, passageId, memory]);
 
+  useEffect(() => {
+    if (isOpen) setUploadSuccess(undefined);
+  }, [isOpen]);
+
   return (
     <>
       {recordAudio && ready && !importList && (
@@ -369,6 +379,7 @@ export const Uploader = (props: IProps) => {
           onVisible={onOpen}
           mediaId={mediaId ?? ''}
           uploadMethod={uploadMedia}
+          uploadSuccess={uploadSuccess}
           onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}

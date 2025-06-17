@@ -15,8 +15,11 @@ import {
 } from '@mui/material';
 import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
+import StoryIcon from '@mui/icons-material/RecordVoiceOver';
 import { BsPencilSquare } from 'react-icons/bs';
 import ShareIcon from '@mui/icons-material/OfflineShare';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import moment from 'moment';
 import {
   DialogMode,
@@ -60,6 +63,7 @@ import {
 } from '../../crud/useProjectDefaults';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { UpdateRecord } from '../../model/baseModel';
+import { useProjectPermissions } from '../../utils/useProjectPermissions';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,6 +72,9 @@ const ProjectCardRoot = styled('div')(({ theme }) => ({
   },
   '& .MuiTypography-root': {
     cursor: 'default ',
+  },
+  '& .MuiCardContent-root': {
+    maxWidth: '243px',
   },
   cursor: 'pointer',
 }));
@@ -161,6 +168,11 @@ export const ProjectCard = (props: IProps) => {
     loadProject(project);
     leaveHome();
   };
+
+  const { canPublish, canEditSheet } = useProjectPermissions(
+    related(project, 'organization'),
+    related(project, 'project')
+  );
 
   useEffect(() => {
     if (open !== '') doOpen(open);
@@ -276,6 +288,10 @@ export const ProjectCard = (props: IProps) => {
       organizedBy,
       book,
       story,
+      sheetGroup,
+      sheetUser,
+      publishGroup,
+      publishUser,
     } = values;
     var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
     var defaultParams = setParam(
@@ -302,6 +318,10 @@ export const ProjectCard = (props: IProps) => {
         flat: values.flat,
         organizedBy,
         defaultParams,
+        sheetUser,
+        sheetGroup,
+        publishUser,
+        publishGroup,
       },
     });
     if (oldBook !== book) UpdatePublishingBookRows(oldBook, book);
@@ -332,6 +352,12 @@ export const ProjectCard = (props: IProps) => {
     setDeleteItem(undefined);
   };
 
+  const isStory = useMemo(
+    () => getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [project]
+  );
+
   const projectValues = (project: VProjectD) => {
     const attr = project.attributes;
     const value: IProjectDialog = {
@@ -339,8 +365,7 @@ export const ProjectCard = (props: IProps) => {
       description: attr.description || '',
       type: attr?.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
-      story:
-        getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
+      story: isStory,
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -353,6 +378,10 @@ export const ProjectCard = (props: IProps) => {
       organizedBy: attr.organizedBy || vProjectStrings.sections,
       isPersonal: personalProjects.includes(project),
       vProjectStrings: vProjectStrings,
+      sheetUser: related(project, 'editsheetuser'),
+      sheetGroup: related(project, 'editsheetgroup'),
+      publishUser: related(project, 'publishuser'),
+      publishGroup: related(project, 'publishgroup'),
     };
     return value;
   };
@@ -373,11 +402,17 @@ export const ProjectCard = (props: IProps) => {
             <Typography
               variant="h6"
               component="h2"
-              sx={{ display: 'flex', alignItems: 'center' }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
             >
               {(project?.attributes?.type || '').toLowerCase() ===
               'scripture' ? (
                 <ScriptureIcon />
+              ) : isStory ? (
+                <StoryIcon />
               ) : (
                 <BsPencilSquare />
               )}
@@ -391,6 +426,7 @@ export const ProjectCard = (props: IProps) => {
               inProject={false}
               isAdmin={isAdmin}
               isPersonal={personalProjects.includes(project)}
+              canPublish={canPublish}
             />
           </FirstLineDiv>
           <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>
@@ -420,6 +456,16 @@ export const ProjectCard = (props: IProps) => {
                     label={localizeProjectTag(t, vProjectStrings)}
                   />
                 ))}
+              {canEditSheet && !isAdmin && (
+                <EditNoteIcon
+                  sx={{ display: 'flex', color: 'primary.contrastText' }}
+                />
+              )}
+              {canPublish && !isAdmin && (
+                <PublishedWithChangesIcon
+                  sx={{ display: 'flex', color: 'primary.contrastText' }}
+                />
+              )}
             </>
           </CardActions>
         )}
@@ -436,7 +482,11 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab />
+        <IntegrationTab
+          isPermitted={true}
+          projectId={related(project, 'project')}
+          planId={project.id}
+        />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}

@@ -1,4 +1,5 @@
 import Memory from '@orbit/memory';
+import { InitializedRecord } from '@orbit/records';
 
 export const findRecord = (memory: Memory, table: string, id: string) => {
   try {
@@ -8,7 +9,7 @@ export const findRecord = (memory: Memory, table: string, id: string) => {
         type: table,
         id: id,
       })
-    );
+    ) as InitializedRecord;
   } catch {
     return undefined;
   }

@@ -28,6 +28,7 @@ export const ResourceDescription = (props: IResourceState) => {
       value={description}
       onChange={setState ? handleChangeDescription : undefined}
       fullWidth
+      disabled={!setState}
     />
   );
 };

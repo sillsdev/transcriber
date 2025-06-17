@@ -5,6 +5,7 @@ import {
   IViewModeStrings,
   IwsKind,
   OptionType,
+  OrganizationD,
 } from '../../model';
 import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
@@ -14,10 +15,12 @@ import {
   useRole,
   ArtifactTypeSlug,
   useArtifactType,
+  findRecord,
+  isPersonalTeam,
 } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
-import { Avatar, Badge } from '@mui/material';
+import { Avatar, Badge, Typography } from '@mui/material';
 import PlanPublishActions from './PlanPublishActions';
 import PlanAudioActions from './PlanAudioActions';
 import {
@@ -25,7 +28,7 @@ import {
   isPublishingTitle,
   passageTypeFromRef,
 } from '../../control/RefRender';
-import { memo, useContext, useCallback, useMemo, ReactElement } from 'react';
+import { useContext, useCallback, useMemo, ReactElement } from 'react';
 import TaskAvatar from '../TaskAvatar';
 import { PassageTypeEnum } from '../../model/passageType';
 import PlanActionMenu from './PlanActionMenu';
@@ -41,6 +44,8 @@ import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
 import { PublishButton } from './PublishButton';
 import { NoteIcon } from '../../control/PlanIcons';
+import { OrganizationSchemeD } from '../../model/organizationScheme';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -150,16 +155,27 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionArr, setSectionArr, shared } = ctx.state;
+  const { canEditSheet, sectionArr, setSectionArr, shared, canPublish } =
+    ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
+  const [memory] = useGlobal('memory');
   const [planId] = useGlobal('plan'); //will be constant here
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { userIsAdmin } = useRole();
+  const [team] = useGlobal('organization');
+  const teams = useOrbitData<OrganizationD[]>('organization');
+
+  const showAssign = useMemo(
+    () => !isPersonalTeam(team, teams) && !offlineOnly,
+    [teams, team, offlineOnly]
+  );
+
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
   const showIcon = useShowIcon({
-    readonly,
+    canEditSheet,
+    canPublish,
     rowInfo,
     inlinePassages,
     hidePublishing: !publishingOn || hidePublishing,
@@ -169,6 +185,7 @@ export const usePlanSheetFill = ({
     isPassageType,
     isSectionType,
     isMovement,
+    isChapter,
     isBook,
     isAltBook,
     isBeta,
@@ -190,7 +207,7 @@ export const usePlanSheetFill = ({
 
   const bookEditor: ICellEditor = useCallback(
     (props: any) => {
-      if (readonly) return <></>;
+      if (!canEditSheet) return <></>;
       return (
         <BookSelect
           id="book"
@@ -202,7 +219,7 @@ export const usePlanSheetFill = ({
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookSuggestions, readonly, t.bookSelect]
+    [bookSuggestions, canEditSheet, t.bookSelect]
   );
 
   const ActivateCell: ICellEditor = (props: any) => {
@@ -212,32 +229,29 @@ export const usePlanSheetFill = ({
     return <></>;
   };
 
-  const MemoizedTaskAvatar = memo(TaskAvatar);
-
   const titleRow = (columns: ICell[]) => {
     const titles = [
       {
         value: t.step,
         readOnly: true,
       } as ICell,
-      {
+    ];
+    if (showAssign)
+      titles.push({
         value: t.assigned,
         readOnly: true,
-      } as ICell,
-      {
-        value:
-          shared || (publishingOn && !hidePublishing)
-            ? t.published
-            : t.versions,
-        readOnly: true,
-        width: 20,
-      } as ICell,
-      {
-        value: t.action,
-        readOnly: true,
-        width: 50,
-      } as ICell,
-    ];
+      } as ICell);
+    titles.push({
+      value:
+        shared || (publishingOn && !hidePublishing) ? t.published : t.versions,
+      readOnly: true,
+      width: 20,
+    } as ICell);
+    titles.push({
+      value: t.action,
+      readOnly: true,
+      width: 50,
+    } as ICell);
     if (!hidePublishing && publishingOn)
       titles.push({
         value: localizedArtifactType(ArtifactTypeSlug.Graphic),
@@ -288,12 +302,28 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
+  const schemeName = (schemeId: string) => {
+    const schemeRec = findRecord(memory, 'organizationscheme', schemeId) as
+      | OrganizationSchemeD
+      | undefined;
+    return schemeRec?.attributes?.name;
+  };
+
   const assignmentCell = (rowIndex: number, calcClassName: string) =>
     ({
-      value: (
-        <MemoizedTaskAvatar
-          assigned={rowInfo[rowIndex].transcriber?.id || ''}
-        />
+      value: rowInfo[rowIndex].assign ? (
+        <TaskAvatar assigned={rowInfo[rowIndex].assign || null} />
+      ) : (
+        <Typography
+          sx={{
+            maxWidth: '80px',
+            whiteSpace: 'break-spaces',
+            textAlign: 'center',
+            fontSize: 'small',
+          }}
+        >
+          {schemeName(rowInfo[rowIndex].scheme?.id || '')}
+        </Typography>
       ),
       readOnly: true,
       className: calcClassName,
@@ -323,6 +353,7 @@ export const usePlanSheetFill = ({
           rowIndex={rowIndex}
           organizedBy={organizedBy}
           onAction={onAction}
+          canPublish={canPublish}
         />
       );
     }
@@ -347,6 +378,7 @@ export const usePlanSheetFill = ({
     mediaPlaying: boolean;
     canPlay: boolean;
     canEdit: boolean;
+    readonly: boolean;
   }
 
   const actionValue = ({
@@ -356,6 +388,7 @@ export const usePlanSheetFill = ({
     mediaPlaying,
     canPlay,
     canEdit,
+    readonly,
   }: ActionValueProps) => {
     if (!passage) return <></>;
     return (
@@ -368,9 +401,10 @@ export const usePlanSheetFill = ({
         canEdit={canEdit}
         onPlayStatus={onPlayStatus}
         onEdit={
-          rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE ||
-          (shared &&
-            rowInfo[rowIndex].passageType !== PassageTypeEnum.CHAPTERNUMBER)
+          !readonly &&
+          (rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE ||
+            (shared &&
+              rowInfo[rowIndex].passageType !== PassageTypeEnum.CHAPTERNUMBER))
             ? onEdit
             : undefined
         }
@@ -412,6 +446,7 @@ export const usePlanSheetFill = ({
     mediaPlaying,
     canEdit,
     canPlay,
+    readonly,
   }: ActionCellProps) =>
     ({
       value: actionValue({
@@ -421,6 +456,7 @@ export const usePlanSheetFill = ({
         mediaPlaying,
         canEdit,
         canPlay,
+        readonly,
       }),
       readOnly: true,
       className: calcClassName,
@@ -430,7 +466,7 @@ export const usePlanSheetFill = ({
     e: string | number,
     rowIndex: number,
     cellIndex: number,
-    anyRecording: boolean,
+    readonly: boolean,
     isNote: boolean = false
   ) => {
     const handleTextChange = (value: string) => {
@@ -456,6 +492,7 @@ export const usePlanSheetFill = ({
         </>
       );
     };
+
     return (
       <>
         {isNote && noteTitle(e as string)}
@@ -468,7 +505,8 @@ export const usePlanSheetFill = ({
               ''
             }
             ws={rowInfo[rowIndex]}
-            anyRecording={anyRecording}
+            readonly={readonly}
+            showpublish={!hidePublishing && publishingOn}
             onRecording={onRecording}
             onTextChange={handleTextChange}
             onMediaIdChange={handleMediaIdChange}
@@ -546,8 +584,8 @@ export const usePlanSheetFill = ({
     refCol: number;
     calcClassName: string;
     rowIndex: number;
-    anyRecording: boolean;
     sharedRes: boolean;
+    anyRecording: boolean;
   }
 
   const rowCells =
@@ -557,13 +595,18 @@ export const usePlanSheetFill = ({
       refCol,
       calcClassName,
       rowIndex,
-      anyRecording,
       sharedRes,
+      anyRecording,
     }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
       const descCol = colSlugs.indexOf('comment');
+      const chapter = isChapter(rowIndex);
+      const canEditTitle =
+        !anyRecording &&
+        (canEditSheet || (canPublish && !hidePublishing && publishingOn));
+
       if (cellIndex === SectionSeqCol && section && !hidePublishing) {
         return {
           value: e,
@@ -576,7 +619,7 @@ export const usePlanSheetFill = ({
       if (cellIndex === bookCol && passage)
         return {
           value: e,
-          readOnly: readonly,
+          readOnly: !canEditSheet,
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
@@ -588,7 +631,7 @@ export const usePlanSheetFill = ({
       ) {
         return {
           value: e,
-          component: TitleValue(e, rowIndex, cellIndex, anyRecording),
+          component: TitleValue(e, rowIndex, cellIndex, !canEditTitle),
           forceComponent: true,
           readOnly: true,
           className: calcClassName,
@@ -606,7 +649,7 @@ export const usePlanSheetFill = ({
               rowData[rowIndex][descCol] as string,
               rowIndex,
               descCol,
-              anyRecording
+              !canEditTitle
             ),
             forceComponent: true,
             readOnly: true,
@@ -615,7 +658,7 @@ export const usePlanSheetFill = ({
         } else if (cellIndex === descCol) {
           return {
             value: '',
-            readOnly: readonly,
+            readOnly: !canEditSheet || chapter,
             className: calcClassName,
           };
         }
@@ -632,7 +675,7 @@ export const usePlanSheetFill = ({
             rowInfo[rowIndex].sharedResource?.attributes.title || '',
             rowIndex,
             cellIndex,
-            anyRecording,
+            !canEditTitle,
             true
           ),
           forceComponent: true,
@@ -643,7 +686,7 @@ export const usePlanSheetFill = ({
 
       if (cellIndex === refCol) {
         if (
-          readonly ||
+          !canEditSheet ||
           !passage ||
           (!inlinePassages &&
             passageTypeFromRef(e as string, inlinePassages) !==
@@ -678,15 +721,17 @@ export const usePlanSheetFill = ({
       return {
         value: e,
         readOnly:
-          readonly ||
+          !canEditSheet ||
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
           cellIndex === passageSeqCol ||
           (sharedRes && getGlobal('offline')) ||
-          passage
+          (inlinePassages
             ? false
+            : passage
+            ? cellIndex <= 1
             : section
             ? cellIndex > 1
-            : cellIndex <= 1,
+            : cellIndex <= 1),
         className:
           (cellIndex === SectionSeqCol || cellIndex === passageSeqCol
             ? 'num '
@@ -742,7 +787,7 @@ export const usePlanSheetFill = ({
               passageSequenceNumber={positiveWholeOnly(
                 row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
               )}
-              readonly={readonly || check.length > 0}
+              readonly={check.length > 0}
               onDelete={onDelete}
               onPlayStatus={onPlayStatus}
               onAudacity={onAudacity}
@@ -750,12 +795,14 @@ export const usePlanSheetFill = ({
               onUpload={onUpload}
               onAssign={onAssign}
               onFirstMovement={onFirstMovement}
-              canAssign={userIsAdmin && !movement && !book}
-              canDelete={userIsAdmin && (!offline || offlineOnly)}
-              active={active - 1 === rowIndex}
-              onDisableFilter={
-                !readonly && filtered ? disableFilter : undefined
+              canAssign={
+                showAssign && (userIsAdmin || canEditSheet) && !book && !offline
               }
+              canDelete={
+                (userIsAdmin || canEditSheet) && (!offline || offlineOnly)
+              }
+              active={active - 1 === rowIndex}
+              onDisableFilter={filtered ? disableFilter : undefined}
               showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
               onAction={onAction}
             />
@@ -787,9 +834,10 @@ export const usePlanSheetFill = ({
       const sharedRes =
         passage &&
         Boolean(rowInfo[rowIndex].sharedResource) &&
+        Boolean(rowInfo[rowIndex].passage) &&
         related(rowInfo[rowIndex].sharedResource, 'passage') !==
           rowInfo[rowIndex].passage?.id;
-
+      const sharedOffline = sharedRes && getGlobal('offline');
       const calcClassName =
         iscurrent +
         (section
@@ -797,7 +845,6 @@ export const usePlanSheetFill = ({
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
           : 'pass');
-      const readonly = anyRecording || (sharedRes && getGlobal('offline'));
       const sheetRow = [
         stepCell({
           passage,
@@ -805,16 +852,20 @@ export const usePlanSheetFill = ({
           refCol,
           rowIndex,
           calcClassName,
-          readonly: readonly,
+          readonly: sharedOffline || anyRecording,
         }),
-        assignmentCell(rowIndex, calcClassName),
+      ];
+      if (showAssign) sheetRow.push(assignmentCell(rowIndex, calcClassName));
+      sheetRow.push(
         publishedCell({
           passage,
           rowIndex,
           calcClassName:
             calcClassName + (beta && !hidePublishing ? ' beta' : ''),
-          canEdit: !readonly,
-        }),
+          canEdit: canPublish,
+        })
+      );
+      sheetRow.push(
         actionCell({
           passage,
           rowIndex,
@@ -824,11 +875,13 @@ export const usePlanSheetFill = ({
           mediaPlaying,
           canPlay:
             !anyRecording && (rowInfo[rowIndex].mediaId?.id || '') !== '',
-          canEdit: !readonly,
-        }),
-      ];
+          canEdit: !sharedOffline && !anyRecording,
+          readonly:
+            !canEditSheet && (!canPublish || hidePublishing || !publishingOn),
+        })
+      );
       if (!hidePublishing && publishingOn)
-        sheetRow.push(graphicCell(rowIndex, calcClassName, readonly));
+        sheetRow.push(graphicCell(rowIndex, calcClassName, !canPublish));
       row
         .slice(0, 6) // quits when it runs out of columns
         .map(
@@ -838,8 +891,8 @@ export const usePlanSheetFill = ({
             refCol,
             calcClassName,
             rowIndex,
-            anyRecording,
             sharedRes,
+            anyRecording,
           })
         )
         .forEach((c) => {
@@ -857,7 +910,8 @@ export const usePlanSheetFill = ({
           book,
           active,
           filtered,
-          readonly: readonly,
+          readonly:
+            sharedOffline || anyRecording || (!canEditSheet && !canPublish),
         })
       );
       return sheetRow;

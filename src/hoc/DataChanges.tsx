@@ -5,6 +5,7 @@ import {
   useContext,
   useMemo,
   PropsWithChildren,
+  useCallback,
 } from 'react';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
@@ -137,6 +138,7 @@ export const processDataChanges = async (pdc: {
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
+    isUser: boolean,
     fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
     cb?: () => void
   ) => {
@@ -197,7 +199,8 @@ export const processDataChanges = async (pdc: {
       const ops = myOps.filter(
         (o) =>
           o.op !== 'updateRecord' ||
-          Boolean((o as UpdateRecordOperation).record.relationships)
+          Boolean((o as UpdateRecordOperation).record.relationships) ||
+          ((o as UpdateRecordOperation).record.type === 'user' && isUser) //user doesn't have any
       );
       await backup.sync((t) => ops);
       await memory.sync((t) => ops);
@@ -206,10 +209,13 @@ export const processDataChanges = async (pdc: {
       for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
-          if (!upRec.record.relationships)
+          if (
+            !upRec.record.relationships &&
+            !(isUser && upRec.record.type !== 'user')
+          )
             //this is just an included record and wasn't changed
             continue;
-          switch (upRec.record?.type) {
+          switch (upRec.record.type) {
             case 'section':
               if (upRec.record.relationships?.transcriber === undefined)
                 resetRelated(localOps, tb, 'transcriber', upRec.record);
@@ -316,7 +322,12 @@ export const processDataChanges = async (pdc: {
           { fullResponse: true }
         );
         if (results?.transforms)
-          await processTableChanges(results.transforms, fetchUrl, cb);
+          await processTableChanges(
+            results.transforms,
+            table.type === 'user',
+            fetchUrl,
+            cb
+          );
       }
     }
     setDataChangeCount(deletes.length);
@@ -549,6 +560,7 @@ export function DataChanges(props: PropsWithChildren) {
           : defaultDataDelay
         : null;
     setDataDelay(newDelay);
+
     if (!remote) setBusy(false);
     // the busy delay is increased by 10 times if we aren't connected yet
     // but should be because we have authenticated.
@@ -557,20 +569,24 @@ export function DataChanges(props: PropsWithChildren) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remote, ctx, loadComplete, connected, firstRun, userDataDelay]);
-  const updateBusy = () => {
+
+  const updateBusy = useCallback(() => {
     const checkBusy =
-      user === '' || (remote && remote.requestQueue.length !== 0);
+      user === '' ||
+      (remote && remote.requestQueue.length !== 0) ||
+      getGlobal('orbitRetries') < OrbitNetworkErrorRetries;
     //we know we're offline, or we've retried something so maybe we're offline
-    if (
-      !getGlobal('connected') ||
-      (checkBusy && getGlobal('orbitRetries') < OrbitNetworkErrorRetries)
-    ) {
+    if (!getGlobal('connected') || checkBusy) {
       checkOnline((result) => {
-        if ((checkBusy && result) !== getGlobal('remoteBusy'))
+        if ((checkBusy && result) !== getGlobal('remoteBusy')) {
           setBusy(checkBusy && result);
+        }
       });
-    } else if (checkBusy !== getGlobal('remoteBusy')) setBusy(checkBusy);
-  };
+    } else if (checkBusy !== getGlobal('remoteBusy')) {
+      setBusy(checkBusy);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remote, user]);
 
   const updateData = async () => {
     if (

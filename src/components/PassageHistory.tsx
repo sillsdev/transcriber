@@ -74,13 +74,14 @@ export function PassageHistory(props: IProps) {
       editable: boolean
     ) => {
       const userFromId = (psc: PassageStateChange): UserD => {
-        var id = related(psc, 'lastModifiedByUser');
+        let id = related(psc, 'lastModifiedByUser');
         if (!id && psc.attributes?.lastModifiedBy) {
-          id = remoteIdGuid(
-            'user',
-            psc.attributes.lastModifiedBy.toString(),
-            memory?.keyMap as RecordKeyMap
-          );
+          id =
+            remoteIdGuid(
+              'user',
+              psc.attributes.lastModifiedBy.toString(),
+              memory?.keyMap as RecordKeyMap
+            ) ?? '';
         }
         return getUserRec(id);
       };

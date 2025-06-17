@@ -80,13 +80,17 @@ export function ProvideRights(props: IProps) {
   const [state, setState] = useState<IVoicePerm>({});
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
+  const canSaveRef = useRef(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
   const [importList, setImportList] = useState<File[]>();
-  const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadVisible, setUploadVisiblex] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
+  const uploadVisibleRef = useRef(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [statement, setStatement] = useState<string>('');
+  const [saving, setSaving] = useState(false);
   const {
     toolChanged,
     toolsChanged,
@@ -107,6 +111,14 @@ export function ProvideRights(props: IProps) {
 
   const toolId = 'RecordArtifactTool';
 
+  const setUploadVisible = (value: boolean) => {
+    setUploadVisiblex(value);
+    uploadVisibleRef.current = value;
+    if (value) {
+      cancelled.current = false;
+      setUploadSuccess(undefined);
+    } else setUploadSuccess(cancelled.current);
+  };
   const teamRec = React.useMemo(
     () =>
       findRecord(
@@ -227,6 +239,7 @@ export function ProvideRights(props: IProps) {
       setUploadVisible(false);
       setResetMedia(true);
     }
+    setSaving(false);
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -247,7 +260,8 @@ export function ProvideRights(props: IProps) {
   };
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSave) {
+    if (valid !== canSaveRef.current) {
+      canSaveRef.current = valid;
       setCanSave(valid);
     }
   };
@@ -276,12 +290,14 @@ export function ProvideRights(props: IProps) {
           voice={speaker}
           team={teamRec}
           state={state}
+          saving={saving}
           setState={setState}
           setStatement={handleStatement}
         />
         <MediaRecord
           toolId={toolId}
           uploadMethod={uploadMedia}
+          uploadSuccess={uploadSuccess}
           defaultFilename={defaultFilename}
           allowWave={false}
           showFilename={false}
@@ -291,6 +307,7 @@ export function ProvideRights(props: IProps) {
           doReset={resetMedia}
           setDoReset={setResetMedia}
           size={200}
+          onSaving={() => setSaving(true)}
         />
         <Box sx={rowProp}>
           {!recordingRequired && (

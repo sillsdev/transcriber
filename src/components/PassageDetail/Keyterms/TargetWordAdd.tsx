@@ -56,11 +56,12 @@ interface IProps {
   fileName: string;
   cancelOnlyIfChanged?: boolean;
   uploadMethod: (files: File[]) => Promise<void>;
+  uploadSuccess: boolean | undefined;
   row: IKeyTermRow;
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
-  onTextChange: (txt: string, row: IKeyTermRow) => void;
+  onTextChange?: (txt: string, row: IKeyTermRow) => void;
   onSetRecordRow: (row: IKeyTermRow | undefined) => void;
 }
 
@@ -71,6 +72,7 @@ export default function TargetWordAdd(props: IProps) {
     word,
     fileName,
     uploadMethod,
+    uploadSuccess,
     onOk,
     onCancel,
     setCanSaveRecording,
@@ -96,6 +98,7 @@ export default function TargetWordAdd(props: IProps) {
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
   // const [myChanged, setMyChanged] = useState(false);
+
   const {
     toolsChanged,
     toolChanged,
@@ -128,7 +131,7 @@ export default function TargetWordAdd(props: IProps) {
       return;
     }
     setCurText(e.target.value);
-    onTextChange(e.target.value, row);
+    onTextChange && onTextChange(e.target.value, row);
     toolChanged(toolId, true);
   };
 
@@ -155,6 +158,14 @@ export default function TargetWordAdd(props: IProps) {
     setStatusText(t.saving);
     if (doRecordRef.current) setCommentRecording(false);
   };
+
+  useEffect(() => {
+    //ignore undefined - true will call reset
+    if (uploadSuccess === false) {
+      setStatusText('');
+      saving.current = false;
+    }
+  }, [uploadSuccess]);
 
   const reset = () => {
     if (doRecordRef.current) setCommentRecording(false);
@@ -224,6 +235,7 @@ export default function TargetWordAdd(props: IProps) {
           id="outlined-adornment-term"
           sx={{ borderRadius: '24px', py: 0, mb: 1 }}
           value={curText}
+          disabled={!onTextChange}
           onChange={handleTextChange}
           size="small"
           multiline
@@ -236,7 +248,7 @@ export default function TargetWordAdd(props: IProps) {
                   aria-label="record target term"
                   onClick={handleRecord}
                   onMouseDown={handleMouseDownSave}
-                  disabled={commentRecording || recording}
+                  disabled={commentRecording || recording || !onTextChange}
                   edge="start"
                 >
                   <MicIcon fontSize="small" />
@@ -287,6 +299,7 @@ export default function TargetWordAdd(props: IProps) {
           toolId={toolId}
           onRecording={onRecording}
           uploadMethod={uploadMethod}
+          uploadSuccess={uploadSuccess}
           defaultFilename={fileName}
           allowWave={false}
           showFilename={false}

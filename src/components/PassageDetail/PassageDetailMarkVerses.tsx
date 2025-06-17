@@ -55,6 +55,7 @@ import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { PassageTypeEnum } from '../../model/passageType';
 import { usePlanType } from '../../crud/usePlanType';
 import { passageTypeFromRef } from '../../control/RefRender';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 const NotTable = 490;
 const verseToolId = 'VerseTool';
@@ -116,6 +117,7 @@ export interface MarkVersesProps {
 export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const {
     mediafileId,
+    section,
     passage,
     currentstep,
     currentSegment,
@@ -139,6 +141,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const dataRef = useRef<ICell[][]>([]);
   const segmentsRef = useRef('{}');
   const passageRefs = useRef<string[]>([]);
+  const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(verseSelector, shallowEqual) as IVerseStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -363,6 +367,10 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const formLim = ({ start, end }: IRegion) => `${d1(start)}-${d1(end)}`;
 
   const handleSegment = (segments: string, init: boolean) => {
+    if (!hasPermission && !init) {
+      toolChanged(verseToolId, false);
+      return;
+    }
     const regions = getSortedRegions(segments);
     let change = numSegments !== regions.length;
     setNumSegments(regions.length);
@@ -534,7 +542,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     }
     checkSavedFn(() => {
       toolChanged(verseToolId, false);
-      handleComplete(true); // cancel advances to next step
+      if (hasPermission) handleComplete(true); // cancel advances to next step
     });
   };
 
@@ -544,6 +552,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   };
 
   const handleNoIssueSave = () => {
+    if (!hasPermission) return handleCancel();
     if (!saveRequested(verseToolId)) {
       startSave(verseToolId);
     }
@@ -571,7 +580,11 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       <StyledPaper style={heightStyle}>
         <StyledTable id="verse-sheet" data-testid="verse-sheet">
           <DataSheet
-            data={data}
+            data={
+              hasPermission
+                ? data
+                : data.map((r) => r.map((c) => ({ ...c, readOnly: true })))
+            }
             valueRenderer={handleValueRenderer}
             onCellsChanged={handleCellsChanged}
             parsePaste={handleParsePaste}
@@ -591,7 +604,10 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           id="create-mark-verse"
           onClick={handleSaveMarkup}
           disabled={
-            numSegments === 0 || savingRef.current || !isChanged(verseToolId)
+            numSegments === 0 ||
+            savingRef.current ||
+            !isChanged(verseToolId) ||
+            !hasPermission
           }
         >
           {t.saveVerseMarkup}

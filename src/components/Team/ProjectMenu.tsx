@@ -39,6 +39,7 @@ interface IProps {
   justFilter?: boolean;
   action?: (what: string) => void;
   stopPlayer?: () => void;
+  canPublish: boolean;
 }
 
 export function ProjectMenu(props: IProps) {

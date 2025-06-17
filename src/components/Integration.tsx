@@ -104,6 +104,9 @@ interface IProps {
     psgCompleted?: any[]
   ) => Promise<void>;
   gotoNextStep?: () => void;
+  isPermitted?: boolean;
+  projectId?: string;
+  planId?: string;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -115,6 +118,9 @@ export function IntegrationPanel(props: IProps) {
     sectionArr,
     setStepComplete,
     gotoNextStep,
+    isPermitted,
+    projectId,
+    planId,
   } = props;
   const t: IIntegrationStrings = useSelector(integrationSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
@@ -237,7 +243,7 @@ export function IntegrationPanel(props: IProps) {
   const [ptPermission, setPtPermission] = useState('None');
   const [myProject, setMyProject] = useState('');
   const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
-  const [project] = useGlobal('project'); //will be constant here
+  const [projectGlobal] = useGlobal('project'); //will be constant here
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
@@ -250,7 +256,7 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
-  const [plan] = useGlobal('plan'); //will be constant here
+  const [planGlobal] = useGlobal('plan'); //will be constant here
 
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
@@ -273,6 +279,15 @@ export function IntegrationPanel(props: IProps) {
   const getGlobal = useGetGlobal();
   const [exportNumbers, setExportNumbers] = useState(
     JSON.parse(getProjectDefault(projDefExportNumbers) ?? false) as boolean
+  );
+
+  const project: string = useMemo(
+    () => projectId || projectGlobal,
+    [projectId, projectGlobal]
+  );
+  const plan: string = useMemo(
+    () => planId || planGlobal,
+    [planId, planGlobal]
   );
 
   const handleExportSectionNumbers = (
@@ -912,7 +927,8 @@ export function IntegrationPanel(props: IProps) {
                       !hasPtProj ||
                       !hasParatext ||
                       !hasPermission ||
-                      !paratext_count
+                      !paratext_count ||
+                      !isPermitted
                     }
                     onClick={handleSync}
                   >
@@ -922,7 +938,9 @@ export function IntegrationPanel(props: IProps) {
                 }
                 label=""
               />
-              <FormHelperText>{t.allCriteria}</FormHelperText>
+              <FormHelperText>
+                {!isPermitted ? t.notPermitted : t.allCriteria}
+              </FormHelperText>
             </FormGroup>
           </FormControl>
         </AccordionDetails>
@@ -1050,7 +1068,8 @@ export function IntegrationPanel(props: IProps) {
                       syncing.current ||
                       !ptPath ||
                       !hasPtProj ||
-                      !paratext_count
+                      !paratext_count ||
+                      !isPermitted
                     }
                     onClick={handleLocalSync}
                   >
@@ -1060,7 +1079,9 @@ export function IntegrationPanel(props: IProps) {
                 }
                 label=""
               />
-              <FormHelperText>{t.allCriteria}</FormHelperText>
+              <FormHelperText>
+                {!isPermitted ? t.notPermitted : t.allCriteria}
+              </FormHelperText>
             </FormGroup>
           </FormControl>
         </AccordionDetails>

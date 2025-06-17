@@ -56,6 +56,7 @@ interface IProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
+  noClose?: boolean;
   onTogglePlay?: () => void;
   controls?: boolean;
   limits: IMediaLimits;
@@ -69,6 +70,7 @@ export function LimitedMediaPlayer(props: IProps) {
     requestPlay,
     onLoaded,
     onEnded,
+    noClose,
     onTogglePlay,
     controls,
     limits,
@@ -301,7 +303,7 @@ export function LimitedMediaPlayer(props: IProps) {
                   </IconButton>
                 </StyledTip>
               )}
-              {
+              {!noClose && (
                 <StyledTip title={ts.close}>
                   <IconButton
                     data-testid="close"
@@ -311,7 +313,7 @@ export function LimitedMediaPlayer(props: IProps) {
                     <CloseIcon fontSize="small" />
                   </IconButton>
                 </StyledTip>
-              }
+              )}
             </>
           }
           onDelete={handleSkipNext}

@@ -8,8 +8,8 @@ interface IProps {
   label: string;
   playerOpen?: boolean;
   onPlay?: () => void;
-  onClick: () => void;
-  onDelete: () => void;
+  onClick?: () => void;
+  onDelete?: () => void;
 }
 export const KeyTermChip = ({
   label,

@@ -48,6 +48,7 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
 import ArtifactStatus from '../ArtifactStatus';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 export const btDefaultSegParams = {
   silenceThreshold: 0.004,
@@ -102,7 +103,7 @@ export function PassageDetailItem(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
-  const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadVisible, setUploadVisiblex] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [confirm, setConfirm] = useState('');
   const { userIsAdmin } = useRole();
@@ -127,6 +128,8 @@ export function PassageDetailItem(props: IProps) {
     handleItemTogglePlay,
     handleItemPlayEnd,
     setRecording,
+    currentstep,
+    section,
   } = usePassageDetailContext();
   const { toolChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
@@ -137,10 +140,20 @@ export function PassageDetailItem(props: IProps) {
   const [currentVersion, setCurrentVersion] = useState(1);
   const [segString, setSegString] = useState('{}');
   const [verses, setVerses] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const cancelled = useRef(false);
+  const { canDoSectionStep } = useStepPermissions();
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
+
+  const setUploadVisible = (value: boolean) => {
+    if (value) {
+      setUploadSuccess(undefined);
+      cancelled.current = false;
+    } else setUploadSuccess(!cancelled.current);
+    setUploadVisiblex(value);
+  };
 
   const mediafileId = useMemo(() => {
     return playerMediafile?.id ?? '';
@@ -262,6 +275,11 @@ export function PassageDetailItem(props: IProps) {
     }
   };
 
+  const handleCancel = () => {
+    handleItemPlayEnd();
+    setPlayItem('');
+  };
+
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
   };
@@ -329,6 +347,12 @@ export function PassageDetailItem(props: IProps) {
     if (teamDefault && segments) setOrgDefault(segments, params);
   };
 
+  const editStep = useMemo(
+    () => canDoSectionStep(currentstep, section),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentstep, section]
+  );
+
   return (
     <div>
       <Paper sx={paperProps}>
@@ -357,21 +381,28 @@ export function PassageDetailItem(props: IProps) {
                         allowSegment={segments}
                         allowAutoSegment={segments !== undefined}
                         saveSegments={
-                          segments !== undefined
+                          segments !== undefined && editStep
                             ? SaveSegments.showSaveButton
                             : undefined
                         }
                         defaultSegParams={segParams}
                         suggestedSegments={segString}
                         verses={verses}
-                        canSetDefaultParams={canSetOrgDefault}
-                        onSegmentParamChange={onSegmentParamChange}
+                        canSetDefaultParams={editStep && canSetOrgDefault}
+                        onSegmentParamChange={
+                          editStep ? onSegmentParamChange : undefined
+                        }
                         chooserReduce={chooserSize}
                       />
                     </Pane>
 
                     <Pane>
-                      <Paper sx={paperProps}>
+                      <Paper
+                        sx={{
+                          ...paperProps,
+                          display: editStep ? 'block' : 'none',
+                        }}
+                      >
                         <Box sx={rowProp}>
                           <ArtifactStatus
                             recordType={recordType}
@@ -447,6 +478,7 @@ export function PassageDetailItem(props: IProps) {
                         <MediaRecord
                           toolId={toolId}
                           uploadMethod={uploadMedia}
+                          uploadSuccess={uploadSuccess}
                           defaultFilename={defaultFilename}
                           allowWave={false}
                           showFilename={false}
@@ -458,6 +490,7 @@ export function PassageDetailItem(props: IProps) {
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
                           oneTryOnly={oneTryOnly}
+                          noNewVoice={true}
                         />
                         <Box sx={rowProp}>
                           <Typography variant="caption" sx={statusProps}>
@@ -497,6 +530,7 @@ export function PassageDetailItem(props: IProps) {
                                 srcMediaId={playItem}
                                 requestPlay={itemPlaying}
                                 onEnded={handleItemPlayEnd}
+                                onCancel={handleCancel}
                                 onTogglePlay={handleItemTogglePlay}
                                 controls={true}
                               />

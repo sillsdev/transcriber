@@ -49,8 +49,9 @@ import {
   useArtifactType,
   findRecord,
   useOrgDefaults,
-  useRole,
   GetUser,
+  saveFontData,
+  loadFontData,
 } from '../crud';
 import {
   insertAtCursor,
@@ -116,6 +117,7 @@ interface IProps {
   defaultWidth: number;
   stepSettings?: string;
   hasChecking?: boolean;
+  hasPermission?: boolean;
   setComplete?: (complete: boolean) => void;
   onReopen?: () => void;
   onReject?: (reason: string) => void;
@@ -131,6 +133,7 @@ export function Transcriber(props: IProps) {
   const {
     stepSettings,
     hasChecking,
+    hasPermission,
     setComplete,
     onReopen,
     onReject,
@@ -288,7 +291,6 @@ export function Transcriber(props: IProps) {
     timeThreshold: 0.02,
     segLenThreshold: 0.5,
   };
-  const { userIsAdmin } = useRole();
   const [segParams, setSegParams] = useState(transcribeDefaultParams);
 
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
@@ -598,16 +600,20 @@ export function Transcriber(props: IProps) {
     if (artifactTypeSlug === ArtifactTypeSlug.Vernacular || !language) {
       if (project) {
         const r = findRecord(memory, 'project', project) as Project | undefined;
-        if (r) getFontData(r, offline).then((data) => setProjData(data));
+        if (r) getFontData(r, artifactId).then((data) => setProjData(data));
       }
     } else {
+      const lastFontData = loadFontData(artifactId ?? 'project');
       const defaultFont = lgSettings?.font;
       const rtl = lgSettings?.rtl ?? false;
-      const spellCheck = lgSettings?.spellCheck ?? false;
+      const spellCheck =
+        lastFontData?.spellCheck ?? lgSettings?.spellCheck ?? false;
+      const defaultFontSize =
+        lastFontData?.fontSize ?? lgSettings?.fontSize ?? 'large';
       const rec = {
-        attributes: { language, spellCheck, defaultFont, rtl },
+        attributes: { language, spellCheck, defaultFont, defaultFontSize, rtl },
       } as Project;
-      getFontData(rec, offline).then((data) => setProjData(data));
+      getFontData(rec, artifactId).then((data) => setProjData(data));
     }
     const ptCheck =
       [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
@@ -615,7 +621,7 @@ export function Transcriber(props: IProps) {
       ) || projType.toLowerCase() !== 'scripture';
     if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, projType, artifactTypeSlug, offline]);
+  }, [project, projType, artifactTypeSlug, artifactId, offline]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -822,10 +828,6 @@ export function Transcriber(props: IProps) {
     if (projData && settingsState) {
       let newData = projData;
       let change = false;
-      if (settingsState?.rtl !== (newData.fontDir === 'rtl')) {
-        change = true;
-        newData = { ...newData, fontDir: settingsState?.rtl ? 'rtl' : 'ltr' };
-      }
       if (settingsState?.fontSize !== newData.fontSize) {
         change = true;
         newData = { ...newData, fontSize: settingsState.fontSize };
@@ -835,10 +837,11 @@ export function Transcriber(props: IProps) {
         newData = { ...newData, spellCheck: settingsState.spellCheck };
       }
       if (change) setProjData(newData);
+      saveFontData(newData, artifactId ?? 'project');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settingsState]);
+  }, [settingsState, artifactId]);
 
   const nextOnSave: { [key: string]: string } = {
     incomplete: ActivityStates.Transcribing,
@@ -1307,8 +1310,7 @@ export function Transcriber(props: IProps) {
                           !transSelected ||
                           !previous.hasOwnProperty(state) ||
                           playing ||
-                          (user !== related(section, 'transcriber') &&
-                            !userIsAdmin)
+                          !hasPermission
                         }
                       >
                         {t.reopen}

@@ -133,13 +133,19 @@ export const CommentCard = (props: IProps) => {
     setApprovedx(value);
     approvedRef.current = value;
   };
-  const { getAuthor, hasPermission } = usePermissions();
+  const { getMentorAuthor, hasPermission } = usePermissions();
+
+  const CommentAuthor = (comment: CommentD) =>
+    getMentorAuthor(comment.attributes.visible) ??
+    related(comment, 'creatorUser') ??
+    related(comment, 'lastModifiedByUser');
 
   const reset = () => {
     setEditing(false);
     onEditing(false);
     setChanged(false);
     savingRef.current = false;
+    uploadReset();
   };
   const setChanged = (changed: boolean) => {
     const valid = editComment !== '' || canSaveRecording;
@@ -147,7 +153,7 @@ export const CommentCard = (props: IProps) => {
   };
 
   const saveComment = useSaveComment({ cb: reset });
-  const afterUploadcb = async (mediaId: string) => {
+  const afterUploadCb = async (mediaId: string) => {
     saveComment(
       discussion.id,
       comment.id,
@@ -157,11 +163,12 @@ export const CommentCard = (props: IProps) => {
       comment.attributes?.visible
     );
   };
-  const { uploadMedia, fileName } = useRecordComment({
-    mediafileId: related(discussion, 'mediafile'),
-    commentNumber,
-    afterUploadcb,
-  });
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: related(discussion, 'mediafile'),
+      commentNumber,
+      afterUploadCb,
+    });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
   const [oldVernVer, setOldVernVer] = useState(0);
@@ -217,7 +224,7 @@ export const CommentCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      if (editComment.length > 0 || approvedChange) afterUploadcb('');
+      if (editComment.length > 0 || approvedChange) afterUploadCb('');
       else saveCompleted(comment.id);
     }
   };
@@ -255,12 +262,7 @@ export const CommentCard = (props: IProps) => {
 
   useEffect(() => {
     if (users) {
-      var u = users.filter(
-        (u) =>
-          u.id ===
-          (getAuthor(comment.attributes.visible) ??
-            related(comment, 'lastModifiedByUser'))
-      );
+      var u = users.filter((u) => u.id === CommentAuthor(comment));
       if (u.length > 0) setAuthor(u[0]);
     }
     setMediaId(related(comment, 'mediafile'));
@@ -281,6 +283,7 @@ export const CommentCard = (props: IProps) => {
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
                   requestPlay={commentPlaying}
                   onEnded={handleCommentPlayEnd}
+                  onCancel={handleCommentPlayEnd}
                   onTogglePlay={handleCommentTogglePlay}
                   controls={mediaId === commentPlayId}
                 />
@@ -330,7 +333,11 @@ export const CommentCard = (props: IProps) => {
             ))}
           {mediaId !== commentPlayId && author?.id === user && !oldVernVer && (
             <Grid item>
-              <DiscussionMenu action={handleCommentAction} />
+              <DiscussionMenu
+                action={handleCommentAction}
+                canResolve={true}
+                canEdit={true}
+              />
             </Grid>
           )}
         </GridContainerSpread>
@@ -346,6 +353,7 @@ export const CommentCard = (props: IProps) => {
               onTextChange={handleTextChange}
               fileName={fileName(discussion.attributes.subject, discussion.id)}
               uploadMethod={uploadMedia}
+              uploadSuccess={uploadSuccess}
             />
           ) : (
             text && (

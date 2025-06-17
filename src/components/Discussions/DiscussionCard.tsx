@@ -30,8 +30,6 @@ import {
   Section,
   Plan,
   Passage,
-  GroupD,
-  UserD,
   OrganizationD,
 } from '../../model';
 import ResolveIcon from '@mui/icons-material/Check';
@@ -60,8 +58,6 @@ import {
   ArtifactCategoryType,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
-import SelectGroup from '../../control/SelectPeerGroup';
-import SelectUser from '../../control/SelectUser';
 import { LightTooltip, StageReport } from '../../control';
 import SelectArtifactCategory, {
   ScriptureEnum,
@@ -77,7 +73,7 @@ import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
-import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
+import GroupOrUserAssignment from '../../control/GroupOrUserAssignment';
 import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
 import { useSelector } from 'react-redux';
@@ -89,6 +85,7 @@ import BigDialog from '../../hoc/BigDialog';
 import { DiscussionMove } from './DiscussionMove';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import { useGroupOrUser } from '../../crud/useGroupOrUser';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -208,8 +205,6 @@ export const DiscussionCard = (props: IProps) => {
   const plans = useOrbitData<Plan[]>('plan');
   const artifactcategorys =
     useOrbitData<ArtifactCategory[]>('artifactcategory');
-  const users = useOrbitData<UserD[]>('user');
-  const groups = useOrbitData<GroupD[]>('group');
   const teams = useOrbitData<OrganizationD[]>('organization');
   const t: IDiscussionCardStrings = useSelector(
     discussionCardSelector,
@@ -260,10 +255,21 @@ export const DiscussionCard = (props: IProps) => {
     discussion.attributes?.subject
   );
   const assignedToMeRef = useRef(false);
-  const { permissions, canAccess, approvalStatus, getAuthor, hasPermission } =
-    usePermissions();
+  const {
+    permissions,
+    canAccess,
+    approvalStatus,
+    getMentorAuthor,
+    hasPermission,
+  } = usePermissions();
   const { myGroups, citGroup, mentorGroup } = usePeerGroups();
-  const [editAssigned, setEditAssigned] = useState<string>('');
+  const {
+    assignedGroup,
+    assignedUser,
+    editAssigned,
+    setEditAssigned,
+    setAssigned,
+  } = useGroupOrUser();
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
   const { localizedArtifactCategory } = useArtifactCategory();
@@ -273,7 +279,23 @@ export const DiscussionCard = (props: IProps) => {
   const [comment, setComment] = useState('');
   const commentMediaId = useRef('');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const { userIsAdmin } = useRole();
 
+  const CommentAuthor = (comment: CommentD) =>
+    getMentorAuthor(comment.attributes.visible) ??
+    related(comment, 'creatorUser') ??
+    related(comment, 'lastModifiedByUser');
+
+  const DiscussionAuthor = (discussion: DiscussionD) =>
+    related(discussion, 'creatorUser') ??
+    related(discussion, 'lastModifiedByUser') ??
+    user;
+
+  const canResolve: boolean = useMemo(
+    () => userIsAdmin || DiscussionAuthor(discussion) === user,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [discussion, user, userIsAdmin]
+  );
   const mediafileId = useMemo(() => {
     return playerMediafile?.id ?? '';
   }, [playerMediafile]);
@@ -301,32 +323,31 @@ export const DiscussionCard = (props: IProps) => {
       else saveCompleted(NewCommentToolId);
       commentText.current = '';
       commentMediaId.current = '';
+      uploadReset();
     }
   };
-  const { uploadMedia, fileName } = useRecordComment({
-    mediafileId: mediafileId,
-    commentNumber: -1,
-    afterUploadcb: saveMyComment,
-  });
+
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: mediafileId,
+      commentNumber: -1,
+      afterUploadCb: saveMyComment,
+    });
 
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
-  const { userIsAdmin } = useRole();
 
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
   };
-  const userPrefix = 'u:';
-  const groupPrefix = 'g:';
-
   const handleEditCard = (val: boolean) => {
     if (val !== editCard) setEditCard(val);
   };
 
   const handleReset = () => {
     setEditSubject('');
-    setEditAssigned('');
+    setAssigned('', '');
     setEditCategory('');
     setComment('');
     commentText.current = '';
@@ -403,10 +424,8 @@ export const DiscussionCard = (props: IProps) => {
   }, [comments, discussion.id, permissions]);
 
   useEffect(() => {
-    var a = related(discussion, 'group');
-    if (a) setEditAssigned(groupPrefix + a);
-    a = related(discussion, 'user');
-    if (a) setEditAssigned(userPrefix + a);
+    setAssigned(related(discussion, 'group'), related(discussion, 'user'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussion]);
 
   useEffect(() => {
@@ -581,7 +600,7 @@ export const DiscussionCard = (props: IProps) => {
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
-      setEditAssigned(currentAssigned());
+      setAssigned(related(discussion, 'group'), related(discussion, 'user'));
       setEditCategory(related(discussion, 'artifactCategory') || '');
       setEditing(true);
     } else if (what === 'delete') {
@@ -657,14 +676,20 @@ export const DiscussionCard = (props: IProps) => {
     setChangeAssignment(false);
   };
   const handleGroupChange = (e: string) => {
-    if (groupPrefix + e !== editAssigned) {
-      setEditAssigned(groupPrefix + e);
+    if (e !== assignedGroup?.id) {
+      setAssigned(e, '');
       setChanged(true);
     }
   };
   const handleUserChange = (e: string) => {
-    if (userPrefix + e !== editAssigned) {
-      setEditAssigned(userPrefix + e);
+    if (e !== assignedUser?.id) {
+      setAssigned('', e);
+      setChanged(true);
+    }
+  };
+  const handleAssign = (e: string) => {
+    if (e !== assignedGroup?.id && e !== assignedUser?.id) {
+      setEditAssigned(e);
       setChanged(true);
     }
   };
@@ -695,7 +720,16 @@ export const DiscussionCard = (props: IProps) => {
       var t = new RecordTransformBuilder();
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
-
+        ops.push(
+          ...UpdateRelatedRecord(
+            t,
+            discussion,
+            'creatorUser',
+            'user',
+            assignedUser?.id ?? user ?? '',
+            user
+          )
+        );
         ops.push(
           ...UpdateRelatedRecord(
             t,
@@ -749,7 +783,6 @@ export const DiscussionCard = (props: IProps) => {
     saveMyComment(commentMediaId.current).then(() => {
       onAddComplete && onAddComplete(discussion.id);
       setEditing(false);
-      setEditAssigned('');
       setChanged(false);
     });
   };
@@ -763,17 +796,6 @@ export const DiscussionCard = (props: IProps) => {
     setMoveTo(undefined);
     clearCompleted(myToolId);
   };
-  const assignedGroup = useMemo(() => {
-    return editAssigned.startsWith(groupPrefix)
-      ? groups?.find((g) => g.id === editAssigned.substring(groupPrefix.length))
-      : undefined;
-  }, [editAssigned, groups]);
-
-  const assignedUser = useMemo(() => {
-    return editAssigned.startsWith(userPrefix)
-      ? users?.find((u) => u.id === editAssigned.substring(userPrefix.length))
-      : undefined;
-  }, [editAssigned, users]);
 
   const version = useMemo(() => {
     const mediafile = mediafiles.find(
@@ -816,20 +838,11 @@ export const DiscussionCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightDiscussion, myRegion?.start, refresh, requestHighlight]);
 
-  const currentAssigned = () =>
-    related(discussion, 'group')
-      ? groupPrefix + related(discussion, 'group')
-      : related(discussion, 'user')
-      ? userPrefix + related(discussion, 'user')
-      : '';
-
   useEffect(() => {
-    const assigned = editAssigned || currentAssigned();
     assignedToMeRef.current =
-      assigned === userPrefix + user ||
-      myGroups.map((grp) => groupPrefix + grp.id).includes(assigned);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editAssigned, myGroups]);
+      assignedUser?.id === user ||
+      myGroups.map((grp) => grp.id).includes(assignedGroup?.id ?? 'x');
+  }, [assignedUser, assignedGroup, myGroups, user]);
 
   useEffect(() => {
     if (assignedToMeRef.current) {
@@ -854,15 +867,11 @@ export const DiscussionCard = (props: IProps) => {
           for (
             var ix = 0;
             ix < sortedByUpdatedDesc.length &&
-            (getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-              related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')) === user;
+            CommentAuthor(sortedByUpdatedDesc[ix]) === user;
             ix++
           );
           if (ix < sortedByUpdatedDesc.length) {
-            handleUserChange(
-              getAuthor(sortedByUpdatedDesc[ix].attributes.visible) ??
-                related(sortedByUpdatedDesc[ix], 'lastModifiedByUser')
-            );
+            handleUserChange(CommentAuthor(sortedByUpdatedDesc[ix]));
             setChangeAssignment(false);
           }
         }
@@ -872,7 +881,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [myComments]);
 
   const handleAssignedClick = () => {
-    setEditAssigned(currentAssigned());
+    setAssigned(related(discussion, 'group'), related(discussion, 'user'));
     setChangeAssignment(!changeAssignment as boolean);
   };
   const handleTextChange = (newText: string) => {
@@ -912,30 +921,17 @@ export const DiscussionCard = (props: IProps) => {
                   placeholder={t.topic}
                   required
                   fullWidth
+                  disabled={!canResolve}
                 />
                 {!isPersonal && (
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <SelectGroup
+                    <GroupOrUserAssignment
                       id={`group-${discussion.id}`}
-                      org={false}
-                      initGroup={assignedGroup?.id || ''}
-                      onChange={handleGroupChange}
+                      listAdmins={true}
+                      initAssignment={editAssigned}
+                      onChange={handleAssign}
                       required={false}
-                      label={t.assignGroup}
-                    />
-                    <Typography
-                      variant="h6"
-                      component="h2"
-                      sx={{ m: 1, mt: 3, color: 'primary.dark' }}
-                    >
-                      {t.or}
-                    </Typography>
-                    <SelectUser
-                      id={`user-${discussion.id}`}
-                      initUser={assignedUser?.id || ''}
-                      onChange={handleUserChange}
-                      required={false}
-                      label={t.assignUser}
+                      label={t.assign}
                     />
                   </Box>
                 )}
@@ -947,6 +943,7 @@ export const DiscussionCard = (props: IProps) => {
                   required={false}
                   scripture={ScriptureEnum.hide}
                   type={ArtifactCategoryType.Discussion}
+                  disabled={!canResolve}
                 />
                 {onAddComplete && (
                   <CommentEditor
@@ -958,6 +955,7 @@ export const DiscussionCard = (props: IProps) => {
                     uploadMethod={uploadMedia}
                     onTextChange={handleTextChange}
                     cancelOnlyIfChanged={true}
+                    uploadSuccess={uploadSuccess}
                   />
                 )}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -1039,18 +1037,16 @@ export const DiscussionCard = (props: IProps) => {
                     </LightTooltip>
                   )}
                   {!isPersonal && changeAssignment && (
-                    <SelectDiscussionAssignment
+                    <GroupOrUserAssignment
                       id={`group-${discussion.id}`}
-                      org={false}
+                      listAdmins={true}
                       initAssignment={editAssigned}
                       onChange={handleAssignedChange}
                       required={false}
                       label={t.assign}
-                      userPrefix={userPrefix}
-                      groupPrefix={groupPrefix}
                     />
                   )}
-                  {!discussion.attributes.resolved && (
+                  {!discussion.attributes.resolved && canResolve && (
                     <IconButton
                       id={`resolveDiscussion-${discussion.id}`}
                       sx={lightButton}
@@ -1064,7 +1060,9 @@ export const DiscussionCard = (props: IProps) => {
                     id={`menu-${discussion.id}`}
                     action={handleDiscussionAction}
                     resolved={discussion.attributes.resolved || false}
-                    canSet={Boolean(currentSegment)}
+                    canSet={Boolean(currentSegment) && canResolve}
+                    canResolve={canResolve}
+                    canEdit={canResolve || !isPersonal} //can only assign
                   />
                 </Grid>
               </Grid>

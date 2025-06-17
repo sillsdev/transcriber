@@ -28,8 +28,8 @@ export interface ISheet {
   kind: IwsKind;
   sectionSeq: number;
   title?: string;
-  transcriber?: RecordIdentity;
-  editor?: RecordIdentity;
+  scheme?: RecordIdentity;
+  assign?: RecordIdentity;
   sectionId?: RecordIdentity;
   sectionUpdated?: string;
   passageSeq: number;
@@ -41,19 +41,20 @@ export interface ISheet {
   passageType: PassageTypeEnum;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
-  mediaShared: IMediaShare;
+  mediaShared?: IMediaShare;
   publishStatus?: string;
   step?: string;
   stepId?: string;
   deleted: boolean;
   filtered: boolean;
-  discussionCount: number;
+  discussionCount?: number;
   published: PublishDestinationEnum[];
   graphicUri?: string;
   graphicRights?: string;
   graphicFullSizeUrl?: string;
   color?: string;
   titleMediaId?: RecordIdentity;
+  myWork?: boolean;
 }
 
 export const flatScrColNames = [

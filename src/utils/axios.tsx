@@ -74,6 +74,19 @@ export const axiosPost = async (api: string, data: any, token?: string) => {
       : { 'X-FP': fp },
   });
 };
+export const axiosPatch = async (api: string, data: any, token?: string) => {
+  var fp = await getFingerprint();
+  return await Axios.patch(API_CONFIG.host + '/api/' + api, data, {
+    headers: token
+      ? {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/vnd.api+json',
+          'X-FP': fp,
+        }
+      : { 'Content-Type': 'application/vnd.api+json', 'X-FP': fp },
+  });
+};
+
 export const axiosSendSignedUrl = async (
   api: string,
   signedUrl: string,

@@ -16,7 +16,7 @@ const StyledButtonGroup = styled(ButtonGroup)<ButtonGroupProps>(() => ({
 interface IProps {
   onVersions?: () => void;
   onReload?: () => void;
-  onUpload: () => void;
+  onUpload?: () => void;
   onAudacity?: () => void;
 }
 
@@ -60,6 +60,7 @@ export const RecordButtons = ({
         onClick={onUpload}
         title={ts.uploadMediaSingular}
         startIcon={<AddIcon sx={IconSize} />}
+        disabled={!onUpload}
       >
         {ts.uploadMediaSingular}
       </AltButton>

@@ -219,7 +219,6 @@ Promise.all(promises)
       loadComplete: false,
       importexportBusy: false,
       autoOpenAddMedia: false,
-      editUserId: null,
       developer: localStorage.getItem(LocalKey.developer),
       offline: isElectron,
       errorReporter: bugsnagClient,

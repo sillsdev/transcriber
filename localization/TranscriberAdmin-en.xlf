@@ -346,9 +346,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.addScheme">
+         <segment>
+            <source>Add Permission Scheme</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.addScheme2">
+         <segment>
+            <source>Add Assignment Scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Assign {0}</source>
+            <source>Configure Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec2">
+         <segment>
+            <source>Configure Assignments</source>
             <target/>
          </segment>
       </unit>
@@ -366,7 +384,13 @@
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
-            <source>Remove Assignment</source>
+            <source>Remove Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.removeSec2">
+         <segment>
+            <source>Remove Assignments</source>
             <target/>
          </segment>
       </unit>
@@ -384,7 +408,7 @@
       </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
-            <source>Please select row(s) to assign.</source>
+            <source>Please select row(s) to configure.</source>
             <target/>
          </segment>
       </unit>
@@ -406,9 +430,75 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.assignment">
+         <segment>
+            <source>{0} Permission</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.assignment2">
+         <segment>
+            <source>{0} Assignment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.confirmDelete">
+         <segment>
+            <source>Confirm Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.confirmModify">
+         <segment>
+            <source>Confirm Modify</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.deleteSections">
+         <segment>
+            <source>Delete will remove permissions from {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.duplicateName">
+         <segment>
+            <source>Duplicate Permission Scheme name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.duplicateName2">
+         <segment>
+            <source>Duplicate Assignment Scheme name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.modifySections">
+         <segment>
+            <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.noAssignment">
+         <segment>
+            <source>Unassigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.noRestriction">
+         <segment>
+            <source>No Restriction</source>
             <target/>
          </segment>
       </unit>
@@ -418,9 +508,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.schemeName">
+         <segment>
+            <source>Permission Scheme Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.schemeName2">
+         <segment>
+            <source>Assignment Scheme Name</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0}</source>
+            <source>Configure Permission Scheme</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.title2">
+         <segment>
+            <source>Configure Assignment Scheme</source>
             <target/>
          </segment>
       </unit>
@@ -858,19 +966,19 @@
       </unit>
       <unit id="cards.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeech">
          <segment>
-            <source>Recognize Speech</source>
+            <source>Auto Transcription</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
          </segment>
       </unit>
@@ -913,6 +1021,12 @@
       <unit id="cards.notesProject">
          <segment>
             <source>Project with Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.projectPermissions">
+         <segment>
+            <source>Permissions may be set for projects of this team.</source>
             <target/>
          </segment>
       </unit>
@@ -1162,6 +1276,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.noVoiceCreation">
+         <segment>
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.playTest">
          <segment>
             <source>Play Test</source>
@@ -1342,9 +1462,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.adminsAlways">
+         <segment>
+            <source>Admins are always allowed.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.assign">
          <segment>
-            <source>Assign to a Group or Team Member</source>
+            <source>Assign</source>
             <target/>
          </segment>
       </unit>
@@ -1356,7 +1482,7 @@
       </unit>
       <unit id="discussionCard.groupuser">
          <segment>
-            <source>Group/Team Member</source>
+            <source>Peer Group / Member {0}</source>
             <target/>
          </segment>
       </unit>
@@ -1411,6 +1537,18 @@
       <unit id="discussionCard.move">
          <segment>
             <source>Select step for discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.none">
+         <segment>
+            <source>None of the above</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.onlyAdmin">
+         <segment>
+            <source>Only Admins</source>
             <target/>
          </segment>
       </unit>
@@ -2494,6 +2632,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.notPermitted">
+         <segment>
+            <source>You're not permitted to sync to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.offline">
          <segment>
             <source>Offline</source>
@@ -2749,6 +2893,12 @@
       <unit id="invite.newInviteTask">
          <segment>
             <source>Enter the email address of the person to invite.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.newInviteTask2">
+         <segment>
+            <source>Separate multiple email addresses with a semicolon (';').</source>
             <target/>
          </segment>
       </unit>
@@ -3616,6 +3766,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.confirmChange">
+         <segment>
+            <source>Confirm Change</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.confirmValue">
+         <segment>
+            <source>Replace the current rights holder with {0}?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
@@ -3856,6 +4018,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.recordOrUpload">
+         <segment>
+            <source>Record or Upload</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTitle.recording">
          <segment>
             <source>Recording...</source>
@@ -3871,6 +4039,36 @@
       <unit id="mediaTitle.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.provideAudio">
+         <segment>
+            <source>Provide audio for '{0}'</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.unsavedChanges">
+         <segment>
+            <source>Please cancel, save or upload.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.upload">
+         <segment>
+            <source>Upload</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.uploadFailed">
+         <segment>
+            <source>Upload Failed!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.uploadFailStatus">
+         <segment>
+            <source>{0} Upload Failed!</source>
             <target/>
          </segment>
       </unit>
@@ -4678,6 +4876,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.assignment">
+         <segment>
+            <source>assignment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4690,9 +4894,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peer.inSchemeUse">
+         <segment>
+            <source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.inUse">
          <segment>
             <source>Name already in use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peer.permission">
+         <segment>
+            <source>permission</source>
             <target/>
          </segment>
       </unit>
@@ -4801,12 +5017,6 @@
       <unit id="permission.consultantInTrainingTip">
          <segment>
             <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="permission.nsp">
-         <segment>
-            <source>General</source>
             <target/>
          </segment>
       </unit>
@@ -5076,7 +5286,7 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
             <target/>
          </segment>
       </unit>
@@ -5148,7 +5358,7 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-            <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
+            <source>You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</source>
             <target/>
          </segment>
       </unit>
@@ -5344,6 +5554,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.additionalSettings">
+         <segment>
+            <source>Additional Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.cancel">
          <segment>
             <source>Cancel</source>
@@ -5382,13 +5598,19 @@
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
             <source>Delete User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.deleteWarning">
+         <segment>
+            <source>The following action cannot be undone:</source>
             <target/>
          </segment>
       </unit>
@@ -5401,6 +5623,18 @@
       <unit id="profile.discardChangesExplained">
          <segment>
             <source>Discard unsaved Changes? ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.edit">
+         <segment>
+            <source>Edit Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.editMember">
+         <segment>
+            <source>Edit Member Profile</source>
             <target/>
          </segment>
       </unit>
@@ -5527,6 +5761,18 @@
       <unit id="profile.syncFrequency">
          <segment>
             <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.syncFrequencyEnable">
+         <segment>
+            <source>Enable Data Sync:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.syncFrequencyLabel">
+         <segment>
+            <source>Frequency:</source>
             <target/>
          </segment>
       </unit>
@@ -5742,7 +5988,7 @@
       </unit>
       <unit id="publishTo.Internalization">
          <segment>
-            <source>Internalization Resources for other projects</source>
+            <source>Internalization Resources for other APM projects</source>
             <target/>
          </segment>
       </unit>
@@ -6012,7 +6258,7 @@
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
-            <source>Only rows with discussions assigned to me</source>
+            <source>Hide rows assigned to others</source>
             <target/>
          </segment>
       </unit>
@@ -6061,6 +6307,12 @@
       <unit id="scriptureTableFilter.maximum">
          <segment>
             <source>Maximum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.reset">
+         <segment>
+            <source>Reset</source>
             <target/>
          </segment>
       </unit>
@@ -6454,6 +6706,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.scheme">
+         <segment>
+            <source>Permission Scheme</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.scheme2">
+         <segment>
+            <source>Assignment Scheme</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.select">
          <segment>
             <source>Select</source>
@@ -6493,6 +6757,12 @@
       <unit id="shared.uploadRights">
          <segment>
             <source>Upload Rights File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.uploadSuccess">
+         <segment>
+            <source>Upload Successful</source>
             <target/>
          </segment>
       </unit>
@@ -7050,7 +7320,7 @@
       </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
-            <source>Begin Recognition</source>
+            <source>Begin Auto Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -7351,6 +7621,12 @@
       <unit id="transcriptionTab.writingDownloadFile">
          <segment>
             <source>Writing file...It could take up to 6 minutes to resume progress.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.nopermission">
+         <segment>
+            <source>You do not have permission to download the project.</source>
             <target/>
          </segment>
       </unit>
@@ -7984,6 +8260,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.basic">
+         <segment>
+            <source>Basic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.cancel">
          <segment>
             <source>Cancel</source>
@@ -8122,6 +8404,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.newTag">
+         <segment>
+            <source>New Tag</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.organizedBy">
          <segment>
             <source>Term for organizing layout</source>
@@ -8137,6 +8425,24 @@
       <unit id="vProject.pericopes">
          <segment>
             <source>Pericope/Pericopes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionSettings">
+         <segment>
+            <source>Permissions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionEditSheet">
+         <segment>
+            <source>Can Edit Spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.permissionPublish">
+         <segment>
+            <source>Can Publish</source>
             <target/>
          </segment>
       </unit>
@@ -8700,25 +9006,25 @@
       </unit>
       <unit id="wsAudioPlayer.recognizeProgress">
          <segment>
-            <source>Recognize Speech in Progress</source>
+            <source>Auto Transcription in Progress</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
          <segment>
-            <source>Recognize Speech {0}</source>
+            <source>Auto Transcription {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeechSettings">
          <segment>
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
          </segment>
       </unit>

@@ -37,7 +37,7 @@ interface IProps {
   isPassage: boolean;
   publishStatus?: string;
   mediaId: string;
-  mediaShared: IMediaShare;
+  mediaShared?: IMediaShare;
   canEdit: boolean;
   onHistory: (i: number) => () => void;
 }

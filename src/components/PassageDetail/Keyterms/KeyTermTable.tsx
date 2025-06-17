@@ -10,8 +10,8 @@ import Paper from '@mui/material/Paper';
 import { Box, Grid, GridProps, IconButton } from '@mui/material';
 import { elemOffset, generateUUID } from '../../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IKeyTermsStrings } from '../../../model';
-import { keyTermsSelector } from '../../../selector';
+import { IKeyTermsStrings, ISharedStrings } from '../../../model';
+import { keyTermsSelector, sharedSelector } from '../../../selector';
 import TargetWord from './TargetWordAdd';
 import { useMediaUpload } from '../../../crud/useMediaUpload';
 import { useArtifactType } from '../../../crud';
@@ -25,7 +25,8 @@ import {
 import Confirm from '../../AlertDialog';
 import MediaPlayer from '../../MediaPlayer';
 import AddIcon from '@mui/icons-material/Add';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
+import { useStepPermissions } from '../../../utils/useStepPermission';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,9 +97,14 @@ export default function KeyTermTable({
   const [canSaveRecording, setCanSaveRecording] = React.useState(false);
   const [mediaId, setMediaId] = React.useState<string>();
   const [confirm, setConfirm] = React.useState<string>();
+  const [uploadSuccess, setUploadSuccess] = React.useState<
+    boolean | undefined
+  >();
+  const { passage } = useContext(PassageDetailContext).state;
   const deleteId = React.useRef<string>();
   const [adding, setAdding] = React.useState<number[]>([]);
   const { saveCompleted } = React.useContext(UnsavedContext).state;
+  const { canDoSectionStep } = useStepPermissions();
   const {
     setSelected,
     commentPlaying,
@@ -106,8 +112,12 @@ export default function KeyTermTable({
     commentPlayId,
     handleCommentPlayEnd,
     handleCommentTogglePlay,
+    currentstep,
+    section,
   } = React.useContext(PassageDetailContext).state;
+  const hasPermission = canDoSectionStep(currentstep, section);
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const reset = () => {
     setTargetText('');
@@ -118,7 +128,7 @@ export default function KeyTermTable({
 
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
 
-  const afterUploadCb = useCallback(
+  const save = useCallback(
     async (mediaRemId: string) => {
       if (rowRef.current) {
         const { term, index } = rowRef.current;
@@ -133,10 +143,21 @@ export default function KeyTermTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [targetText]
   );
+  const afterUploadCb = async (mediaRemId: string) => {
+    if (mediaRemId) await save(mediaRemId);
+    else {
+      saveCompleted(`${rowRef.current?.index}`, ts.NoSaveOffline);
+    }
+  };
 
   const { keyTermId } = useArtifactType();
 
-  const uploadMedia = useMediaUpload({ artifactId: keyTermId, afterUploadCb });
+  const uploadMedia = useMediaUpload({
+    artifactId: keyTermId,
+    passageId: passage.id,
+    afterUploadCb,
+    setUploadSuccess,
+  });
 
   const handleTermClick = (term: number) => () => {
     termClick && termClick(term);
@@ -198,7 +219,7 @@ export default function KeyTermTable({
     rowRef.current = row;
     // If we have a recording, save after upload
     if (!canSaveRecording) {
-      afterUploadCb(''); // save without recording
+      save(''); // save without recording
     }
   };
 
@@ -271,8 +292,14 @@ export default function KeyTermTable({
                         onPlay={
                           t.mediaId ? handleChipPlay(t.mediaId) : undefined
                         }
-                        onClick={handleChipClick(t.label)}
-                        onDelete={handleChipDelete(t, row.source)}
+                        onClick={
+                          hasPermission ? handleChipClick(t.label) : undefined
+                        }
+                        onDelete={
+                          hasPermission
+                            ? handleChipDelete(t, row.source)
+                            : undefined
+                        }
                       />
                       {commentPlayId &&
                         mediaId === commentPlayId &&
@@ -284,6 +311,7 @@ export default function KeyTermTable({
                               }
                               requestPlay={commentPlaying}
                               onEnded={handlePlayEnd}
+                              onCancel={handlePlayEnd}
                               onTogglePlay={handleTogglePlay}
                               controls={mediaId === commentPlayId}
                               sx={{ mb: 1 }}
@@ -292,7 +320,9 @@ export default function KeyTermTable({
                         )}
                     </Box>
                   ))}
-                  {row.target.length > 0 && adding.indexOf(row.index) === -1 ? (
+                  {row.target.length > 0 &&
+                  adding.indexOf(row.index) === -1 &&
+                  hasPermission ? (
                     <IconButton
                       sx={{ height: '24px' }}
                       aria-label="add another translation"
@@ -305,12 +335,13 @@ export default function KeyTermTable({
                       toolId={`${row.index}`}
                       fileName={getFilename(row)}
                       uploadMethod={uploadMedia}
+                      uploadSuccess={uploadSuccess}
                       row={row}
                       onOk={onOk}
                       onCancel={onCancel}
                       cancelOnlyIfChanged
                       setCanSaveRecording={setCanSaveRecording}
-                      onTextChange={onTextChange}
+                      onTextChange={hasPermission ? onTextChange : undefined}
                       onSetRecordRow={onSetRecordRow}
                     />
                   ) : (

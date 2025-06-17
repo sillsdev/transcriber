@@ -25,6 +25,7 @@ import {
   defaultWorkflow,
   orgDefaultFeatures,
   orgDefaultLangProps,
+  orgDefaultPermissions,
   orgDefaultWorkflowProgression,
   pubDataCopyright,
   pubDataLangProps,
@@ -35,7 +36,7 @@ import {
 } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
+import { useUserCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
 import TeamSettings from './TeamSettings';
@@ -54,6 +55,7 @@ export interface ITeamDialog {
   noNoise?: boolean;
   deltaVoice?: boolean;
   aiTranscribe?: boolean;
+  resetProjectPermissions: boolean;
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -93,11 +95,15 @@ export function TeamDialog(props: IProps) {
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
-  const { canPublish } = useCanPublish();
+  const { canUserPublish } = useUserCanPublish();
 
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
+  const [permissions, setPermissions] = useState(false);
+  const [savedPermission, setSavedPermission] = useState(false);
+  const [resetProjects, setResetProjects] = useState(false);
+
   const { getDefault } = useOrgDefaults();
   const reset = () => {
     setName('');
@@ -112,6 +118,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
+    setPermissions(false);
     setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
@@ -162,6 +169,7 @@ export function TeamDialog(props: IProps) {
           current.attributes?.defaultParams ?? defaultParams
         );
         df = setParam(orgDefaultFeatures, features, df);
+        df = setParam(orgDefaultPermissions, permissions, df);
         const team = {
           ...current,
           attributes: {
@@ -195,6 +203,7 @@ export function TeamDialog(props: IProps) {
             bibleMediafile: bibleMediafileRef.current,
             isoMediafile: isoMediafileRef.current,
             process: process || defaultWorkflow,
+            resetProjectPermissions: resetProjects,
           },
           async (id: string) => {
             reset();
@@ -236,8 +245,13 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
         setPublishingData(setParam(pubDataLangProps, value, publishingData));
         break;
-      case 'workflowProgression':
+      case orgDefaultWorkflowProgression:
         setWorkflowProgression(value);
+        break;
+      case orgDefaultPermissions:
+        var newPermission = value === 'true';
+        setPermissions(newPermission);
+        setResetProjects(newPermission !== savedPermission && !newPermission);
         break;
       case 'noNoise':
       case 'deltaVoice':
@@ -282,16 +296,18 @@ export function TeamDialog(props: IProps) {
       if (!defaultParams) {
         setDefaultParams(values?.team.attributes?.defaultParams || '{}');
 
-        if (values) {
-          if (values.team) {
-            const wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
-            setWorkflowProgression(
-              wfp === 'step'
-                ? t.workflowProgressionStep
-                : t.workflowProgressionPassage
-            );
-            setFeatures(getDefault(orgDefaultFeatures, values?.team));
-          }
+        if (values?.team) {
+          const wfp = getDefault(orgDefaultWorkflowProgression, values.team);
+          setWorkflowProgression(
+            wfp === 'step'
+              ? t.workflowProgressionStep
+              : t.workflowProgressionPassage
+          );
+          setFeatures(getDefault(orgDefaultFeatures, values.team));
+          var permission =
+            getDefault(orgDefaultPermissions, values.team) ?? false; //if default is true use this values.team.id !== personalTeam
+          setPermissions(permission);
+          setSavedPermission(permission);
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
         }
@@ -343,7 +359,6 @@ export function TeamDialog(props: IProps) {
     } else setOwner('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
-
   return (
     <div>
       <Dialog
@@ -378,10 +393,10 @@ export function TeamDialog(props: IProps) {
           <TeamSettings
             mode={mode}
             team={values?.team}
-            values={{ features, workflowProgression }}
+            values={{ features, workflowProgression, permissions }}
             setValue={setValue}
           />
-          {mode !== DialogMode.add && canPublish && (
+          {mode !== DialogMode.add && canUserPublish && (
             <PublishExpansion
               t={t}
               team={values?.team}

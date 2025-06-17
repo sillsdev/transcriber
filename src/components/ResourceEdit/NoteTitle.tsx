@@ -67,7 +67,7 @@ export const NoteTitle = (props: IResourceState) => {
       )}
       <MediaTitle
         titlekey={`note-${ws?.passage?.id}`}
-        label={t.title} // zero-width space
+        label={t.title}
         required={true}
         mediaId={titleMediafile}
         title={titlex}

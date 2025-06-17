@@ -1,49 +1,40 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {
-  IDiscussionCardStrings,
-  User,
-  Group,
-  OrganizationMembership,
-} from '../model';
+import { IDiscussionCardStrings, User, Group } from '../model';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
-import { related } from '../crud';
-import { useGlobal } from '../context/GlobalContext';
-import { useOrbitData } from '../hoc/useOrbitData';
+import { groupPrefix, userPrefix } from '../crud/useGroupOrUser';
+import { useOrgMembers } from '../crud/useOrgMembers';
+
+const OnlyAdmin = 'only-admin';
 
 interface IProps {
   id?: string;
-  org: boolean;
+  listAdmins: boolean;
   initAssignment?: string;
   required?: boolean;
   disabled?: boolean;
   label?: string;
-  userPrefix: string;
-  groupPrefix: string;
+  emptyValue?: string;
+  team?: string;
   onChange: (value: string) => void;
 }
 
-export const SelectDiscussionAssignment = (props: IProps) => {
+export const GroupOrUserAssignment = (props: IProps) => {
   const {
     onChange,
     initAssignment,
     required,
     disabled,
     label,
-    userPrefix,
-    groupPrefix,
+    emptyValue,
     id: idIn,
+    listAdmins,
+    team,
   } = props;
-  const users = useOrbitData<User[]>('user');
-  const orgmems = useOrbitData<OrganizationMembership[]>(
-    'organizationmembership'
-  );
   const { peerGroups } = usePeerGroups();
-  const [orgUsers, setOrgUsers] = useState<User[]>([]);
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
-  const [organization] = useGlobal('organization');
+  const orgUsers = useOrgMembers({ team, listAdmins });
   const [value, setValue] = useState(initAssignment);
   const t = useSelector(
     discussionCardSelector,
@@ -51,46 +42,29 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   ) as IDiscussionCardStrings;
 
   const handleAssigmentChange = (e: any) => {
-    setValue(e.target.value);
-    onChange && onChange(e.target.value);
+    const value = ![OnlyAdmin, 'none'].includes(e.target.value)
+      ? e.target.value
+      : '';
+    setValue(value);
+    onChange && onChange(value);
   };
 
   useEffect(() => {
     setValue(initAssignment);
   }, [initAssignment]);
 
-  useEffect(() => {
-    var orgusers = orgmems
-      .filter((om) => related(om, 'organization') === organization)
-      .map((om) => related(om, 'user'));
-    setOrgUsers(
-      users
-        .filter(
-          (u) =>
-            u.attributes &&
-            Boolean(u?.keys?.remoteId) !== offlineOnly &&
-            orgusers.includes(u.id)
-        )
-        .sort((i, j) =>
-          (i.attributes.familyName || '') < (j.attributes.familyName || '')
-            ? -1
-            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
-            ? 1
-            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
-            ? -1
-            : 1
-        )
-    );
-  }, [organization, users, orgmems, offlineOnly]);
-  return (
+  return orgUsers.length > 0 ? (
     <TextField
       id={idIn || 'selectassignment'}
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
-      label={t.groupuser}
-      value={value}
+      label={label || t.groupuser.replace('{0}', '')}
+      value={value || (!listAdmins ? OnlyAdmin : 'none')}
       onChange={handleAssigmentChange}
-      helperText={label || ''}
+      helperText={t.groupuser.replace(
+        '{0}',
+        !listAdmins ? `(${t.adminsAlways})` : ''
+      )}
       margin="normal"
       variant="filled"
       required={required}
@@ -110,8 +84,19 @@ export const SelectDiscussionAssignment = (props: IProps) => {
           } ${option.attributes.email?.toLowerCase()}`}
         </MenuItem>
       ))}
+      {!listAdmins ? (
+        <MenuItem key={OnlyAdmin} value={OnlyAdmin}>
+          {t.onlyAdmin}
+        </MenuItem>
+      ) : (
+        <MenuItem key="none" value="none">
+          {emptyValue || t.none}
+        </MenuItem>
+      )}
     </TextField>
+  ) : (
+    <></>
   );
 };
 
-export default SelectDiscussionAssignment;
+export default GroupOrUserAssignment;

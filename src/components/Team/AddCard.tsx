@@ -43,7 +43,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import { restoreScroll, useHome, useJsonParams } from '../../utils';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
-import { projDefBook } from '../../crud/useProjectDefaults';
+import { projDefBook, projDefStory } from '../../crud/useProjectDefaults';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -207,8 +207,14 @@ export const AddCard = (props: IProps) => {
       tags,
       organizedBy,
       book,
+      story,
+      sheetUser,
+      sheetGroup,
+      publishUser,
+      publishGroup,
     } = values;
     var defaultParams = setParam(projDefBook, book, '{}');
+    defaultParams = setParam(projDefStory, story, defaultParams);
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(
       {
@@ -227,6 +233,10 @@ export const AddCard = (props: IProps) => {
           flat: values.flat,
           organizedBy,
           defaultParams,
+          sheetUser,
+          sheetGroup,
+          publishUser,
+          publishGroup,
         },
       } as VProject,
       team
@@ -390,6 +400,7 @@ export const AddCard = (props: IProps) => {
               onCommit={handleCommit}
               nameInUse={nameInUse}
               values={projDef}
+              team={team?.id}
             />
           </Box>
         </StyledCardContent>

@@ -3,7 +3,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
   Typography,
   Box,
   SxProps,
@@ -17,13 +16,14 @@ import {
   taskPassageNumber,
   PassageReference,
 } from '../crud';
-import { NextAction } from './TaskFlag';
-import TaskAvatar from './TaskAvatar';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
 import { ActivityStates } from '../model';
 import usePassageDetailContext from '../context/usePassageDetailContext';
-import { PassageDetailContext, PlayInPlayer } from '../context/PassageDetailContext';
+import {
+  PassageDetailContext,
+  PlayInPlayer,
+} from '../context/PassageDetailContext';
 
 const rowProp = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -44,8 +44,7 @@ export function TaskItem(props: IProps) {
     allBookData,
   } = useTodo();
   const uctx = React.useContext(UnsavedContext);
-  const { playerMediafile, setSelected } =
-    usePassageDetailContext();
+  const { playerMediafile, setSelected } = usePassageDetailContext();
   const { checkSavedFn } = uctx.state;
   const { sectionArr } = React.useContext(PassageDetailContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
@@ -66,18 +65,6 @@ export function TaskItem(props: IProps) {
       });
   };
 
-  let assigned: string | null = null;
-  const attr = mediafile.attributes;
-  if (attr) {
-    const next = NextAction({
-      ta: activityStateStr,
-      state: attr.transcriptionstate || ActivityStates.TranscribeReady,
-    });
-    if (next === activityStateStr.transcribe)
-      assigned = related(section, 'transcriber');
-    if (next === activityStateStr.review) assigned = related(section, 'editor');
-  }
-
   return (
     <List sx={{ width: '100%', minWidth: `${TaskItemWidth}px` }}>
       <ListItem
@@ -85,9 +72,6 @@ export function TaskItem(props: IProps) {
         alignItems="flex-start"
         onClick={handleSelect(mediafile.id)}
       >
-        <ListItemAvatar sx={{ minWidth: 4 }}>
-          <TaskAvatar assigned={assigned} />
-        </ListItemAvatar>
         <ListItemText
           disableTypography
           primary={
@@ -119,7 +103,8 @@ export function TaskItem(props: IProps) {
               <TaskFlag
                 ta={activityStateStr}
                 state={
-                  attr?.transcriptionstate || ActivityStates.TranscribeReady
+                  mediafile?.attributes?.transcriptionstate ||
+                  ActivityStates.TranscribeReady
                 }
               />
               <GrowingSpacer />

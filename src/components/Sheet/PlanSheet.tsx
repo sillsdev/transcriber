@@ -18,6 +18,7 @@ import {
   OrgWorkflowStep,
   SheetLevel,
   IPassageTypeStrings,
+  OrganizationD,
 } from '../../model';
 import { Box, IconButton, debounce, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -48,12 +49,12 @@ import {
   Severity,
 } from '../../utils';
 import {
+  isPersonalTeam,
   PublishDestinationEnum,
   remoteIdGuid,
   useBible,
   useOrganizedBy,
   usePublishDestination,
-  useRole,
 } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -77,6 +78,7 @@ import { RecordKeyMap } from '@orbit/records';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
 import { addPt } from '../../utils/addPt';
 import { Akuo } from '../../assets/brands';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -218,7 +220,7 @@ interface IProps {
   onHistory: (i: number) => () => void;
   onGraphic: (i: number) => void;
   onFilterChange: (
-    newstate: ISTFilterState | undefined,
+    newstate: ISTFilterState | undefined | null,
     isDefault: boolean
   ) => void;
   onFirstMovement: (newFM: number) => void;
@@ -261,9 +263,10 @@ export function PlanSheet(props: IProps) {
     hidePublishing,
     publishingOn,
     connected,
-    readonly,
+    canEditSheet,
     sectionArr,
     shared,
+    canPublish,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -316,8 +319,10 @@ export function PlanSheet(props: IProps) {
   const organizedBy = getOrganizedBy(true);
   const organizedByPlural = getOrganizedBy(false);
   const { isPublished } = usePublishDestination();
+
   const showIcon = useShowIcon({
-    readonly,
+    canEditSheet,
+    canPublish,
     rowInfo,
     inlinePassages,
     hidePublishing,
@@ -326,9 +331,8 @@ export function PlanSheet(props: IProps) {
   const [confirmPublish, setConfirmPublish] = useState(false);
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
-  const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
-  const { canPublish } = useCanPublish();
+  const { canAddPublishing } = useCanPublish();
   const rowsPerPage = useRef(20);
   const [scrollCount, setScrollCount] = useState(0);
   const [curTop, setCurTop] = useState(0);
@@ -339,12 +343,18 @@ export function PlanSheet(props: IProps) {
   const [hasBible, setHasBible] = useState(false);
   const { getOrgBible } = useBible();
   const getGlobal = useGetGlobal();
+  const teams = useOrbitData<OrganizationD[]>('organization');
 
+  const showAssign = useMemo(
+    () => !isPersonalTeam(org, teams) && !offlineOnly,
+    [org, teams, offlineOnly]
+  );
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
       setHasBible((bible?.attributes.bibleName ?? '') !== '');
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
@@ -433,8 +443,8 @@ export function PlanSheet(props: IProps) {
     [key: number]: () => void;
   }
   const actionMap: IActionMap = {
-    [ExtraIcon.Publish]: onPublish,
-    [ExtraIcon.Publishing]: updatePublishing,
+    [ExtraIcon.Publish]: onPublish, //section publish
+    [ExtraIcon.Publishing]: updatePublishing, //menuitem in add section
     [ExtraIcon.Note]: onNote,
     [ExtraIcon.PassageBelow]: onPassageBelow,
     [ExtraIcon.MovementAbove]: onMovementAbove,
@@ -563,7 +573,12 @@ export function PlanSheet(props: IProps) {
     if (recording) toolChanged(toolId);
   };
 
-  const PrefixedCols = 4;
+  const PrefixedCols = useMemo(() => (showAssign ? 4 : 3), [showAssign]);
+
+  const readonly = useMemo(
+    () => !canEditSheet && !canPublish,
+    [canEditSheet, canPublish]
+  );
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
@@ -820,7 +835,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!canPublish && !publishingOn) {
+    if (!canAddPublishing && !publishingOn) {
       showMessage(addPt(t.paratextRequired));
       return;
     }
@@ -971,18 +986,18 @@ export function PlanSheet(props: IProps) {
     },
     [emptyRow, curTop]
   );
-
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {userIsAdmin && (
+            {!readonly && (
               <>
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
-                  readonly={anyRecording || readonly}
+                  canEditSheet={canEditSheet}
+                  readonly={anyRecording}
                   isSection={dataRowisSection}
                   isPassage={isPassageType(currentRow - 1)}
                   mouseposition={position}
@@ -997,24 +1012,26 @@ export function PlanSheet(props: IProps) {
                   )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
-                <ProjButtons
-                  {...props}
-                  noCopy={pasting || filtered}
-                  noPaste={pasting || anyRecording || readonly || filtered}
-                  noReseq={
-                    pasting ||
-                    data.length < 2 ||
-                    anyRecording ||
-                    readonly ||
-                    filtered ||
-                    !hidePublishing
-                  }
-                  noImExport={anyRecording || pasting}
-                  noIntegrate={anyRecording || pasting || data.length < 2}
-                  onCopy={handleSheetCopy}
-                  onPaste={handleTablePaste}
-                  onReseq={handleResequence}
-                />
+                {canEditSheet && (
+                  <ProjButtons
+                    {...props}
+                    noCopy={pasting || filtered}
+                    noPaste={pasting || anyRecording || readonly || filtered}
+                    noReseq={
+                      pasting ||
+                      data.length < 2 ||
+                      anyRecording ||
+                      !canEditSheet ||
+                      filtered ||
+                      !hidePublishing
+                    }
+                    noImExport={anyRecording || pasting}
+                    noIntegrate={anyRecording || pasting || data.length < 2}
+                    onCopy={handleSheetCopy}
+                    onPaste={handleTablePaste}
+                    onReseq={handleResequence}
+                  />
+                )}
               </>
             )}
 
@@ -1022,7 +1039,6 @@ export function PlanSheet(props: IProps) {
             {data.length > 1 &&
               !offline &&
               !inlinePassages &&
-              !readonly &&
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
@@ -1052,7 +1068,7 @@ export function PlanSheet(props: IProps) {
               hidePublishing={hidePublishing}
               disabled={!filtered && (rowInfo.length < 2 || anyRecording)}
             />
-            {userIsAdmin && (
+            {!readonly && (
               <>
                 <PriButton
                   id="planSheetSave"

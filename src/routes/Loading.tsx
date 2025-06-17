@@ -40,6 +40,7 @@ import {
   useRole,
   AcceptInvitation,
   useProjectType,
+  findRecord,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -245,9 +246,7 @@ export function Loading() {
     planId: string,
     fromUrl: string | null
   ) => {
-    const projRec = memory.cache.query((q) =>
-      q.findRecord({ type: 'project', id: projectId })
-    );
+    const projRec = findRecord(memory, 'project', projectId);
     if (projRec) {
       setProject(projectId);
       const orgId = related(projRec, 'organization') as string;
@@ -274,15 +273,16 @@ export function Loading() {
       !userRec?.attributes?.locale ||
       !uiLanguages.includes(userRec?.attributes?.locale)
     ) {
-      setView('/profile');
+      setView('/createProfile');
       return;
     }
     let fromUrl = getGotoUrl();
     let waitToNavigate = false;
-    if (fromUrl && !/^\/profile|^\/plan|^\/detail/.test(fromUrl))
-      fromUrl = null;
+    if (fromUrl && !/^\/plan|^\/detail/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
-      const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
+      const m = /^\/[workplandetail]+\/([0-9a-f-]+)\/?([0-9a-f-]*)/.exec(
+        fromUrl
+      );
       if (m) {
         const planId =
           remoteIdGuid('plan', m[1], memory?.keyMap as RecordKeyMap) || m[1];
@@ -301,12 +301,18 @@ export function Loading() {
           if (projectId) {
             waitToNavigate = true;
             LoadProjData(projectId, () => {
+              if (
+                fromUrl?.startsWith('/detail/') &&
+                !remoteIdGuid('passage', m[2], memory?.keyMap as RecordKeyMap)
+              ) {
+                fromUrl = `/plan/${m[1]}/0`;
+              }
               loadDone(projectId, planId, fromUrl);
               navigate(fromUrl || '/team');
             });
           }
         }
-      } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
+      }
     }
     if (!waitToNavigate) navigate(fromUrl || '/team');
   };

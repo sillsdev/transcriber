@@ -83,6 +83,7 @@ import {
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
 import { usePassageNavigate } from '../components/PassageDetail/usePassageNavigate';
+import { useProjectPermissions } from '../utils/useProjectPermissions';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -205,6 +206,7 @@ const initState = {
   forceRefresh: (rowData?: IRow[]) => {},
   sectionArr: [] as [number, string][],
   toggleDone: (id: string) => {},
+  canPublish: false,
 };
 
 export type ICtxState = typeof initState;
@@ -282,6 +284,7 @@ const PassageDetailProvider = (props: IProps) => {
   const inPlayerRef = useRef<string>();
   const { getOrgDefault } = useOrgDefaults();
   const getGlobal = useGetGlobal();
+  const { canPublish } = useProjectPermissions();
 
   const setCurrentStep = (stepId: string) => {
     if (getGlobal('changed')) {
@@ -1090,6 +1093,7 @@ const PassageDetailProvider = (props: IProps) => {
       value={{
         state: {
           ...state,
+          canPublish,
           setSelected,
           setCurrentStep,
           setFirstStepIndex,

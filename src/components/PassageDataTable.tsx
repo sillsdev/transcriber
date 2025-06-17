@@ -72,6 +72,7 @@ interface IProps {
   value?: number;
   bookOpt: OptionType | undefined;
   scope?: ResourceTypeEnum;
+  initFindRef: string;
   onScope?: (val: ResourceTypeEnum) => void;
   termsOfUse: (i: number) => string | undefined;
   onOpen: (val: boolean) => void;
@@ -88,6 +89,7 @@ export const PassageDataTable = (props: IProps) => {
     data,
     value,
     scope,
+    initFindRef,
     onScope,
     onOpen,
     onSelect,
@@ -107,7 +109,7 @@ export const PassageDataTable = (props: IProps) => {
     (state: IState) => state.books.suggestions
   );
   const { passage } = usePassageDetailContext();
-  const [findRef, setFindRef] = useState('');
+  const [findRef, setFindRef] = useState(initFindRef);
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
@@ -170,6 +172,11 @@ export const PassageDataTable = (props: IProps) => {
       value: RefLevel.All,
     },
   ];
+
+  useEffect(() => {
+    if (findRef !== initFindRef) setFindRef(initFindRef);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initFindRef]);
 
   const isScripture = useMemo(
     () => planType(plan)?.scripture,
@@ -285,7 +292,6 @@ export const PassageDataTable = (props: IProps) => {
           : ResourceTypeEnum.passageResource
       );
   };
-
   return (
     <div id="passage-data-table">
       {isScripture && (

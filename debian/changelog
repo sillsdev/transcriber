@@ -1,3 +1,168 @@
+audio-project-manager (4.2.0.0)  experimental; urgency=high
+
+ * add creator user to new discussion for offline
+ * Add readOnly view for members
+ * Allow settings without recording
+ * ask for confirmation is the user doesn't use add
+ * assign sections to new scheme
+ * change all section assignments or permissions in one call
+ * change message to have them create voice samples first
+ * check permission for community testing and phrase back translation
+ * require rights statement before enabling voice conversion
+ * create new scheme with name and an assigment for each workflow step
+ * default to no permissions for personal team
+ * Everyone can see title rows if publishing is enabled.
+ * for discussion card use the combined control for add as well as edit
+ * give message if trying to add a new voice in phrase back translation
+ * if no permission scheme assigned, show section and passages.
+ * if permission enabled only admin can change multi-step status
+ * only show if it is assigned to user or group containing user
+ * Make default team permission setting false
+ * passage shows current step assignment
+ * project card icons not shown for admin.  Make white
+ * put scheme in table
+ * remove and Export from can Publish
+ * save is disabled unless a change has been made
+ * save new scheme
+ * save the rights even if the graphic isn't changed
+ * section shows scheme
+ * set default to false for personal teams
+ * show existing schemes
+ * show permissions on project card
+ * show publish globe to everyone
+ * show users how many groups will be affected by removing a group
+ * Show what reference we're using in note find
+ * sort list of rights holders
+ * sort note list by title
+ * standardize permission name format on project advanced
+ * update ai result name to ai instead of nr
+ * update language picker to 2.5.1
+ * update to give message on upload failure.
+ * use caseless trimmed compares
+ * view mode for users without permissions
+ * wait to set category selection until the list is there
+ * Workflow permissions (#1890)
+ * Workflow Permsissions - Internalization step done
+ * TT-1522 setting line height by font size (#1950)
+ * TT-3785 Record step can be assigned
+ * TT-4854 Updated New Project / Project Settings dialog (#1872)
+ * TT-4857 New Profile Dialog (#1871)
+ * TT-4900 add player close button (#1937)
+ * TT-5307 Pasting publishing sheets (#1879)
+ * TT-5488 Enable Select All (#1880)
+ * TT-5817 remove members from peer groups
+ * TT-5879 only allow creator to edit, delete, resolve.  anyone can assign. (#1901)
+ * TT-5895 Show my work
+ * TT-5895b rewording hide filter
+ * TT-6209 Allow saving text resource (#1932)
+ * TT-6223 stories checkbox not saved on new projects (#1898)
+ * TT-6272 Back Translate - new voice (#1957)
+ * TT-6273 disable personalize while saving (#1929)
+ * TT-6321 big files sent as s3 links to aero - noise remove tested (#1942)
+ * TT-6337, TT-6341 go to team screen if invalid url (#1899)
+ * TT-6346 All assignment to all members
+ * TT-6346, TT-6347 Sheet permissions and publish/export permissions (#1883)
+ * TT-6346c Show All members
+ * TT-6346d change All members to Only Admins
+ * TT-6348 assignment update (#1891)
+ * TT-6348b sort scheme names on menu
+ * TT-6355 Remember size choice
+ * TT-6357 set the permissions correctly (#1878)
+ * TT-6358 don't show permissions for personal team
+ * TT-6359 No Change user on edit (#1885)
+ * TT-6360 user info datachanges
+ * TT-6364 No refresh for offline only (#1884)
+ * TT-6367 select all only selects section rows (#1882)
+ * TT-6369 restore the missing buttons
+ * TT-6373 change title of flat spreadsheet (#1927)
+ * TT-6374 update counts for Assignments and Transcriptions
+ * TT-6376 TT-6385 update Category List
+ * TT-6378 TT-6384 project sheet permissions
+ * TT-6383 member with sheet can delete
+ * TT-6387 Admin and sheet user can modify audio tab
+ * TT-6390 removing assignments when none present
+ * TT-6391 Update assignment column (#1894)
+ * TT-6393 Changing User to Peer assignment (#1895)
+ * TT-6393b Change font size avoid wrap
+ * TT-6394 Add information on Peer Group use (#1945)
+ * TT-6396 use permission for KeyTerm step
+ * TT-6396b no record of key term w/o permission (#1896)
+ * TT-6397 scheme must have name
+ * TT-6398 duplicates must be in the same organization
+ * TT-6400 Recompute duplicate name on delete
+ * TT-6403 Update Configure Scheme
+ * TT-6404 Assigning from spreadsheet
+ * TT-6406 Transcriber permission
+ * TT-6407 Assignment count
+ * TT-6408 Sync to Paratext checks permission
+ * TT-6409 hide assignment tab and column for personal and offlineOnly (#1930)
+ * TT-6410 permissions scheme don't save if invalid scheme (#1909)
+ * TT-6411 change required to save scheme
+ * TT-6413 No Transcriber or Editor on Transcription Tab (#1925)
+ * TT-6419 Add TW to help menu (#1897)
+ * TT-6421 Only remove secs without passages (#1916)
+ * TT-6422 Allow record with vernacular permission
+ * TT-6424 recover from failed upload (#1939)
+ * TT-6425 permission scheme datachanges (#1923)
+ * TT-6426 Permit flat title editing (#1913)
+ * TT-6428 Title persist without passages (#1912)
+ * TT-6429 edit topic if new (#1917)
+ * TT-6433 bulk email invitations
+ * TT-6435 display resource images offline (#1903)
+ * TT-6436 Phrase Back Translation Permission (#1918)
+ * TT-6437 default creator to current user if none assigned
+ * TT-6439 Change tip on close to reset (#1938)
+ * TT-6445 Add reset and clear options for filter (#1907)
+ * TT-6446 Notice missing aquifer files, ignore markdown and links (#1910)
+ * TT-6448 Default sheet filter to clear (#1914)
+ * TT-6450 anyone can export (#1920)
+ * TT-6451 TT-6454 Called Assignments if no Permissions
+ * TT-6452 Filter empty sections when filtering for assigned (#1919)
+ * TT-6453 Consultant Check Permission (#1921)
+ * TT-6455 hide unassigned sections
+ * TT-6457 Allow movements to be assigned (#1922)
+ * TT-6459 Remove state column from Assignment tab (#1924)
+ * TT-6464 only the user who can resolve can set the segment
+ * TT-6467 Progress while saving schemes
+ * TT-6468 use Permission instead of Assignment on steps
+ * TT-6469 save before assign (#1936)
+ * TT-6470 Sync from Project card on team screen (#1933)
+ * TT-6472 don't hide rows for flat projects
+ * TT-6475 save as default disabled while filter disabled.
+ * TT-6476 allow changing graphic rights (#1956)
+ * TT-6477 recognize speech to auto transcription
+ * TT-6479 Unassigned sections are available to everyone (#1949)
+ * TT-6480 No exit when going offline with download (#1934)
+ * TT-6481 no offline team sheet edit
+ * TT-6483 upgrade auth0 to latest
+ * TT-6485 Dialog for Record or Upload titles (#1943)
+ * TT-6489 clear checks on assign/remove complete
+ * TT-6490 No logout button for existing user (#1935)
+ * TT-6493 Multistep status (#1948)
+ * TT-6494 no chapter number description
+ * TT-6497 avoid race on second compare play
+ * TT-6504 wait for big file to finish writing when querying (#1946)
+ * TT-6507 Don't set changed unless upload successful (#1947)
+ * TT-6509 Force cancel or save on title
+ * TT-6510 improve record or upload icon
+ * TT-6511 only allow save after recording
+ * TT-6513 title upload successful message
+ * TT-6516 add APM to internalization publishing destination
+ * TT-6523 no helper message when adding peer groups
+ * TT-6524 Upgrade default Audacity file for latest Audacity version
+ * TT-6525 Completely remove scheme when deleting
+ * TT-6526 Don't lose new links in worksheet save (#1955)
+ * TT-6531 use permission to set reopen status
+ * TT-6536 scheme assign save - allow user to unassign a step
+ * TT-6536b show value of empty step permission or assignment control
+ * TT-6539, TT-6538, TT-6537 handle duplicate invitation emails
+ * TT-6542 allow recording continuously
+ * TT-6546 propagate to all except linked notes(#1958)
+ * TT-6557 Allow adding to recording - save as a new version
+ * TT-???? Reset projects when turning off team permissions
+
+-- Greg Trihus <greg_trihus@sil.org>  Tue, 17 Jun 2025 15:36:00 -0600
+
 audio-project-manager (4.1.0.0)  experimental; urgency=high
 
 * Add SplitButton for ASR

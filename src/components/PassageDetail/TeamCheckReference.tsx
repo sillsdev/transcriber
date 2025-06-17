@@ -68,7 +68,7 @@ export function TeamCheckReference() {
   const handleEnded = () => {
     setPlayItem('');
     handleItemPlayEnd();
-    setTimeout(() => setResetCount(resetCount + 1), 100);
+    setTimeout(() => setResetCount(resetCount + 1), 500);
   };
 
   useEffect(() => {
@@ -94,6 +94,7 @@ export function TeamCheckReference() {
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}
           onEnded={handleEnded}
+          noClose={true}
           controls={true}
           limits={{ start: mediaStart, end: mediaEnd }}
         />

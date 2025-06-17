@@ -36,15 +36,17 @@ export const ReplyCard = (props: IProps) => {
   };
   const saveComment = useSaveComment({ cb: afterSavecb });
   const commentText = useRef('');
-  const afterUploadcb = async (mediaId: string) => {
+  const afterUploadCb = async (mediaId: string) => {
     saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
+    uploadReset();
   };
-  const { uploadMedia, fileName } = useRecordComment({
-    mediafileId: related(discussion, 'mediafile'),
-    commentNumber,
-    afterUploadcb,
-  });
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: related(discussion, 'mediafile'),
+      commentNumber,
+      afterUploadCb,
+    });
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
 
@@ -52,7 +54,7 @@ export const ReplyCard = (props: IProps) => {
     savingRef.current = true;
     //if we're recording and can save, the comment will save after upload
     if (!canSaveRecording) {
-      if (commentText.current.length > 0) afterUploadcb('');
+      if (commentText.current.length > 0) afterUploadCb('');
       else saveCompleted(myToolId);
     }
   };
@@ -99,6 +101,7 @@ export const ReplyCard = (props: IProps) => {
         uploadMethod={uploadMedia}
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}
+        uploadSuccess={uploadSuccess}
       />
     </Box>
   );

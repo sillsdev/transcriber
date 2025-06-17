@@ -125,6 +125,8 @@ import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
+import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
+import { usePeerGroups } from '../Peers/usePeerGroups';
 
 const SaveWait = 500;
 
@@ -150,6 +152,9 @@ export function ScriptureTable(props: IProps) {
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const workflowSteps = useOrbitData<WorkflowStep[]>('workflowstep');
   const orgWorkflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
+  const organizationSchemeSteps = useOrbitData<OrganizationSchemeStepD[]>(
+    'organizationschemestep'
+  );
   const t: IScriptureTableStrings = useSelector(
     scriptureTableSelector,
     shallowEqual
@@ -179,7 +184,6 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [org] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
@@ -196,8 +200,9 @@ export function ScriptureTable(props: IProps) {
     hidePublishing,
     publishingOn,
     setSectionArr,
-    setCanPublish,
+    setCanAddPublishing,
     togglePublishing,
+    canPublish,
   } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
@@ -257,6 +262,7 @@ export function ScriptureTable(props: IProps) {
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStepD[]>([]);
+  const { myGroups } = usePeerGroups();
   const {
     getProjectDefault,
     setProjectDefault,
@@ -303,9 +309,10 @@ export function ScriptureTable(props: IProps) {
     action: t.extras,
   };
   const onFilterChange = (
-    filter: ISTFilterState | undefined,
+    filter: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
+    if (filter === null) filter = defaultFilterState;
     setLocalDefault(projDefFilterParam, filter);
     if (projDefault) {
       var def;
@@ -327,7 +334,7 @@ export function ScriptureTable(props: IProps) {
       }
       setProjectDefault(projDefFilterParam, def);
     }
-    if (filter) setFilterState(() => filter);
+    if (filter) setFilterState(() => filter as ISTFilterState);
     else setFilterState(getFilter(defaultFilterState));
   };
   const setSheet = (ws: ISheet[]) => {
@@ -336,7 +343,7 @@ export function ScriptureTable(props: IProps) {
     var anyPublishing = !getGlobal('offline')
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
-    if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
+    if (publishingOn !== anyPublishing) setCanAddPublishing(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -487,15 +494,17 @@ export function ScriptureTable(props: IProps) {
   const isPassageOrNote = (ws: ISheet[], i: number) =>
     [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(ws[i].passageType);
 
-  const updatePassageRef = (id: string, val: string) => {
+  const updatePassageRef = (id: string, val: string, sr: SharedResourceD) => {
     const index = sheet.findIndex((s) => s?.passage?.id === id);
     if (index < 0) return;
     const passageRow = { ...sheet[index] };
-    if (passageRow.reference === val) return;
+    if (passageRow.reference === val && passageRow.sharedResource?.id === sr.id)
+      return;
     if (updateRef.current) return;
     setUpdate(true);
     passageRow.reference = val;
     passageRow.passageUpdated = currentDateTime();
+    passageRow.sharedResource = sr;
     setSheet(updateRowAt(sheet, passageRow, index));
     setUpdate(false);
     setChanged(true);
@@ -818,7 +827,6 @@ export function ScriptureTable(props: IProps) {
       await waitForIt(
         'saving before delete',
         () => {
-          console.log('waiting for save before deleting.');
           return !savingRef.current;
         },
         () => false,
@@ -830,8 +838,13 @@ export function ScriptureTable(props: IProps) {
     return false;
   };
 
+  const getScheme = (where: number[]) => {
+    const { ws } = getByIndex(sheetRef.current, where[0]);
+    return ws?.scheme?.id;
+  };
+
   const getSectionsWhere = (where: number[]) => {
-    let selected = Array<Section>();
+    let selected = Array<SectionD>();
     where.forEach((c) => {
       const { ws } = getByIndex(sheetRef.current, c);
       let one = sections.find((s) => s.id === ws?.sectionId?.id);
@@ -946,6 +959,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     setUpdate(false);
+    setTimeout(() => startSave(), 1000);
   };
 
   const saveIfChanged = (cb: () => void) => {
@@ -1007,8 +1021,10 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleAssign = (where: number[]) => () => {
-    setAssignSections(where);
-    setAssignSectionVisible(true);
+    saveIfChanged(() => {
+      setAssignSections(where);
+      setAssignSectionVisible(true);
+    });
   };
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
@@ -1064,7 +1080,7 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
-  const handleUploadGraphicVisible = (v: boolean) => {
+  const graphicsClosed = (v: boolean) => {
     setUploadType(v ? UploadType.Graphic : undefined);
     setUploadGraphicVisible(v);
   };
@@ -1101,25 +1117,44 @@ export function ScriptureTable(props: IProps) {
       ws?.kind === IwsKind.Section
         ? parseInt(secRec?.keys?.remoteId ?? '0')
         : parseInt(ws?.passage?.keys?.remoteId ?? '0');
-    const infoData: IGraphicInfo = { [Rights]: ws?.graphicRights };
-    images.forEach((image) => {
-      infoData[image.dimension.toString()] = image;
-    });
-    const info = JSON.stringify(infoData);
     const graphicRec = graphics.find(
       (g) =>
         g.attributes.resourceType === resourceType &&
         g.attributes.resourceId === resourceId
     );
-    if (graphicRec) {
-      await graphicUpdate({
-        ...graphicRec,
-        attributes: { ...graphicRec.attributes, info },
+    const curData = JSON.parse(
+      graphicRec?.attributes?.info || '{}'
+    ) as IGraphicInfo;
+    if (curData[Rights] !== ws?.graphicRights || images.length > 0) {
+      showMessage(ts.saving);
+      const infoData: IGraphicInfo = {
+        ...curData,
+        [Rights]: ws?.graphicRights,
+      };
+      images.forEach((image) => {
+        infoData[image.dimension.toString()] = image;
       });
-    } else {
-      await graphicCreate({ resourceType, resourceId, info });
+      const info = JSON.stringify(infoData);
+      if (graphicRec) {
+        await graphicUpdate({
+          ...graphicRec,
+          attributes: { ...graphicRec.attributes, info },
+        });
+      } else if (images.length > 0) {
+        await graphicCreate({ resourceType, resourceId, info });
+      }
     }
     setUploadType(undefined);
+  };
+
+  const handleUploadGraphicVisible = (v: boolean) => {
+    if (!v && Boolean(uploadType)) {
+      afterConvert([]).then(() => {
+        graphicsClosed(false);
+      });
+    } else {
+      graphicsClosed(v);
+    }
   };
 
   const handleAudacityImport = (i: number, list: File[]) => {
@@ -1230,13 +1265,16 @@ export function ScriptureTable(props: IProps) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowSteps, orgWorkflowSteps, org]);
+  }, [workflowSteps, orgWorkflowSteps, organization]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
 
   useEffect(() => {
-    setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    if (minSection !== defaultFilterState.minSection) {
+      setDefaultFilterState((fs) => ({ ...fs, minSection }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minSection]);
 
   const doneStepId = useMemo(() => {
@@ -1372,6 +1410,7 @@ export function ScriptureTable(props: IProps) {
         plan,
         sections,
         passages,
+        organizationSchemeSteps,
         flat,
         projectShared: shared,
         memory,
@@ -1387,6 +1426,8 @@ export function ScriptureTable(props: IProps) {
         getPublishTo,
         publishStatus,
         getSharedResource,
+        user,
+        myGroups,
       });
       setSheet(newWorkflow);
 
@@ -1396,6 +1437,7 @@ export function ScriptureTable(props: IProps) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    organizationSchemeSteps,
     plan,
     sections,
     passages,
@@ -1456,8 +1498,19 @@ export function ScriptureTable(props: IProps) {
 
     if (!updateRef.current) {
       setUpdate(true);
+      let sectionIndex = -1;
+      let sectionScheme: RecordIdentity | undefined;
+      let hasOnePassage = false;
       sheetRef.current.forEach((s, index) => {
         if (isSectionRow(s)) {
+          if (sectionIndex >= 0) {
+            if (!hasOnePassage && filterState.assignedToMe && !flat) {
+              newWork[sectionIndex].filtered = true;
+            }
+          }
+          sectionIndex = index;
+          sectionScheme = s.scheme;
+          hasOnePassage = false;
           sectionfiltered = isSectionFiltered(
             filterState,
             minSection,
@@ -1486,7 +1539,7 @@ export function ScriptureTable(props: IProps) {
             sectionfiltered = allMyPassagesArePublishing;
           }
         }
-        if (isPassageRow(s))
+        if (isPassageRow(s)) {
           filtered =
             sectionfiltered ||
             isPassageFiltered(
@@ -1495,22 +1548,33 @@ export function ScriptureTable(props: IProps) {
               minSection,
               hidePublishing,
               orgSteps,
-              doneStepId
+              doneStepId,
+              sectionScheme,
+              s.assign,
+              user,
+              myGroups
             );
-        else filtered = sectionfiltered;
+        } else filtered = sectionfiltered;
+        hasOnePassage ||= s.kind === IwsKind.Passage && filtered === false;
         if (filtered !== s.filtered) changed = true;
         newWork.push({
           ...s,
           filtered,
         });
       });
+      if (sectionIndex >= 0) {
+        if (!hasOnePassage && filterState.assignedToMe) {
+          newWork[sectionIndex].filtered = true;
+        }
+      }
+
       if (changed) {
         setSheet(newWork);
       }
       setUpdate(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSteps, filterState, doneStepId, hidePublishing]);
+  }, [orgSteps, filterState, doneStepId, hidePublishing, flat]);
 
   const firstBook = useMemo(
     () =>
@@ -1913,6 +1977,7 @@ export function ScriptureTable(props: IProps) {
       />
       {assignSectionVisible && (
         <AssignSection
+          scheme={getScheme(assignSections)}
           sections={getSectionsWhere(assignSections)}
           visible={assignSectionVisible}
           closeMethod={handleAssignClose()}
@@ -1988,7 +2053,7 @@ export function ScriptureTable(props: IProps) {
       >
         <VersionDlg
           passId={versionRow?.passage?.id || ''}
-          canSetDestination={!offline}
+          canSetDestination={!offline && canPublish}
           hasPublishing={publishingOn}
         />
       </BigDialog>

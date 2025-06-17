@@ -32,6 +32,10 @@ import SelectAsrLanguage from '../../business/asr/SelectAsrLanguage';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import { useGlobal } from '../../context/GlobalContext';
+import {
+  orgDefaultPermissions,
+  orgDefaultWorkflowProgression,
+} from '../../crud';
 
 export enum FeatureSlug {
   NoNoise = 'noNoise',
@@ -59,6 +63,7 @@ export interface IFeatures {
 interface IValues {
   features: IFeatures;
   workflowProgression: string;
+  permissions: boolean;
 }
 
 interface IProps {
@@ -71,10 +76,11 @@ interface IProps {
 export function TeamSettings(props: IProps) {
   const { mode, team, values, setValue } = props;
   const ctx = React.useContext(TeamContext);
+  const [permissions, setPermissions] = useState(true);
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
-  const { cardStrings } = ctx.state;
+  const { cardStrings, personalTeam } = ctx.state;
   const t = cardStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const workflowOptions = [
@@ -92,9 +98,14 @@ export function TeamSettings(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values?.workflowProgression]);
 
+  useEffect(() => {
+    setPermissions(values?.permissions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values?.permissions]);
+
   const setProgression = (val: string) => {
     setWorkflowProgression(val);
-    setValue('workflowProgression', val);
+    setValue(orgDefaultWorkflowProgression, val);
   };
 
   const handleFeatures = (feat: string) => (_e: any, checked: boolean) => {
@@ -104,7 +115,10 @@ export function TeamSettings(props: IProps) {
   const handleRefresh = () => {
     setValue('refresh', '');
   };
-
+  const handlePermissionSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(orgDefaultPermissions, e.target.checked.toString());
+    setPermissions(e.target.checked);
+  };
   return (
     <Box sx={{ width: '100%', my: 1 }}>
       <Accordion>
@@ -117,6 +131,18 @@ export function TeamSettings(props: IProps) {
         </AccordionSummary>
         <Details>
           <Stack spacing={1}>
+            {team?.id !== personalTeam && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={permissions}
+                    onChange={handlePermissionSwitch}
+                  />
+                }
+                labelPlacement="end"
+                label={t.projectPermissions}
+              />
+            )}
             <Options
               label={t.workflowProgression}
               defaultValue={workflowProgression}

@@ -80,13 +80,19 @@ function a11yProps(index: number) {
 interface FindTabsProps {
   onClose?: () => void;
   closeRequested: boolean;
+  canAdd: boolean;
 }
 
-export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
+export default function FindTabs({
+  onClose,
+  closeRequested,
+  canAdd,
+}: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
   const { getPassageTypeFromId } = usePassageType();
-  const [start, setStart] = useState(0);
+  const [biblebrain, setBiblebrain] = useState(true);
+  const [aquifer, setAquifer] = useState(true);
   const [resources, setResources] = useState<BibleResource[]>([]);
   const [links, setLinks] = useState<Tpl>({});
   const [link, setLink] = useState<string>();
@@ -103,10 +109,11 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
   }, []);
 
   useEffect(() => {
+    setAquifer(canAdd);
     const pt = getPassageTypeFromId(related(passage, 'passagetype'));
-    setStart(pt === PassageTypeEnum.PASSAGE ? 0 : 1);
+    setBiblebrain(canAdd && pt === PassageTypeEnum.PASSAGE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage]);
+  }, [passage, canAdd]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -138,25 +145,35 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {start === 0 && (
+          {aquifer && (
             <Tab
-              label={t.findBrandedContent.replace('{0}', BibleBrain)}
+              label={t.findBrandedContent.replace('{0}', Aquifer)}
               {...a11yProps(0)}
             />
           )}
+          {biblebrain && (
+            <Tab
+              label={t.findBrandedContent.replace('{0}', BibleBrain)}
+              {...a11yProps(aquifer ? 1 : 0)}
+            />
+          )}
           <Tab
-            label={t.findBrandedContent.replace('{0}', Aquifer)}
-            {...a11yProps(1 - start)}
+            label={aquifer || biblebrain ? t.findOther : t.findResource}
+            {...a11yProps(aquifer ? (biblebrain ? 2 : 1) : 0)}
           />
-          <Tab label={t.findOther} {...a11yProps(2 - start)} />
           <Tab
             label={<Badge badgeContent={ts.ai}>{t.create}</Badge>}
-            {...a11yProps(3 - start)}
+            {...a11yProps(aquifer ? (biblebrain ? 3 : 2) : 1)}
           />
         </Tabs>
       </Box>
-      {start === 0 && (
+      {aquifer && (
         <CustomTabPanel value={value} index={0}>
+          <FindAquifer onClose={onClose} />
+        </CustomTabPanel>
+      )}
+      {biblebrain && (
+        <CustomTabPanel value={value} index={aquifer ? 1 : 0}>
           <FindBibleBrain
             handleLink={handleLink}
             onClose={onClose}
@@ -164,13 +181,10 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
           />
         </CustomTabPanel>
       )}
-      <CustomTabPanel value={value} index={1 - start}>
-        <FindAquifer onClose={onClose} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2 - start}>
+      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 2 : 1) : 0}>
         <FindOther handleLink={handleLink} resources={resources} />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={3 - start}>
+      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 3 : 2) : 1}>
         <CreateAiRes resources={resources} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />

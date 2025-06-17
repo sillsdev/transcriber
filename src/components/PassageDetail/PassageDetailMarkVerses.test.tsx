@@ -97,6 +97,11 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   setupLocate: jest.fn(),
   rowData: mockRowData,
 }));
+jest.mock('../../utils/useStepPermission', () => ({
+  useStepPermissions: () => ({
+    canDoSectionStep: jest.fn(() => true),
+  }),
+}));
 jest.mock('./PassageDetailPlayer', () => ({ onSegment }: DetailPlayerProps) => {
   mockPlayerAction = onSegment;
   return <div>PassageDetailPlayer</div>;

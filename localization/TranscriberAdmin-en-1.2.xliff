@@ -401,8 +401,29 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignmentTable.addScheme">
+            <source>Add Permission Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignmentTable.addScheme2">
+            <source>Add Assignment Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignmentTable.assignSec">
-            <source>Assign {0}</source>
+            <source>Configure Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignmentTable.assignSec2">
+            <source>Configure Assignments</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -423,7 +444,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.removeSec">
-            <source>Remove Assignment</source>
+            <source>Remove Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignmentTable.removeSec2">
+            <source>Remove Assignments</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -444,7 +472,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignmentTable.selectRowsToAssign">
-            <source>Please select row(s) to assign.</source>
+            <source>Please select row(s) to configure.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -471,8 +499,85 @@
                <context context-type="sourcefile">AssignmentTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.assignment">
+            <source>{0} Permission</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.assignment2">
+            <source>{0} Assignment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">assignmentTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.close">
             <source>Close</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.confirmDelete">
+            <source>Confirm Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.confirmModify">
+            <source>Confirm Modify</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.delete">
+            <source>Delete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.deleteSections">
+            <source>Delete will remove permissions from {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.duplicateName">
+            <source>Duplicate Permission Scheme name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.duplicateName2">
+            <source>Duplicate Assignment Scheme name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.modifySections">
+            <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.noAssignment">
+            <source>Unassigned</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.noRestriction">
+            <source>No Restriction</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>
@@ -485,8 +590,29 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="assignSection.schemeName">
+            <source>Permission Scheme Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.schemeName2">
+            <source>Assignment Scheme Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="assignSection.title">
-            <source>Assign {0}</source>
+            <source>Configure Permission Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AssignSection.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="assignSection.title2">
+            <source>Configure Assignment Scheme</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>
@@ -998,21 +1124,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizePrompt">
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizeSpeech">
-            <source>Recognize Speech</source>
+            <source>Auto Transcription</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.recognizeSpeechSettings">
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
@@ -1062,6 +1188,13 @@
          </trans-unit>
          <trans-unit id="cards.notesProject">
             <source>Project with Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.projectPermissions">
+            <source>Permissions may be set for projects of this team.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectButtons.tsx</context>
@@ -1354,6 +1487,13 @@
                <context context-type="sourcefile">SpeakerName.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="community.noVoiceCreation">
+            <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>
@@ -1564,8 +1704,15 @@
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.adminsAlways">
+            <source>Admins are always allowed.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.assign">
-            <source>Assign to a Group or Team Member</source>
+            <source>Assign</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -1579,7 +1726,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="discussionCard.groupuser">
-            <source>Group/Team Member</source>
+            <source>Peer Group / Member {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -1648,6 +1795,20 @@
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.none">
+            <source>None of the above</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="discussionCard.onlyAdmin">
+            <source>Only Admins</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.or">
             <source>or</source>
             <target/>
@@ -2909,6 +3070,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="integration.notPermitted">
+            <source>You're not permitted to sync to Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="integration.offline">
             <source>Offline</source>
             <target/>
@@ -3205,6 +3373,13 @@
          </trans-unit>
          <trans-unit id="invite.newInviteTask">
             <source>Enter the email address of the person to invite.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Invite.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="invite.newInviteTask2">
+            <source>Separate multiple email addresses with a semicolon (';').</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -4218,6 +4393,20 @@
       			<context context-type="sourcefile">MediaTab.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="mediaTab.confirmChange">
+            <source>Confirm Change</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTab.confirmValue">
+            <source>Replace the current rights holder with {0}?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.date">
             <source>Date</source>
             <target/>
@@ -4498,6 +4687,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTitle.recordOrUpload">
+            <source>Record or Upload</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTitle.recording">
             <source>Recording...</source>
             <target/>
@@ -4517,6 +4713,41 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.provideAudio">
+            <source>Provide audio for '{0}'</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.unsavedChanges">
+            <source>Please cancel, save or upload.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.upload">
+            <source>Upload</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.uploadFailed">
+            <source>Upload Failed!</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.uploadFailStatus">
+            <source>{0} Upload Failed!</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TitleTabs.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.cancel">
@@ -5458,13 +5689,20 @@
       			<context context-type="sourcefile">passageType.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="peer.peerDescription">
-      		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+      	<trans-unit id="peer.assignment">
+      		<source>assignment</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.peerDescription">
+            <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="peer.editPeerGroup">
       		<source>Edit Peer Group</source>
       		<target/>
@@ -5472,20 +5710,34 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="peer.inUse">
-      		<source>Name already in use</source>
+      	<trans-unit id="peer.inSchemeUse">
+      		<source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peer.inUse">
+            <source>Name already in use</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="peer.permission">
+      		<source>permission</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">GroupDialog.tsx</context>
+      		</context-group>
+         </trans-unit>
          <trans-unit id="peer.permissions">
-      		<source>Special permission</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
+            <source>Special permission</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">GroupDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="peer.noSpecialPermission">
       		<source>No special permission</source>
       		<target/>
@@ -5600,13 +5852,6 @@
       	</trans-unit>
          <trans-unit id="permission.consultantInTrainingTip">
       		<source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">GroupDialog.tsx</context>
-      		</context-group>
-      	</trans-unit>
-         <trans-unit id="permission.nsp">
-      		<source>General</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
@@ -5921,7 +6166,7 @@
             </context-group>
          </trans-unit>         
          <trans-unit id="planSheet.confirmPublishSection">
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
@@ -6005,7 +6250,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.paratextRequired">
-            <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
+            <source>You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -6225,252 +6470,294 @@
             <source>Add</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.addMember">
             <source>Complete User Profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.additionalSettings">
+            <source>Additional Settings</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.checkingParatext">
             <source>Checking for {0} account...</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.close">
             <source>Close</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.completeProfile">
             <source>Complete User Profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="profile.defaultLocale">
       		<source>Default locale set.</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="profile.defaultTimezone">
       		<source>Default timezone set.</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
          <trans-unit id="profile.deleteExplained">
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
-            <target/>
+            <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
+            <target />
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.deleteUser">
             <source>Delete User</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.deleteWarning">
+            <source>The following action cannot be undone:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="profile.discardChanges">
       		<source>Discard unsaved Changes?</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="profile.discardChangesExplained">
       		<source>Discard unsaved Changes? ({0})</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">Profile.tsx</context>
+      			<context context-type="sourcefile">ProfileDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+        <trans-unit id="profile.edit">
+            <source>Edit Profile</source>
+            <target />
+            <context-group>
+                <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+        </trans-unit>
+        <trans-unit id="profile.editMember">
+            <source>Edit Member Profile</source>
+            <target />
+            <context-group>
+                <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+        </trans-unit>
          <trans-unit id="profile.email">
             <source>Email</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.family">
             <source>Family Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.given">
             <source>Given Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.installParatext">
             <source>Install {0} to be able to sync.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.linkingExplained">
             <source>Log out and log in with {0} button</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.locale">
             <source>Preferred Language</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.locked">
             <source>Locked</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.logout">
             <source>Logout</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.name">
             <source>Full Name</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.nameNotEmail">
             <source>Please choose a name other than your email address.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.next">
             <source>Next</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.notLinked">
             <source>Not linked to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextLinked">
             <source>Linked to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextLinking">
             <source>Linking to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.paratextNotLinked">
             <source>Link to {0}</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.phone">
             <source>Phone</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.role">
             <source>Team Role</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.save">
             <source>Save</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendDigest">
             <source>Receive Email Notifications and Digests</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sharedContentCreator">
             <source>Allow user to create shared content projects.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.syncFrequency">
             <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.syncFrequencyEnable">
+            <source>Enable Data Sync:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="profile.syncFrequencyLabel">
+            <source>Frequency:</source>
+            <target />
+            <context-group>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userExists">
             <source>This offline user exists.</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userProfile">
             <source>User profile</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
+               <context context-type="sourcefile">ProfileDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="projButtons.categoryTitle">
@@ -6698,7 +6985,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishTo.Internalization">
-            <source>Internalization Resources for other projects</source>
+            <source>Internalization Resources for other APM projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -7013,7 +7300,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.assignedToMe">
-            <source>Only rows with discussions assigned to me</source>
+            <source>Hide rows assigned to others</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -7070,6 +7357,13 @@
          </trans-unit>
          <trans-unit id="scriptureTableFilter.maximum">
             <source>Maximum</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.reset">
+            <source>Reset</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -7531,6 +7825,20 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.scheme">
+            <source>Permission Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">drawer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.scheme2">
+            <source>Assignment Scheme</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">drawer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.select">
             <source>Select</source>
             <target/>
@@ -7580,6 +7888,13 @@
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="shared.uploadSuccess">
+            <source>Upload Successful</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="shared.user">
             <source>Team Member</source>
             <target/>
@@ -8225,7 +8540,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.beginRecognize">
-            <source>Begin Recognition</source>
+            <source>Begin Auto Transcription</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -8581,6 +8896,13 @@
                <context context-type="sourcefile">ProjectDownload.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriptionTab.nopermission">
+            <source>You do not have permission to download the project.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="transcriptionTab.downloading">
             <source>Creation complete. Downloading {0}</source>
             <target/>
@@ -9317,6 +9639,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.basic">
+            <source>Basic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="vProject.cancel">
             <source>Cancel</source>
             <target/>
@@ -9479,6 +9808,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.newTag">
+            <source>New Tag</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="vProject.organizedBy">
             <source>Term for organizing layout</source>
             <target/>
@@ -9500,6 +9836,27 @@
                <context context-type="sourcefile">LastEdit.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.permissionSettings">
+            <source>Permissions</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.permissionEditSheet">
+            <source>Can Edit Spreadsheet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>           
+         <trans-unit id="vProject.permissionPublish">
+            <source>Can Publish</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>                    
          <trans-unit id="vProject.preview">
             <source>Preview</source>
             <target/>
@@ -10152,28 +10509,28 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeProgress">
-            <source>Recognize Speech in Progress</source>
+            <source>Auto Transcription in Progress</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizePrompt">
-            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeSpeech">
-            <source>Recognize Speech {0}</source>
+            <source>Auto Transcription {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.recognizeSpeechSettings">
-            <source>Recognize Speech Settings</source>
+            <source>Auto Transcription Settings</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailPlayer.tsx</context>

@@ -35,22 +35,22 @@ export const useNotes = () => {
         memory,
         'passage',
         related(sr, 'passage')
-      ) as PassageD[];
+      ) as PassageD;
       const secRec = findRecord(
         memory,
         'section',
         related(passRec, 'section')
-      ) as SectionD[];
+      ) as SectionD;
       const planRec = findRecord(
         memory,
         'plan',
         related(secRec, 'plan')
-      ) as PlanD[];
+      ) as PlanD;
       const projRec = findRecord(
         memory,
         'project',
         related(planRec, 'project')
-      ) as ProjectD[];
+      ) as ProjectD;
       if (related(projRec, 'organization') !== organization) return false;
       return sr?.attributes?.note ?? false;
     });
@@ -82,16 +82,16 @@ export const useNotes = () => {
     const rec = findRecord(
       memory,
       'passage',
-      related(r, 'passage')
+      related(r, 'passage') as string
     ) as PassageD;
     if (!rec?.attributes) return '';
     let source = '';
     const secRec = findRecord(
       memory,
       'section',
-      related(rec, 'section')
+      related(rec, 'section') as string
     ) as SectionD;
-    const myPlan = related(secRec, 'plan');
+    const myPlan = related(secRec, 'plan') as string;
     const planRec = findRecord(memory, 'plan', myPlan) as Plan;
     if (planRec?.attributes) {
       source += planRec.attributes.name + ':';

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings, ISharedStrings, User, UserD } from '../model';
 import {
@@ -16,11 +16,14 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { StyledMenu, StyledMenuItem } from '../control';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
-import { useLocation } from 'react-router-dom';
-import { localizeRole } from '../utils';
+import { 
+  localizeRole,
+  restoreScroll, 
+} from '../utils';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mainSelector, sharedSelector } from '../selector';
+import ProfileDialog from './ProfileDialog';
 
 const TermsItem = styled(StyledMenuItem)<MenuItemProps>(() => ({
   textAlign: 'center',
@@ -46,16 +49,22 @@ export function UserMenu(props: IProps) {
   const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
-  const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [userRec, setUserRec] = React.useState<UserD | undefined>(undefined);
+  const [profileOpen, setProfileOpen] = React.useState(false);
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleProfile = (visible: boolean) => () => {
+      if (visible !== profileOpen) setProfileOpen(visible);
+      restoreScroll();
+      setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -71,8 +80,6 @@ export function UserMenu(props: IProps) {
     setAnchorEl(null);
     if (action) action(what);
   };
-
-  const isProfile = useMemo(() => /\/profile/i.test(pathname), [pathname]);
 
   return (
     <div>
@@ -104,14 +111,12 @@ export function UserMenu(props: IProps) {
             />
           </StyledMenuItem>
         )}
-        {!isProfile && (
-          <StyledMenuItem id="myAccount" onClick={handleAction('Profile')}>
-            <ListItemIcon>
-              <AccountIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={t.myAccount} />
-          </StyledMenuItem>
-        )}
+        <StyledMenuItem id="myAccount" onClick={handleProfile(true)}>
+          <ListItemIcon>
+            <AccountIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary={t.myAccount} />
+        </StyledMenuItem>
         {shift && !isElectron && (
           <StyledMenuItem id="clearCache" onClick={handleAction('Clear')}>
             <ListItemIcon>
@@ -150,6 +155,12 @@ export function UserMenu(props: IProps) {
           <ListItemText primary={t.terms} />
         </TermsItem>
       </StyledMenu>
+
+      <ProfileDialog
+        mode='viewMyAccount'
+        open={profileOpen} 
+        onClose={handleProfile(false)}
+      />
     </div>
   );
 }

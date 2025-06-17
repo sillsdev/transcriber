@@ -15,6 +15,7 @@ import { InitializedRecord } from '@orbit/records';
 import { ISTFilterState } from '../components/Sheet/filterMenu';
 import { PassageTypeEnum } from '../model/passageType';
 import { PublishDestinationEnum } from '../crud/usePublishDestination';
+import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
 
 var mockMemory = {} as Memory;
 
@@ -321,6 +322,7 @@ var gsDefaults = {
   plan: '',
   sections: [] as SectionD[],
   passages: [] as PassageD[],
+  organizationSchemeSteps: [] as OrganizationSchemeStepD[],
   flat: false,
   projectShared: false,
   memory: mockMemory,
@@ -338,6 +340,8 @@ var gsDefaults = {
   readSharedResource,
   current: curSheet,
   getSharedResource,
+  user: 'u0',
+  myGroups: [],
 };
 
 var secResult = {
@@ -349,13 +353,13 @@ var secResult = {
   deleted: false,
   filtered: false,
   published: [] as PublishDestinationEnum[],
-  editor: undefined,
   graphicUri: undefined,
   graphicFullSizeUrl: undefined,
   graphicRights: undefined,
   reference: '',
   titleMediaId: undefined,
   transcriber: undefined,
+  scheme: undefined,
 } as ISheet;
 
 var pasResult = {
@@ -409,7 +413,7 @@ test('empty input with plan id gives empty output', () => {
   expect(getSheet({ ...gsDefaults, plan: 'pl1' })).toEqual([]);
 });
 
-test('one section gives output', () => {
+test('one section filters output', () => {
   expect(getSheet({ ...gsDefaults, plan: 'pl1', sections: [s1] })).toEqual([
     {
       ...secResult,

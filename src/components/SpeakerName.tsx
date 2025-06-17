@@ -11,6 +11,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, findRecord, related } from '../crud';
 import { Typography } from '@mui/material';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { useSnackBar } from '../hoc/SnackBar';
 
 interface NameOptionType {
   inputValue?: string;
@@ -21,20 +22,24 @@ const filter = createFilterOptions<NameOptionType>();
 
 interface IProps {
   name: string;
+  noNewVoice?: boolean;
   onChange?: (name: string) => void;
   onRights?: (hasRights: boolean) => void;
   createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
+  disabled?: boolean;
 }
 
 export function SpeakerName({
   name,
+  noNewVoice,
   onChange,
   onRights,
   createProject,
   team,
   recordingRequired,
+  disabled,
 }: IProps) {
   const ipRecs = useOrbitData<IntellectualProperty[]>('intellectualproperty');
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
@@ -42,11 +47,16 @@ export function SpeakerName({
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [organization] = useGlobal('organization');
+  const { showMessage } = useSnackBar();
   const [memory] = useGlobal('memory');
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
 
   const handleRights = () => {
     onRights && onRights(false);
+    if (noNewVoice) {
+      showMessage(t.noVoiceCreation);
+      return;
+    }
     setShowDialog(true);
   };
 
@@ -59,6 +69,19 @@ export function SpeakerName({
   const handleCancelRights = () => {
     setShowDialog(false);
     nameReset();
+  };
+
+  const getOptionLabel = (option: string | NameOptionType) => {
+    // Value selected with enter, right from the input
+    if (typeof option === 'string') {
+      return option;
+    }
+    // Add "xxx" option created dynamically
+    if (option.inputValue) {
+      return option.inputValue;
+    }
+    // Regular option
+    return option.name;
   };
 
   const handleRightsChange = (hasRights: boolean) => {
@@ -131,7 +154,11 @@ export function SpeakerName({
         ...orgIp.map((r) => ({ name: r.attributes.rightsHolder }))
       );
     }
-    setSpeakers(newSpeakers);
+    setSpeakers(
+      newSpeakers.sort((a, b) =>
+        getOptionLabel(a).localeCompare(getOptionLabel(b))
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipRecs, team, organization, recordingRequired]);
 
@@ -153,6 +180,7 @@ export function SpeakerName({
         value={value}
         onChange={(event, newValue) => handleChoice(newValue)}
         onClose={handleLeave}
+        disabled={disabled}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
@@ -175,18 +203,7 @@ export function SpeakerName({
         handleHomeEndKeys
         id="speaker-name"
         options={speakers}
-        getOptionLabel={(option) => {
-          // Value selected with enter, right from the input
-          if (typeof option === 'string') {
-            return option;
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          // Regular option
-          return option.name;
-        }}
+        getOptionLabel={getOptionLabel}
         renderOption={(props, option) => <li {...props}>{option.name}</li>}
         sx={{ width: 300, marginTop: '5px' }}
         freeSolo

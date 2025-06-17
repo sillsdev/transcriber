@@ -16,16 +16,25 @@ import { Paper, SxProps, Typography } from '@mui/material';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import { ISharedStrings } from '../../model';
+import { useStepPermissions } from '../../utils/useStepPermission';
 
 const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
 
 export default function PassageDetailParatextIntegration() {
-  const { passage, currentstep, sectionArr, gotoNextStep, setStepComplete } =
-    usePassageDetailContext();
+  const {
+    section,
+    passage,
+    currentstep,
+    sectionArr,
+    gotoNextStep,
+    setStepComplete,
+  } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan'); //will be constant here
   const { slugFromId } = useArtifactType();
   const planType = usePlanType();
+  const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
   const { settings } = useStepTool(currentstep);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
@@ -69,6 +78,7 @@ export default function PassageDetailParatextIntegration() {
       currentstep={currentstep}
       sectionArr={sectionArr}
       gotoNextStep={gotoNextStep}
+      isPermitted={hasPermission}
     />
   ) : (
     <Paper sx={paperProps}>

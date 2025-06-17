@@ -1,5 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
+import {
+  IScriptureTableFilterStrings,
+  ISharedStrings,
+  OrgWorkflowStep,
+} from '../../model';
 import {
   IconButton,
   Badge,
@@ -13,8 +17,11 @@ import {
   Switch,
 } from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
-import { iconMargin, PriButton, StyledMenu } from '../../control';
-import { scriptureTableFilterMenuSelector } from '../../selector';
+import { AltButton, iconMargin, PriButton, StyledMenu } from '../../control';
+import {
+  scriptureTableFilterMenuSelector,
+  sharedSelector,
+} from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { OrgWorkflowStepList } from './OrgWorkflowStepList';
 import { useOrganizedBy } from '../../crud';
@@ -39,7 +46,7 @@ interface IProps {
   maximumSection: number;
   hidePublishing: boolean;
   onFilterChange: (
-    newstate: ISTFilterState | undefined,
+    newstate: ISTFilterState | undefined | null,
     isDefault: boolean
   ) => void;
   filtered: boolean;
@@ -81,6 +88,8 @@ export function FilterMenu(props: IProps) {
     scriptureTableFilterMenuSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
   const [changed, setChanged] = useState(false);
 
   const { getOrganizedBy } = useOrganizedBy();
@@ -98,32 +107,33 @@ export function FilterMenu(props: IProps) {
   };
 
   const apply = (
-    filterState: ISTFilterState | undefined,
+    filterState: ISTFilterState | undefined | null,
     projDefault: boolean
   ) => {
     setApplying(true);
     onFilterChange(filterState, projDefault);
     setApplying(false);
+    handleDefaultCheck(false);
     setChanged(false);
   };
   const handleApply = () => {
     apply(localState, defaultRef.current);
   };
-  const handleClear = () => {
+  const handleReset = (clear?: boolean) => {
     setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : undefined);
     setMapMax(!hidePublishing ? sectionMap.get(-1) : undefined);
     setMinHelp('');
     setMaxHelp('');
-    apply(undefined, defaultRef.current);
+    apply(clear ? null : undefined, defaultRef.current);
     setAnchorEl(null);
   };
   const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
     apply({ ...localState, disabled: event.target.checked }, false);
   };
   useEffect(() => {
-    setLocalState({ ...props.state });
+    if (!changed) setLocalState({ ...props.state });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.state]);
+  }, [props.state, changed]);
 
   const filterChange = (what: string, value: any) => {
     var newstate = { ...localState } as any;
@@ -315,6 +325,7 @@ export function FilterMenu(props: IProps) {
                   value="projDefault"
                 />
               }
+              disabled={localState.disabled}
               label={t.saveFilter}
             />
             <FormControlLabel
@@ -330,16 +341,17 @@ export function FilterMenu(props: IProps) {
             />
           </Box>
         )}
-        <PriButton
-          autoFocus
+        <AltButton autoFocus sx={btnProp} onClick={() => handleReset()}>
+          {t.reset}
+        </AltButton>
+        <AltButton
           sx={btnProp}
-          onClick={handleClear}
+          onClick={() => handleReset(true)}
           disabled={applyingRef.current || !filtered}
         >
           {t.clear}
-        </PriButton>
-        <PriButton
-          autoFocus
+        </AltButton>
+        <AltButton
           sx={btnProp}
           onClick={handleApply}
           disabled={
@@ -350,6 +362,9 @@ export function FilterMenu(props: IProps) {
           }
         >
           {t.apply}
+        </AltButton>
+        <PriButton autoFocus sx={btnProp} onClick={handleClose}>
+          {ts.close}
         </PriButton>
       </StyledMenu>
     </Badge>

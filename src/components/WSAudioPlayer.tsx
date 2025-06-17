@@ -131,6 +131,7 @@ interface IProps {
   onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
   onMarkerClick?: (time: number) => void;
   reload?: (blob: Blob) => void;
+  noNewVoice?: boolean;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -198,6 +199,7 @@ function WSAudioPlayer(props: IProps) {
     onCurrentSegment,
     onMarkerClick,
     reload,
+    noNewVoice,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -792,7 +794,7 @@ function WSAudioPlayer(props: IProps) {
       cancelAIRef.current = false;
       try {
         doingAI(true);
-        const filename = `${Date.now()}nr.wav`;
+        const filename = `${Date.now()}ai.wav`;
         wsRegionBlob().then((blob) => {
           if (blob) {
             requestAudioAi({
@@ -1044,6 +1046,7 @@ function WSAudioPlayer(props: IProps) {
                               duration === 0 ||
                               waitingForAI
                             }
+                            allowSettings={duration === 0}
                           >
                             <VoiceConversionLogo
                               sx={{
@@ -1425,6 +1428,8 @@ function WSAudioPlayer(props: IProps) {
               bp={BigDialogBp.sm}
             >
               <SelectVoice
+                noNewVoice={noNewVoice && duration > 0}
+                onlySettings={duration === 0}
                 onOpen={handleCloseVoice}
                 begin={applyVoiceChange}
                 refresh={handleRefresh}

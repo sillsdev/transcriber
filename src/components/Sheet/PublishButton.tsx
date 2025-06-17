@@ -10,6 +10,7 @@ import { rowTypes } from './rowTypes';
 import { PublishDestinationEnum, usePublishDestination } from '../../crud';
 
 interface IProps {
+  canPublish: boolean;
   sectionMap: Map<number, string>;
   rowInfo: ISheet[];
   rowIndex: number;
@@ -18,7 +19,8 @@ interface IProps {
 }
 
 export const PublishButton = (props: IProps) => {
-  const { sectionMap, rowInfo, rowIndex, organizedBy, onAction } = props;
+  const { canPublish, sectionMap, rowInfo, rowIndex, organizedBy, onAction } =
+    props;
   const { isMovement } = rowTypes(rowInfo);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const sectionSequenceNumber =
@@ -41,6 +43,7 @@ export const PublishButton = (props: IProps) => {
       title={t.changepublish
         .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
+      disabled={!canPublish}
     />
   ) : (
     <IconButton
@@ -50,6 +53,7 @@ export const PublishButton = (props: IProps) => {
         .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
       sx={{ p: '2px' }}
+      disabled={!canPublish}
     >
       <RadioButtonUnchecked color="primary" />
     </IconButton>

@@ -22,13 +22,13 @@ import {
 import GraphicRights from '../GraphicRights';
 import { useGlobal } from '../../context/GlobalContext';
 import { useOrbitData } from '../../hoc/useOrbitData';
-import { GraphicD, ICategoryStrings } from '../../model';
+import { GraphicD, ICategoryStrings, ISharedStrings } from '../../model';
 import { UploadType } from '../MediaUpload';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { Avatar, Button, IconButton, styled } from '@mui/material';
 import { ColorResult } from '@uiw/color-convert';
 import { RecordKeyMap } from '@orbit/records';
-import { categorySelector } from '../../selector';
+import { categorySelector, sharedSelector } from '../../selector';
 
 const StyledColorful = styled(Colorful)<ColorfulProps>(() => ({
   '& .w-color-alpha': {
@@ -90,6 +90,7 @@ export default function CategoryEdit({
   const resourceType = 'category';
 
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleTitleChange = (value: string) => {
     value = value.replace(/\|/g, '').trim(); // remove pipe character
@@ -107,7 +108,14 @@ export default function CategoryEdit({
     onChanged(category);
   };
   const handleUploadGraphicVisible = (v: boolean) => {
-    setUploadGraphicVisible(v);
+    if (!v && !cancelled.current) {
+      afterConvert([]).then(() => {
+        setUploadGraphicVisible(false);
+        showMessage(ts.saving);
+      });
+    } else {
+      setUploadGraphicVisible(v);
+    }
   };
 
   const handleRightsChange = (value: string) => {
@@ -144,7 +152,10 @@ export default function CategoryEdit({
   }, [graphicRec]);
 
   const afterConvert = async (images: CompressedImages[]) => {
-    const infoData: IGraphicInfo = { [Rights]: graphicRights };
+    const curData = JSON.parse(
+      graphicRec?.attributes?.info || '{}'
+    ) as IGraphicInfo;
+    const infoData: IGraphicInfo = { ...curData, [Rights]: graphicRights };
     images.forEach((image) => {
       infoData[image.dimension.toString()] = image;
     });
@@ -156,7 +167,7 @@ export default function CategoryEdit({
       };
       var newrec = (await graphicUpdate(upd)) as GraphicD;
       setGraphicRec(newrec);
-    } else {
+    } else if (images.length > 0) {
       setGraphicRec(
         await graphicCreate({
           resourceType,

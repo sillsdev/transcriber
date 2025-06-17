@@ -1,14 +1,13 @@
 import { Box, debounce, useTheme } from '@mui/material';
 import { Stage } from '../../control/Stage';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { toCamel } from '../../utils';
 import { useEffect, useState } from 'react';
 import { SimpleWf } from '../../context/PassageDetailContext';
 import { useGetGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
-import { addPt } from '../../utils/addPt';
+import { useWfLabel } from '../../utils/useWfLabel';
 
 export function WorkflowSteps() {
   const {
@@ -16,7 +15,6 @@ export function WorkflowSteps() {
     stepComplete,
     currentstep,
     setCurrentStep,
-    wfStr,
     firstStepIndex,
     setFirstStepIndex,
     recording,
@@ -28,6 +26,7 @@ export function WorkflowSteps() {
   const [stageWdith, setStageWidth] = useState(300);
   const { showMessage } = useSnackBar();
   const ts = useSelector(sharedSelector, shallowEqual);
+  const getWfLabel = useWfLabel();
   const getGlobal = useGetGlobal();
   const prevWF = {
     id: 'prev',
@@ -107,32 +106,26 @@ export function WorkflowSteps() {
   };
   return (
     <Box sx={{ display: 'flex', m: 1, alignItems: 'center' }}>
-      {shownWorkflow.map((w) => {
-        const cameLabel = toCamel(w.label);
-        const label = wfStr.hasOwnProperty(cameLabel)
-          ? addPt(wfStr.getString(cameLabel))
-          : w.label;
-        return (
-          <Stage
-            key={w.id}
-            id={w.id}
-            disabled={recording || commentRecording}
-            label={label}
-            color={curColor(w.id)}
-            textColor={
-              w.id === currentstep
-                ? theme.palette.secondary.contrastText
-                : recording || commentRecording
-                ? '#d3d3d3'
-                : '#000000'
-            }
-            wid={stageWdith}
-            done={stepComplete(w.id)}
-            select={handleSelect}
-            moveStep={moveStep}
-          />
-        );
-      })}
+      {shownWorkflow.map((w) => (
+        <Stage
+          key={w.id}
+          id={w.id}
+          disabled={recording || commentRecording}
+          label={getWfLabel(w.label)}
+          color={curColor(w.id)}
+          textColor={
+            w.id === currentstep
+              ? theme.palette.secondary.contrastText
+              : recording || commentRecording
+              ? '#d3d3d3'
+              : '#000000'
+          }
+          wid={stageWdith}
+          done={stepComplete(w.id)}
+          select={handleSelect}
+          moveStep={moveStep}
+        />
+      ))}
     </Box>
   );
 }

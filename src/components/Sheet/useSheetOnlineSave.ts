@@ -6,8 +6,8 @@ import {
   RecordIdentity,
   StandardRecordNormalizer,
   RecordKeyMap,
+  InitializedRecord,
 } from '@orbit/records';
-import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import {
   remoteId,
@@ -15,6 +15,7 @@ import {
   remoteIdGuid,
   findRecord,
   usePublishDestination,
+  waitForRemoteId,
 } from '../../crud';
 import {
   isSectionRow,
@@ -24,9 +25,13 @@ import {
   isSectionUpdated,
   isPassageUpdated,
 } from '.';
-import { waitForIt, generateUUID } from '../../utils';
+import {
+  waitForIt,
+  generateUUID,
+  useDataChanges,
+  currentDateTime,
+} from '../../utils';
 import { usePassageType } from '../../crud/usePassageType';
-import { pullRemoteToMemory } from '../../crud/syncToMemory';
 
 interface SaveRec {
   id: string;
@@ -52,12 +57,11 @@ export const useWfOnlineSave = (props: IProps) => {
   const { setComplete } = props;
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan'); //will be constant here
   const { getPassageTypeRec, checkIt } = usePassageType();
   const { setPublishTo, isPublished } = usePublishDestination();
-
+  const forceDataChanges = useDataChanges();
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
       'remoteId',
@@ -150,6 +154,7 @@ export const useWfOnlineSave = (props: IProps) => {
       const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
+      let startTime = currentDateTime();
       let rec = await memory.update((t) => t.addRecord(sp), {
         label: 'Update Plan Section and Passages',
         sources: {
@@ -163,17 +168,14 @@ export const useWfOnlineSave = (props: IProps) => {
       //null only if sent twice by orbit
       if (rec) {
         setComplete(50);
-        const filter = [
-          {
-            attribute: 'plan-id',
-            value: remoteId('plan', plan, memory?.keyMap as RecordKeyMap),
-          },
-        ];
+
+        await waitForRemoteId(
+          rec as InitializedRecord,
+          memory?.keyMap as RecordKeyMap
+        );
         //must wait for these...in case they they navigate away before done
-        for (const table of ['section', 'passage']) {
-          await pullRemoteToMemory({ table, memory, remote, filter });
-        }
-        await pullRemoteToMemory({ table: 'plan', memory, remote });
+        await forceDataChanges(startTime);
+
         const anyNew = sheet.reduce(
           (prev, cur) =>
             prev ||

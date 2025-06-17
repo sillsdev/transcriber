@@ -19,6 +19,7 @@ import {
   GroupD,
   RoleNames,
   IPeerStrings,
+  GroupMembershipD,
 } from '../../model';
 import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
@@ -30,7 +31,7 @@ import { InitializedRecord } from '@orbit/records';
 import { useOrbitData } from '../../hoc/useOrbitData';
 
 export function Peer() {
-  const memberships = useOrbitData<GroupMembership[]>('groupmembership');
+  const memberships = useOrbitData<GroupMembershipD[]>('groupmembership');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
@@ -81,6 +82,13 @@ export function Peer() {
   };
 
   const handleRemove = async (id: string) => {
+    // remove all group memberships
+    await memory.update((t) =>
+      memberships
+        .filter((m) => related(m, 'group') === id)
+        .map((m) => t.removeRecord(m))
+    );
+    // remove group
     await memory.update((t) => t.removeRecord({ type: 'group', id }));
   };
 

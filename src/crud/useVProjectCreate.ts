@@ -50,6 +50,10 @@ export const useVProjectCreate = () => {
       tags,
       organizedBy,
       defaultParams,
+      sheetUser,
+      sheetGroup,
+      publishUser,
+      publishGroup,
     } = vProject.attributes;
 
     let project: Project = {
@@ -104,6 +108,34 @@ export const useVProjectCreate = () => {
         'owner',
         'user',
         user
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
+        'editsheetuser',
+        'user',
+        sheetUser
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
+        'editsheetgroup',
+        'group',
+        sheetGroup
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
+        'publishuser',
+        'user',
+        publishUser
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
+        'publishgroup',
+        'group',
+        publishGroup
       ),
     ]);
     await offlineProjectCreate(project);

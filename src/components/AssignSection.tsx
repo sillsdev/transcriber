@@ -1,220 +1,408 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
-  Section,
-  SectionD,
   IAssignSectionStrings,
   ISharedStrings,
-  OrganizationMembership,
-  UserD,
+  OrgWorkflowStepD,
+  SectionD,
 } from '../model';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Radio,
-  ListItemAvatar,
-  IconButton,
+  TextField,
+  LinearProgress,
 } from '@mui/material';
 import {
-  Grid,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Box,
-  SxProps,
-} from '@mui/material';
-import UserAvatar from './UserAvatar';
-import {
+  orgDefaultPermissions,
+  pullTableList,
   related,
-  sectionTranscriberName,
-  sectionEditorName,
-  sectionNumber,
+  remoteId,
   useOrganizedBy,
+  useOrgDefaults,
 } from '../crud';
-import { TranscriberIcon, EditorIcon } from './RoleIcons';
-import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
-import { PriButton } from '../control';
+import { AddRecord, UpdateRelatedRecord } from '../model/baseModel';
+import { AltButton, GrowingSpacer, PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
-import { PlanContext } from '../context/PlanContext';
+import GroupOrUserAssignment from '../control/GroupOrUserAssignment';
+import { OrganizationSchemeD } from '../model/organizationScheme';
+import { waitForIt } from '../utils/waitForIt';
+import { OrganizationSchemeStepD } from '../model/organizationSchemeStep';
+import {
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
+import Confirm from './AlertDialog';
+import { useWfLabel } from '../utils/useWfLabel';
+import { axiosPatch } from '../utils/axios';
+import { TokenContext } from '../context/TokenProvider';
+import IndexedDBSource from '@orbit/indexeddb';
+import JSONAPISource from '@orbit/jsonapi';
+import logError, { Severity } from '../utils/logErrorService';
+import { useWaitForRemoteQueue } from '../utils/useWaitForRemoteQueue';
 
-const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
-const gridProps = { m: 'auto', p: 1 } as SxProps;
-
-interface SectionListProps {
-  sections: Array<Section>;
-  users: UserD[];
-}
-
-function SectionList({ sections, users }: SectionListProps) {
-  const { sectionArr } = useContext(PlanContext).state;
-  const sectionMap = new Map<number, string>(sectionArr);
-  return (
-    <>
-      {sections.map((p) => {
-        return (
-          <TableRow key={p.id}>
-            <TableCell component="th" scope="row">
-              {sectionNumber(p, sectionMap) + ' ' + p.attributes.name}
-            </TableCell>
-            <TableCell align="right">
-              {sectionTranscriberName(p, users)}
-            </TableCell>
-            <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
-          </TableRow>
-        );
-      })}
-    </>
-  );
-}
-
-interface UserListProps {
-  id?: string;
-  users: UserD[];
-  memberIds: string[];
-  selected: string;
-  select: (id: string) => () => void;
-}
-
-function UserList({ id, users, memberIds, selected, select }: UserListProps) {
-  return (
-    <>
-      {users
-        .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
-        .map((m) => {
-          const labelId = 'user-' + m.attributes.name;
-          return (
-            <ListItem
-              id={`${id}-${m.id}`}
-              key={`${id}-${m.id}`}
-              role="listitem"
-              onClick={select(m.id as string)}
-            >
-              <ListItemIcon>
-                <Radio
-                  checked={selected === m.id}
-                  tabIndex={-1}
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemAvatar>
-                <UserAvatar userRec={m} />
-              </ListItemAvatar>
-              <ListItemText id={labelId} primary={m.attributes.name} />
-            </ListItem>
-          );
-        })}
-    </>
-  );
+enum ConfirmType {
+  delete,
+  modify,
 }
 
 interface IProps {
-  sections: Array<Section>;
+  sections: Array<SectionD>;
+  scheme?: string; // id of scheme to edit
   visible: boolean;
-  closeMethod?: () => void;
+  closeMethod?: (cancel?: boolean) => void;
   refresh?: () => void;
+  readOnly?: boolean;
+  inChange?: boolean; // if true, the dialog is opened from a change request
 }
-export enum TranscriberActors {
-  Transcriber = 'Transcriber',
-  Editor = 'Editor',
-}
+
 function AssignSection(props: IProps) {
-  const { sections, visible, closeMethod, refresh } = props;
+  const { sections, scheme, visible, closeMethod, readOnly, refresh } = props;
   const t: IAssignSectionStrings = useSelector(
     assignSectionSelector,
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const users = useOrbitData<UserD[]>('user');
-  const orgMemberships = useOrbitData<OrganizationMembership[]>(
-    'organizationmembership'
+  const allOrgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
+  const schemes = useOrbitData<OrganizationSchemeD[]>('organizationscheme');
+  const steps = useOrbitData<OrganizationSchemeStepD[]>(
+    'organizationschemestep'
   );
+  const allSections = useOrbitData<SectionD[]>('section');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const [errorReporter] = useGlobal('errorReporter');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const [user] = useGlobal('user');
+  const [org] = useGlobal('organization');
   const [open, setOpen] = useState(visible);
-  const [memberIds, setMemberIds] = useState<string[]>([]);
-  const [selectedTranscriber, setSelectedTranscriber] = useState('');
-  const [selectedReviewer, setSelectedReviewer] = useState('');
+  const [schemeName, setSchemeName] = useState('');
+  const [assignArr, setAssignArr] = useState<[string, string][]>([]);
+  const [changed, setChanged] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = useState('');
+  const [confirm, setConfirm] = useState<ConfirmType>();
+  const [confirmMsg, setConfirmMsg] = useState('');
+  const getWfLabel = useWfLabel();
+  const { getOrgDefault } = useOrgDefaults();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
+  const isPermission = useMemo(
+    () => Boolean(getOrgDefault(orgDefaultPermissions)),
+    [getOrgDefault]
+  );
+  const token = useContext(TokenContext).state.accessToken ?? '';
 
-  const handleClose = () => {
-    if (closeMethod) {
-      closeMethod();
-    }
-    setOpen(false);
-  };
+  const orgSteps = useMemo(() => {
+    return allOrgSteps?.filter(
+      (s) => related(s, 'organization') === organization
+    );
+  }, [allOrgSteps, organization]);
+  const impactedSections = useMemo(() => {
+    return allSections?.filter(
+      (s) => related(s, 'organizationScheme') === scheme
+    );
+  }, [allSections, scheme]);
 
-  const assign = async (
-    section: Section,
-    userId: string,
-    role: TranscriberActors
-  ) => {
-    await memory.update((t) => [
+  const isNameDuplicate = useMemo(() => {
+    return schemes
+      .filter((s) => s.id !== scheme && related(s, 'organization') === org)
+      .some((s) => s.attributes?.name === schemeName.trim());
+  }, [scheme, schemeName, schemes, org]);
+
+  interface IStepProps {
+    t: RecordTransformBuilder;
+    ops: RecordOperation[];
+    schemeRec: OrganizationSchemeD;
+    step: string;
+    relateType: string;
+    actorId: string;
+    value: string;
+  }
+  const createSchemeStep = ({
+    t,
+    ops,
+    schemeRec,
+    step,
+    relateType,
+    actorId,
+  }: IStepProps) => {
+    const stepRec = {
+      type: 'organizationschemestep',
+      attributes: {},
+    } as OrganizationSchemeStepD;
+    ops.push(...AddRecord(t, stepRec, user, memory));
+    ops.push(
       ...UpdateRelatedRecord(
         t,
-        section as SectionD,
-        role.toLowerCase(),
-        'user',
-        userId,
+        stepRec,
+        'organizationscheme',
+        'organizationscheme',
+        schemeRec.id,
         user
-      ),
-      ...UpdateLastModifiedBy(
+      )
+    );
+    ops.push(
+      ...UpdateRelatedRecord(
         t,
-        { type: 'plan', id: related(section, 'plan') },
+        stepRec,
+        'orgWorkflowStep',
+        'orgworkflowstep',
+        step,
+        user
+      )
+    );
+    ops.push(
+      ...UpdateRelatedRecord(t, stepRec, relateType, relateType, actorId, user)
+    );
+  };
+
+  const handleAdd = async () => {
+    let schemeRec = schemes.find((s) => s.id === scheme) as
+      | OrganizationSchemeD
+      | undefined;
+    if (schemeRec !== undefined) {
+      // update name if changed
+      if (schemeName !== schemeRec?.attributes?.name) {
+        await memory.update((t) =>
+          t.replaceAttribute(
+            schemeRec as OrganizationSchemeD,
+            'name',
+            schemeName.trim()
+          )
+        );
+      }
+      for (let [step, value] of assignArr) {
+        if (!step) continue;
+        const [actorType, actorId] = value.split(':');
+        const relateType = actorType === 'u' ? 'user' : 'group';
+        let t = new RecordTransformBuilder();
+        let ops: RecordOperation[] = [];
+        let stepRec = steps.find(
+          (s) =>
+            related(s, 'organizationscheme') === scheme &&
+            related(s, 'orgWorkflowStep') === step
+        ) as OrganizationSchemeStepD | undefined;
+        // if the step permission exists, update it
+        if (stepRec !== undefined) {
+          const curId = related(stepRec, relateType);
+          if (curId !== actorId) {
+            ops.push(
+              ...UpdateRelatedRecord(
+                t,
+                stepRec,
+                relateType,
+                relateType,
+                actorId,
+                user
+              )
+            );
+          }
+          // changing the type user <=> group, remove old type
+          const otherType = actorType === 'u' ? 'group' : 'user';
+          const otherId = related(stepRec, otherType);
+          if (otherId !== '') {
+            ops.push(
+              ...UpdateRelatedRecord(t, stepRec, otherType, otherType, '', user)
+            );
+          }
+        } else {
+          createSchemeStep({
+            t,
+            ops,
+            schemeRec,
+            step,
+            relateType,
+            actorId,
+            value,
+          });
+        }
+        if (ops.length > 0) {
+          await memory.update(ops);
+        }
+      }
+
+      return schemeRec.id as string;
+    }
+    schemeRec = {
+      type: 'organizationscheme',
+      attributes: {
+        name: schemeName.trim(),
+      },
+    } as OrganizationSchemeD;
+    await memory.update((t) => [
+      ...AddRecord(t, schemeRec as OrganizationSchemeD, user, memory),
+      ...UpdateRelatedRecord(
+        t,
+        schemeRec as OrganizationSchemeD,
+        'organization',
+        'organization',
+        organization,
         user
       ),
     ]);
+    await waitForIt(
+      'add scheme',
+      () => Boolean(schemeRec?.id),
+      () => false,
+      500
+    );
+    for (let [step, value] of assignArr) {
+      let t = new RecordTransformBuilder();
+      let ops: RecordOperation[] = [];
+      const [actorType, actorId] = value.split(':');
+      const relateType = actorType === 'u' ? 'user' : 'group';
+      createSchemeStep({
+        t,
+        ops,
+        schemeRec,
+        step,
+        relateType,
+        actorId,
+        value,
+      });
+      await memory.update(ops);
+    }
+    return schemeRec.id as string;
   };
 
-  const handleSelectTranscriber = (id: string) => async () => {
-    const newVal = id !== selectedTranscriber ? id : '';
-    setSelectedTranscriber(newVal);
-    for (let s of sections) {
-      await assign(s, newVal, TranscriberActors.Transcriber);
+  const doAssign = async (schemeId: string) => {
+    if (!sections.some((s) => related(s, 'organizationScheme') !== schemeId))
+      return;
+    var ids = sections.map(
+      (s) => remoteId('section', s.id, memory.keyMap as RecordKeyMap) as string
+    );
+    var list = ids.join('|');
+    var id = remoteId(
+      'organizationscheme',
+      schemeId,
+      memory.keyMap as RecordKeyMap
+    );
+    await waitForRemoteQueue('steps created');
+    try {
+      await axiosPatch(`sections/assign/${id}/${list}`, undefined, token);
+      await pullTableList(
+        'section',
+        ids,
+        memory,
+        remote,
+        backup,
+        errorReporter
+      );
+    } catch (err) {
+      logError(Severity.error, errorReporter, err as Error);
     }
-    refresh && refresh();
-  };
-  const handleSelectReviewer = (id: string) => async () => {
-    const newVal = id !== selectedReviewer ? id : '';
-    setSelectedReviewer(newVal);
-    for (let s of sections) {
-      await assign(s, newVal, TranscriberActors.Editor);
-    }
-    refresh && refresh();
   };
 
-  const doSetSelected = (section: Section) => {
-    const newTranscriber = related(section, 'transcriber');
-    if (selectedTranscriber !== newTranscriber) {
-      setSelectedTranscriber(related(section, 'transcriber'));
+  const justClose = (cancel?: boolean) => {
+    setChanged(false);
+    setSaving(false);
+    setConfirm(undefined);
+    refresh?.();
+    closeMethod?.(cancel);
+    setOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    if (scheme) {
+      //remove scheme assignment on sections
+      await memory.update((t) =>
+        impactedSections.map((s) =>
+          t.replaceRelatedRecord(s, 'organizationScheme', null)
+        )
+      );
+      //remove steps used by scheme
+      await memory.update((t) =>
+        steps
+          .filter((s) => related(s, 'organizationscheme') === scheme)
+          .map((s) => t.removeRecord(s))
+      );
+      //remove scheme
+      await memory.update((t) =>
+        t.removeRecord({ type: 'organizationscheme', id: scheme })
+      );
+      setSchemeName('');
     }
-    const newReviewer = related(section, 'editor');
-    if (selectedReviewer !== newReviewer) {
-      setSelectedReviewer(related(section, 'editor'));
+    justClose();
+  };
+
+  const handleDelete = async () => {
+    if (impactedSections.length > 0) {
+      const nImp = impactedSections.length;
+      setConfirmMsg(
+        t.deleteSections
+          .replace('{0}', nImp.toString())
+          .replace('{1}', getOrganizedBy(nImp === 1))
+      );
+      setConfirm(ConfirmType.delete);
+      return;
     }
+    await confirmDelete();
+  };
+
+  const confirmClose = async () => {
+    setSaving(true);
+    setBusy(true);
+    const schemeId = await handleAdd();
+    await doAssign(schemeId);
+    setBusy(false);
+    justClose();
+  };
+
+  const handleClose = async () => {
+    if (readOnly || !schemeName.trim() || isNameDuplicate) {
+      justClose();
+      return;
+    }
+    const nImp = impactedSections.length;
+    if (changed && nImp > sections.length) {
+      const nSecs = sections.length;
+      setConfirmMsg(
+        t.modifySections
+          .replace('{0}', nSecs.toString())
+          .replace('{1}', getOrganizedBy(nSecs === 1))
+          .replace('{2}', nImp.toString())
+          .replace('{3}', getOrganizedBy(nImp === 1))
+      );
+      setConfirm(ConfirmType.modify);
+      return;
+    }
+    await confirmClose();
   };
 
   useEffect(() => {
-    const newIds: string[] = orgMemberships
-      .filter((gm) => related(gm, 'organization') === organization)
-      .map((gm) => related(gm, 'user'))
-      .sort();
-    setMemberIds(newIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgMemberships, organization]);
+    if (scheme) {
+      const schemeRec = schemes.find((s) => s.id === scheme);
+      if (schemeRec) {
+        setSchemeName(schemeRec.attributes?.name);
+      }
+      if (steps?.length > 0) {
+        const assignMap = new Map<string, string>();
+        for (let s of steps.filter(
+          (s) => related(s, 'organizationscheme') === scheme
+        )) {
+          const step = related(s, 'orgWorkflowStep');
+          if (related(s, 'group')) {
+            assignMap.set(step, 'g:' + related(s, 'group'));
+          } else if (related(s, 'user')) {
+            assignMap.set(step, 'u:' + related(s, 'user'));
+          }
+        }
+        setAssignArr(Array.from(assignMap.entries()));
+      }
+    } else {
+      setSchemeName('');
+      setAssignArr([]);
+    }
+  }, [steps, schemes, scheme]);
 
   useEffect(() => {
     const newOrganizedBy = getOrganizedBy(false);
@@ -225,111 +413,115 @@ function AssignSection(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (open !== visible) {
-      setOpen(visible);
-    }
-    doSetSelected(sections[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, sections]);
+    if (visible) setOpen(true);
+  }, [visible]);
+
+  const handleAssign = (step: string, value: string) => {
+    const assignMap = new Map<string, string>(assignArr);
+    assignMap.set(step, value);
+    setAssignArr(Array.from(assignMap.entries()));
+    setChanged(true);
+  };
+
+  const handleNameChange = (name: string) => {
+    setSchemeName(name);
+    setChanged(true);
+  };
 
   return (
-    <div>
+    <>
       <Dialog
         open={open}
         fullWidth={true}
-        maxWidth="md"
+        maxWidth="sm"
         onClose={handleClose}
         aria-labelledby="assignDlg"
         disableEnforceFocus
       >
         <DialogTitle id="assignDlg">
-          {t.title.replace('{0}', organizedBy)}
+          {isPermission ? t.title : t.title2}
         </DialogTitle>
         <DialogContent>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="flex-start"
-            sx={gridProps}
-          >
-            <Paper>
-              <Table sx={{ minWidth: 650 }} size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{organizedBy}</TableCell>
-                    <TableCell align="right">
-                      <Box sx={headProps}>
-                        <TranscriberIcon />
-                        {ts.transcriber}
-                      </Box>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={headProps}>
-                        <EditorIcon />
-                        {ts.editor}
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <SectionList sections={sections} users={users} />
-                </TableBody>
-              </Table>
-            </Paper>
-          </Grid>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="center"
-            alignItems="flex-start"
-            sx={gridProps}
-          >
-            <Grid item>
-              <Paper>
-                <List dense component="div">
-                  <ListItem key="head">
-                    <TranscriberIcon />
-                    {ts.transcriber}
-                  </ListItem>
-                  <UserList
-                    id={'assignTranscriber'}
-                    users={users}
-                    memberIds={memberIds}
-                    selected={selectedTranscriber}
-                    select={handleSelectTranscriber}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <List dense component="div">
-                  <ListItem key="head">
-                    <IconButton>
-                      <EditorIcon />
-                    </IconButton>
-                    {ts.editor}
-                  </ListItem>
-                  <UserList
-                    id={'assignEditor'}
-                    users={users}
-                    memberIds={memberIds}
-                    selected={selectedReviewer}
-                    select={handleSelectReviewer}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-          </Grid>
+          <TextField
+            id="scheme-name"
+            label={isPermission ? t.schemeName : t.schemeName2}
+            value={schemeName}
+            helperText={
+              isNameDuplicate && schemeName.trim() !== ''
+                ? isPermission
+                  ? t.duplicateName
+                  : t.duplicateName2
+                : ''
+            }
+            onChange={(e) => handleNameChange(e.target.value)}
+            disabled={readOnly || saving}
+            sx={{ m: 1, width: '40ch' }}
+          />
+          {orgSteps
+            .filter((s) => (s?.attributes?.sequencenum ?? -1) >= 0)
+            .sort(
+              (a, b) =>
+                (a?.attributes?.sequencenum ?? 0) -
+                (b?.attributes?.sequencenum ?? 0)
+            )
+            .map((s) => (
+              <GroupOrUserAssignment
+                listAdmins={true}
+                key={s.id}
+                label={(isPermission ? t.assignment : t.assignment2).replace(
+                  '{0}',
+                  getWfLabel(s?.attributes?.name ?? '')
+                )}
+                emptyValue={isPermission ? t.noRestriction : t.noAssignment}
+                initAssignment={assignArr.find((a) => a[0] === s.id)?.[1] ?? ''}
+                onChange={(value) => handleAssign(s.id, value)}
+                disabled={readOnly || saving}
+              />
+            ))}
         </DialogContent>
+        {busy && <LinearProgress variant="indeterminate" />}
         <DialogActions>
-          <PriButton id="assignClose" onClick={handleClose}>
-            {t.close}
-          </PriButton>
+          {scheme && !readOnly && !saving && (
+            <AltButton color="warning" onClick={handleDelete}>
+              {t.delete}
+            </AltButton>
+          )}
+          <GrowingSpacer />
+          {!saving && (
+            <AltButton onClick={() => justClose(true)}>
+              {readOnly ? ts.close : ts.cancel}
+            </AltButton>
+          )}
+          {!readOnly && (
+            <PriButton
+              id="assignClose"
+              onClick={handleClose}
+              disabled={
+                !schemeName.trim() ||
+                isNameDuplicate ||
+                !(props.inChange || changed) ||
+                saving
+              }
+            >
+              {ts.save}
+            </PriButton>
+          )}
         </DialogActions>
       </Dialog>
-    </div>
+      {confirm !== undefined && (
+        <Confirm
+          title={
+            confirm === ConfirmType.modify ? t.confirmModify : t.confirmDelete
+          }
+          text={confirmMsg}
+          noResponse={() => setConfirm(undefined)}
+          yesResponse={() => {
+            if (confirm === ConfirmType.modify) confirmClose();
+            else confirmDelete();
+          }}
+        />
+      )}
+    </>
   );
 }
 
