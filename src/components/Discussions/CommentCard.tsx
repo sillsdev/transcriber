@@ -145,6 +145,7 @@ export const CommentCard = (props: IProps) => {
     onEditing(false);
     setChanged(false);
     savingRef.current = false;
+    uploadReset();
   };
   const setChanged = (changed: boolean) => {
     const valid = editComment !== '' || canSaveRecording;
@@ -162,11 +163,12 @@ export const CommentCard = (props: IProps) => {
       comment.attributes?.visible
     );
   };
-  const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
-    mediafileId: related(discussion, 'mediafile'),
-    commentNumber,
-    afterUploadCb,
-  });
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: related(discussion, 'mediafile'),
+      commentNumber,
+      afterUploadCb,
+    });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
   const [oldVernVer, setOldVernVer] = useState(0);

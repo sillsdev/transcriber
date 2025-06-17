@@ -30,12 +30,15 @@ export const useRecordComment = ({
   const { showMessage } = useSnackBar();
   const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
 
+  const uploadReset = () => setUploadSuccess(undefined);
+
   const fileName = (subject: string, id: string) => {
     return `${cleanFileName(subject)}${(id + 'xxxx').slice(
       0,
       4
     )}-${commentNumber}`;
   };
+
   const uploadMedia = useMediaUpload({
     artifactId: commentId,
     passageId,
@@ -50,5 +53,5 @@ export const useRecordComment = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadSuccess]);
 
-  return { uploadMedia, fileName, uploadSuccess };
+  return { uploadMedia, fileName, uploadSuccess, uploadReset };
 };

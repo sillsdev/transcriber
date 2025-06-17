@@ -323,14 +323,16 @@ export const DiscussionCard = (props: IProps) => {
       else saveCompleted(NewCommentToolId);
       commentText.current = '';
       commentMediaId.current = '';
+      uploadReset();
     }
   };
 
-  const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
-    mediafileId: mediafileId,
-    commentNumber: -1,
-    afterUploadCb: saveMyComment,
-  });
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: mediafileId,
+      commentNumber: -1,
+      afterUploadCb: saveMyComment,
+    });
 
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
