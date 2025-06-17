@@ -39,12 +39,14 @@ export const ReplyCard = (props: IProps) => {
   const afterUploadCb = async (mediaId: string) => {
     saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
+    uploadReset();
   };
-  const { uploadMedia, fileName, uploadSuccess } = useRecordComment({
-    mediafileId: related(discussion, 'mediafile'),
-    commentNumber,
-    afterUploadCb,
-  });
+  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
+    useRecordComment({
+      mediafileId: related(discussion, 'mediafile'),
+      commentNumber,
+      afterUploadCb,
+    });
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
 
