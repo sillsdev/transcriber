@@ -317,9 +317,7 @@ export const usePlanSheetFill = ({
         <Typography
           sx={{
             maxWidth: '80px',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
+            whiteSpace: 'break-spaces',
             textAlign: 'center',
             fontSize: 'small',
           }}
