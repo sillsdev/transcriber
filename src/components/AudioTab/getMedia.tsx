@@ -24,10 +24,10 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
   const passage = showId ? passages.filter((p) => p.id === showId) : [];
   const sectionId = related(passage[0], 'section');
   const section = sections.filter((s) => s.id === sectionId);
-  var updateddt =
-    showId && data.isPassageDate
-      ? passage[0]?.attributes?.dateUpdated || ''
-      : f?.attributes?.dateCreated || '';
+  const passdt = passage[0]?.attributes?.dateUpdated || '';
+  const meddt = f?.attributes?.dateUpdated || '';
+  const lastdt = meddt > passdt ? meddt : passdt;
+  var updateddt = showId && data.isPassageDate ? lastdt : meddt;
 
   return {
     planid: related(f, 'plan'),
