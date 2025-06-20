@@ -59,9 +59,12 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
+    "activity": string;
     "backtranslation": string;
     "comment": string;
     "graphic": string;
+    "intellectualproperty": string;
+    "keyterm": string;
     "projectresource": string;
     "qanda": string;
     "resource": string;

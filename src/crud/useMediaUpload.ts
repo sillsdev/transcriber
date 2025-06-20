@@ -1,28 +1,43 @@
 import { useRef, useContext } from 'react';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
-import { pullTableList, remoteIdNum, useOfflnMediafileCreate } from '.';
+import {
+  pullTableList,
+  related,
+  remoteIdNum,
+  useArtifactType,
+  useOfflnMediafileCreate,
+} from '.';
 import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../context/TokenProvider';
-import { useDispatch } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { IndexedDBSource } from '@orbit/indexeddb';
 import { UploadType } from '../components/MediaUpload';
 import { RecordKeyMap } from '@orbit/records';
 import { getContentType } from '../utils/contentType';
+import { ISharedStrings, MediaFile } from '../model';
+import { sharedSelector } from '../selector';
+import { OrbitNetworkErrorRetries } from '../api-variable';
 
 interface IProps {
   artifactId: string | null;
   passageId: string | undefined;
   planId?: string;
+  sourceMediaId?: string;
+  sourceSegments?: string;
+  performedBy?: string;
+  topic?: string;
   afterUploadCb: (mediaId: string) => Promise<void>;
-  setUploadSuccess: (success: boolean | undefined) => void;
 }
 export const useMediaUpload = ({
   artifactId,
   passageId,
+  sourceMediaId,
+  sourceSegments,
+  performedBy,
   planId,
+  topic,
   afterUploadCb,
-  setUploadSuccess,
 }: IProps) => {
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
@@ -40,16 +55,41 @@ export const useMediaUpload = ({
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
   const { createMedia } = useOfflnMediafileCreate();
-
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const { localizedArtifactTypeFromId } = useArtifactType();
+  const [, setOrbitRetries] = useGlobal('orbitRetries'); //verified this is not used in a function 2/18/25
+  const getLatestVersion = () => {
+    var num = 1;
+    var psgId = passageId || '';
+    if (psgId && !artifactId) {
+      const mediaFiles = (
+        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+      )
+        .filter(
+          (m) =>
+            related(m, 'passage') === psgId &&
+            related(m, 'artifactType') === null
+        )
+        .filter((m) => m?.attributes?.versionNumber !== undefined)
+        .sort(
+          (i, j) => j.attributes.versionNumber - i.attributes.versionNumber
+        );
+      if (mediaFiles.length > 0) {
+        //vernacular
+        num = mediaFiles[0].attributes.versionNumber + 1;
+      }
+    }
+    return num;
+  };
   const itemComplete = async (n: number, success: boolean, data?: any) => {
+    if (!success) setOrbitRetries(OrbitNetworkErrorRetries - 1); //notify of possible network issue
     const uploadList = fileList.current;
-    setUploadSuccess(success);
     if (!uploadList) return; // This should never happen
     if (data?.stringId) {
       mediaIdRef.current = data?.stringId;
     } else if (success && data) {
       // offlineOnly
-      var num = 1;
+      var num = getLatestVersion();
       mediaIdRef.current = (
         await createMedia(
           data,
@@ -104,9 +144,16 @@ export const useMediaUpload = ({
         : '';
     const getUserId = () =>
       remoteIdNum('user', user, memory?.keyMap as RecordKeyMap) || user;
+    const getSourceMediaId = () =>
+      remoteIdNum(
+        'mediafile',
+        sourceMediaId || '',
+        memory?.keyMap as RecordKeyMap
+      ) || sourceMediaId;
 
     uploadFiles(files);
     fileList.current = files;
+
     const mediaFile = {
       planId: getPlanId(),
       versionNumber: 1,
@@ -116,8 +163,14 @@ export const useMediaUpload = ({
       passageId: getPassageId(),
       recordedbyUserId: getUserId(),
       userId: getUserId(),
+      sourceMediaId: getSourceMediaId(),
+      sourceSegments: sourceSegments,
+      performedBy: performedBy,
+      topic: topic,
+      eafUrl: !artifactId
+        ? ts.mediaAttached
+        : localizedArtifactTypeFromId(artifactId), //put psc message here
     };
-    setUploadSuccess(undefined);
     nextUpload({
       record: mediaFile,
       files,

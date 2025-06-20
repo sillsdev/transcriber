@@ -10,6 +10,7 @@ import {
   remoteIdNum,
   useArtifactType,
   useOfflnMediafileCreate,
+  VernacularTag,
 } from '../crud';
 import { TokenContext } from '../context/TokenProvider';
 import Memory from '@orbit/memory';
@@ -39,7 +40,7 @@ interface IProps {
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
-  createProject?: (name: string) => Promise<string>;
+  // createProject?: (name: string) => Promise<string>;
   cancelled: React.MutableRefObject<boolean>;
   multiple?: boolean;
   mediaId?: string;
@@ -79,10 +80,9 @@ export const Uploader = (props: IProps) => {
     uploadType,
     team,
     onNonAudio,
+    finish,
   } = props;
-  const { finish } = props;
   const { metaData, ready } = props;
-  const { createProject } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const uploadError = useSelector((state: IState) => state.upload.errmsg);
@@ -108,13 +108,33 @@ export const Uploader = (props: IProps) => {
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate();
   const [, setComplete] = useGlobal('progress');
-  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
-  const [errMsgs, setErrMsgs] = useState<string[]>([]);
+  const [errMsgs] = useState<string[]>([]);
   const { localizedArtifactTypeFromId } = useArtifactType();
   const getGlobal = useGetGlobal();
 
   const handleSpeakerChange = (speaker: string) => {
     onSpeakerChange && onSpeakerChange(speaker);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      mediaIdRef.current = [];
+      successCount.current = 0;
+      clearErrors();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    if (mediaId) {
+      successCount.current = 1;
+      mediaIdRef.current = [mediaId];
+    } else successCount.current = 0;
+    finishMessage();
+  };
+  const clearErrors = () => {
+    let err = errMsgs.pop();
+    while (err) err = errMsgs.pop();
   };
 
   const finishMessage = () => {
@@ -123,7 +143,8 @@ export const Uploader = (props: IProps) => {
       errMsgs.forEach((err, ix) => {
         setTimeout(() => showMessage(err, AlertSeverity.Error), ix ? 2000 : 0);
       });
-      setErrMsgs([]);
+      //empty it instead of redefining it, which doesn't work between calls;
+      clearErrors();
       //wait to show the final message if there are errors
       setTimeout(() => {
         if (fileList.current) {
@@ -138,7 +159,6 @@ export const Uploader = (props: IProps) => {
       setComplete(0);
       setBusy(false);
       cancelled.current = successCount.current <= 0;
-      setUploadSuccess(!cancelled.current);
       finish && finish(planIdRef.current, mediaIdRef.current);
     }, 1000);
   };
@@ -163,6 +183,29 @@ export const Uploader = (props: IProps) => {
   const getUserId = () =>
     remoteIdNum('user', user || '', memory?.keyMap as RecordKeyMap) || user;
 
+  const getLatestVersion = () => {
+    var num = 1;
+    var psgId = passageId || '';
+    if (psgId && !artifactState?.id) {
+      const mediaFiles = (
+        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+      )
+        .filter(
+          (m) =>
+            related(m, 'passage') === psgId &&
+            related(m, 'artifactType') === null
+        )
+        .filter((m) => m?.attributes?.versionNumber !== undefined)
+        .sort(
+          (i, j) => j.attributes.versionNumber - i.attributes.versionNumber
+        );
+      if (mediaFiles.length > 0) {
+        //vernacular
+        num = mediaFiles[0].attributes.versionNumber + 1;
+      }
+    }
+    return num;
+  };
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
     else setOrbitRetries(OrbitNetworkErrorRetries - 1); //notify of possible network issue
@@ -172,25 +215,7 @@ export const Uploader = (props: IProps) => {
     else if (success && data) {
       // offlineOnly
       var psgId = passageId || '';
-      var num = 1;
-      if (psgId && !artifactState?.id) {
-        const mediaFiles = (
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
-        )
-          .filter(
-            (m) =>
-              related(m, 'passage') === psgId &&
-              related(m, 'artifactType') === null
-          )
-          .filter((m) => m?.attributes?.versionNumber !== undefined)
-          .sort(
-            (i, j) => j.attributes.versionNumber - i.attributes.versionNumber
-          );
-        if (mediaFiles.length > 0) {
-          //vernacular
-          num = mediaFiles[0].attributes.versionNumber + 1;
-        }
-      }
+      var num = getLatestVersion();
       const newMediaRec = await createMedia(
         data,
         num,
@@ -217,9 +242,11 @@ export const Uploader = (props: IProps) => {
         errorReporter
       ).then(() => {
         finishMessage();
+        onOpen(false); //do this just for uploader
       });
     } else {
       finishMessage();
+      onOpen(false); //do this just for uploader
     }
   };
 
@@ -250,7 +277,6 @@ export const Uploader = (props: IProps) => {
         ? ts.mediaAttached
         : localizedArtifactTypeFromId(artifactState?.id), //put psc message here
     } as any;
-    setUploadSuccess(undefined);
     nextUpload({
       record: mediaFile,
       files: uploadList,
@@ -261,6 +287,39 @@ export const Uploader = (props: IProps) => {
       uploadType: uploadType ?? UploadType.Media,
       cb: itemComplete,
     });
+  };
+  const preUpload = async (files: File[]) => {
+    //   let name =
+    //     uploadType === UploadType.IntellectualProperty
+    //       ? 'Project'
+    //       : files[0]?.name.split('.')[0];
+    //    if (createProject) planIdRef.current = await createProject(name);
+    var suffix = passageDefaultSuffix(
+      planIdRef.current,
+      memory,
+      getGlobal('offline')
+    );
+
+    while (
+      files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      ) > -1
+    ) {
+      var ix = files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      );
+      files.splice(
+        ix,
+        1,
+        new File(
+          [files[ix]],
+          path.basename(files[ix].name, path.extname(files[ix].name)) +
+            suffix +
+            path.extname(files[ix].name),
+          { type: files[ix]?.type }
+        )
+      );
+    }
   };
 
   const uploadMedia = async (files: File[]) => {
@@ -274,37 +333,7 @@ export const Uploader = (props: IProps) => {
       uploadType &&
       ![UploadType.Link, UploadType.MarkDown].includes(uploadType)
     ) {
-      let name =
-        uploadType === UploadType.IntellectualProperty
-          ? 'Project'
-          : files[0]?.name.split('.')[0];
-      if (createProject) planIdRef.current = await createProject(name);
-      var suffix = passageDefaultSuffix(
-        planIdRef.current,
-        memory,
-        getGlobal('offline')
-      );
-
-      while (
-        files.findIndex(
-          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-        ) > -1
-      ) {
-        var ix = files.findIndex(
-          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-        );
-        files.splice(
-          ix,
-          1,
-          new File(
-            [files[ix]],
-            path.basename(files[ix].name, path.extname(files[ix].name)) +
-              suffix +
-              path.extname(files[ix].name),
-            { type: files[ix]?.type }
-          )
-        );
-      }
+      preUpload(files);
       uploadFiles(files);
     }
     fileList.current = files;
@@ -316,13 +345,8 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
-    setUploadSuccess(false);
     restoreScroll();
   };
-
-  useEffect(() => {
-    setErrMsgs([]);
-  }, []);
 
   useEffect(() => {
     if (uploadError && uploadError !== '') {
@@ -367,19 +391,16 @@ export const Uploader = (props: IProps) => {
     } else if (plan !== '') planIdRef.current = plan;
   }, [plan, passageId, memory]);
 
-  useEffect(() => {
-    if (isOpen) setUploadSuccess(undefined);
-  }, [isOpen]);
-
   return (
     <>
       {recordAudio && ready && !importList && (
         <PassageRecordDlg
+          artifactId={artifactState?.id ?? VernacularTag}
+          passageId={passageId}
           visible={isOpen}
           onVisible={onOpen}
           mediaId={mediaId ?? ''}
-          uploadMethod={uploadMedia}
-          uploadSuccess={uploadSuccess}
+          afterUploadCb={afterUploadCb}
           onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
@@ -387,7 +408,6 @@ export const Uploader = (props: IProps) => {
           allowWave={allowWave}
           speaker={performedBy}
           onSpeaker={handleSpeakerChange}
-          createProject={createProject}
           team={team}
         />
       )}
@@ -408,7 +428,6 @@ export const Uploader = (props: IProps) => {
               ? handleSpeakerChange
               : undefined
           }
-          createProject={createProject}
           team={team}
           onNonAudio={onNonAudio}
         />

@@ -31,6 +31,7 @@ import { UnsavedContext } from '../../../context/UnsavedContext';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { IKeyTermRow } from './KeyTermTable';
 import { useSnackBar } from '../../../hoc/SnackBar';
+import { useArtifactType } from '../../../crud';
 
 const ColumnDiv = styled('div')(() => ({
   display: 'flex',
@@ -55,8 +56,8 @@ interface IProps {
   word?: string;
   fileName: string;
   cancelOnlyIfChanged?: boolean;
-  uploadMethod: (files: File[]) => Promise<void>;
-  uploadSuccess: boolean | undefined;
+  afterUploadCb: (mediaId: string | undefined) => Promise<void>;
+  passageId: string;
   row: IKeyTermRow;
   onOk: (row: IKeyTermRow) => void;
   onCancel: () => void;
@@ -71,8 +72,8 @@ export default function TargetWordAdd(props: IProps) {
     row,
     word,
     fileName,
-    uploadMethod,
-    uploadSuccess,
+    afterUploadCb,
+    passageId,
     onOk,
     onCancel,
     setCanSaveRecording,
@@ -98,6 +99,7 @@ export default function TargetWordAdd(props: IProps) {
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
   // const [myChanged, setMyChanged] = useState(false);
+  const { keyTermId } = useArtifactType();
 
   const {
     toolsChanged,
@@ -159,14 +161,6 @@ export default function TargetWordAdd(props: IProps) {
     if (doRecordRef.current) setCommentRecording(false);
   };
 
-  useEffect(() => {
-    //ignore undefined - true will call reset
-    if (uploadSuccess === false) {
-      setStatusText('');
-      saving.current = false;
-    }
-  }, [uploadSuccess]);
-
   const reset = () => {
     if (doRecordRef.current) setCommentRecording(false);
     setStatusText('');
@@ -192,7 +186,11 @@ export default function TargetWordAdd(props: IProps) {
   // WHen cancelling this logic tries to save
   useEffect(() => {
     if (saveRequested(toolId)) handleOk();
-    else if (clearRequested(toolId)) handleCancel();
+    else {
+      saving.current = false;
+      setStatusText('');
+      if (clearRequested(toolId)) handleCancel();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -298,8 +296,9 @@ export default function TargetWordAdd(props: IProps) {
         <MediaRecord
           toolId={toolId}
           onRecording={onRecording}
-          uploadMethod={uploadMethod}
-          uploadSuccess={uploadSuccess}
+          afterUploadCb={afterUploadCb}
+          passageId={passageId}
+          artifactId={keyTermId}
           defaultFilename={fileName}
           allowWave={false}
           showFilename={false}

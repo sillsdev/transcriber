@@ -13,8 +13,6 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings, ISharedStrings } from '../../../model';
 import { keyTermsSelector, sharedSelector } from '../../../selector';
 import TargetWord from './TargetWordAdd';
-import { useMediaUpload } from '../../../crud/useMediaUpload';
-import { useArtifactType } from '../../../crud';
 import { useKeyTermSave } from '../../../crud/useKeyTermSave';
 import KeyTermChip from './KeyTermChip';
 import { UnsavedContext } from '../../../context/UnsavedContext';
@@ -97,9 +95,6 @@ export default function KeyTermTable({
   const [canSaveRecording, setCanSaveRecording] = React.useState(false);
   const [mediaId, setMediaId] = React.useState<string>();
   const [confirm, setConfirm] = React.useState<string>();
-  const [uploadSuccess, setUploadSuccess] = React.useState<
-    boolean | undefined
-  >();
   const { passage } = useContext(PassageDetailContext).state;
   const deleteId = React.useRef<string>();
   const [adding, setAdding] = React.useState<number[]>([]);
@@ -143,21 +138,12 @@ export default function KeyTermTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [targetText]
   );
-  const afterUploadCb = async (mediaRemId: string) => {
+  const afterUploadCb = async (mediaRemId: string | undefined) => {
     if (mediaRemId) await save(mediaRemId);
     else {
       saveCompleted(`${rowRef.current?.index}`, ts.NoSaveOffline);
     }
   };
-
-  const { keyTermId } = useArtifactType();
-
-  const uploadMedia = useMediaUpload({
-    artifactId: keyTermId,
-    passageId: passage.id,
-    afterUploadCb,
-    setUploadSuccess,
-  });
 
   const handleTermClick = (term: number) => () => {
     termClick && termClick(term);
@@ -334,8 +320,8 @@ export default function KeyTermTable({
                     <TargetWord
                       toolId={`${row.index}`}
                       fileName={getFilename(row)}
-                      uploadMethod={uploadMedia}
-                      uploadSuccess={uploadSuccess}
+                      passageId={passage.id}
+                      afterUploadCb={afterUploadCb}
                       row={row}
                       onOk={onOk}
                       onCancel={onCancel}

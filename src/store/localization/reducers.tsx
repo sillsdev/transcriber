@@ -69,9 +69,12 @@ const initialState = {
 	}),
 	"artifactType": new LocalizedStrings({
 		"en": {
+			"activity": "Activity",
 			"backtranslation": "Phrase Back Translation",
 			"comment": "Comment",
 			"graphic": "Graphic",
+			"intellectualproperty": "Intellectual Property",
+			"keyterm": "Key Term",
 			"projectresource": "General Resource",
 			"qanda": "Community Test Question and Answer",
 			"resource": "Resource",

@@ -362,6 +362,7 @@ export function PassageDetailArtifacts() {
     catIdRef.current = undefined;
     descriptionRef.current = '';
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
+    setUploadVisible(false);
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -426,6 +427,7 @@ export function PassageDetailArtifacts() {
     artifactState.id = resourceType;
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     if (what === 'upload') {
+      mediaRef.current = undefined;
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
       setUploadVisible(true);
@@ -523,7 +525,7 @@ export function PassageDetailArtifacts() {
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
     var projRes = new Array<MediaFileD>();
-    if (mediaRemoteIds) {
+    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
         const id =

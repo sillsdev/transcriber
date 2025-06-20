@@ -274,6 +274,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.activity">
+         <segment>
+            <source>Activity</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
@@ -289,6 +295,18 @@
       <unit id="artifactType.graphic">
          <segment>
             <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.intellectualproperty">
+         <segment>
+            <source>Intellectual Property</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.keyterm">
+         <segment>
+            <source>Key Term</source>
             <target/>
          </segment>
       </unit>
