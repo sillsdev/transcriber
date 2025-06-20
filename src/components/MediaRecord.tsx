@@ -7,7 +7,7 @@ import React, {
   useContext,
 } from 'react';
 import { useGlobal } from '../context/GlobalContext';
-import { IState, IPassageRecordStrings } from '../model';
+import { IState, IPassageRecordStrings, ISharedStrings } from '../model';
 import * as actions from '../store';
 import {
   Stack,
@@ -21,18 +21,31 @@ import {
 } from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
 import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
-import { IMediaState, MediaSt, useFetchMediaUrl } from '../crud';
+import {
+  IMediaState,
+  MediaSt,
+  useFetchMediaUrl,
+  useMediaUpload,
+} from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { UploadType, SIZELIMIT } from './MediaUpload';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
-import { useSelector } from 'react-redux';
-import { passageRecordSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
+import { passageRecordSelector, sharedSelector } from '../selector';
 import { useDispatch } from 'react-redux';
 const controlProps = { m: 1 } as SxProps;
 
 interface IProps {
   toolId: string;
+  artifactId: string | null;
+  passageId: string | undefined;
+  planId?: string;
+  sourceMediaId?: string;
+  sourceSegments?: string;
+  performedBy?: string;
+  topic?: string;
+  afterUploadCb: (mediaId: string | undefined) => Promise<void>;
   onReady?: () => void;
   onSaving?: () => void;
   onRecording?: (r: boolean) => void;
@@ -44,8 +57,6 @@ interface IProps {
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
-  uploadMethod: (files: File[]) => Promise<void>;
-  uploadSuccess: boolean | undefined;
   cancelMethod?: () => void;
   allowRecord?: boolean;
   oneTryOnly?: boolean;
@@ -72,8 +83,14 @@ function MediaRecord(props: IProps) {
     mediaId,
     defaultFilename,
     allowDeltaVoice,
-    uploadMethod,
-    uploadSuccess,
+    artifactId,
+    passageId,
+    planId,
+    sourceMediaId,
+    sourceSegments,
+    performedBy,
+    topic,
+    afterUploadCb,
     setCanSave,
     setCanCancel,
     setStatusText,
@@ -138,6 +155,7 @@ function MediaRecord(props: IProps) {
     []
   );
   const sizeLimit = SIZELIMIT(UploadType.Media);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const mimes = useMemo(
     () => [
@@ -151,6 +169,31 @@ function MediaRecord(props: IProps) {
     ],
     []
   );
+  const myAfterUploadCb = async (mediaId: string) => {
+    setUploading(false);
+    if (filechanged && mediaId) setFilechanged(false);
+    if (!mediaId) {
+      showMessage(ts.NoSaveOffline);
+      setStatusText(ts.NoSaveOffline);
+      saveCompleted(toolId, ts.NoSaveOffline);
+    } else {
+      setStatusText('');
+      saveCompleted(toolId);
+    }
+    afterUploadCb(mediaId);
+    saveRef.current = false;
+  };
+
+  const uploadMedia = useMediaUpload({
+    artifactId,
+    passageId,
+    sourceMediaId,
+    sourceSegments,
+    performedBy,
+    planId,
+    topic,
+    afterUploadCb: myAfterUploadCb,
+  });
 
   useEffect(() => {
     setConverting(false);
@@ -218,18 +261,11 @@ function MediaRecord(props: IProps) {
           type: mimeType,
         }),
       ];
-      await uploadMethod(files);
+      await uploadMedia(files);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name, filetype, mimeType]
   );
-
-  useEffect(() => {
-    if (uploadSuccess !== undefined) {
-      setUploading(false);
-      if (filechanged && uploadSuccess) setFilechanged(false);
-    }
-  }, [uploadSuccess, filechanged]);
 
   useEffect(() => {
     //was it me who asked for this?
@@ -258,7 +294,6 @@ function MediaRecord(props: IProps) {
   const convertComplete = () => {
     resetConvertBlob();
     setConverting(false);
-    saveCompleted(toolId);
     if (onReady) onReady();
   };
   useEffect(() => {
@@ -270,35 +305,40 @@ function MediaRecord(props: IProps) {
         (big ? t.toobig : t.toobigwarn).replace('{1}', limit.toString())
       );
     else setWarning('');
-    if (saveRequested(toolId) && !saveRef.current) {
-      if (audioBlob) {
-        onSaving && onSaving();
-        saveRef.current = true;
-        if (mimeType !== 'audio/wav') {
-          setConverting(true);
-          guidRef.current = generateUUID();
-          waitForIt(
-            'previous convert',
-            () => convert_guid === '',
-            () => false,
-            300
-          ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
+
+    if (saveRequested(toolId)) {
+      if (!saveRef.current) {
+        if (audioBlob) {
+          onSaving && onSaving();
+          saveRef.current = true;
+          if (mimeType !== 'audio/wav') {
+            setConverting(true);
+            guidRef.current = generateUUID();
+            waitForIt(
+              'previous convert',
+              () => convert_guid === '',
+              () => false,
+              300
+            ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
+          } else {
+            doUpload(audioBlob).then(() => {
+              onReady && onReady();
+            });
+          }
+          return;
         } else {
-          doUpload(audioBlob).then(() => {
-            saveCompleted(toolId);
-            onReady && onReady();
-          });
+          saveCompleted(toolId);
+          onReady && onReady();
         }
-        return;
-      } else {
-        saveCompleted(toolId);
-        onReady && onReady();
       }
-    } else if (clearRequested(toolId)) {
-      reset();
-      setDoReset && setDoReset(true);
+    } else {
+      saveRef.current = false;
+      if (clearRequested(toolId)) {
+        reset();
+        setDoReset && setDoReset(true);
+      }
     }
-    if (!saveRequested(toolId) && saveRef.current) saveRef.current = false;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioBlob, toolsChanged, mimeType, convert_guid, toolId]);
 

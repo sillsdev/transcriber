@@ -317,6 +317,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.activity">
+            <source>Activity</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="artifactType.backtranslation">
             <source>Phrase Back Translation</source>
             <target/>
@@ -338,6 +345,20 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.intellectualproperty">
+            <source>Intellectual Property</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.keyterm">
+            <source>Key Term</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>         
       	<trans-unit id="artifactType.projectresource">
       		<source>General Resource</source>
       		<target/>

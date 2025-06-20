@@ -4,16 +4,19 @@ import { ActionRow, AltButton, PriButton } from './StepEditor';
 import { ISharedStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
+import { VernacularTag } from '../crud';
 
 interface IProps {
   recToolId: string;
+  titleId: string;
+  passageId: string | undefined;
+  planId: string | undefined;
   defaultFilename: string;
   autoStart?: boolean;
-  uploadSuccess?: boolean;
   canSave: boolean;
   onMyRecording: (recording: boolean) => void;
   handleSetCanSave: (canSave: boolean) => void;
-  uploadMedia: (files: File[]) => Promise<void>;
+  afterUploadCb: (mediaId: string | undefined) => Promise<void>;
   setStatusText: (status: string) => void;
   onCancel?: () => void;
   onSave?: () => void;
@@ -22,10 +25,12 @@ interface IProps {
 export default function TitleRecord(props: IProps) {
   const {
     recToolId,
+    titleId,
+    passageId,
+    planId,
     defaultFilename,
-    uploadSuccess,
     onMyRecording,
-    uploadMedia,
+    afterUploadCb,
     canSave,
     handleSetCanSave,
     setStatusText,
@@ -38,14 +43,16 @@ export default function TitleRecord(props: IProps) {
     <Stack direction="column" spacing={2}>
       <MediaRecord
         toolId={recToolId}
+        passageId={passageId}
+        planId={planId}
+        artifactId={passageId !== undefined ? VernacularTag : titleId}
         onRecording={onMyRecording}
-        uploadMethod={uploadMedia}
         defaultFilename={defaultFilename}
         allowWave={false}
         showFilename={false}
         setCanSave={handleSetCanSave}
         setStatusText={setStatusText}
-        uploadSuccess={uploadSuccess}
+        afterUploadCb={afterUploadCb}
         size={200}
         autoStart={false}
       />

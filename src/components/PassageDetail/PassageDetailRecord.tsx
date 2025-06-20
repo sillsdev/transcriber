@@ -72,7 +72,6 @@ export function PassageDetailRecord(props: IProps) {
   };
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const [uploadVisible, setUploadVisiblex] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
@@ -86,9 +85,8 @@ export function PassageDetailRecord(props: IProps) {
 
   const setUploadVisible = (value: boolean) => {
     if (value) {
-      setUploadSuccess(undefined);
       cancelled.current = false;
-    } else setUploadSuccess(!cancelled.current);
+    }
     setUploadVisiblex(value);
   };
 
@@ -148,9 +146,18 @@ export function PassageDetailRecord(props: IProps) {
   const handleSave = () => {
     startSave(toolId);
   };
-
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    if (mediaId) {
+      setStatusText('');
+    } else setStatusText(ts.NoSaveOffline);
+  };
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    setStatusText('');
+    var mediaId =
+      mediaRemoteIds && mediaRemoteIds.length > 0
+        ? mediaRemoteIds[0]
+        : undefined;
+    afterUploadCb(mediaId);
+    if (mediaId) handleReload();
     if (importList) {
       setImportList(undefined);
       setUploadVisible(false);
@@ -163,12 +170,6 @@ export function PassageDetailRecord(props: IProps) {
       startSave(toolId);
       waitForSave(() => cb(), SaveWait);
     } else cb();
-  };
-
-  //from the on screen recorder...send it off to the uploader
-  const uploadMedia = async (files: File[]) => {
-    setImportList(files);
-    setUploadVisible(true);
   };
 
   const handleAudacityImport = (i: number, list: File[]) => {
@@ -208,9 +209,6 @@ export function PassageDetailRecord(props: IProps) {
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   const handleRecording = (recording: boolean) => {
     setRecording(recording);
-    if (recording) {
-      setUploadSuccess(undefined);
-    }
   };
 
   return (
@@ -239,9 +237,10 @@ export function PassageDetailRecord(props: IProps) {
       </Box>
       <MediaRecord
         toolId={toolId}
+        artifactId={VernacularTag}
+        passageId={passageId}
+        afterUploadCb={afterUploadCb}
         mediaId={mediafileId}
-        uploadMethod={uploadMedia}
-        uploadSuccess={uploadSuccess}
         onSaving={onSaving}
         onReady={onReady}
         onRecording={handleRecording}

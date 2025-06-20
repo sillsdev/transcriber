@@ -40,15 +40,15 @@ interface IProps {
   onVisible: (visible: boolean) => void;
   onCancel?: () => void;
   mediaId: string;
+  artifactId: string | null;
+  afterUploadCb: (mediaId: string | undefined) => Promise<void>;
+  passageId: string | undefined;
   metaData?: JSX.Element;
   defaultFilename?: string;
   ready?: () => boolean;
-  uploadMethod: (files: File[]) => Promise<void>;
-  uploadSuccess: boolean | undefined;
   allowWave?: boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string;
 }
 
@@ -57,16 +57,16 @@ function PassageRecordDlg(props: IProps) {
     visible,
     onVisible,
     mediaId,
+    artifactId,
+    afterUploadCb,
+    passageId,
     defaultFilename,
-    uploadMethod,
-    uploadSuccess,
     onCancel,
     ready,
     metaData,
     allowWave,
     speaker,
     onSpeaker,
-    createProject,
     team,
   } = props;
   const [reporter] = useGlobal('errorReporter');
@@ -90,7 +90,6 @@ function PassageRecordDlg(props: IProps) {
 
   const onReady = () => {
     setBusy(false);
-    close();
   };
 
   const close = () => {
@@ -134,16 +133,16 @@ function PassageRecordDlg(props: IProps) {
             name={speaker || ''}
             onRights={handleRights}
             onChange={handleSpeaker}
-            createProject={createProject}
             team={team}
           />
         )}
         {busy && <Busy />}
         <MediaRecord
           toolId={myToolId}
+          artifactId={artifactId}
+          passageId={passageId}
+          afterUploadCb={afterUploadCb}
           mediaId={mediaId}
-          uploadMethod={uploadMethod}
-          uploadSuccess={uploadSuccess}
           onSaving={onSaving}
           onReady={onReady}
           defaultFilename={defaultFilename}

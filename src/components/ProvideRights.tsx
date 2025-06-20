@@ -27,7 +27,7 @@ import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { UnsavedContext } from '../context/UnsavedContext';
 import Uploader from './Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -60,20 +60,12 @@ interface IProps {
   speaker: string;
   recordType: ArtifactTypeSlug;
   onRights?: (hasRights: boolean) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
 }
 
 export function ProvideRights(props: IProps) {
-  const {
-    speaker,
-    recordType,
-    onRights,
-    createProject,
-    team,
-    recordingRequired,
-  } = props;
+  const { speaker, recordType, onRights, team, recordingRequired } = props;
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
   const [busy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
@@ -86,11 +78,11 @@ export function ProvideRights(props: IProps) {
   const memory = coordinator?.getSource('memory') as Memory;
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisiblex] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState<undefined | boolean>();
   const uploadVisibleRef = useRef(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [statement, setStatement] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const getGlobal = useGetGlobal();
   const {
     toolChanged,
     toolsChanged,
@@ -116,8 +108,7 @@ export function ProvideRights(props: IProps) {
     uploadVisibleRef.current = value;
     if (value) {
       cancelled.current = false;
-      setUploadSuccess(undefined);
-    } else setUploadSuccess(cancelled.current);
+    }
   };
   const teamRec = React.useMemo(
     () =>
@@ -175,71 +166,73 @@ export function ProvideRights(props: IProps) {
     if (recordingRequired) setStatement(statement);
   };
 
-  const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    setStatusText('');
-    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
-      if (!cancelled.current) {
-        let orgId = team || organizationId;
-        if (!orgId) {
-          const planRec = findRecord(memory, 'plan', planId);
-          const projRec = findRecord(
-            memory,
-            'project',
-            related(planRec, 'project')
-          );
-          orgId = related(projRec, 'organization');
-        }
-        const mediaId =
-          remoteIdGuid(
-            'mediafile',
-            mediaRemoteIds[0],
-            memory?.keyMap as RecordKeyMap
-          ) ?? mediaRemoteIds[0];
-        if (statement) {
-          const mediaRec = findRecord(
-            memory,
-            'mediafile',
-            mediaId
-          ) as MediaFileD;
-          updateRecord({
-            ...mediaRec,
-            attributes: { ...mediaRec.attributes, transcription: statement },
-          } as MediaFileD);
-        }
-        const ip = {
-          type: 'intellectualproperty',
-          attributes: {
-            rightsHolder: speaker,
-            notes: JSON.stringify(state),
-          },
-        } as IntellectualProperty & UninitializedRecord;
-        await memory.update((t) => [
-          ...AddRecord(t, ip, user, memory),
-          ...ReplaceRelatedRecord(
-            t,
-            ip as RecordIdentity,
-            'releaseMediafile',
-            'mediafile',
-            mediaId
-          ),
-          ...ReplaceRelatedRecord(
-            t,
-            ip as RecordIdentity,
-            'organization',
-            'organization',
-            orgId
-          ),
-        ]);
-        onRights && onRights(true);
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    if (mediaId && !cancelled.current) {
+      let orgId = team || organizationId;
+      if (!orgId) {
+        const planRec = findRecord(memory, 'plan', getGlobal('plan'));
+        const projRec = findRecord(
+          memory,
+          'project',
+          related(planRec, 'project')
+        );
+        orgId = related(projRec, 'organization');
       }
-    }
-    saveCompleted(toolId);
-    if (importList) {
-      setImportList(undefined);
-      setUploadVisible(false);
-      setResetMedia(true);
+      mediaId =
+        remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
+        mediaId;
+      if (statement) {
+        const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
+        updateRecord({
+          ...mediaRec,
+          attributes: { ...mediaRec.attributes, transcription: statement },
+        } as MediaFileD);
+      }
+      const ip = {
+        type: 'intellectualproperty',
+        attributes: {
+          rightsHolder: speaker,
+          notes: JSON.stringify(state),
+        },
+      } as IntellectualProperty & UninitializedRecord;
+      await memory.update((t) => [
+        ...AddRecord(t, ip, user, memory),
+        ...ReplaceRelatedRecord(
+          t,
+          ip as RecordIdentity,
+          'releaseMediafile',
+          'mediafile',
+          mediaId
+        ),
+        ...ReplaceRelatedRecord(
+          t,
+          ip as RecordIdentity,
+          'organization',
+          'organization',
+          orgId
+        ),
+      ]);
+      onRights && onRights(true);
+      if (importList) {
+        setImportList(undefined);
+        setUploadVisible(false);
+        setResetMedia(true);
+      }
+      setStatusText('');
+      saveCompleted(toolId);
+    } else {
+      setStatusText(ts.NoSaveOffline);
+      saveCompleted(toolId, ts.NoSaveOffline);
     }
     setSaving(false);
+  };
+
+  const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
+    afterUploadCb(
+      mediaRemoteIds && mediaRemoteIds.length > 0
+        ? mediaRemoteIds[0]
+        : undefined
+    );
   };
 
   const handleUploadVisible = (v: boolean) => {
@@ -251,11 +244,6 @@ export function ProvideRights(props: IProps) {
       return;
     }
     setImportList(undefined);
-    setUploadVisible(true);
-  };
-  //from recorder...send it on to uploader
-  const uploadMedia = async (files: File[]) => {
-    setImportList(files);
     setUploadVisible(true);
   };
 
@@ -296,9 +284,11 @@ export function ProvideRights(props: IProps) {
         />
         <MediaRecord
           toolId={toolId}
-          uploadMethod={uploadMedia}
-          uploadSuccess={uploadSuccess}
           defaultFilename={defaultFilename}
+          afterUploadCb={afterUploadCb}
+          artifactId={artifactState.id}
+          passageId={undefined}
+          performedBy={speaker}
           allowWave={false}
           showFilename={false}
           allowDeltaVoice={false}
@@ -350,7 +340,6 @@ export function ProvideRights(props: IProps) {
         cancelled={cancelled}
         artifactState={artifactState}
         performedBy={speaker}
-        createProject={createProject}
         uploadType={UploadType.IntellectualProperty}
       />
     </div>

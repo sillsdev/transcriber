@@ -7,6 +7,8 @@ import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { Box } from '@mui/material';
 import { related } from '../../crud';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../../selector';
 
 interface IProps {
   discussion: DiscussionD;
@@ -25,37 +27,54 @@ export const ReplyCard = (props: IProps) => {
     clearRequested,
     clearCompleted,
   } = useContext(UnsavedContext).state;
+  const ts = useSelector(sharedSelector, shallowEqual);
   const myToolId = discussion.id + 'reply';
-  const afterSavecb = () => {
+  const reset = () => {
     savingRef.current = false;
     saveCompleted(myToolId);
+    commentText.current = '';
     if (isMounted()) {
       setChanged(false);
       setRefresh(refresh + 1);
     }
   };
-  const saveComment = useSaveComment({ cb: afterSavecb });
-  const commentText = useRef('');
-  const afterUploadCb = async (mediaId: string) => {
-    saveComment(discussion.id, '', commentText.current, mediaId, undefined);
-    commentText.current = '';
-    uploadReset();
+  const resetAfterError = () => {
+    savingRef.current = false;
+    saveCompleted(myToolId, ts.NoSaveOffline);
   };
-  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
-    useRecordComment({
-      mediafileId: related(discussion, 'mediafile'),
-      commentNumber,
-      afterUploadCb,
-    });
+  const commentText = useRef('');
+  const saveComment = useSaveComment();
+  const doSaveComment = async (mediaId: string | undefined) => {
+    await saveComment(
+      discussion.id,
+      '',
+      commentText.current,
+      mediaId,
+      undefined
+    );
+    reset();
+  };
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    if (mediaId) doSaveComment(mediaId);
+    else resetAfterError();
+  };
+
+  const { passageId, fileName } = useRecordComment({
+    mediafileId: related(discussion, 'mediafile'),
+    commentNumber,
+  });
+
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
 
   const handleSaveEdit = () => {
-    savingRef.current = true;
-    //if we're recording and can save, the comment will save after upload
-    if (!canSaveRecording) {
-      if (commentText.current.length > 0) afterUploadCb('');
-      else saveCompleted(myToolId);
+    if (!savingRef.current) {
+      savingRef.current = true;
+      //if we're recording and can save, the comment will save after upload
+      if (!canSaveRecording) {
+        if (commentText.current.length > 0) doSaveComment('');
+        else saveCompleted(myToolId);
+      }
     }
   };
   const handleCancelEdit = () => {
@@ -65,9 +84,12 @@ export const ReplyCard = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (saveRequested(myToolId) && !savingRef.current) {
+    if (saveRequested(myToolId)) {
       handleSaveEdit();
-    } else if (clearRequested(myToolId)) handleCancelEdit();
+    } else {
+      savingRef.current = false;
+      if (clearRequested(myToolId)) handleCancelEdit();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -92,16 +114,16 @@ export const ReplyCard = (props: IProps) => {
     <Box sx={{ display: 'flex', flexFlow: 'column', flexGrow: 1 }}>
       <CommentEditor
         toolId={myToolId}
+        passageId={passageId}
         comment={commentText.current}
         refresh={refresh}
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
         setCanSaveRecording={setCanSaveRecording}
         fileName={fileName(discussion.attributes.subject, discussion.id)}
-        uploadMethod={uploadMedia}
+        afterUploadCb={afterUploadCb}
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}
-        uploadSuccess={uploadSuccess}
       />
     </Box>
   );

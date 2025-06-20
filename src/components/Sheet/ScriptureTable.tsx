@@ -1912,9 +1912,9 @@ export function ScriptureTable(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     uploadItem.current = undefined;
+    if (!cancelled.current) setUploadVisible(false);
     if (importList) {
       setImportList(undefined);
-      setUploadVisible(false);
     }
   };
   const isReady = () => true;

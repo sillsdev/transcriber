@@ -1,12 +1,4 @@
-import { useMemo } from 'react';
-import {
-  ArtifactTypeSlug,
-  remoteId,
-  remoteIdGuid,
-  useArtifactType,
-  useMediaUpload,
-  VernacularTag,
-} from '../crud';
+import { remoteIdGuid } from '../crud';
 import { useGlobal } from '../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { logError, Severity } from '../utils/logErrorService';
@@ -17,47 +9,29 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { mediaTitleSelector } from '../selector';
 
 interface IProps {
-  myPlanId?: string;
-  passageId?: string;
-  reset?: () => void;
+  afterSave: (success: boolean) => void;
   onMediaIdChange: (mediaId: string) => void;
-  onDialogVisible?: (show: boolean) => void;
-  setUploadSuccess: (success: boolean | undefined) => void;
 }
 
 export const useTitleSave = (props: IProps) => {
-  const {
-    myPlanId,
-    passageId,
-    onMediaIdChange,
-    onDialogVisible,
-    reset,
-    setUploadSuccess,
-  } = props;
+  const { onMediaIdChange, afterSave } = props;
   const [memory] = useGlobal('memory');
   const [errorReporter] = useGlobal('errorReporter');
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
-  const { getTypeId } = useArtifactType();
   const { showMessage } = useSnackBar();
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
 
-  const TitleId = useMemo(() => {
-    var id = getTypeId(ArtifactTypeSlug.Title) as string;
-    return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offlineOnly]);
-
-  const uploadFailedMessage = (mediaId: string) => {
+  const uploadFailedMessage = (mediaId: string | undefined) => {
     logError(
       Severity.info,
       errorReporter,
-      t.uploadFailStatus.replace('{0}', mediaId)
+      t.uploadFailStatus.replace('{0}', mediaId ?? '')
     );
     showMessage(t.uploadFailed);
-    setUploadSuccess(false);
+    afterSave(false);
   };
 
-  const afterUploadCb = async (mediaId: string) => {
+  const afterUploadCb = async (mediaId: string | undefined) => {
     if (mediaId) {
       waitForIt(
         'mediaId',
@@ -69,7 +43,6 @@ export const useTitleSave = (props: IProps) => {
         100
       )
         .then(() => {
-          onDialogVisible?.(false);
           onMediaIdChange(
             remoteIdGuid(
               'mediafile',
@@ -77,7 +50,7 @@ export const useTitleSave = (props: IProps) => {
               memory?.keyMap as RecordKeyMap
             ) ?? mediaId
           );
-          reset?.();
+          afterSave(true);
         })
         .catch(() => {
           uploadFailedMessage(mediaId);
@@ -85,13 +58,5 @@ export const useTitleSave = (props: IProps) => {
     } else uploadFailedMessage(mediaId);
   };
 
-  const uploadMedia = useMediaUpload({
-    artifactId: passageId !== undefined ? VernacularTag : TitleId,
-    passageId: passageId,
-    planId: myPlanId,
-    afterUploadCb,
-    setUploadSuccess,
-  });
-
-  return { uploadMedia };
+  return { afterUploadCb };
 };

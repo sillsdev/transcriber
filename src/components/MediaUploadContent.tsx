@@ -119,7 +119,6 @@ interface IProps {
   ready?: () => boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
   onValue?: (value: string) => void;
@@ -139,7 +138,6 @@ function MediaUploadContent(props: IProps) {
     ready,
     speaker,
     onSpeaker,
-    createProject,
     team,
     onFiles,
     onValue,
@@ -173,7 +171,6 @@ function MediaUploadContent(props: IProps) {
       uploadMethod(files);
     }
     handleFiles(undefined);
-    onVisible(false);
   };
   const handleCancel = () => {
     handleFiles(undefined);
@@ -298,7 +295,6 @@ function MediaUploadContent(props: IProps) {
             name={hasRights ? speaker || '' : ''}
             onRights={handleRights}
             onChange={handleSpeaker}
-            createProject={createProject}
             team={team}
           />
         )}
