@@ -14,6 +14,9 @@ export const FaithbridgeIframe = () => {
   const [chat, setChat] = React.useState<string | null>(null);
   const [verseRef, setVerseRef] = React.useState<string | null>(null);
   const [userId] = useGlobal('user');
+  const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
+    null
+  );
   const { passage } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
   const { data, loading, error, fetchResult } = useFaithbridgeResult();
@@ -41,10 +44,21 @@ export const FaithbridgeIframe = () => {
     );
   }, [passage]);
 
+  React.useEffect(() => {
+    if (chat && verseRef && userId) {
+      const params = new URLSearchParams({
+        chatSessionId: chat,
+        verseRef: verseRef ?? '',
+        userId: userId,
+      });
+      setUrlParams(params);
+    }
+  }, [chat, verseRef, userId]);
+
   return (
     <>
       <iframe
-        src={`https://faithbridge.multilingualai.com/apm?chatSessionId=${chat}`}
+        src={`https://faithbridge.multilingualai.com/apm?${urlParams?.toString()}`}
         title="Faithbridge"
         style={{ width: '100%', height: '600px', border: 'none' }}
         allowFullScreen
