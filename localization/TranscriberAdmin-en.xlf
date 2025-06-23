@@ -1810,6 +1810,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="faithbridge.audioResources">
+         <segment>
+            <source>RequestAudio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="faithbridge.newChat">
          <segment>
             <source>New Chat</source>

@@ -369,6 +369,7 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
 
 export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
     "addContent": string;
+    "audioResources": string;
     "newChat": string;
 };
 

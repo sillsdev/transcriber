@@ -50,8 +50,8 @@ export const useFaithbridgeResult = () => {
   const [state, dispatch] = useReducer(faithbridgeReducer, initialState);
 
   const fetchResult = useCallback(
-    async (chatSessionId: string, verseRef: string, userId: string) => {
-      if (!chatSessionId || !verseRef || !userId) {
+    async (chatSessionId: string, userId: string, includeAudio: boolean) => {
+      if (!chatSessionId || !userId) {
         dispatch({
           type: 'FETCH_ERROR',
           payload: 'Missing required parameters',
@@ -64,8 +64,8 @@ export const useFaithbridgeResult = () => {
       try {
         const params = new URLSearchParams({
           chatSessionId,
-          verseRef,
           userId,
+          includeAudio: includeAudio ? 'true' : 'false',
         });
 
         const response = await fetch(

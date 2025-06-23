@@ -2111,6 +2111,13 @@
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="faithbridge.audioResources">
+            <source>RequestAudio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="faithbridge.newChat">
             <source>New Chat</source>
             <target/>
