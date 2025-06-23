@@ -131,7 +131,8 @@ function MediaRecord(props: IProps) {
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [loading, setLoading] = useState(false);
-  const [filechanged, setFilechanged] = useState(false);
+  const [filechanged, setFilechangedx] = useState(false);
+  const filechangedRef = useRef(false);
   const [recording, setRecording] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
@@ -169,9 +170,14 @@ function MediaRecord(props: IProps) {
     ],
     []
   );
+  const setFilechanged = (value: boolean) => {
+    setFilechangedx(value);
+    filechangedRef.current = value;
+  };
+
   const myAfterUploadCb = async (mediaId: string) => {
     setUploading(false);
-    if (filechanged && mediaId) setFilechanged(false);
+    if (filechangedRef.current && mediaId) setFilechanged(false);
     if (!mediaId) {
       showMessage(ts.NoSaveOffline);
       setStatusText(ts.NoSaveOffline);
