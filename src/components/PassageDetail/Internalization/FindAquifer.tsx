@@ -1,10 +1,12 @@
 import {
   Autocomplete,
   Grid,
+  Icon,
   IconButton,
   InputAdornment,
   OutlinedInput,
   Stack,
+  styled,
   TextField,
   Typography,
 } from '@mui/material';
@@ -39,6 +41,12 @@ import BigDialog from '../../../hoc/BigDialog';
 import { Aquifer } from '../../../assets/brands';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { AxiosError } from 'axios';
+
+const StyledStack = styled(Stack)(() => ({
+  '& .MuiDataGrid-footerContainer': {
+    display: 'none!important',
+  },
+}));
 
 interface AquiferSearch {
   id: number;
@@ -139,8 +147,8 @@ export default function FindAquifer({ onClose }: IProps) {
   );
   const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const token = useContext(TokenContext).state.accessToken ?? '';
-  const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
-  const [offset] = useState(0); //TODO?
+  const [limit] = useState(100); // TODO: always loads max of 100 results?
+  const [offset, setOffset] = useState(0);
   const forceDataChanges = useDataChanges();
   const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
   const { userIsAdmin } = useRole();
@@ -233,7 +241,7 @@ export default function FindAquifer({ onClose }: IProps) {
       setResult(response.items);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, lang, refresh]);
+  }, [passage, lang, refresh, offset]);
 
   useEffect(() => {
     const dataRows = result.map((item: AquiferSearch) => ({
@@ -335,7 +343,7 @@ export default function FindAquifer({ onClose }: IProps) {
       spacing={2}
       sx={{ alignItems: 'center', justifyContent: 'center' }}
     >
-      <Stack>
+      <StyledStack>
         <Grid
           container
           direction={'row'}
@@ -436,11 +444,30 @@ export default function FindAquifer({ onClose }: IProps) {
           </BigDialog>
         )}
 
-        {count > 100 && (
-          <Typography variant="h6" component="h6">{`${Math.min(
-            count,
-            100
-          )} of ${count} aquifer results`}</Typography>
+        {count > limit && (
+          <Stack direction="row" spacing={2}>
+            <Typography variant="h6" component="h6">
+              {t.showing
+                .replace('{0}', `${offset + 1}`)
+                .replace('{1}', `${Math.min(offset + limit, count)}`)
+                .replace('{2}', `${count}`)
+                .replace('{3}', Aquifer)}
+            </Typography>
+            {offset > 0 ? (
+              <IconButton onClick={() => setOffset(offset - limit)}>
+                <Icon>arrow_upward</Icon>
+              </IconButton>
+            ) : (
+              <></>
+            )}
+            {offset + limit < count ? (
+              <IconButton onClick={() => setOffset(offset + limit)}>
+                <Icon>arrow_downward</Icon>
+              </IconButton>
+            ) : (
+              <></>
+            )}
+          </Stack>
         )}
         {data.length > 0 ? (
           <DataTable
@@ -464,7 +491,7 @@ export default function FindAquifer({ onClose }: IProps) {
             </Grid>
           </Grid>
         )}
-      </Stack>
+      </StyledStack>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
   );

@@ -421,6 +421,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "script": string;
     "scriptTpl": string;
     "section": string;
+    "showing": string;
     "source": string;
     "summary": string;
     "summaryTpl": string;

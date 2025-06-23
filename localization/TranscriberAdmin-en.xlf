@@ -2104,6 +2104,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.showing">
+         <segment>
+            <source>{0} to {1} of {2} {3} results</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.source">
          <segment>
             <source>Source</source>

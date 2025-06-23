@@ -450,6 +450,7 @@ const initialState = {
 			"script": "script",
 			"scriptTpl": "Please provide a script for {0}",
 			"section": "section",
+			"showing": "{0} to {1} of {2} {3} results",
 			"source": "Source",
 			"summary": "summary",
 			"summaryTpl": "Please provide a summary of {0}",
