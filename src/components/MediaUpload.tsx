@@ -48,6 +48,7 @@ interface IProps {
   onSpeaker?: (speaker: string) => void;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
+  inValue?: string;
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
 }
@@ -67,6 +68,7 @@ function MediaUpload(props: IProps) {
     onSpeaker,
     team,
     onFiles,
+    inValue,
     onValue,
     onNonAudio,
   } = props;
@@ -110,6 +112,7 @@ function MediaUpload(props: IProps) {
         onSpeaker={onSpeaker}
         team={team}
         onFiles={onFiles}
+        inValue={inValue}
         onValue={onValue}
         onNonAudio={onNonAudio}
       />

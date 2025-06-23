@@ -367,6 +367,12 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
     "verify": string;
 };
 
+export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
+    "addContent": string;
+    "audioResources": string;
+    "newChat": string;
+};
+
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "all": string;
     "allPassages": string;
@@ -1842,6 +1848,7 @@ export interface ILocalizedStrings {
 	discussionMenu: IDiscussionMenuStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
+	faithbridge: IFaithbridgeStrings;
 	filterMenu: IFilterMenuStrings;
 	findResource: IFindResourceStrings;
 	grid: IGridStrings;

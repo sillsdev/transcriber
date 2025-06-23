@@ -14,10 +14,11 @@ import { IFindResourceStrings, ISharedStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector, sharedSelector } from '../../../selector';
 import FindAquifer from './FindAquifer';
+import FaithbridgeIframe from './FaithbridgeIframe';
 import { usePassageType } from '../../../crud/usePassageType';
 import { related } from '../../../crud';
 import { PassageTypeEnum } from '../../../model/passageType';
-import { Aquifer, BibleBrain } from '../../../assets/brands';
+import { Aquifer, BibleBrain, FaithBridge } from '../../../assets/brands';
 
 export enum scopeI {
   passage,
@@ -81,12 +82,14 @@ interface FindTabsProps {
   onClose?: () => void;
   closeRequested: boolean;
   canAdd: boolean;
+  onMarkdown?: (value: string) => void;
 }
 
 export default function FindTabs({
   onClose,
   closeRequested,
   canAdd,
+  onMarkdown,
 }: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
@@ -165,6 +168,10 @@ export default function FindTabs({
             label={<Badge badgeContent={ts.ai}>{t.create}</Badge>}
             {...a11yProps(aquifer ? (biblebrain ? 3 : 2) : 1)}
           />
+          <Tab
+            label={FaithBridge}
+            {...a11yProps(aquifer ? (biblebrain ? 4 : 3) : 2)}
+          />
         </Tabs>
       </Box>
       {aquifer && (
@@ -186,6 +193,9 @@ export default function FindTabs({
       </CustomTabPanel>
       <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 3 : 2) : 1}>
         <CreateAiRes resources={resources} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 4 : 3) : 2}>
+        <FaithbridgeIframe onMarkdown={onMarkdown} onClose={onClose} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Box>

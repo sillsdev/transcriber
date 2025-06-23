@@ -53,6 +53,7 @@ interface IProps {
   onSpeakerChange?: (performedBy: string) => void;
   topic?: string;
   uploadType?: UploadType;
+  inValue?: string; // used when adding Aquifer markdown
   team?: string; // used when adding a card to check speakers
   onNonAudio?: (nonAudio: boolean) => void;
 }
@@ -78,6 +79,7 @@ export const Uploader = (props: IProps) => {
     onSpeakerChange,
     topic,
     uploadType,
+    inValue,
     team,
     onNonAudio,
     finish,
@@ -428,6 +430,7 @@ export const Uploader = (props: IProps) => {
               ? handleSpeakerChange
               : undefined
           }
+          inValue={inValue}
           team={team}
           onNonAudio={onNonAudio}
         />
