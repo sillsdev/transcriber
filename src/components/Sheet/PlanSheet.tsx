@@ -47,6 +47,7 @@ import {
   useCanPublish,
   logError,
   Severity,
+  useCheckOnline,
 } from '../../utils';
 import {
   isPersonalTeam,
@@ -344,6 +345,7 @@ export function PlanSheet(props: IProps) {
   const { getOrgBible } = useBible();
   const getGlobal = useGetGlobal();
   const teams = useOrbitData<OrganizationD[]>('organization');
+  const checkOnline = useCheckOnline('PlanSheet');
 
   const showAssign = useMemo(
     () => !isPersonalTeam(org, teams) && !offlineOnly,
@@ -807,7 +809,11 @@ export function PlanSheet(props: IProps) {
     }
     if (changedRef.current) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
+      if (!connected && !offlineOnly) {
+        checkOnline((online) => {
+          if (!online) showMessage(ts.NoSaveOffline);
+        }, true);
+      }
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
