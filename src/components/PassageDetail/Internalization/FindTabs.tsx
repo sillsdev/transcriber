@@ -18,7 +18,7 @@ import FaithbridgeIframe from './FaithbridgeIframe';
 import { usePassageType } from '../../../crud/usePassageType';
 import { related } from '../../../crud';
 import { PassageTypeEnum } from '../../../model/passageType';
-import { Aquifer, BibleBrain } from '../../../assets/brands';
+import { Aquifer, BibleBrain, FaithBridge } from '../../../assets/brands';
 
 export enum scopeI {
   passage,
@@ -167,7 +167,7 @@ export default function FindTabs({
             {...a11yProps(aquifer ? (biblebrain ? 3 : 2) : 1)}
           />
           <Tab
-            label={'Faithbridge'}
+            label={FaithBridge}
             {...a11yProps(aquifer ? (biblebrain ? 4 : 3) : 2)}
           />
         </Tabs>

@@ -8,19 +8,13 @@ import { IFaithbridgeStrings } from '../../../model';
 import { faithbridgeSelector } from '../../../selector';
 import { useGlobal } from '../../../context/GlobalContext';
 import { useFaithbridgeResult } from './useFaithbridgeResult';
+import usePassageDetailContext from '../../../context/usePassageDetailContext';
 
-interface FaithbridgeIframeProps {
-  book: string;
-  reference: string;
-}
-
-export const FaithbridgeIframe = ({
-  book,
-  reference,
-}: FaithbridgeIframeProps) => {
+export const FaithbridgeIframe = () => {
   const [chat, setChat] = React.useState<string | null>(null);
   const [verseRef, setVerseRef] = React.useState<string | null>(null);
   const [userId] = useGlobal('user');
+  const { passage } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
   const { data, loading, error, fetchResult } = useFaithbridgeResult();
 
@@ -40,8 +34,12 @@ export const FaithbridgeIframe = ({
   }, []);
 
   React.useEffect(() => {
-    setVerseRef(`${book} ${reference}`);
-  }, [book, reference]);
+    setVerseRef(
+      `${passage?.attributes?.book || 'MAT'} ${
+        passage?.attributes?.reference || '1:1'
+      }`
+    );
+  }, [passage]);
 
   return (
     <>
