@@ -1804,6 +1804,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="faithbridge.addContent">
+         <segment>
+            <source>Add Content as Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="faithbridge.newChat">
+         <segment>
+            <source>New Chat</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>

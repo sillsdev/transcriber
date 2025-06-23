@@ -2104,6 +2104,20 @@
                <context context-type="sourcefile">EmailUnverified.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="faithbridge.addContent">
+            <source>Add Content as Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.newChat">
+            <source>New Chat</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="filterMenu.all">
             <source>All</source>
             <target/>

@@ -394,6 +394,12 @@ const initialState = {
 			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
 		}
 	}),
+	"faithbridge": new LocalizedStrings({
+		"en": {
+			"addContent": "Add Content as Resource",
+			"newChat": "New Chat",
+		}
+	}),
 	"filterMenu": new LocalizedStrings({
 		"en": {
 			"all": "All",
@@ -1945,6 +1951,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
+				"faithbridge" : new LocalizedStrings(action.payload.data.faithbridge),
 				"filterMenu" : new LocalizedStrings(action.payload.data.filterMenu),
 				"findResource" : new LocalizedStrings(action.payload.data.findResource),
 				"grid" : new LocalizedStrings(action.payload.data.grid),
