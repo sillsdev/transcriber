@@ -16,12 +16,14 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
+  findRecord,
   orgDefaultPermissions,
   pullTableList,
   related,
   remoteId,
   useOrganizedBy,
   useOrgDefaults,
+  waitForRemoteId,
 } from '../crud';
 import { AddRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { AltButton, GrowingSpacer, PriButton } from '../control';
@@ -44,7 +46,6 @@ import { TokenContext } from '../context/TokenProvider';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
 import logError, { Severity } from '../utils/logErrorService';
-import { useWaitForRemoteQueue } from '../utils/useWaitForRemoteQueue';
 
 enum ConfirmType {
   delete,
@@ -94,7 +95,6 @@ function AssignSection(props: IProps) {
   const [confirmMsg, setConfirmMsg] = useState('');
   const getWfLabel = useWfLabel();
   const { getOrgDefault } = useOrgDefaults();
-  const waitForRemoteQueue = useWaitForRemoteQueue();
   const isPermission = useMemo(
     () => Boolean(getOrgDefault(orgDefaultPermissions)),
     [getOrgDefault]
@@ -281,12 +281,12 @@ function AssignSection(props: IProps) {
       (s) => remoteId('section', s.id, memory.keyMap as RecordKeyMap) as string
     );
     var list = ids.join('|');
-    var id = remoteId(
+    const schemeRec = findRecord(
+      memory,
       'organizationscheme',
-      schemeId,
-      memory.keyMap as RecordKeyMap
-    );
-    await waitForRemoteQueue('steps created');
+      schemeId
+    ) as OrganizationSchemeD;
+    const id = await waitForRemoteId(schemeRec, memory.keyMap as RecordKeyMap);
     try {
       await axiosPatch(`sections/assign/${id}/${list}`, undefined, token);
       await pullTableList(
