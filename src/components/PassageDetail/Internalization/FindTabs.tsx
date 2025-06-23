@@ -82,12 +82,14 @@ interface FindTabsProps {
   onClose?: () => void;
   closeRequested: boolean;
   canAdd: boolean;
+  onMarkdown?: (value: string) => void;
 }
 
 export default function FindTabs({
   onClose,
   closeRequested,
   canAdd,
+  onMarkdown,
 }: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
@@ -193,7 +195,7 @@ export default function FindTabs({
         <CreateAiRes resources={resources} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 4 : 3) : 2}>
-        <FaithbridgeIframe />
+        <FaithbridgeIframe onMarkdown={onMarkdown} onClose={onClose} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Box>

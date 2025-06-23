@@ -9,18 +9,27 @@ import { faithbridgeSelector } from '../../../selector';
 import { useGlobal } from '../../../context/GlobalContext';
 import { useFaithbridgeResult } from './useFaithbridgeResult';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { GrowingSpacer } from '../../../control/GrowingSpacer';
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { remoteId } from '../../../crud';
+// import { GrowingSpacer } from '../../../control/GrowingSpacer';
+// import { Checkbox, FormControlLabel } from '@mui/material';
+import { remoteId, useRole } from '../../../crud';
 import { RecordKeyMap } from '@orbit/records';
 import { FaithBridge } from '../../../assets/brands';
 
-export const FaithbridgeIframe = () => {
+interface IFaithbridgeIframeProps {
+  onMarkdown?: (value: string) => void;
+  onClose?: () => void;
+}
+
+export const FaithbridgeIframe = ({
+  onMarkdown,
+  onClose,
+}: IFaithbridgeIframeProps) => {
   const [chat, setChat] = React.useState<string | null>(null);
   const [verseRef, setVerseRef] = React.useState<string | null>(null);
   const [userId] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [audio, setAudio] = React.useState(true);
+  const userIsAdmin = useRole();
+  // const [audio, setAudio] = React.useState(true);
   const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
     null
   );
@@ -35,7 +44,11 @@ export const FaithbridgeIframe = () => {
 
   const handleAddContent = () => {
     if (chat && verseRef && userId) {
-      fetchResult(chat, userId, audio);
+      fetchResult(
+        chat,
+        userId
+        // audio
+      );
     }
   };
 
@@ -68,6 +81,15 @@ export const FaithbridgeIframe = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat, verseRef, userId]);
 
+  React.useEffect(() => {
+    if (data) {
+      console.log('Faithbridge data received:', data);
+      onMarkdown && onMarkdown(data?.lastMessage?.content || '');
+      onClose?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   return (
     <>
       <iframe
@@ -80,9 +102,8 @@ export const FaithbridgeIframe = () => {
       />
       {loading && <div>Loading result...</div>}
       {error && <div>Error: {error}</div>}
-      {data && <div>Result: {JSON.stringify(data)}</div>}
       <ActionRow>
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Checkbox
               defaultChecked
@@ -92,9 +113,13 @@ export const FaithbridgeIframe = () => {
           }
           label={t.audioResources}
         />
-        <GrowingSpacer />
+        <GrowingSpacer /> */}
         <AltButton onClick={getNewChat}>{t.newChat}</AltButton>
-        <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>
+        {userIsAdmin ? (
+          <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>
+        ) : (
+          <></>
+        )}
       </ActionRow>
     </>
   );

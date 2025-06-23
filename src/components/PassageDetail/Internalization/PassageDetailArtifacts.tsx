@@ -173,6 +173,7 @@ export function PassageDetailArtifacts() {
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [performedBy, setPerformedBy] = useState('');
+  const [markdownValue, setMarkdownValue] = useState('');
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
   const [plan] = useGlobal('plan'); //will be constant here
@@ -447,6 +448,13 @@ export function PassageDetailArtifacts() {
       resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
     }
+  };
+
+  const handleMarkdownValue = (value: string) => {
+    setMarkdownValue(value);
+    setUploadType(UploadType.MarkDown);
+    setRecordAudio(false);
+    setUploadVisible(true);
   };
 
   const passDesc = useMemo(
@@ -814,6 +822,7 @@ export function PassageDetailArtifacts() {
         onNonAudio={handleNonAudio}
         performedBy={performedBy}
         onSpeakerChange={(value) => setPerformedBy(value)}
+        inValue={markdownValue}
         metaData={
           <ResourceData
             uploadType={uploadType}
@@ -843,6 +852,7 @@ export function PassageDetailArtifacts() {
           onClose={() => handleFindVisible(false)}
           closeRequested={findTabsClose}
           canAdd={hasPermission}
+          onMarkdown={handleMarkdownValue}
         />
       </BigDialog>
       <BigDialog

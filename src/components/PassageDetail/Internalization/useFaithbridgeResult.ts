@@ -50,7 +50,7 @@ export const useFaithbridgeResult = () => {
   const [state, dispatch] = useReducer(faithbridgeReducer, initialState);
 
   const fetchResult = useCallback(
-    async (chatSessionId: string, userId: string, includeAudio: boolean) => {
+    async (chatSessionId: string, userId: string, includeAudio?: boolean) => {
       if (!chatSessionId || !userId) {
         dispatch({
           type: 'FETCH_ERROR',

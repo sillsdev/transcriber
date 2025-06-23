@@ -121,6 +121,7 @@ interface IProps {
   onSpeaker?: (speaker: string) => void;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
+  inValue?: string;
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
   saveText?: string;
@@ -140,6 +141,7 @@ function MediaUploadContent(props: IProps) {
     onSpeaker,
     team,
     onFiles,
+    inValue,
     onValue,
     onNonAudio,
     saveText,
@@ -250,6 +252,15 @@ function MediaUploadContent(props: IProps) {
   };
 
   useEffect(() => {
+    if (inValue) {
+      setFiles([
+        { name: inValue, size: inValue.length, type: MarkDownType } as File,
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inValue]);
+
+  useEffect(() => {
     setAcceptExtension(
       [
         '.mp3, .m4a, .wav, .ogg',
@@ -315,7 +326,7 @@ function MediaUploadContent(props: IProps) {
         ) : uploadType === UploadType.Link ? (
           <LinkEdit onValue={handleValue} />
         ) : (
-          <MarkDownEdit onValue={handleValue} />
+          <MarkDownEdit inValue={inValue} onValue={handleValue} />
         )}
         {metaData}
       </DialogContent>
