@@ -2454,6 +2454,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.showing">
+            <source>{0} to {1} of {2} {3} results</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.source">
             <source>Source</source>
             <target/>
