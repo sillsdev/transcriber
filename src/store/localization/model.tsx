@@ -415,10 +415,12 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "mediaType": string;
     "movement": string;
     "name": string;
+    "next": string;
     "oralVersion": string;
     "oralVersionTpl": string;
     "passage": string;
     "preview": string;
+    "previous": string;
     "query": string;
     "querying": string;
     "queryBuilder": string;

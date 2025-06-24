@@ -2391,6 +2391,13 @@
                <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.next">
+            <source>Next page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.oralVersion">
             <source>oral-version</source>
             <target/>
@@ -2417,6 +2424,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.previous">
+            <source>Previous page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.query">

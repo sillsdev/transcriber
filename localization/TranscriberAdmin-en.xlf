@@ -2050,6 +2050,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.next">
+         <segment>
+            <source>Next page</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.oralVersion">
          <segment>
             <source>oral-version</source>
@@ -2071,6 +2077,12 @@
       <unit id="findResource.preview">
          <segment>
             <source>Preview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.previous">
+         <segment>
+            <source>Previous page</source>
             <target/>
          </segment>
       </unit>

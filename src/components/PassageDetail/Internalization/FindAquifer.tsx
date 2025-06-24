@@ -446,6 +446,16 @@ export default function FindAquifer({ onClose }: IProps) {
 
         {count > limit && (
           <Stack direction="row" spacing={2}>
+            {offset > 0 ? (
+              <IconButton
+                onClick={() => setOffset(offset - limit)}
+                title={t.previous}
+              >
+                <Icon>arrow_left</Icon>
+              </IconButton>
+            ) : (
+              <></>
+            )}
             <Typography variant="h6" component="h6">
               {t.showing
                 .replace('{0}', `${offset + 1}`)
@@ -453,16 +463,12 @@ export default function FindAquifer({ onClose }: IProps) {
                 .replace('{2}', `${count}`)
                 .replace('{3}', Aquifer)}
             </Typography>
-            {offset > 0 ? (
-              <IconButton onClick={() => setOffset(offset - limit)}>
-                <Icon>arrow_upward</Icon>
-              </IconButton>
-            ) : (
-              <></>
-            )}
             {offset + limit < count ? (
-              <IconButton onClick={() => setOffset(offset + limit)}>
-                <Icon>arrow_downward</Icon>
+              <IconButton
+                onClick={() => setOffset(offset + limit)}
+                title={t.next}
+              >
+                <Icon>arrow_right</Icon>
               </IconButton>
             ) : (
               <></>
