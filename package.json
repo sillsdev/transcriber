@@ -147,6 +147,7 @@
     "@craco/craco": "^7.1.0",
     "@craco/types": "^7.1.0",
     "@redux-devtools/extension": "^3.2.6",
+    "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^7.0.2",
