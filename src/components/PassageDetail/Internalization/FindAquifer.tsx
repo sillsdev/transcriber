@@ -443,9 +443,8 @@ export default function FindAquifer({ onClose }: IProps) {
             </>
           </BigDialog>
         )}
-
-        {count > limit && (
-          <Stack direction="row" spacing={2}>
+        {count > 0 && (
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
             {offset > 0 ? (
               <IconButton
                 onClick={() => setOffset(offset - limit)}
