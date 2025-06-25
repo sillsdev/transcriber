@@ -181,6 +181,20 @@ export default function FindAquifer({ onClose }: IProps) {
     { columnName: 'source', width: 200 },
     { columnName: 'preview', width: 100 },
   ];
+  const filteringEnabled = [
+    { columnName: 'name', filteringEnabled: true },
+    { columnName: 'mediaType', filteringEnabled: true },
+    { columnName: 'group', filteringEnabled: true },
+    { columnName: 'source', filteringEnabled: true },
+    { columnName: 'preview', filteringEnabled: false },
+  ];
+  const sortingEnabled = [
+    { columnName: 'name', sortingEnabled: true },
+    { columnName: 'mediaType', sortingEnabled: true },
+    { columnName: 'group', sortingEnabled: true },
+    { columnName: 'source', sortingEnabled: true },
+    { columnName: 'preview', sortingEnabled: false },
+  ];
   const columnFormatting = [
     { columnName: 'name', wordWrapEnabled: true },
     { columnName: 'group', wordWrapEnabled: true },
@@ -481,6 +495,8 @@ export default function FindAquifer({ onClose }: IProps) {
             columns={columnDefs}
             columnWidths={columnWidths}
             columnFormatting={columnFormatting}
+            filteringEnabled={filteringEnabled}
+            sortingEnabled={sortingEnabled}
             sorting={sorting}
             rows={data}
             select={handleCheck}

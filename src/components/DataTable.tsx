@@ -130,10 +130,14 @@ function DataTable(props: IProps) {
       }
       if (sortingEnabled) {
         const se = sortingEnabled.find((s) => s.columnName === c.name);
+        if (se?.sortingEnabled !== undefined) {
+          col.sortable = se?.sortingEnabled;
+        }
         if (se?.sortingEnabled) {
-          if (!col?.sortComparator)
+          if (!col?.sortComparator) {
             col.sortComparator = (a: any, b: any) =>
               a === b ? 0 : a > b ? 1 : -1;
+          }
         } else {
           col.sortComparator = undefined;
         }
