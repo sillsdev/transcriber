@@ -2118,6 +2118,20 @@
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="faithbridge.error">
+            <source>Error: </source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.loading">
+            <source>Loading result...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="faithbridge.newChat">
             <source>New Chat</source>
             <target/>
@@ -2190,6 +2204,13 @@
          </trans-unit>
          <trans-unit id="findResource.add">
             <source>Add</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.addError">
+            <source>Aquifer add failed </source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>

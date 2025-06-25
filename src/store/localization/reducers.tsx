@@ -398,6 +398,8 @@ const initialState = {
 		"en": {
 			"addContent": "Add Content as Resource",
 			"audioResources": "RequestAudio",
+			"error": "Error: ",
+			"loading": "Loading result...",
 			"newChat": "New Chat",
 		}
 	}),
@@ -417,6 +419,7 @@ const initialState = {
 	"findResource": new LocalizedStrings({
 		"en": {
 			"add": "Add",
+			"addError": "Aquifer add failed ",
 			"aiDesc": "Copy the query contents and paste it into one or more of the AI chat tools:",
 			"aquiferSearchTip": "The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.",
 			"resource": "{0} Resource",

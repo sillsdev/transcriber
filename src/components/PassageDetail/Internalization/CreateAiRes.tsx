@@ -38,9 +38,10 @@ import { usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
   resources: BibleResource[];
+  onTab?: () => void;
 }
 
-export default function CreateAiRes({ resources }: CreateAiResProps) {
+export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
   const [scopeOpts, setScopeOpts] = useState<OptionProps[]>([]);
   const [plan] = useGlobal('plan'); //will be constant here
@@ -286,6 +287,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
                 key={resource.name}
                 resource={resource}
                 onLink={setLink}
+                onTab={onTab}
               />
             ))}
         </Grid>

@@ -14,6 +14,10 @@ var mockMemory = {
 // Mock dependencies
 jest.mock('../utils', () => ({
   generateUUID: jest.fn(() => 'mock-uuid-123'),
+  useCheckOnline: () => (callback: (result: boolean) => void) => {
+    // Simulate online check by calling the callback with true
+    callback(true);
+  },
 }));
 
 jest.mock(
@@ -30,7 +34,7 @@ jest.mock('../context/usePassageDetailContext', () => ({
 
 jest.mock('../crud', () => ({
   remoteId: jest.fn(() => 'remote-user-123'),
-  useRole: jest.fn(() => false),
+  useRole: jest.fn(() => ({ userIsAdmin: false })),
 }));
 
 jest.mock('../assets/brands', () => ({
@@ -53,6 +57,10 @@ jest.mock('../context/GlobalContext', () => {
         ? ['user-123', jest.fn()]
         : arg === 'memory'
         ? [mockMemory, jest.fn()]
+        : arg === 'offline'
+        ? [false, jest.fn()]
+        : arg === 'connected'
+        ? [true, jest.fn()]
         : [{}, jest.fn()],
   };
 });
@@ -62,6 +70,8 @@ jest.mock('react-redux', () => ({
     addContent: 'Add Content as Resource',
     audioResources: 'RequestAudio',
     newChat: 'New Chat',
+    loading: 'Loading result...',
+    error: 'Error: ',
   }),
   shallowEqual: jest.fn(),
 }));
@@ -163,13 +173,13 @@ describe('FaithbridgeIframe', () => {
       fetchResult: mockFetchResult,
     });
 
-    mockUseRole.mockReturnValue(false);
+    mockUseRole.mockReturnValue({ userIsAdmin: false });
     mockRemoteId.mockReturnValue('remote-user-123');
     mockGenerateUUID.mockReturnValue('mock-uuid-123');
   });
 
   describe('initialization', () => {
-    it('should render the iframe with correct initial URL parameters', () => {
+    it('should render the iframe with correct URL parameters', () => {
       const store = createMockStore();
 
       render(
@@ -287,7 +297,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should not render Add Content button for non-admin users', () => {
-      mockUseRole.mockReturnValue(false);
+      mockUseRole.mockReturnValue({ userIsAdmin: false });
       const store = createMockStore();
 
       render(
@@ -305,7 +315,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should render Add Content button for admin users', () => {
-      mockUseRole.mockReturnValue(true);
+      mockUseRole.mockReturnValue({ userIsAdmin: true });
       const store = createMockStore();
 
       render(
@@ -322,7 +332,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should call fetchResult when Add Content button is clicked by admin', () => {
-      mockUseRole.mockReturnValue(true);
+      mockUseRole.mockReturnValue({ userIsAdmin: true });
       const store = createMockStore();
 
       render(
@@ -341,7 +351,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should not call fetchResult when Add Content button is clicked without required data', () => {
-      mockUseRole.mockReturnValue(true);
+      mockUseRole.mockReturnValue({ userIsAdmin: true });
       mockUsePassageDetailContext.mockReturnValue({
         passage: null,
       });

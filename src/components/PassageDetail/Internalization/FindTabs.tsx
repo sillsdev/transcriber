@@ -169,7 +169,7 @@ export default function FindTabs({
             {...a11yProps(aquifer ? (biblebrain ? 3 : 2) : 1)}
           />
           <Tab
-            label={FaithBridge}
+            label={<Badge badgeContent={ts.ai}>{FaithBridge}</Badge>}
             {...a11yProps(aquifer ? (biblebrain ? 4 : 3) : 2)}
           />
         </Tabs>
@@ -192,7 +192,7 @@ export default function FindTabs({
         <FindOther handleLink={handleLink} resources={resources} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 3 : 2) : 1}>
-        <CreateAiRes resources={resources} />
+        <CreateAiRes resources={resources} onTab={() => setValue(4)} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 4 : 3) : 2}>
         <FaithbridgeIframe onMarkdown={onMarkdown} onClose={onClose} />

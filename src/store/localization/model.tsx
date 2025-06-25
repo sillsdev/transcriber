@@ -370,6 +370,8 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
 export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
     "addContent": string;
     "audioResources": string;
+    "error": string;
+    "loading": string;
     "newChat": string;
 };
 
@@ -387,6 +389,7 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
 
 export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "addError": string;
     "aiDesc": string;
     "aquiferSearchTip": string;
     "resource": string;

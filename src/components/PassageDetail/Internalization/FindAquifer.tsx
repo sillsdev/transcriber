@@ -125,6 +125,7 @@ export default function FindAquifer({ onClose }: IProps) {
   const { passage, section } = usePassageDetailContext();
   const { InternalizationStep } = useSecResCreate(section);
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [memory] = useGlobal('memory');
   const [result, setResult] = useState<AquiferSearch[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
@@ -342,12 +343,8 @@ export default function FindAquifer({ onClose }: IProps) {
         });
       })
       .catch((err) => {
-        showMessage('Aquifer add failed ' + (err as AxiosError).message);
-        logError(
-          Severity.error,
-          errorReporter,
-          infoMsg(err, 'Aquifer add failed ')
-        );
+        showMessage(t.addError + (err as AxiosError).message);
+        logError(Severity.error, errorReporter, infoMsg(err, t.addError));
       });
   };
 
@@ -412,7 +409,7 @@ export default function FindAquifer({ onClose }: IProps) {
               </LightTooltip>
             )}
           </Grid>
-          {userIsAdmin && !isOffline && (
+          {userIsAdmin && (!isOffline || offlineOnly) && (
             <Grid item>
               <PriButton
                 onClick={handleAdd}

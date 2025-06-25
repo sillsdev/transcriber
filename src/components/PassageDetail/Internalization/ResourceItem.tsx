@@ -12,13 +12,16 @@ import { pad3 } from '../../../utils/pad3';
 import { isElectron } from '../../../api-variable';
 import launch from '../../../utils/launch';
 import { Online } from '../../../utils/useCheckOnline';
+import { FaithBridge } from '../../../assets/brands';
 
 export default function ResourceItem({
   resource,
   onLink,
+  onTab,
 }: {
   resource: BibleResource;
   onLink?: (link: string) => void;
+  onTab?: () => void;
 }) {
   const { passage } = usePassageDetailContext();
   const { showMessage } = useSnackBar();
@@ -29,7 +32,12 @@ export default function ResourceItem({
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const handleClick = (_kind: string, hrefTpl: string) => () => {
+  const handleClick = (kind: string, hrefTpl: string) => () => {
+    if (kind === FaithBridge) {
+      onTab?.();
+      setOpen(false);
+      return;
+    }
     const book = passage?.attributes?.book;
     parseRef(passage);
     const href = hrefTpl

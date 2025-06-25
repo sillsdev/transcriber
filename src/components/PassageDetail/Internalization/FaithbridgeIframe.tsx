@@ -1,11 +1,16 @@
 import React from 'react';
-import { generateUUID } from '../../../utils';
+import {
+  generateUUID,
+  logError,
+  Severity,
+  useCheckOnline,
+} from '../../../utils';
 import { ActionRow } from '../../../control/ActionRow';
 import { AltButton } from '../../../control/AltButton';
 import { PriButton } from '../../../control/PriButton';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IFaithbridgeStrings } from '../../../model';
-import { faithbridgeSelector } from '../../../selector';
+import { IFaithbridgeStrings, ISharedStrings } from '../../../model';
+import { faithbridgeSelector, sharedSelector } from '../../../selector';
 import { useGlobal } from '../../../context/GlobalContext';
 import { useFaithbridgeResult } from './useFaithbridgeResult';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
@@ -14,6 +19,7 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { remoteId, useRole } from '../../../crud';
 import { RecordKeyMap } from '@orbit/records';
 import { FaithBridge } from '../../../assets/brands';
+import { Typography } from '@mui/material';
 
 interface IFaithbridgeIframeProps {
   onMarkdown?: (value: string) => void;
@@ -29,14 +35,20 @@ export const FaithbridgeIframe = ({
   const [userId] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline');
-  const userIsAdmin = useRole();
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [errorReporter] = useGlobal('errorReporter');
+  const [connected, setConnected] = React.useState(false);
+  const { userIsAdmin } = useRole();
+  const checkOnline = useCheckOnline(FaithBridge);
   // const [audio, setAudio] = React.useState(true);
   const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
     null
   );
   const { passage } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { data, loading, error, fetchResult } = useFaithbridgeResult();
+  const [refresh, setRefresh] = React.useState(0);
 
   const getNewChat = () => {
     const newChatId = generateUUID();
@@ -55,6 +67,8 @@ export const FaithbridgeIframe = ({
 
   React.useEffect(() => {
     getNewChat();
+    checkOnline(setConnected);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -91,7 +105,20 @@ export const FaithbridgeIframe = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return (
+  React.useEffect(() => {
+    if (error) {
+      console.log('Faithbridge error:', error);
+      if (refresh < 5) setRefresh(refresh + 1);
+      else {
+        logError(Severity.error, errorReporter, error);
+      }
+    } else {
+      if (refresh !== 0) setRefresh(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
+
+  return connected ? (
     <>
       <iframe
         src={`https://faithbridge.multilingualai.com/apm?${
@@ -100,9 +127,14 @@ export const FaithbridgeIframe = ({
         title={FaithBridge}
         style={{ width: '100%', height: '600px', border: 'none' }}
         allowFullScreen
+        allow="microphone"
       />
-      {loading && <div>Loading result...</div>}
-      {error && <div>Error: {error}</div>}
+      {loading && <div>{t.loading}</div>}
+      {error && (
+        <div>
+          {t.error} {error}
+        </div>
+      )}
       <ActionRow>
         {/* <FormControlLabel
           control={
@@ -116,13 +148,15 @@ export const FaithbridgeIframe = ({
         />
         <GrowingSpacer /> */}
         <AltButton onClick={getNewChat}>{t.newChat}</AltButton>
-        {userIsAdmin && !isOffline ? (
+        {userIsAdmin && (!isOffline || offlineOnly) ? (
           <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>
         ) : (
           <></>
         )}
       </ActionRow>
     </>
+  ) : (
+    <Typography variant="h6">{ts.mustBeOnline}</Typography>
   );
 };
 

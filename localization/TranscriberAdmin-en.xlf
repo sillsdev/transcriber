@@ -1816,6 +1816,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="faithbridge.error">
+         <segment>
+            <source>Error: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="faithbridge.loading">
+         <segment>
+            <source>Loading result...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="faithbridge.newChat">
          <segment>
             <source>New Chat</source>
@@ -1879,6 +1891,12 @@
       <unit id="findResource.add">
          <segment>
             <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.addError">
+         <segment>
+            <source>Aquifer add failed </source>
             <target/>
          </segment>
       </unit>
