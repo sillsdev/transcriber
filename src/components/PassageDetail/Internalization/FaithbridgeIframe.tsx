@@ -28,6 +28,7 @@ export const FaithbridgeIframe = ({
   const [verseRef, setVerseRef] = React.useState<string | null>(null);
   const [userId] = useGlobal('user');
   const [memory] = useGlobal('memory');
+  const [isOffline] = useGlobal('offline');
   const userIsAdmin = useRole();
   // const [audio, setAudio] = React.useState(true);
   const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
@@ -115,7 +116,7 @@ export const FaithbridgeIframe = ({
         />
         <GrowingSpacer /> */}
         <AltButton onClick={getNewChat}>{t.newChat}</AltButton>
-        {userIsAdmin ? (
+        {userIsAdmin && !isOffline ? (
           <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>
         ) : (
           <></>
