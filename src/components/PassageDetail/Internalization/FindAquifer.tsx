@@ -367,34 +367,36 @@ export default function FindAquifer({ onClose }: IProps) {
             />
           </Grid>
           <Grid item>
-            <LightTooltip title={t.aquiferSearchTip}>
-              <OutlinedInput
-                id="query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      type="submit"
-                      onClick={() => setRefresh(refresh + 1)}
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        setQuery('');
-                        setRefresh(refresh + 1);
-                      }}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                inputProps={{
-                  'aria-label': 'query',
-                }}
-              />
-            </LightTooltip>
+            {offset === 0 && (
+              <LightTooltip title={t.aquiferSearchTip}>
+                <OutlinedInput
+                  id="query"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        type="submit"
+                        onClick={() => setRefresh(refresh + 1)}
+                      >
+                        <SearchIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setQuery('');
+                          setRefresh(refresh + 1);
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  inputProps={{
+                    'aria-label': 'query',
+                  }}
+                />
+              </LightTooltip>
+            )}
           </Grid>
           {userIsAdmin && !isOffline && (
             <Grid item>
