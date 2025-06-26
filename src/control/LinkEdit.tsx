@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { IconButton, Stack, TextField } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -24,12 +24,23 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
     onValue && onValue(newValue);
   };
 
+  const setDefaultValue = () => {
+    if (inValue !== undefined && inValue !== value) {
+      setValue(inValue);
+      onValue?.(inValue);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(() => setDefaultValue(), [inValue]);
+
   return (
     <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
       <TextField
         id="link"
         label={t.linkTitle}
         value={value}
+        multiline
         color={!value || isUrl(value) ? 'primary' : 'error'}
         onChange={handleValue}
         sx={{ flexGrow: 1, my: 2, minWidth: 400 }}

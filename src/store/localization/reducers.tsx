@@ -397,7 +397,7 @@ const initialState = {
 	"faithbridge": new LocalizedStrings({
 		"en": {
 			"addContent": "Add Content as Resource",
-			"audioResources": "RequestAudio",
+			"audioResources": "Request Audio",
 			"error": "Error: ",
 			"loading": "Loading result...",
 			"newChat": "New Chat",

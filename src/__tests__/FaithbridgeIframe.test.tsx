@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { configureStore } from '@reduxjs/toolkit';
 import { FaithbridgeIframe } from '../components/PassageDetail/Internalization/FaithbridgeIframe';
 
+var mockUser: string | null = 'user-123';
 var mockMemory = {
   keyMap: {
     user: {
@@ -18,6 +18,10 @@ jest.mock('../utils', () => ({
     // Simulate online check by calling the callback with true
     callback(true);
   },
+  logError: jest.fn(
+    (_severity: number, _reporter: any, _error: Error | string) => {}
+  ),
+  Severity: { error: 1 },
 }));
 
 jest.mock(
@@ -42,33 +46,27 @@ jest.mock('../assets/brands', () => ({
 }));
 
 // Mock the GlobalProvider to avoid complex dependencies
-jest.mock('../context/GlobalContext', () => {
-  const mockReact = require('react');
-  return {
-    GlobalProvider: ({ children, init }: { children: any; init: any }) => {
-      // Create a simple context provider that provides the necessary values
-      const GlobalContext = mockReact.createContext({});
-      return (
-        <GlobalContext.Provider value={init}>{children}</GlobalContext.Provider>
-      );
-    },
-    useGlobal: (arg: string) =>
-      arg === 'user'
-        ? ['user-123', jest.fn()]
-        : arg === 'memory'
-        ? [mockMemory, jest.fn()]
-        : arg === 'offline'
-        ? [false, jest.fn()]
-        : arg === 'connected'
-        ? [true, jest.fn()]
-        : [{}, jest.fn()],
-  };
-});
+jest.mock('../context/GlobalContext', () => ({
+  useGlobal: (arg: string) =>
+    arg === 'user'
+      ? [mockUser, jest.fn()]
+      : arg === 'memory'
+      ? [mockMemory, jest.fn()]
+      : arg === 'offline'
+      ? [false, jest.fn()]
+      : arg === 'connected'
+      ? [true, jest.fn()]
+      : arg === 'offlineOnly'
+      ? [false, jest.fn()]
+      : arg === 'errorReporter'
+      ? [undefined, jest.fn()]
+      : [{}, jest.fn()],
+}));
 
 jest.mock('react-redux', () => ({
   useSelector: () => ({
     addContent: 'Add Content as Resource',
-    audioResources: 'RequestAudio',
+    audioResources: 'Request Audio',
     newChat: 'New Chat',
     loading: 'Loading result...',
     error: 'Error: ',
@@ -93,24 +91,8 @@ const mockRemoteId = require('../crud').remoteId;
 // Mock the generateUUID function
 const mockGenerateUUID = require('../utils').generateUUID;
 
-// Create a mock Redux store
-const createMockStore = (initialState = {}) => {
-  return configureStore({
-    reducer: {
-      localization: (state = { faithbridge: {} }, action) => state,
-    },
-    preloadedState: {
-      localization: {
-        faithbridge: {
-          addContent: 'Add Content as Resource',
-          audioResources: 'RequestAudio',
-          newChat: 'New Chat',
-        },
-        ...initialState,
-      },
-    },
-  });
-};
+// Mock the logError function
+const mockLogError = require('../utils').logError;
 
 // Mock passage data
 const mockPassage = {
@@ -120,32 +102,6 @@ const mockPassage = {
     book: 'MAT',
     reference: '1:1-5',
   },
-};
-
-// Mock global context data
-const mockGlobalState = {
-  user: 'user-123',
-  memory: {
-    keyMap: {
-      user: {
-        'user-123': 'remote-user-123',
-      },
-    },
-  },
-};
-
-// Test wrapper component
-const TestWrapper = ({
-  children,
-  store,
-  globalState = mockGlobalState,
-}: {
-  children: React.ReactNode;
-  store: any;
-  globalState?: any;
-}) => {
-  const { GlobalProvider } = require('../context/GlobalContext');
-  return <GlobalProvider init={globalState}>{children}</GlobalProvider>;
 };
 
 describe('FaithbridgeIframe', () => {
@@ -180,15 +136,8 @@ describe('FaithbridgeIframe', () => {
 
   describe('initialization', () => {
     it('should render the iframe with correct URL parameters', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -202,30 +151,16 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should generate a new chat ID on mount', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       expect(mockGenerateUUID).toHaveBeenCalledTimes(1);
     });
 
     it('should set verse reference from passage data', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       // The iframe src should contain the verse reference
@@ -241,15 +176,8 @@ describe('FaithbridgeIframe', () => {
         passage: null,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -263,15 +191,8 @@ describe('FaithbridgeIframe', () => {
 
   describe('button interactions', () => {
     it('should render New Chat button with correct text', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const newChatButton = screen.getByText('New Chat');
@@ -279,15 +200,8 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should generate new chat ID when New Chat button is clicked', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const newChatButton = screen.getByText('New Chat');
@@ -298,15 +212,9 @@ describe('FaithbridgeIframe', () => {
 
     it('should not render Add Content button for non-admin users', () => {
       mockUseRole.mockReturnValue({ userIsAdmin: false });
-      const store = createMockStore();
 
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       expect(
@@ -316,15 +224,9 @@ describe('FaithbridgeIframe', () => {
 
     it('should render Add Content button for admin users', () => {
       mockUseRole.mockReturnValue({ userIsAdmin: true });
-      const store = createMockStore();
 
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const addContentButton = screen.getByText('Add Content as Resource');
@@ -333,21 +235,19 @@ describe('FaithbridgeIframe', () => {
 
     it('should call fetchResult when Add Content button is clicked by admin', () => {
       mockUseRole.mockReturnValue({ userIsAdmin: true });
-      const store = createMockStore();
 
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const addContentButton = screen.getByText('Add Content as Resource');
       fireEvent.click(addContentButton);
 
-      expect(mockFetchResult).toHaveBeenCalledWith('mock-uuid-123', 'user-123');
+      expect(mockFetchResult).toHaveBeenCalledWith(
+        'mock-uuid-123',
+        'user-123',
+        true
+      );
     });
 
     it('should not call fetchResult when Add Content button is clicked without required data', () => {
@@ -356,21 +256,10 @@ describe('FaithbridgeIframe', () => {
         passage: null,
       });
       // Mock userId to be null to actually prevent fetchResult from being called
-      const store = createMockStore();
-
-      // Override the useGlobal mock for this test to return null userId
-      const originalUseGlobal = require('../context/GlobalContext').useGlobal;
-      require('../context/GlobalContext').useGlobal = jest.fn((arg) =>
-        arg === 'user' ? [null, jest.fn()] : originalUseGlobal(arg)
-      );
+      mockUser = null;
 
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const addContentButton = screen.getByText('Add Content as Resource');
@@ -379,7 +268,7 @@ describe('FaithbridgeIframe', () => {
       expect(mockFetchResult).not.toHaveBeenCalled();
 
       // Restore the original mock
-      require('../context/GlobalContext').useGlobal = originalUseGlobal;
+      mockUser = 'user-123';
     });
   });
 
@@ -392,15 +281,8 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       expect(screen.getByText('Loading result...')).toBeInTheDocument();
@@ -414,19 +296,153 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       expect(
         screen.getByText('Error: Network error occurred')
+      ).toBeInTheDocument();
+    });
+
+    it('should show 500 error message when iframe fails with server error', () => {
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error: 'HTTP 500: Internal Server Error',
+        fetchResult: mockFetchResult,
+      });
+
+      render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      expect(
+        screen.getByText('Error: HTTP 500: Internal Server Error')
+      ).toBeInTheDocument();
+    });
+
+    it('should handle 500 error with retry mechanism', () => {
+      // Simulate multiple errors to trigger the retry limit
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error: 'HTTP 500: Internal Server Error',
+        fetchResult: mockFetchResult,
+      });
+
+      const { rerender } = render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      // Simulate 5 consecutive errors to reach the retry limit
+      for (let i = 0; i < 5; i++) {
+        mockUseFaithbridgeResult.mockReturnValue({
+          data: null,
+          loading: false,
+          error: `HTTP 500: Internal Server Error (attempt ${i + 1})`,
+          fetchResult: mockFetchResult,
+        });
+
+        rerender(
+          <FaithbridgeIframe
+            onMarkdown={mockOnMarkdown}
+            onClose={mockOnClose}
+          />
+        );
+      }
+
+      // After 5 errors, logError should be called
+      expect(mockLogError).toHaveBeenCalledWith(
+        1,
+        undefined,
+        'HTTP 500: Internal Server Error (attempt 5)'
+      );
+    });
+
+    it('should handle 500 error state properly', () => {
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error: 'HTTP 500: Internal Server Error - Database connection failed',
+        fetchResult: mockFetchResult,
+      });
+
+      render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      // Verify the error is displayed
+      expect(
+        screen.getByText(
+          'Error: HTTP 500: Internal Server Error - Database connection failed'
+        )
+      ).toBeInTheDocument();
+
+      // Verify the iframe is still rendered (component doesn't crash)
+      const iframe = screen.getByTitle('FaithBridge');
+      expect(iframe).toBeInTheDocument();
+    });
+
+    it('should handle multiple 500 errors and show latest error message', () => {
+      const { rerender } = render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      // First error
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error: 'HTTP 500: Internal Server Error - First attempt',
+        fetchResult: mockFetchResult,
+      });
+
+      rerender(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      expect(
+        screen.getByText(
+          'Error: HTTP 500: Internal Server Error - First attempt'
+        )
+      ).toBeInTheDocument();
+
+      // Second error
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error: 'HTTP 500: Internal Server Error - Second attempt',
+        fetchResult: mockFetchResult,
+      });
+
+      rerender(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      expect(
+        screen.getByText(
+          'Error: HTTP 500: Internal Server Error - Second attempt'
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('should display 500 error message correctly in UI', () => {
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: null,
+        loading: false,
+        error:
+          'HTTP 500: Internal Server Error - Server is temporarily unavailable',
+        fetchResult: mockFetchResult,
+      });
+
+      render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      expect(
+        screen.getByText(
+          'Error: HTTP 500: Internal Server Error - Server is temporarily unavailable'
+        )
       ).toBeInTheDocument();
     });
 
@@ -438,15 +454,8 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       expect(screen.queryByText('Loading result...')).not.toBeInTheDocument();
@@ -455,9 +464,10 @@ describe('FaithbridgeIframe', () => {
   });
 
   describe('data handling', () => {
-    it('should call onMarkdown with data content when data is received', async () => {
+    it('should call onMarkdown with data audioUrl when data is received and audio is true', async () => {
       const mockData = {
         lastMessage: {
+          audioUrl: 'https://example.com/audio.mp3',
           content: 'Sample translation content',
         },
       };
@@ -469,20 +479,44 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       await waitFor(() => {
         expect(mockOnMarkdown).toHaveBeenCalledWith(
-          'Sample translation content'
+          mockData.lastMessage.audioUrl,
+          true
+        );
+      });
+    });
+
+    it('should call onMarkdown with data content when data is received and audio is false', async () => {
+      const mockData = {
+        lastMessage: {
+          audioUrl: 'https://example.com/audio.mp3',
+          content: 'Sample translation content',
+        },
+      };
+
+      mockUseFaithbridgeResult.mockReturnValue({
+        data: mockData,
+        loading: false,
+        error: null,
+        fetchResult: mockFetchResult,
+      });
+
+      render(
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+      );
+
+      const audioButton = screen.getByText('Request Audio');
+      fireEvent.click(audioButton);
+
+      await waitFor(() => {
+        expect(mockOnMarkdown).toHaveBeenCalledWith(
+          mockData.lastMessage.content,
+          false
         );
       });
     });
@@ -501,15 +535,8 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       await waitFor(() => {
@@ -529,19 +556,12 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       await waitFor(() => {
-        expect(mockOnMarkdown).toHaveBeenCalledWith('');
+        expect(mockOnMarkdown).toHaveBeenCalledWith('', true);
       });
     });
 
@@ -559,13 +579,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const store = createMockStore();
-
-      render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe />
-        </TestWrapper>
-      );
+      render(<FaithbridgeIframe />);
 
       // Should not throw any errors
       await waitFor(() => {
@@ -576,15 +590,8 @@ describe('FaithbridgeIframe', () => {
 
   describe('URL parameter construction', () => {
     it('should construct URL with all required parameters', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -607,15 +614,8 @@ describe('FaithbridgeIframe', () => {
         },
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -628,15 +628,8 @@ describe('FaithbridgeIframe', () => {
     it('should handle missing user remote ID', () => {
       mockRemoteId.mockReturnValue(null);
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -646,15 +639,8 @@ describe('FaithbridgeIframe', () => {
 
   describe('state updates', () => {
     it('should update iframe src when chat ID changes', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       // First render
@@ -680,15 +666,8 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should update iframe src when verse reference changes', () => {
-      const store = createMockStore();
-
       const { rerender } = render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       // First render
@@ -712,12 +691,7 @@ describe('FaithbridgeIframe', () => {
 
       // Re-render with new passage data
       rerender(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       // Check that the iframe src was updated
@@ -735,15 +709,8 @@ describe('FaithbridgeIframe', () => {
         passage: null,
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -763,15 +730,8 @@ describe('FaithbridgeIframe', () => {
         },
       });
 
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');
@@ -783,15 +743,8 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should handle missing global context data', () => {
-      const store = createMockStore();
-
       render(
-        <TestWrapper store={store} globalState={mockGlobalState}>
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
-        </TestWrapper>
+        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       const iframe = screen.getByTitle('FaithBridge');

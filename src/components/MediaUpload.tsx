@@ -7,6 +7,7 @@ import MediaUploadContent from './MediaUploadContent';
 
 export const UriLinkType = 'text/uri-list';
 export const MarkDownType = 'text/markdown';
+export const Mp3Type = 'audio/mpeg';
 
 export enum UploadType {
   Media = 0,
