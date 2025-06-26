@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  LinearProgress,
   styled,
 } from '@mui/material';
 import path from 'path-browserify';
@@ -154,6 +155,7 @@ function MediaUploadContent(props: IProps) {
   const [sizeLimit, setSizeLimit] = useState(0);
   const [acceptmime, setAcceptMime] = useState('');
   const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
+  const [progress, setProgress] = useState(false);
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
   const text = [
     t.task,
@@ -170,6 +172,7 @@ function MediaUploadContent(props: IProps) {
 
   const handleAddOrSave = () => {
     if (uploadMethod && files) {
+      setProgress(true);
       uploadMethod(files);
     }
     handleFiles(undefined);
@@ -251,6 +254,8 @@ function MediaUploadContent(props: IProps) {
     onValue && onValue(newValue);
   };
 
+  useEffect(() => setProgress(false), []);
+
   useEffect(() => {
     if (inValue) {
       setFiles([
@@ -329,6 +334,7 @@ function MediaUploadContent(props: IProps) {
           <MarkDownEdit inValue={inValue} onValue={handleValue} />
         )}
         {metaData}
+        {progress && <LinearProgress variant="indeterminate" />}
       </DialogContent>
       <DialogActions>
         <Button
