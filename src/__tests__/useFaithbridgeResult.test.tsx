@@ -177,7 +177,7 @@ describe('useFaithbridgeResult', () => {
     });
 
     it('should handle HTTP error responses', async () => {
-      mockFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValue({
         ok: false,
         status: 404,
       });
@@ -187,6 +187,8 @@ describe('useFaithbridgeResult', () => {
       await act(async () => {
         await result.current.fetchResult('chat123', 'user456');
       });
+
+      expect(mockFetch).toHaveBeenCalledTimes(5);
 
       expect(result.current).toEqual({
         data: null,
@@ -198,13 +200,15 @@ describe('useFaithbridgeResult', () => {
 
     it('should handle network errors', async () => {
       const networkError = new Error('Network error');
-      mockFetch.mockRejectedValueOnce(networkError);
+      mockFetch.mockRejectedValue(networkError);
 
       const { result } = renderHook(() => useFaithbridgeResult());
 
       await act(async () => {
         await result.current.fetchResult('chat123', 'user456');
       });
+
+      expect(mockFetch).toHaveBeenCalledTimes(4);
 
       expect(result.current).toEqual({
         data: null,
@@ -248,7 +252,7 @@ describe('useFaithbridgeResult', () => {
       expect(result.current).toEqual({
         data: null,
         loading: false,
-        error: 'An unknown error occurred',
+        error: 'HTTP error! status: undefined',
         fetchResult: expect.any(Function),
       });
     });

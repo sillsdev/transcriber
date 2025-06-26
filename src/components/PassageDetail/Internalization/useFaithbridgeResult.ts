@@ -68,18 +68,34 @@ export const useFaithbridgeResult = () => {
           includeAudio: includeAudio ? 'true' : 'false',
         });
 
-        const response = await fetch(
-          `https://faithbridge.multilingualai.com/apmResult?${params}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        let response: Response | null = null;
+        let retryCount = 0;
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        while (retryCount < 5) {
+          try {
+            response = await fetch(
+              `https://faithbridge.multilingualai.com/apmResult?${params}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+            if (response?.ok) break; // Exit loop if successful
+          } catch (error) {
+            if (
+              error instanceof Error &&
+              !/network/i.test(error?.message || error?.name)
+            )
+              throw error; // Only retry on network errors
+            if (retryCount >= 3) throw error; // Throw error after 3 retries
+          }
+          retryCount++;
+        }
+
+        if (!response?.ok) {
+          throw new Error(`HTTP error! status: ${response?.status}`);
         }
 
         const data = await response.json();
