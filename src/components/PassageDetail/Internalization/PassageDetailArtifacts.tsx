@@ -364,6 +364,7 @@ export function PassageDetailArtifacts() {
     descriptionRef.current = '';
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     setUploadVisible(false);
+    setMarkdownValue('');
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
