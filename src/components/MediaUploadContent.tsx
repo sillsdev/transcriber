@@ -249,7 +249,8 @@ function MediaUploadContent(props: IProps) {
     onSpeaker && onSpeaker(speaker);
   };
   const handleValue = (newValue: string) => {
-    const type = uploadType === UploadType.Link ? UriLinkType : MarkDownType;
+    const type =
+      uploadType !== UploadType.MarkDown ? UriLinkType : MarkDownType;
     setFiles([{ name: newValue, size: newValue.length, type } as File]);
     onValue && onValue(newValue);
   };
@@ -259,7 +260,11 @@ function MediaUploadContent(props: IProps) {
   useEffect(() => {
     if (inValue) {
       setFiles([
-        { name: inValue, size: inValue.length, type: MarkDownType } as File,
+        {
+          name: inValue,
+          size: inValue.length,
+          type: uploadType !== UploadType.MarkDown ? UriLinkType : MarkDownType,
+        } as File,
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -329,7 +334,7 @@ function MediaUploadContent(props: IProps) {
             )}
           </Drop>
         ) : uploadType === UploadType.Link ? (
-          <LinkEdit onValue={handleValue} />
+          <LinkEdit inValue={inValue} onValue={handleValue} />
         ) : (
           <MarkDownEdit inValue={inValue} onValue={handleValue} />
         )}

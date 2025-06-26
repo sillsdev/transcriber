@@ -1812,7 +1812,7 @@
       </unit>
       <unit id="faithbridge.audioResources">
          <segment>
-            <source>RequestAudio</source>
+            <source>Request Audio</source>
             <target/>
          </segment>
       </unit>

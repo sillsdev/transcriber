@@ -14,15 +14,15 @@ import { faithbridgeSelector, sharedSelector } from '../../../selector';
 import { useGlobal } from '../../../context/GlobalContext';
 import { useFaithbridgeResult } from './useFaithbridgeResult';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-// import { GrowingSpacer } from '../../../control/GrowingSpacer';
-// import { Checkbox, FormControlLabel } from '@mui/material';
+import { GrowingSpacer } from '../../../control/GrowingSpacer';
+import { Checkbox, FormControlLabel } from '@mui/material';
 import { remoteId, useRole } from '../../../crud';
 import { RecordKeyMap } from '@orbit/records';
 import { FaithBridge } from '../../../assets/brands';
 import { Typography } from '@mui/material';
 
 interface IFaithbridgeIframeProps {
-  onMarkdown?: (value: string) => void;
+  onMarkdown?: (value: string, audio: boolean) => void;
   onClose?: () => void;
 }
 
@@ -40,7 +40,7 @@ export const FaithbridgeIframe = ({
   const [connected, setConnected] = React.useState(false);
   const { userIsAdmin } = useRole();
   const checkOnline = useCheckOnline(FaithBridge);
-  // const [audio, setAudio] = React.useState(true);
+  const [audio, setAudio] = React.useState(true);
   const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
     null
   );
@@ -57,11 +57,7 @@ export const FaithbridgeIframe = ({
 
   const handleAddContent = () => {
     if (chat && verseRef && userId) {
-      fetchResult(
-        chat,
-        userId
-        // audio
-      );
+      fetchResult(chat, userId, audio);
     }
   };
 
@@ -99,11 +95,17 @@ export const FaithbridgeIframe = ({
   React.useEffect(() => {
     if (data) {
       console.log('Faithbridge data received:', data);
-      onMarkdown && onMarkdown(data?.lastMessage?.content || '');
+      onMarkdown &&
+        onMarkdown(
+          audio
+            ? data?.lastMessage?.audioUrl || ''
+            : data?.lastMessage?.content || '',
+          audio
+        );
       onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, audio]);
 
   React.useEffect(() => {
     if (error) {
@@ -136,7 +138,7 @@ export const FaithbridgeIframe = ({
         </div>
       )}
       <ActionRow>
-        {/* <FormControlLabel
+        <FormControlLabel
           control={
             <Checkbox
               defaultChecked
@@ -146,7 +148,7 @@ export const FaithbridgeIframe = ({
           }
           label={t.audioResources}
         />
-        <GrowingSpacer /> */}
+        <GrowingSpacer />
         <AltButton onClick={getNewChat}>{t.newChat}</AltButton>
         {userIsAdmin && (!isOffline || offlineOnly) ? (
           <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>

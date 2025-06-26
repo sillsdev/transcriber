@@ -450,9 +450,13 @@ export function PassageDetailArtifacts() {
     }
   };
 
-  const handleMarkdownValue = (value: string) => {
+  const handleMarkdownValue = (value: string, audio: boolean) => {
+    if (audio) {
+      setUploadType(UploadType.Link);
+    } else {
+      setUploadType(UploadType.MarkDown);
+    }
     setMarkdownValue(value);
-    setUploadType(UploadType.MarkDown);
     setRecordAudio(false);
     setUploadVisible(true);
   };

@@ -2112,7 +2112,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="faithbridge.audioResources">
-            <source>RequestAudio</source>
+            <source>Request Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>

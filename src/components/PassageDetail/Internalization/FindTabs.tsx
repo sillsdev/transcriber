@@ -82,7 +82,7 @@ interface FindTabsProps {
   onClose?: () => void;
   closeRequested: boolean;
   canAdd: boolean;
-  onMarkdown?: (value: string) => void;
+  onMarkdown?: (value: string, audio: boolean) => void;
 }
 
 export default function FindTabs({
