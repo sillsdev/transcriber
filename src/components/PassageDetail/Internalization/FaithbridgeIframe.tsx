@@ -21,6 +21,7 @@ import { RecordKeyMap } from '@orbit/records';
 import { FaithBridge } from '../../../assets/brands';
 import { Typography } from '@mui/material';
 import { useStepPermissions } from '../../../utils/useStepPermission';
+import { AlertSeverity, useSnackBar } from '../../../hoc/SnackBar';
 
 interface IFaithbridgeIframeProps {
   onMarkdown?: (value: string, audio: boolean) => void;
@@ -53,6 +54,7 @@ export const FaithbridgeIframe = ({
   const [onlineMsg, setOnlineMsg] = React.useState<string | null>(null);
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
+  const { showMessage } = useSnackBar();
 
   const getNewChat = () => {
     const newChatId = generateUUID();
@@ -120,6 +122,7 @@ export const FaithbridgeIframe = ({
   React.useEffect(() => {
     if (error) {
       console.log('Faithbridge error:', error);
+      if (/404/.test(error || '')) showMessage(t.noInfo, AlertSeverity.Warning);
       if (refresh < 5) setRefresh(refresh + 1);
       else {
         logError(Severity.error, errorReporter, error);
@@ -165,14 +168,14 @@ export const FaithbridgeIframe = ({
             <PriButton onClick={handleAddContent}>
               {t.addContent.replace('{0}', audio ? t.audio : t.text)}
             </PriButton>
-            {/404/.test(error || '') ? (
-              <div>{t.noInfo}</div>
-            ) : (
+            {!/404/.test(error || '') ? (
               error && (
                 <div>
                   {t.error} {error}
                 </div>
               )
+            ) : (
+              <></>
             )}
           </Stack>
         ) : (
