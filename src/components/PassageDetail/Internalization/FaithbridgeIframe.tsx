@@ -49,6 +49,7 @@ export const FaithbridgeIframe = ({
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { data, loading, error, fetchResult } = useFaithbridgeResult();
   const [refresh, setRefresh] = React.useState(0);
+  const [onlineMsg, setOnlineMsg] = React.useState<string | null>(null);
 
   const getNewChat = () => {
     const newChatId = generateUUID();
@@ -63,7 +64,11 @@ export const FaithbridgeIframe = ({
 
   React.useEffect(() => {
     getNewChat();
-    checkOnline(setConnected);
+    checkOnline((result) => {
+      setConnected(result);
+      if (!result) setTimeout(() => setOnlineMsg(ts.mustBeOnline), 500);
+      else setOnlineMsg(null);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -158,7 +163,7 @@ export const FaithbridgeIframe = ({
       </ActionRow>
     </>
   ) : (
-    <Typography variant="h6">{ts.mustBeOnline}</Typography>
+    <Typography variant="h6">{onlineMsg}</Typography>
   );
 };
 
