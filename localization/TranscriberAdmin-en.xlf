@@ -1806,7 +1806,13 @@
       </unit>
       <unit id="faithbridge.addContent">
          <segment>
-            <source>Add Content as Resource</source>
+            <source>Add {0} as Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="faithbridge.audio">
+         <segment>
+            <source>audio</source>
             <target/>
          </segment>
       </unit>
@@ -1831,6 +1837,18 @@
       <unit id="faithbridge.newChat">
          <segment>
             <source>New Chat</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="faithbridge.noInfo">
+         <segment>
+            <source>No information found</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="faithbridge.text">
+         <segment>
+            <source>text</source>
             <target/>
          </segment>
       </unit>

@@ -10,6 +10,7 @@ var mockMemory = {
     },
   },
 };
+var mockHasPermission = true;
 
 // Mock dependencies
 jest.mock('../utils', () => ({
@@ -70,8 +71,17 @@ jest.mock('react-redux', () => ({
     newChat: 'New Chat',
     loading: 'Loading result...',
     error: 'Error: ',
+    noInfo: 'No information found',
+    audio: 'audio',
+    text: 'text',
   }),
   shallowEqual: jest.fn(),
+}));
+
+jest.mock('../utils/useStepPermission', () => ({
+  useStepPermissions: () => ({
+    canDoSectionStep: jest.fn().mockReturnValue(mockHasPermission),
+  }),
 }));
 
 // Mock the useFaithbridgeResult hook
@@ -132,6 +142,7 @@ describe('FaithbridgeIframe', () => {
     mockUseRole.mockReturnValue({ userIsAdmin: false });
     mockRemoteId.mockReturnValue('remote-user-123');
     mockGenerateUUID.mockReturnValue('mock-uuid-123');
+    mockHasPermission = true;
   });
 
   describe('initialization', () => {
@@ -210,7 +221,8 @@ describe('FaithbridgeIframe', () => {
       expect(mockGenerateUUID).toHaveBeenCalledTimes(2); // Once on mount, once on click
     });
 
-    it('should not render Add Content button for non-admin users', () => {
+    it('should not render Add Content button for users without permission', () => {
+      mockHasPermission = false;
       mockUseRole.mockReturnValue({ userIsAdmin: false });
 
       render(
@@ -245,7 +257,7 @@ describe('FaithbridgeIframe', () => {
 
       expect(mockFetchResult).toHaveBeenCalledWith(
         'mock-uuid-123',
-        'user-123',
+        'remote-user-123',
         true
       );
     });

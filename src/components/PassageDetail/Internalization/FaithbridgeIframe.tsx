@@ -15,11 +15,12 @@ import { useGlobal } from '../../../context/GlobalContext';
 import { useFaithbridgeResult } from './useFaithbridgeResult';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { GrowingSpacer } from '../../../control/GrowingSpacer';
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { remoteId, useRole } from '../../../crud';
+import { Checkbox, FormControlLabel, Stack } from '@mui/material';
+import { remoteId } from '../../../crud';
 import { RecordKeyMap } from '@orbit/records';
 import { FaithBridge } from '../../../assets/brands';
 import { Typography } from '@mui/material';
+import { useStepPermissions } from '../../../utils/useStepPermission';
 
 interface IFaithbridgeIframeProps {
   onMarkdown?: (value: string, audio: boolean) => void;
@@ -38,27 +39,36 @@ export const FaithbridgeIframe = ({
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [connected, setConnected] = React.useState(false);
-  const { userIsAdmin } = useRole();
   const checkOnline = useCheckOnline(FaithBridge);
   const [audio, setAudio] = React.useState(true);
   const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
     null
   );
-  const { passage } = usePassageDetailContext();
+  const { passage, currentstep, section } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { data, loading, error, fetchResult } = useFaithbridgeResult();
+  const [apiReset, setApiReset] = React.useState(0);
+  const { data, loading, error, fetchResult } = useFaithbridgeResult(apiReset);
   const [refresh, setRefresh] = React.useState(0);
   const [onlineMsg, setOnlineMsg] = React.useState<string | null>(null);
+  const { canDoSectionStep } = useStepPermissions();
+  const hasPermission = canDoSectionStep(currentstep, section);
 
   const getNewChat = () => {
     const newChatId = generateUUID();
     setChat(newChatId);
+    setApiReset((prev) => prev + 1);
   };
+
+  const userRemoteId = React.useMemo(
+    () => remoteId('user', userId, memory.keyMap as RecordKeyMap),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [userId]
+  );
 
   const handleAddContent = () => {
     if (chat && verseRef && userId) {
-      fetchResult(chat, userId, audio);
+      fetchResult(chat, userRemoteId || userId, audio);
     }
   };
 
@@ -82,11 +92,6 @@ export const FaithbridgeIframe = ({
 
   React.useEffect(() => {
     if (chat && verseRef && userId) {
-      const userRemoteId = remoteId(
-        'user',
-        userId,
-        memory.keyMap as RecordKeyMap
-      );
       const params = new URLSearchParams({
         chatSessionId: chat,
         verseRef: verseRef ?? '',
@@ -137,11 +142,6 @@ export const FaithbridgeIframe = ({
         allow="microphone; clipboard-write"
       />
       {loading && <div>{t.loading}</div>}
-      {error && (
-        <div>
-          {t.error} {error}
-        </div>
-      )}
       <ActionRow>
         <FormControlLabel
           control={
@@ -154,9 +154,27 @@ export const FaithbridgeIframe = ({
           label={t.audioResources}
         />
         <GrowingSpacer />
-        <AltButton onClick={getNewChat}>{t.newChat}</AltButton>
-        {userIsAdmin && (!isOffline || offlineOnly) ? (
-          <PriButton onClick={handleAddContent}>{t.addContent}</PriButton>
+        <AltButton
+          onClick={getNewChat}
+          sx={{ height: 'fit-content', alignSelf: 'center' }}
+        >
+          {t.newChat}
+        </AltButton>
+        {hasPermission && (!isOffline || offlineOnly) ? (
+          <Stack sx={{ justifyContent: 'center', alignItems: 'center' }}>
+            <PriButton onClick={handleAddContent}>
+              {t.addContent.replace('{0}', audio ? t.audio : t.text)}
+            </PriButton>
+            {/404/.test(error || '') ? (
+              <div>{t.noInfo}</div>
+            ) : (
+              error && (
+                <div>
+                  {t.error} {error}
+                </div>
+              )
+            )}
+          </Stack>
         ) : (
           <></>
         )}

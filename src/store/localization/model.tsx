@@ -369,10 +369,13 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
 
 export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
     "addContent": string;
+    "audio": string;
     "audioResources": string;
     "error": string;
     "loading": string;
     "newChat": string;
+    "noInfo": string;
+    "text": string;
 };
 
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {

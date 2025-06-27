@@ -2105,7 +2105,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="faithbridge.addContent">
-            <source>Add Content as Resource</source>
+            <source>Add {0} as Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.audio">
+            <source>audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
@@ -2134,6 +2141,20 @@
          </trans-unit>
          <trans-unit id="faithbridge.newChat">
             <source>New Chat</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.noInfo">
+            <source>No information found</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.text">
+            <source>text</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
