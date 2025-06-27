@@ -134,7 +134,7 @@ export const FaithbridgeIframe = ({
         title={FaithBridge}
         style={{ width: '100%', height: '600px', border: 'none' }}
         allowFullScreen
-        allow="microphone"
+        allow="microphone; clipboard-write"
       />
       {loading && <div>{t.loading}</div>}
       {error && (
