@@ -1143,6 +1143,7 @@ export function ScriptureTable(props: IProps) {
       } else if (images.length > 0) {
         await graphicCreate({ resourceType, resourceId, info });
       }
+      showMessage(ts.uploadSuccess);
     }
     setUploadType(undefined);
   };
