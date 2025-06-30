@@ -119,6 +119,7 @@ export function GraphicUploader(props: IProps) {
       showMessage(t.selectFiles);
       return;
     }
+
     const results: CompressedImages[] = [];
     const imageFile = files[0];
     fileReport(imageFile, 'Original');
@@ -144,6 +145,7 @@ export function GraphicUploader(props: IProps) {
       }
     }
     if (finish) finish(results);
+    onOpen(false);
   };
 
   const uploadCancel = () => {

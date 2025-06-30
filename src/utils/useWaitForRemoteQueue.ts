@@ -28,7 +28,7 @@ export const useWaitForRemoteQueue = (source?: string) => {
       label,
       () => checkIt(),
       () => getGlobal('offline') && !getGlobal('offlineOnly'),
-      200
+      2000
     );
   };
 };
