@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback } from 'react';
 
 interface FaithbridgeResult {
   data: any;
@@ -9,7 +9,8 @@ interface FaithbridgeResult {
 type FaithbridgeAction =
   | { type: 'FETCH_START' }
   | { type: 'FETCH_SUCCESS'; payload: any }
-  | { type: 'FETCH_ERROR'; payload: string };
+  | { type: 'FETCH_ERROR'; payload: string }
+  | { type: 'FETCH_RESET' };
 
 const initialState: FaithbridgeResult = {
   data: null,
@@ -41,12 +42,16 @@ const faithbridgeReducer = (
         loading: false,
         error: action.payload,
       };
+    case 'FETCH_RESET':
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
 };
 
-export const useFaithbridgeResult = () => {
+export const useFaithbridgeResult = (reset?: number) => {
   const [state, dispatch] = useReducer(faithbridgeReducer, initialState);
 
   const fetchResult = useCallback(
@@ -108,6 +113,12 @@ export const useFaithbridgeResult = () => {
     },
     []
   );
+
+  React.useEffect(() => {
+    if (reset !== undefined && reset > 0) {
+      dispatch({ type: 'FETCH_RESET' });
+    }
+  }, [reset]);
 
   return {
     ...state,

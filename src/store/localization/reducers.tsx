@@ -396,11 +396,14 @@ const initialState = {
 	}),
 	"faithbridge": new LocalizedStrings({
 		"en": {
-			"addContent": "Add Content as Resource",
+			"addContent": "Add {0} as Resource",
+			"audio": "audio",
 			"audioResources": "Request Audio",
 			"error": "Error: ",
 			"loading": "Loading result...",
 			"newChat": "New Chat",
+			"noInfo": "No information found",
+			"text": "text",
 		}
 	}),
 	"filterMenu": new LocalizedStrings({
