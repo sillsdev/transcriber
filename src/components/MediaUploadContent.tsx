@@ -361,7 +361,8 @@ function MediaUploadContent(props: IProps) {
             files.length === 0 ||
             files[0].name.trim() === '' ||
             !hasRights ||
-            (uploadType === UploadType.Link && !isUrl(files[0].name))
+            (uploadType === UploadType.Link && !isUrl(files[0].name)) ||
+            progress
           }
         >
           {saveText || t.upload}
