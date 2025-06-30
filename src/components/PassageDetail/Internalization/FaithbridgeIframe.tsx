@@ -55,6 +55,7 @@ export const FaithbridgeIframe = ({
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
   const { showMessage } = useSnackBar();
+  const onlineTimer = React.useRef<NodeJS.Timeout | null>(null);
 
   const getNewChat = () => {
     const newChatId = generateUUID();
@@ -78,11 +79,25 @@ export const FaithbridgeIframe = ({
     getNewChat();
     checkOnline((result) => {
       setConnected(result);
-      if (!result) setTimeout(() => setOnlineMsg(ts.mustBeOnline), 500);
-      else setOnlineMsg(null);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    if (onlineTimer.current) {
+      clearTimeout(onlineTimer.current);
+      onlineTimer.current = null;
+    }
+    if (!connected) {
+      onlineTimer.current = setTimeout(
+        () => setOnlineMsg(ts.mustBeOnline),
+        1000
+      );
+    } else {
+      setOnlineMsg(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected]);
 
   React.useEffect(() => {
     setVerseRef(
