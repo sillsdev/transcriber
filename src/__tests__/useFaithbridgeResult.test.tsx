@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useFaithbridgeResult } from '../components/PassageDetail/Internalization/useFaithbridgeResult';
+import type { FaithbridgeData } from '../components/PassageDetail/Internalization/useFaithbridgeResult';
 
 // Mock fetch globally
 const mockFetch = jest.fn();
@@ -25,10 +26,26 @@ describe('useFaithbridgeResult', () => {
 
   describe('fetchResult - success cases', () => {
     it('should fetch data successfully with required parameters', async () => {
-      const mockResponse = {
-        id: '123',
-        result: 'Sample translation result',
-        timestamp: '2024-01-01T00:00:00Z',
+      const mockResponse: FaithbridgeData = {
+        chatSessionId: '123',
+        messages: [
+          {
+            content: 'Sample translation result',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [
+              {
+                id: '123',
+                name: 'FaithBridge',
+                source_origin: {
+                  service: 'FaithBridge',
+                  service_id: '123',
+                },
+              },
+            ],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockFetch.mockResolvedValueOnce({
@@ -61,11 +78,27 @@ describe('useFaithbridgeResult', () => {
     });
 
     it('should fetch data with includeAudio set to true', async () => {
-      const mockResponse = {
-        id: '123',
-        result: 'Sample translation result',
-        audioUrl: 'https://example.com/audio.mp3',
-        timestamp: '2024-01-01T00:00:00Z',
+      const mockResponse: FaithbridgeData = {
+        chatSessionId: '123',
+        messages: [
+          {
+            content: 'Sample translation result',
+            audioUrl: 'https://example.com/audio.mp3',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [
+              {
+                id: '123',
+                name: 'FaithBridge',
+                source_origin: {
+                  service: 'FaithBridge',
+                  service_id: '123',
+                },
+              },
+            ],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockFetch.mockResolvedValueOnce({
@@ -94,20 +127,35 @@ describe('useFaithbridgeResult', () => {
       expect(result.current.error).toBe(null);
     });
 
-    it('should handle complex response data', async () => {
+    it('should handle response data including query', async () => {
       const mockResponse = {
-        id: '123',
-        result: {
-          translation: 'Hello world',
-          confidence: 0.95,
-          alternatives: ['Hi world', 'Hello there'],
-        },
-        metadata: {
-          sourceLanguage: 'en',
-          targetLanguage: 'es',
-          model: 'faithbridge-v2',
-        },
-        timestamp: '2024-01-01T00:00:00Z',
+        chatSessionId: '123',
+        messages: [
+          {
+            content: 'My Query',
+            language: 'ENG',
+            messageType: 'USER',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+          {
+            content: 'Sample translation result',
+            audioUrl: 'https://example.com/audio.mp3',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [
+              {
+                id: '123',
+                name: 'FaithBridge',
+                source_origin: {
+                  service: 'FaithBridge',
+                  service_id: '123',
+                },
+              },
+            ],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockFetch.mockResolvedValueOnce({

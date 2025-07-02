@@ -125,8 +125,8 @@ export const FaithbridgeIframe = ({
       onMarkdown &&
         onMarkdown(
           audio
-            ? data?.lastMessage?.audioUrl || ''
-            : data?.lastMessage?.content || '',
+            ? data?.messages?.[1]?.audioUrl || ''
+            : data?.messages?.[1]?.content || '',
           audio
         );
       onClose?.();

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FaithbridgeIframe } from '../components/PassageDetail/Internalization/FaithbridgeIframe';
+import type { FaithbridgeData } from '../components/PassageDetail/Internalization/useFaithbridgeResult';
 
 var mockUser: string | null = 'user-123';
 var mockMemory = {
@@ -477,11 +478,25 @@ describe('FaithbridgeIframe', () => {
 
   describe('data handling', () => {
     it('should call onMarkdown with data audioUrl when data is received and audio is true', async () => {
-      const mockData = {
-        lastMessage: {
-          audioUrl: 'https://example.com/audio.mp3',
-          content: 'Sample translation content',
-        },
+      const mockData: FaithbridgeData = {
+        chatSessionId: 'chat-123',
+        messages: [
+          {
+            content: 'My sample query',
+            language: 'ENG',
+            messageType: 'USER',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+          {
+            audioUrl: 'https://example.com/audio.mp3',
+            content: 'Sample translation content',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockUseFaithbridgeResult.mockReturnValue({
@@ -497,18 +512,31 @@ describe('FaithbridgeIframe', () => {
 
       await waitFor(() => {
         expect(mockOnMarkdown).toHaveBeenCalledWith(
-          mockData.lastMessage.audioUrl,
+          mockData.messages[1].audioUrl,
           true
         );
       });
     });
 
     it('should call onMarkdown with data content when data is received and audio is false', async () => {
-      const mockData = {
-        lastMessage: {
-          audioUrl: 'https://example.com/audio.mp3',
-          content: 'Sample translation content',
-        },
+      const mockData: FaithbridgeData = {
+        chatSessionId: 'chat-123',
+        messages: [
+          {
+            content: 'My sample query',
+            language: 'ENG',
+            messageType: 'USER',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+          {
+            content: 'Sample translation content',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockUseFaithbridgeResult.mockReturnValue({
@@ -527,17 +555,24 @@ describe('FaithbridgeIframe', () => {
 
       await waitFor(() => {
         expect(mockOnMarkdown).toHaveBeenCalledWith(
-          mockData.lastMessage.content,
+          mockData.messages[1].content,
           false
         );
       });
     });
 
     it('should call onClose when data is received', async () => {
-      const mockData = {
-        lastMessage: {
-          content: 'Sample translation content',
-        },
+      const mockData: FaithbridgeData = {
+        chatSessionId: 'chat-123',
+        messages: [
+          {
+            content: 'Sample translation content',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockUseFaithbridgeResult.mockReturnValue({
@@ -557,8 +592,10 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should handle data without lastMessage content', async () => {
-      const mockData = {
-        someOtherField: 'value',
+      // Provide an empty messages array to simulate missing lastMessage
+      const mockData: FaithbridgeData = {
+        chatSessionId: 'chat-123',
+        messages: [],
       };
 
       mockUseFaithbridgeResult.mockReturnValue({
@@ -578,10 +615,17 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should not call callbacks when onMarkdown or onClose are not provided', async () => {
-      const mockData = {
-        lastMessage: {
-          content: 'Sample translation content',
-        },
+      const mockData: FaithbridgeData = {
+        chatSessionId: 'chat-123',
+        messages: [
+          {
+            content: 'Sample translation content',
+            language: 'ENG',
+            messageType: 'BOT',
+            sources: [],
+            timestamp: '2024-01-01T00:00:00Z',
+          },
+        ],
       };
 
       mockUseFaithbridgeResult.mockReturnValue({
