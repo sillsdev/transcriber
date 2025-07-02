@@ -24,7 +24,7 @@ import { useStepPermissions } from '../../../utils/useStepPermission';
 import { AlertSeverity, useSnackBar } from '../../../hoc/SnackBar';
 
 interface IFaithbridgeIframeProps {
-  onMarkdown?: (value: string, audio: boolean) => void;
+  onMarkdown?: (query: string, value: string, transcript?: string) => void;
   onClose?: () => void;
 }
 
@@ -122,13 +122,13 @@ export const FaithbridgeIframe = ({
   React.useEffect(() => {
     if (data) {
       console.log('Faithbridge data received:', data);
-      onMarkdown &&
+      if (onMarkdown) {
         onMarkdown(
-          audio
-            ? data?.messages?.[1]?.audioUrl || ''
-            : data?.messages?.[1]?.content || '',
-          audio
+          data?.messages?.[0]?.content || '',
+          data?.messages?.[1]?.audioUrl || '',
+          data?.messages?.[1]?.content || ''
         );
+      }
       onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
