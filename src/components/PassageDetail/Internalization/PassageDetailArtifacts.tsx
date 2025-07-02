@@ -155,6 +155,7 @@ export function PassageDetailArtifacts() {
   const [artifactState] = useState<{ id?: string | null }>({});
   // const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
+  const [initDescription, setInitDescription] = useState<string>('');
   const [recordAudio, setRecordAudio] = useState<boolean>(false);
   const mediaRef = useRef<MediaFileD>();
   const textRef = useRef<string>();
@@ -365,6 +366,7 @@ export function PassageDetailArtifacts() {
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     setUploadVisible(false);
     setMarkdownValue('');
+    setInitDescription('');
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -451,13 +453,19 @@ export function PassageDetailArtifacts() {
     }
   };
 
-  const handleMarkdownValue = (value: string, audio: boolean) => {
-    if (audio) {
+  const handleMarkdownValue = (
+    query: string,
+    audioUrl: string,
+    transcript: string
+  ) => {
+    setInitDescription(query);
+    descriptionRef.current = query;
+    if (audioUrl) {
       setUploadType(UploadType.Link);
     } else {
       setUploadType(UploadType.MarkDown);
     }
-    setMarkdownValue(value);
+    setMarkdownValue(audioUrl || transcript);
     setRecordAudio(false);
     setUploadVisible(true);
   };
@@ -834,7 +842,7 @@ export function PassageDetailArtifacts() {
             catAllowNew={true} //if they can upload they can add cat
             initCategory=""
             onCategoryChange={handleCategory}
-            initDescription=""
+            initDescription={initDescription}
             onDescriptionChange={handleDescription}
             catRequired={false}
             initPassRes={isPassageResource()}

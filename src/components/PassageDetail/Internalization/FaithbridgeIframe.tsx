@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   generateUUID,
   logError,
@@ -22,9 +22,12 @@ import { FaithBridge } from '../../../assets/brands';
 import { Typography } from '@mui/material';
 import { useStepPermissions } from '../../../utils/useStepPermission';
 import { AlertSeverity, useSnackBar } from '../../../hoc/SnackBar';
+import { axiosGet } from '../../../utils/axios';
+import { TokenContext } from '../../../context/TokenProvider';
+import { AquiferContent } from './FindAquifer';
 
 interface IFaithbridgeIframeProps {
-  onMarkdown?: (query: string, value: string, transcript?: string) => void;
+  onMarkdown?: (query: string, audioUrl: string, transcript: string) => void;
   onClose?: () => void;
 }
 
@@ -56,6 +59,7 @@ export const FaithbridgeIframe = ({
   const hasPermission = canDoSectionStep(currentstep, section);
   const { showMessage } = useSnackBar();
   const onlineTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const token = useContext(TokenContext).state.accessToken ?? '';
 
   const getNewChat = () => {
     const newChatId = generateUUID();
@@ -123,16 +127,38 @@ export const FaithbridgeIframe = ({
     if (data) {
       console.log('Faithbridge data received:', data);
       if (onMarkdown) {
-        onMarkdown(
-          data?.messages?.[0]?.content || '',
-          data?.messages?.[1]?.audioUrl || '',
-          data?.messages?.[1]?.content || ''
+        const contentIds = (data?.messages?.[1]?.sources || []).map(
+          (s) => s.source_origin?.service_id || ''
         );
+        const contentPromises = contentIds.map((contentId) => {
+          return axiosGet(
+            `aquifer/content/${contentId}`,
+            new URLSearchParams({
+              contentId,
+            }),
+            token
+          );
+        });
+        Promise.all(contentPromises).then((responses: AquiferContent[]) => {
+          const contents = responses.map((response) => {
+            return `${response.name} (${response.grouping.name})`;
+          });
+          let allContents = contents.join('\n\n');
+          if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
+          const query = (data?.messages?.[0]?.content || '')
+            .split('(')[0]
+            .trim();
+          onMarkdown(
+            query,
+            data?.messages?.[1]?.audioUrl || '',
+            data?.messages?.[1]?.content + allContents || ''
+          );
+        });
       }
       onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, audio]);
+  }, [data, audio, token]);
 
   React.useEffect(() => {
     if (error) {
