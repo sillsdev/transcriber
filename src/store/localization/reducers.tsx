@@ -70,6 +70,7 @@ const initialState = {
 	"artifactType": new LocalizedStrings({
 		"en": {
 			"activity": "Activity",
+			"airesource": "AI Generated",
 			"backtranslation": "Phrase Back Translation",
 			"comment": "Comment",
 			"graphic": "Graphic",
@@ -857,6 +858,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
+			"faithbridgeTitle": "{0} Resource",
 			"githubSupport": "Github markdown syntax supported",
 			"graphicTask": "Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.",
 			"graphicTitle": "Upload Graphic",

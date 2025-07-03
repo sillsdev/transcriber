@@ -8,7 +8,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactCategoryType, useOrganizedBy } from '../../../crud';
 import {
@@ -71,6 +71,8 @@ export function ResourceData(props: IProps) {
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
+  useEffect(() => setDescription(initDescription), [initDescription]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     var newValue = (event.target as HTMLInputElement).value;
@@ -141,9 +143,11 @@ export function ResourceData(props: IProps) {
               label={passDesc ?? t.passageResource}
             />
             {allowProject &&
-              ![UploadType.Link, UploadType.MarkDown].includes(
-                uploadType ?? UploadType.Resource
-              ) && (
+              ![
+                UploadType.Link,
+                UploadType.MarkDown,
+                UploadType.FaithbridgeLink,
+              ].includes(uploadType ?? UploadType.Resource) && (
                 <FormControlLabel
                   value={'general'}
                   control={<Radio />}

@@ -333,7 +333,11 @@ export const Uploader = (props: IProps) => {
     if (!noBusy) setBusy(true);
     if (
       uploadType &&
-      ![UploadType.Link, UploadType.MarkDown].includes(uploadType)
+      ![
+        UploadType.Link,
+        UploadType.MarkDown,
+        UploadType.FaithbridgeLink,
+      ].includes(uploadType)
     ) {
       preUpload(files);
       uploadFiles(files);

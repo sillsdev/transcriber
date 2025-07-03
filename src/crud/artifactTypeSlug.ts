@@ -13,4 +13,5 @@ export enum ArtifactTypeSlug {
   KeyTerm = 'keyterm',
   Title = 'title',
   Graphic = 'graphic',
+  AIResource = 'airesource',
 }

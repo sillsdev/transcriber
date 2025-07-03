@@ -651,7 +651,7 @@ describe('FaithbridgeIframe', () => {
       });
     });
 
-    it('should not call callbacks when onMarkdown or onClose are not provided', async () => {
+    it('should not call callbacks when onClose are not provided', async () => {
       const mockData: FaithbridgeData = {
         chatSessionId: 'chat-123',
         messages: [
@@ -672,7 +672,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      wrapper(<FaithbridgeIframe />);
+      wrapper(<FaithbridgeIframe onMarkdown={mockOnMarkdown} />);
 
       // Should not throw any errors
       await waitFor(() => {

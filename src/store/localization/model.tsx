@@ -60,6 +60,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "activity": string;
+    "airesource": string;
     "backtranslation": string;
     "comment": string;
     "graphic": string;
@@ -813,6 +814,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "faithbridgeTitle": string;
     "githubSupport": string;
     "graphicTask": string;
     "graphicTitle": string;
