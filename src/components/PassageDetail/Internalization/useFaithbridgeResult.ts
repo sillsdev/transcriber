@@ -1,7 +1,31 @@
 import React, { useReducer, useCallback } from 'react';
 
+interface FaithbridgeSourceOrigin {
+  service: string;
+  service_id: string;
+}
+
+interface FaithbridgeMsgSource {
+  id: string;
+  name: string;
+  source_origin: FaithbridgeSourceOrigin;
+}
+interface FaithbridgeMsg {
+  content: string;
+  audioUrl?: string; // Optional field for audio URL
+  language: string;
+  messageType: 'USER' | 'BOT';
+  sources: FaithbridgeMsgSource[];
+  timestamp: string;
+}
+
+export interface FaithbridgeData {
+  chatSessionId: string;
+  messages: FaithbridgeMsg[];
+}
+
 interface FaithbridgeResult {
-  data: any;
+  data: FaithbridgeData | null;
   loading: boolean;
   error: string | null;
 }
@@ -103,7 +127,7 @@ export const useFaithbridgeResult = (reset?: number) => {
           throw new Error(`HTTP error! status: ${response?.status}`);
         }
 
-        const data = await response.json();
+        const data: FaithbridgeData = await response.json();
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (error) {
         const errorMessage =

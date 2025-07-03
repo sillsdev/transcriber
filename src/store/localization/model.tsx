@@ -376,6 +376,7 @@ export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
     "newChat": string;
     "noInfo": string;
     "text": string;
+    "updating": string;
 };
 
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {

@@ -1852,6 +1852,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="faithbridge.updating">
+         <segment>
+            <source>Including sources in text</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>

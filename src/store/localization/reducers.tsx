@@ -404,6 +404,7 @@ const initialState = {
 			"newChat": "New Chat",
 			"noInfo": "No information found",
 			"text": "text",
+			"updating": "Including sources in text",
 		}
 	}),
 	"filterMenu": new LocalizedStrings({

@@ -77,7 +77,7 @@ interface LicenseByLang {
   };
 }
 
-interface AquiferContent {
+export interface AquiferContent {
   id: number;
   name: string;
   localizedName: string;

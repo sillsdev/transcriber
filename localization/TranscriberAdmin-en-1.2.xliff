@@ -2160,6 +2160,13 @@
                <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="faithbridge.updating">
+            <source>Including sources in text</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="filterMenu.all">
             <source>All</source>
             <target/>

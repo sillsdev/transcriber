@@ -4,6 +4,26 @@
 
 This project builds a front end web app and an [electron app](https://www.electronjs.org/) for desktop use on Windows, Linux, and MacOs. It was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Create React App Configuration Override ([craco](https://craco.js.org/)) is used to enable the electron desktop app to access the local computer so the program can run without access to the Internet in remote locations.
 
+<details>
+<summary>Table of Contents</summary>
+
+- [Audio Project Manager](#audio-project-manager)
+  - [Installation](#installation)
+    - [Visual Studio for (`strings.json` file)](#visual-studio-for-stringsjson-file)
+  - [Running Locally](#running-locally)
+    - [Configuration](#configuration)
+    - [Generate dev configuration files](#generate-dev-configuration-files)
+  - [Execute app](#execute-app)
+  - [Deployment](#deployment)
+  - [Electron (Desktop) app](#electron-desktop-app)
+  - [Electron Development](#electron-development)
+  - [Creating installer](#creating-installer)
+  - [creating the Linux .deb package](#creating-the-linux-deb-package)
+  - [creating the Mac dmg package](#creating-the-mac-dmg-package)
+  - [Test suite](#test-suite)
+
+</details>
+
 ## Installation
 
 Clone the app, go to the project directory, and execute:
