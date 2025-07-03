@@ -280,6 +280,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.airesource">
+         <segment>
+            <source>AI Generated</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
@@ -4183,6 +4189,12 @@
       <unit id="mediaUpload.dragDropSingle">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.faithbridgeTitle">
+         <segment>
+            <source>{0} Resource</source>
             <target/>
          </segment>
       </unit>

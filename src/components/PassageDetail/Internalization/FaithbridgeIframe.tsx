@@ -27,7 +27,7 @@ import { TokenContext } from '../../../context/TokenProvider';
 import { AquiferContent } from './FindAquifer';
 
 interface IFaithbridgeIframeProps {
-  onMarkdown?: (query: string, audioUrl: string, transcript: string) => void;
+  onMarkdown: (query: string, audioUrl: string, transcript: string) => void;
   onClose?: () => void;
 }
 
@@ -126,36 +126,33 @@ export const FaithbridgeIframe = ({
   React.useEffect(() => {
     if (data) {
       console.log('Faithbridge data received:', data);
-      if (onMarkdown) {
-        showMessage(t.updating, AlertSeverity.Info);
-        const contentIds = (data?.messages?.[1]?.sources || []).map(
-          (s) => s.source_origin?.service_id || ''
+      showMessage(t.updating, AlertSeverity.Info);
+      const contentIds = (data?.messages?.[1]?.sources || []).map(
+        (s) => s.source_origin?.service_id || ''
+      );
+
+      const contentPromises = contentIds.map((contentId) => {
+        return axiosGet(
+          `aquifer/content/${contentId}`,
+          new URLSearchParams({
+            contentId,
+          }),
+          token
         );
-        const contentPromises = contentIds.map((contentId) => {
-          return axiosGet(
-            `aquifer/content/${contentId}`,
-            new URLSearchParams({
-              contentId,
-            }),
-            token
-          );
+      });
+      Promise.all(contentPromises).then((responses: AquiferContent[]) => {
+        const contents = responses.map((response) => {
+          return `${response.name} (${response.grouping.name})`;
         });
-        Promise.all(contentPromises).then((responses: AquiferContent[]) => {
-          const contents = responses.map((response) => {
-            return `${response.name} (${response.grouping.name})`;
-          });
-          let allContents = contents.join('\n\n');
-          if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
-          const query = (data?.messages?.[0]?.content || '')
-            .split('(')[0]
-            .trim();
-          onMarkdown(
-            query,
-            data?.messages?.[1]?.audioUrl || '',
-            (data?.messages?.[1]?.content || '') + allContents
-          );
-        });
-      }
+        let allContents = contents.join('\n\n');
+        if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
+        const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
+        onMarkdown(
+          query,
+          data?.messages?.[1]?.audioUrl || '',
+          (data?.messages?.[1]?.content || '') + allContents
+        );
+      });
       onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

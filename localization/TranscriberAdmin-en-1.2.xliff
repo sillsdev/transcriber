@@ -323,7 +323,14 @@
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>   
+         <trans-unit id="artifactType.airesource">
+            <source>AI Generated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>                  
          <trans-unit id="artifactType.backtranslation">
             <source>Phrase Back Translation</source>
             <target/>
@@ -4878,6 +4885,13 @@
          </trans-unit>
          <trans-unit id="mediaUpload.dragDropSingle">
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.faithbridgeTitle">
+            <source>{0} Resource</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>

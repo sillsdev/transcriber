@@ -17,6 +17,7 @@ import { LinkEdit } from '../control/LinkEdit';
 import { MarkDownEdit } from '../control/MarkDownEdit';
 import { isUrl } from '../utils';
 import {
+  FaithbridgeType,
   MarkDownType,
   SIZELIMIT,
   UploadType,
@@ -168,6 +169,7 @@ function MediaUploadContent(props: IProps) {
     t.graphicTask,
     t.linkTask,
     t.markdownTask,
+    t.faithbridgeTitle,
   ];
 
   const handleAddOrSave = () => {
@@ -263,7 +265,12 @@ function MediaUploadContent(props: IProps) {
         {
           name: inValue,
           size: inValue.length,
-          type: uploadType !== UploadType.MarkDown ? UriLinkType : MarkDownType,
+          type:
+            uploadType !== UploadType.MarkDown
+              ? uploadType === UploadType.FaithbridgeLink
+                ? FaithbridgeType
+                : UriLinkType
+              : MarkDownType,
         } as File,
       ]);
     }
@@ -319,7 +326,11 @@ function MediaUploadContent(props: IProps) {
             team={team}
           />
         )}
-        {![UploadType.Link, UploadType.MarkDown].includes(uploadType) ? (
+        {![
+          UploadType.Link,
+          UploadType.MarkDown,
+          UploadType.FaithbridgeLink,
+        ].includes(uploadType) ? (
           <Drop>
             {hasRights ? (
               <DropTarget
@@ -335,8 +346,10 @@ function MediaUploadContent(props: IProps) {
           </Drop>
         ) : uploadType === UploadType.Link ? (
           <LinkEdit inValue={inValue} onValue={handleValue} />
-        ) : (
+        ) : uploadType === UploadType.MarkDown ? (
           <MarkDownEdit inValue={inValue} onValue={handleValue} />
+        ) : (
+          <></>
         )}
         {metaData}
         {progress && <LinearProgress variant="indeterminate" />}

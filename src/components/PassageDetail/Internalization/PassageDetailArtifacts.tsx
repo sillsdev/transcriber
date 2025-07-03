@@ -461,7 +461,7 @@ export function PassageDetailArtifacts() {
     setInitDescription(query);
     descriptionRef.current = query;
     if (audioUrl) {
-      setUploadType(UploadType.Link);
+      setUploadType(UploadType.FaithbridgeLink);
     } else {
       setUploadType(UploadType.MarkDown);
     }
