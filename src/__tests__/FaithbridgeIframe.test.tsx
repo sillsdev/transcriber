@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FaithbridgeIframe } from '../components/PassageDetail/Internalization/FaithbridgeIframe';
 import type { FaithbridgeData } from '../components/PassageDetail/Internalization/useFaithbridgeResult';
+import { TokenContext } from '../context/TokenProvider';
 
 var mockUser: string | null = 'user-123';
 var mockMemory = {
@@ -85,6 +86,10 @@ jest.mock('../utils/useStepPermission', () => ({
   }),
 }));
 
+jest.mock('../utils/axios', () => ({
+  axiosGet: jest.fn(),
+}));
+
 // Mock the useFaithbridgeResult hook
 const mockUseFaithbridgeResult =
   require('../components/PassageDetail/Internalization/useFaithbridgeResult').useFaithbridgeResult;
@@ -105,6 +110,9 @@ const mockGenerateUUID = require('../utils').generateUUID;
 // Mock the logError function
 const mockLogError = require('../utils').logError;
 
+// Now you can set the mock implementation in your tests:
+const mockAxiosGet = require('../utils/axios').axiosGet;
+
 // Mock passage data
 const mockPassage = {
   type: 'passage',
@@ -114,6 +122,15 @@ const mockPassage = {
     reference: '1:1-5',
   },
 };
+
+const mockTokenValue = { state: { accessToken: 'mock-access-token' } };
+
+const wrapper = (children: React.ReactNode) =>
+  render(
+    <TokenContext.Provider value={mockTokenValue as any}>
+      {children}
+    </TokenContext.Provider>
+  );
 
 describe('FaithbridgeIframe', () => {
   let mockOnMarkdown: jest.Mock;
@@ -140,6 +157,12 @@ describe('FaithbridgeIframe', () => {
       fetchResult: mockFetchResult,
     });
 
+    mockAxiosGet.mockReset();
+    mockAxiosGet.mockReturnValue({
+      name: 'aquifer-name',
+      grouping: { name: 'aquifer-grouping' },
+    });
+
     mockUseRole.mockReturnValue({ userIsAdmin: false });
     mockRemoteId.mockReturnValue('remote-user-123');
     mockGenerateUUID.mockReturnValue('mock-uuid-123');
@@ -148,7 +171,7 @@ describe('FaithbridgeIframe', () => {
 
   describe('initialization', () => {
     it('should render the iframe with correct URL parameters', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -163,7 +186,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should generate a new chat ID on mount', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -171,7 +194,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should set verse reference from passage data', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -188,7 +211,7 @@ describe('FaithbridgeIframe', () => {
         passage: null,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -203,7 +226,7 @@ describe('FaithbridgeIframe', () => {
 
   describe('button interactions', () => {
     it('should render New Chat button with correct text', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -212,7 +235,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should generate new chat ID when New Chat button is clicked', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -226,7 +249,7 @@ describe('FaithbridgeIframe', () => {
       mockHasPermission = false;
       mockUseRole.mockReturnValue({ userIsAdmin: false });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -238,7 +261,7 @@ describe('FaithbridgeIframe', () => {
     it('should render Add Content button for admin users', () => {
       mockUseRole.mockReturnValue({ userIsAdmin: true });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -249,7 +272,7 @@ describe('FaithbridgeIframe', () => {
     it('should call fetchResult when Add Content button is clicked by admin', () => {
       mockUseRole.mockReturnValue({ userIsAdmin: true });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -271,7 +294,7 @@ describe('FaithbridgeIframe', () => {
       // Mock userId to be null to actually prevent fetchResult from being called
       mockUser = null;
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -294,7 +317,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -309,7 +332,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -326,7 +349,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -344,7 +367,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      const { rerender } = render(
+      const { rerender } = wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -358,10 +381,12 @@ describe('FaithbridgeIframe', () => {
         });
 
         rerender(
-          <FaithbridgeIframe
-            onMarkdown={mockOnMarkdown}
-            onClose={mockOnClose}
-          />
+          <TokenContext.Provider value={mockTokenValue as any}>
+            <FaithbridgeIframe
+              onMarkdown={mockOnMarkdown}
+              onClose={mockOnClose}
+            />
+          </TokenContext.Provider>
         );
       }
 
@@ -381,7 +406,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -398,7 +423,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should handle multiple 500 errors and show latest error message', () => {
-      const { rerender } = render(
+      const { rerender } = wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -411,7 +436,12 @@ describe('FaithbridgeIframe', () => {
       });
 
       rerender(
-        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+        <TokenContext.Provider value={mockTokenValue as any}>
+          <FaithbridgeIframe
+            onMarkdown={mockOnMarkdown}
+            onClose={mockOnClose}
+          />
+        </TokenContext.Provider>
       );
 
       expect(
@@ -429,7 +459,12 @@ describe('FaithbridgeIframe', () => {
       });
 
       rerender(
-        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+        <TokenContext.Provider value={mockTokenValue as any}>
+          <FaithbridgeIframe
+            onMarkdown={mockOnMarkdown}
+            onClose={mockOnClose}
+          />
+        </TokenContext.Provider>
       );
 
       expect(
@@ -448,7 +483,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -467,7 +502,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -506,14 +541,15 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       await waitFor(() => {
         expect(mockOnMarkdown).toHaveBeenCalledWith(
+          mockData.messages[0].content,
           mockData.messages[1].audioUrl,
-          true
+          mockData.messages[1].content
         );
       });
     });
@@ -546,7 +582,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -555,8 +591,9 @@ describe('FaithbridgeIframe', () => {
 
       await waitFor(() => {
         expect(mockOnMarkdown).toHaveBeenCalledWith(
-          mockData.messages[1].content,
-          false
+          mockData.messages[0].content,
+          '',
+          mockData.messages[1].content
         );
       });
     });
@@ -582,7 +619,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -591,7 +628,7 @@ describe('FaithbridgeIframe', () => {
       });
     });
 
-    it('should handle data without lastMessage content', async () => {
+    it('should handle data without messages content', async () => {
       // Provide an empty messages array to simulate missing lastMessage
       const mockData: FaithbridgeData = {
         chatSessionId: 'chat-123',
@@ -605,12 +642,12 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
       await waitFor(() => {
-        expect(mockOnMarkdown).toHaveBeenCalledWith('', true);
+        expect(mockOnMarkdown).toHaveBeenCalledWith('', '', '');
       });
     });
 
@@ -635,7 +672,7 @@ describe('FaithbridgeIframe', () => {
         fetchResult: mockFetchResult,
       });
 
-      render(<FaithbridgeIframe />);
+      wrapper(<FaithbridgeIframe />);
 
       // Should not throw any errors
       await waitFor(() => {
@@ -646,7 +683,7 @@ describe('FaithbridgeIframe', () => {
 
   describe('URL parameter construction', () => {
     it('should construct URL with all required parameters', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -670,7 +707,7 @@ describe('FaithbridgeIframe', () => {
         },
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -684,7 +721,7 @@ describe('FaithbridgeIframe', () => {
     it('should handle missing user remote ID', () => {
       mockRemoteId.mockReturnValue(null);
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -695,7 +732,7 @@ describe('FaithbridgeIframe', () => {
 
   describe('state updates', () => {
     it('should update iframe src when chat ID changes', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -722,7 +759,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should update iframe src when verse reference changes', () => {
-      const { rerender } = render(
+      const { rerender } = wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -747,7 +784,12 @@ describe('FaithbridgeIframe', () => {
 
       // Re-render with new passage data
       rerender(
-        <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
+        <TokenContext.Provider value={mockTokenValue as any}>
+          <FaithbridgeIframe
+            onMarkdown={mockOnMarkdown}
+            onClose={mockOnClose}
+          />
+        </TokenContext.Provider>
       );
 
       // Check that the iframe src was updated
@@ -765,7 +807,7 @@ describe('FaithbridgeIframe', () => {
         passage: null,
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -786,7 +828,7 @@ describe('FaithbridgeIframe', () => {
         },
       });
 
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 
@@ -799,7 +841,7 @@ describe('FaithbridgeIframe', () => {
     });
 
     it('should handle missing global context data', () => {
-      render(
+      wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
       );
 

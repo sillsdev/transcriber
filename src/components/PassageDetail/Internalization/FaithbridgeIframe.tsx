@@ -151,7 +151,7 @@ export const FaithbridgeIframe = ({
           onMarkdown(
             query,
             data?.messages?.[1]?.audioUrl || '',
-            data?.messages?.[1]?.content + allContents || ''
+            (data?.messages?.[1]?.content || '') + allContents
           );
         });
       }
