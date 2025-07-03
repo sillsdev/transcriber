@@ -176,7 +176,7 @@ export default function CategoryEdit({
         })
       );
     }
-    showMessage(ts.uploadSuccess);
+    if (images.length > 0) showMessage(ts.uploadSuccess);
   };
   const handleColor = (color: ColorResult) => {
     category.color = color.hex;
