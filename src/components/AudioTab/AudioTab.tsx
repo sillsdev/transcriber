@@ -359,15 +359,19 @@ export function AudioTab() {
               </>
             )}
             <GrowingSpacer />
-            {complete !== 0 && complete !== 100 && !cloudSync.current && (
-              <AltButton
-                id="uploadCancel"
-                aria-label={ts.cancel}
-                onClick={handleUploadCancel}
-              >
-                {ts.cancel}
-              </AltButton>
-            )}
+            {complete !== 0 &&
+              complete !== 100 &&
+              !cloudSync.current &&
+              !uploadVisible &&
+              !cancelled.current && (
+                <AltButton
+                  id="uploadCancel"
+                  aria-label={ts.cancel}
+                  onClick={handleUploadCancel}
+                >
+                  {ts.cancel}
+                </AltButton>
+              )}
           </TabActions>
         </TabAppBar>
         <PaddedBox>
