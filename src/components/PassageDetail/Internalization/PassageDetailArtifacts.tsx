@@ -19,7 +19,7 @@ import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
 import { AltButton } from '../../../control';
-import { SortableItem } from '.';
+import { AIGenerated, SortableItem } from '.';
 import {
   remoteIdGuid,
   useSecResCreate,
@@ -135,6 +135,7 @@ export function PassageDetailArtifacts() {
   const { getArtifactCategorys } = useArtifactCategory();
   const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [aiGenerated, setAIGenerated] = useState(false);
   const [findOpen, setFindOpen] = useState(false);
   const [visual, setVisual] = useState(false);
   const [sortKey, setSortKey] = useState(0);
@@ -367,6 +368,7 @@ export function PassageDetailArtifacts() {
     setUploadVisible(false);
     setMarkdownValue('');
     setInitDescription('');
+    setAIGenerated(false);
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -465,8 +467,9 @@ export function PassageDetailArtifacts() {
     } else {
       setUploadType(UploadType.MarkDown);
     }
-    setMarkdownValue(audioUrl || transcript);
+    setMarkdownValue(audioUrl ? `${audioUrl}||${transcript}` : transcript);
     setRecordAudio(false);
+    setAIGenerated(true);
     setUploadVisible(true);
   };
 
@@ -748,6 +751,12 @@ export function PassageDetailArtifacts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plan]
   );
+
+  const modifiable = useMemo(
+    () => hasPermission && (!offline || offlineOnly),
+    [hasPermission, offline, offlineOnly]
+  );
+
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
@@ -812,12 +821,8 @@ export function PassageDetailArtifacts() {
             onLink={handleLinkId}
             onMarkDown={handleMarkDownId}
             onDone={handleDone}
-            onDelete={handleDelete}
-            onEdit={
-              hasPermission && (!offline || offlineOnly)
-                ? handleEdit
-                : undefined
-            }
+            onDelete={modifiable ? handleDelete : undefined}
+            onEdit={modifiable ? handleEdit : undefined}
           />
         ))}
       </VertListDnd>
@@ -836,6 +841,7 @@ export function PassageDetailArtifacts() {
         performedBy={performedBy}
         onSpeakerChange={(value) => setPerformedBy(value)}
         inValue={markdownValue}
+        eafUrl={aiGenerated ? AIGenerated : ''}
         metaData={
           <ResourceData
             uploadType={uploadType}
