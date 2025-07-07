@@ -748,6 +748,12 @@ export function PassageDetailArtifacts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plan]
   );
+
+  const modifiable = useMemo(
+    () => hasPermission && (!offline || offlineOnly),
+    [hasPermission, offline, offlineOnly]
+  );
+
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
@@ -812,12 +818,8 @@ export function PassageDetailArtifacts() {
             onLink={handleLinkId}
             onMarkDown={handleMarkDownId}
             onDone={handleDone}
-            onDelete={handleDelete}
-            onEdit={
-              hasPermission && (!offline || offlineOnly)
-                ? handleEdit
-                : undefined
-            }
+            onDelete={modifiable ? handleDelete : undefined}
+            onEdit={modifiable ? handleEdit : undefined}
           />
         ))}
       </VertListDnd>
