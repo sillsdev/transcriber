@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   generateUUID,
   logError,
@@ -35,26 +35,25 @@ export const FaithbridgeIframe = ({
   onMarkdown,
   onClose,
 }: IFaithbridgeIframeProps) => {
-  const [chat, setChat] = React.useState<string | null>(null);
-  const [verseRef, setVerseRef] = React.useState<string | null>(null);
+  const [chat, setChat] = useState<string | null>(null);
+  const [verseRef, setVerseRef] = useState<string | null>(null);
   const [userId] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
-  const [connected, setConnected] = React.useState(false);
+  const [connected, setConnected] = useState(false);
   const checkOnline = useCheckOnline(FaithBridge);
-  const [audio, setAudio] = React.useState(true);
-  const [urlParams, setUrlParams] = React.useState<URLSearchParams | null>(
-    null
-  );
+  const [audio, setAudio] = useState(true);
+  const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
   const { passage, currentstep, section } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const [apiReset, setApiReset] = React.useState(0);
+  const [apiReset, setApiReset] = useState(0);
   const { data, loading, error, fetchResult } = useFaithbridgeResult(apiReset);
-  const [refresh, setRefresh] = React.useState(0);
-  const [onlineMsg, setOnlineMsg] = React.useState<string | null>(null);
+  const [fetching, setFetching] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+  const [onlineMsg, setOnlineMsg] = useState<string | null>(null);
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
   const { showMessage } = useSnackBar();
@@ -75,6 +74,7 @@ export const FaithbridgeIframe = ({
 
   const handleAddContent = () => {
     if (chat && verseRef && userId) {
+      setFetching(true);
       fetchResult(chat, userRemoteId || userId, audio);
     }
   };
@@ -140,20 +140,32 @@ export const FaithbridgeIframe = ({
           token
         );
       });
-      Promise.all(contentPromises).then((responses: AquiferContent[]) => {
-        const contents = responses.map((response) => {
-          return `${response.name} (${response.grouping.name})`;
+      const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
+      Promise.all(contentPromises)
+        .then((responses: AquiferContent[]) => {
+          const contents = responses.map((response) => {
+            return `${response.name} (${response.grouping.name})`;
+          });
+          let allContents = contents.join('\n\n');
+          if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
+          onMarkdown(
+            query,
+            data?.messages?.[1]?.audioUrl || '',
+            (data?.messages?.[1]?.content || '') + allContents
+          );
+          setFetching(false);
+          onClose?.();
+        })
+        .catch((reason) => {
+          console.log('content failed', reason);
+          onMarkdown(
+            query,
+            data?.messages?.[1]?.audioUrl || '',
+            data?.messages?.[1]?.content || ''
+          );
+          setFetching(false);
+          onClose?.();
         });
-        let allContents = contents.join('\n\n');
-        if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
-        const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
-        onMarkdown(
-          query,
-          data?.messages?.[1]?.audioUrl || '',
-          (data?.messages?.[1]?.content || '') + allContents
-        );
-      });
-      onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, audio, token]);
@@ -197,6 +209,7 @@ export const FaithbridgeIframe = ({
         />
         <GrowingSpacer />
         <AltButton
+          disabled={fetching}
           onClick={getNewChat}
           sx={{ height: 'fit-content', alignSelf: 'center' }}
         >
@@ -204,7 +217,7 @@ export const FaithbridgeIframe = ({
         </AltButton>
         {hasPermission && (!isOffline || offlineOnly) ? (
           <Stack sx={{ justifyContent: 'center', alignItems: 'center' }}>
-            <PriButton onClick={handleAddContent}>
+            <PriButton disabled={fetching} onClick={handleAddContent}>
               {t.addContent.replace('{0}', audio ? t.audio : t.text)}
             </PriButton>
             {!/404/.test(error || '') ? (

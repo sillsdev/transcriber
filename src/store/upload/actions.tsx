@@ -224,6 +224,7 @@ export const nextUpload =
             'source-segments': record.sourceSegments,
             'performed-by': record.performedBy,
             topic: record.topic,
+            transcription: record.transcription,
           },
           relationships: {
             'last-modified-by-user': {

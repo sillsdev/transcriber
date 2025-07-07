@@ -2,7 +2,11 @@ import React, { useRef, useContext, useEffect, useState } from 'react';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
-import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
+import MediaUpload, {
+  FaithbridgeType,
+  SIZELIMIT,
+  UploadType,
+} from './MediaUpload';
 import {
   findRecord,
   pullTableList,
@@ -50,6 +54,7 @@ interface IProps {
   sourceMediaId?: string;
   sourceSegments?: string;
   performedBy?: string;
+  eafUrl?: string;
   onSpeakerChange?: (performedBy: string) => void;
   topic?: string;
   uploadType?: UploadType;
@@ -76,6 +81,7 @@ export const Uploader = (props: IProps) => {
     sourceMediaId,
     sourceSegments,
     performedBy,
+    eafUrl,
     onSpeakerChange,
     topic,
     uploadType,
@@ -259,10 +265,17 @@ export const Uploader = (props: IProps) => {
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
+    let transcription = '';
+    let file = uploadList[currentlyLoading].name;
+    if (uploadList[currentlyLoading].type === FaithbridgeType) {
+      var parts = uploadList[currentlyLoading].name.split('||');
+      file = parts[0];
+      transcription = parts[1];
+    }
     const mediaFile = {
       planId: getPlanId(),
       versionNumber: 1,
-      originalFile: uploadList[currentlyLoading].name,
+      originalFile: file,
       contentType: getContentType(
         uploadList[currentlyLoading]?.type,
         uploadList[currentlyLoading].name
@@ -272,12 +285,15 @@ export const Uploader = (props: IProps) => {
       userId: getUserId(),
       recordedbyUserId: getUserId(),
       sourceMediaId: getSourceMediaId(),
-      sourceSegments: sourceSegments,
-      performedBy: performedBy,
-      topic: topic,
-      eafUrl: !artifactState?.id
-        ? ts.mediaAttached
-        : localizedArtifactTypeFromId(artifactState?.id), //put psc message here
+      sourceSegments,
+      performedBy,
+      topic,
+      eafUrl:
+        eafUrl ??
+        (!artifactState?.id
+          ? ts.mediaAttached
+          : localizedArtifactTypeFromId(artifactState?.id)), //put psc message here
+      transcription,
     } as any;
     nextUpload({
       record: mediaFile,
