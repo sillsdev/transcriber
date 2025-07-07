@@ -7,6 +7,7 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -28,6 +29,8 @@ import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import { LinkEdit } from '../../../control/LinkEdit';
 import { MarkDownEdit } from '../../../control/MarkDownEdit';
 import { mediaContentType } from '../../../utils/contentType';
+import MarkDown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface IProps {
   media?: MediaFileD;
@@ -160,6 +163,17 @@ export function ResourceData(props: IProps) {
           </RadioGroup>
         </FormControl>
       )}
+      {mediaContentType(media).startsWith('audio') &&
+        Boolean(media?.attributes.transcription) && (
+          <Stack spacing={1}>
+            <Typography variant="h6" sx={{ pt: 1 }}>
+              {t.transcription}
+            </Typography>
+            <MarkDown remarkPlugins={[remarkGfm]}>
+              {media?.attributes.transcription || ''}
+            </MarkDown>
+          </Stack>
+        )}
     </Stack>
   );
 }

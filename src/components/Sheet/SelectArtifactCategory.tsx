@@ -120,7 +120,11 @@ export const SelectArtifactCategory = (props: IProps) => {
         select
         label={t.artifactCategory}
         sx={textFieldProps}
-        value={categoryId || ''}
+        value={
+          artifactCategorys.map((c) => c.id).includes(categoryId)
+            ? categoryId || ''
+            : ''
+        }
         onChange={handleArtifactCategoryChange}
         disabled={disabled}
         SelectProps={{

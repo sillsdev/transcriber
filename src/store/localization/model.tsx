@@ -919,6 +919,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "textResource": string;
     "title": string;
     "titleDesc": string;
+    "transcription": string;
     "type": string;
     "tip1a": string;
     "tip1b": string;

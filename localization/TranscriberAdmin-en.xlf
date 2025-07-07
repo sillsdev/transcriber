@@ -4768,6 +4768,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.transcription">
+         <segment>
+            <source>AI Audio Resource Transcript</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.type">
          <segment>
             <source>Type</source>
