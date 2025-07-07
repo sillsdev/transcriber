@@ -966,6 +966,7 @@ const initialState = {
 			"textResource": "Text Resource",
 			"title": "Title",
 			"titleDesc": "for {0}",
+			"transcription": "AI Audio Resource Transcript",
 			"type": "Type",
 			"tip1a": "Resources for:",
 			"tip1b": "Link to a shared resource.",
