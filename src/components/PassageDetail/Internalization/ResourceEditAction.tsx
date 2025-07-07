@@ -1,4 +1,3 @@
-import { useGlobal } from '../../../context/GlobalContext';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,8 +13,6 @@ interface IProps {
 }
 
 export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const t: IMediaActionsStrings = useSelector(
     mediaActionsSelector,
     shallowEqual
@@ -29,7 +26,7 @@ export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
     onDelete && onDelete(item);
   };
 
-  return !isOffline || offlineOnly ? (
+  return (
     <span>
       {onEdit && (
         <LightTooltip title={t.edit}>
@@ -40,15 +37,15 @@ export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
           </span>
         </LightTooltip>
       )}
-      <LightTooltip title={t.delete}>
-        <span>
-          <IconButton id={`res-delete`} onClick={handleDelete(item)}>
-            <DeleteIcon />
-          </IconButton>
-        </span>
-      </LightTooltip>
+      {onDelete && (
+        <LightTooltip title={t.delete}>
+          <span>
+            <IconButton id={`res-delete`} onClick={handleDelete(item)}>
+              <DeleteIcon />
+            </IconButton>
+          </span>
+        </LightTooltip>
+      )}
     </span>
-  ) : (
-    <></>
   );
 };
