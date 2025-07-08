@@ -44,7 +44,7 @@ export const FaithbridgeIframe = ({
   const [errorReporter] = useGlobal('errorReporter');
   const [connected, setConnected] = useState(false);
   const checkOnline = useCheckOnline(FaithBridge);
-  const [audio, setAudio] = useState(true);
+  const [audio, setAudio] = useState(!offlineOnly && !isOffline);
   const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
   const { passage, currentstep, section } = usePassageDetailContext();
   const t: IFaithbridgeStrings = useSelector(faithbridgeSelector, shallowEqual);
@@ -184,6 +184,13 @@ export const FaithbridgeIframe = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
+  React.useEffect(() => {
+    if ((offlineOnly || isOffline) && audio) {
+      setAudio(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly, isOffline, audio]);
+
   return connected ? (
     <>
       <iframe
@@ -197,16 +204,17 @@ export const FaithbridgeIframe = ({
       />
       {loading && <div>{t.loading}</div>}
       <ActionRow>
-        <FormControlLabel
-          control={
-            <Checkbox
-              defaultChecked
-              value={audio}
-              onChange={(_ev, checked) => setAudio(checked)}
-            />
-          }
-          label={t.audioResources}
-        />
+        {!offlineOnly && !isOffline && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={audio}
+                onChange={(_ev, checked) => setAudio(checked)}
+              />
+            }
+            label={t.audioResources}
+          />
+        )}
         <GrowingSpacer />
         <AltButton
           disabled={fetching}
