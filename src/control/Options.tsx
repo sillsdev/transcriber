@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import keycode from 'keycode';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IControlStrings } from '../model';
 import {
@@ -68,7 +67,8 @@ const OptionCtrl = (props: IProps) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.keyCode === keycode('ENTER') || e.keyCode === keycode('TAB')) {
+    const key = e.key?.toLowerCase();
+    if (key === 'enter' || key === 'tab') {
       addOther();
     }
   };
