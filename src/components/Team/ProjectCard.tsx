@@ -17,6 +17,7 @@ import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import StoryIcon from '@mui/icons-material/RecordVoiceOver';
 import { BsPencilSquare } from 'react-icons/bs';
+import type { IconBaseProps } from 'react-icons';
 import ShareIcon from '@mui/icons-material/OfflineShare';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -64,6 +65,8 @@ import {
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { UpdateRecord } from '../../model/baseModel';
 import { useProjectPermissions } from '../../utils/useProjectPermissions';
+
+const PencilSquare = BsPencilSquare as unknown as React.FC<IconBaseProps>;
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -414,7 +417,7 @@ export const ProjectCard = (props: IProps) => {
               ) : isStory ? (
                 <StoryIcon />
               ) : (
-                <BsPencilSquare />
+                <PencilSquare />
               )}
               {project.attributes.isPublic && <ShareIcon />}
               {'\u00A0 '}

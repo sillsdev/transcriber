@@ -30,6 +30,7 @@ import {
   FaDotCircle,
   FaStopCircle,
 } from 'react-icons/fa';
+import type { IconBaseProps } from 'react-icons/lib';
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
@@ -71,6 +72,12 @@ import VoiceConversionLogo from '../control/VoiceConversionLogo';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
 import SelectVoice from '../business/voice/SelectVoice';
+
+const HandScissors = FaHandScissors as unknown as React.FC<IconBaseProps>;
+const AngleDoubleUp = FaAngleDoubleUp as unknown as React.FC<IconBaseProps>;
+const AngleDoubleDown = FaAngleDoubleDown as unknown as React.FC<IconBaseProps>;
+const DotCircle = FaDotCircle as unknown as React.FC<IconBaseProps>;
+const StopCircle = FaStopCircle as unknown as React.FC<IconBaseProps>;
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -918,7 +925,7 @@ function WSAudioPlayer(props: IProps) {
                               playing || processingRecording || waitingForAI
                             }
                           >
-                            {recording ? <FaStopCircle /> : <FaDotCircle />}
+                            {recording ? <StopCircle /> : <DotCircle />}
                           </IconButton>
                         </span>
                       </LightTooltip>
@@ -1076,7 +1083,7 @@ function WSAudioPlayer(props: IProps) {
                           onClick={handleDeleteRegion}
                           disabled={recording || waitingForAI}
                         >
-                          <FaHandScissors />
+                          <HandScissors />
                         </IconButton>
                       </span>
                     </LightTooltip>
@@ -1333,7 +1340,7 @@ function WSAudioPlayer(props: IProps) {
                                   playbackRate === MIN_SPEED || recording
                                 }
                               >
-                                <FaAngleDoubleDown fontSize="small" />{' '}
+                                <AngleDoubleDown fontSize="small" />{' '}
                               </IconButton>
                             </span>
                           </LightTooltip>
@@ -1369,7 +1376,7 @@ function WSAudioPlayer(props: IProps) {
                                   playbackRate === MAX_SPEED || recording
                                 }
                               >
-                                <FaAngleDoubleUp fontSize="small" />{' '}
+                                <AngleDoubleUp fontSize="small" />{' '}
                               </IconButton>
                             </span>
                           </LightTooltip>

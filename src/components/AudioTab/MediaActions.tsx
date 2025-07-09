@@ -2,10 +2,14 @@ import { IMediaActionsStrings } from '../../model';
 import { IconButton, Box, SxProps } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import { FaPaperclip, FaUnlink } from 'react-icons/fa';
+import type { IconBaseProps } from 'react-icons/lib';
 import PauseIcon from '@mui/icons-material/Pause';
 import { shallowEqual, useSelector } from 'react-redux';
 import { isElectron } from '../../api-variable';
 import { mediaActionsSelector } from '../../selector';
+
+const Paperclip = FaPaperclip as unknown as React.FC<IconBaseProps>;
+const Unlink = FaUnlink as unknown as React.FC<IconBaseProps>;
 
 const actionProps = { color: 'primary.light' } as SxProps;
 
@@ -31,7 +35,10 @@ export function MediaActions(props: IProps) {
     isPlaying,
     attached,
   } = props;
-  const t: IMediaActionsStrings = useSelector(mediaActionsSelector, shallowEqual);
+  const t: IMediaActionsStrings = useSelector(
+    mediaActionsSelector,
+    shallowEqual
+  );
 
   const handlePlayStatus = () => {
     onPlayStatus(mediaId);
@@ -51,9 +58,9 @@ export function MediaActions(props: IProps) {
           onClick={handleAttach}
         >
           {!attached ? (
-            <FaPaperclip fontSize="16px" />
+            <Paperclip fontSize="16px" />
           ) : (
-            <FaUnlink fontSize="16px" />
+            <Unlink fontSize="16px" />
           )}
         </IconButton>
       )}

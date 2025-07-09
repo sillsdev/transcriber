@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { StyledTextField } from '../control/WebFontStyles';
 import { FaCopy } from 'react-icons/fa';
+import type { IconBaseProps } from 'react-icons';
 import { useSnackBar } from '../hoc/SnackBar';
 import { getMediaProjRec } from '../crud/media';
 import { FontData, getFontData, getArtTypeFontData } from '../crud/fontChoice';
@@ -29,6 +30,8 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector, transcriptionShowSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { fontSpace } from './FontSize';
+
+const Copy = FaCopy as unknown as React.FC<IconBaseProps>;
 
 interface IProps {
   id: string;
@@ -161,7 +164,7 @@ function TranscriptionShow(props: IProps) {
           {transcription === '' && <>{'\u00A0'}</>}
           {transcription !== '' && (
             <IconButton id="transCopy" onClick={handleCopy(transcription)}>
-              <FaCopy />
+              <Copy />
             </IconButton>
           )}
           <Button
