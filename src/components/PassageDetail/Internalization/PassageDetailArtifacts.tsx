@@ -10,6 +10,7 @@ import {
   ArtifactType,
   Resource,
   SheetLevel,
+  ISharedStrings,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PlayInPlayer } from '../../../context/PassageDetailContext';
@@ -47,7 +48,15 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
-import { Box, BoxProps, Grid, Stack, styled, Typography } from '@mui/material';
+import {
+  Badge,
+  Box,
+  BoxProps,
+  Grid,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -68,7 +77,10 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { shallowEqual, useSelector } from 'react-redux';
-import { passageDetailArtifactsSelector } from '../../../selector';
+import {
+  passageDetailArtifactsSelector,
+  sharedSelector,
+} from '../../../selector';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
@@ -80,6 +92,8 @@ import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
 import { mediaContentType } from '../../../utils/contentType';
 import { useStepPermissions } from '../../../utils/useStepPermission';
+import FindBibleBrain from './FindBibleBrain';
+import { useHandleLink } from './addLinkKind';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -143,6 +157,7 @@ export function PassageDetailArtifacts() {
   const [displayId, setDisplayId] = useState('');
   const [link, setLink] = useState<string>();
   const [markDown, setMarkDoan] = useState('');
+  const [audioScriptureVisible, setAudioScriptureVisible] = useState(false);
   const [nonAudio, setNonAudio] = useState(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
@@ -184,10 +199,12 @@ export function PassageDetailArtifacts() {
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
-  const [findTabsClose, setFindTabsClose] = useState(false);
+  const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
+  const handleLink = useHandleLink({ passage, setLink });
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -437,6 +454,8 @@ export function PassageDetailArtifacts() {
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
       setUploadVisible(true);
+    } else if (what === 'scripture') {
+      setAudioScriptureVisible(true);
     } else if (what === 'link') {
       setUploadType(UploadType.Link);
       setRecordAudio(false);
@@ -764,7 +783,7 @@ export function PassageDetailArtifacts() {
           {isScripture && (
             <Grid item>
               <AltButton onClick={() => handleFindVisible(true)}>
-                {t.find}
+                <Badge badgeContent={ts.ai}>{t.research}</Badge>
               </AltButton>
             </Grid>
           )}
@@ -865,11 +884,9 @@ export function PassageDetailArtifacts() {
         isOpen={findOpen}
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
-        setCloseRequested={setFindTabsClose}
       >
         <FindTabs
           onClose={() => handleFindVisible(false)}
-          closeRequested={findTabsClose}
           canAdd={hasPermission}
           onMarkdown={handleMarkdownValue}
         />
@@ -987,6 +1004,21 @@ export function PassageDetailArtifacts() {
           bp={BigDialogBp.sm}
         >
           <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
+        </BigDialog>
+      )}
+      {audioScriptureVisible && (
+        <BigDialog
+          title={t.audioScripture}
+          isOpen={Boolean(audioScriptureVisible)}
+          onOpen={(_open: boolean) => setAudioScriptureVisible(false)}
+          bp={BigDialogBp.sm}
+          setCloseRequested={setBiblebrainClose}
+        >
+          <FindBibleBrain
+            handleLink={handleLink}
+            onClose={() => setAudioScriptureVisible(false)}
+            closeRequested={biblebrainClose}
+          />
         </BigDialog>
       )}
       <LaunchLink url={link} reset={() => setLink('')} />

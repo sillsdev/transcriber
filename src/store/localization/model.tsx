@@ -870,6 +870,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "add": string;
     "allLevel": string;
     "allResources": string;
+    "audioScripture": string;
     "bookLevel": string;
     "bookResource": string;
     "canceling": string;
@@ -904,6 +905,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "projectResourceConfigure": string;
     "recordResource": string;
     "reference": string;
+    "research": string;
     "resource": string;
     "resources": string;
     "resourcesDeleted": string;
