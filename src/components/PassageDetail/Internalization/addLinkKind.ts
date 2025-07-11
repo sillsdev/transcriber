@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent } from 'react';
 import { OptionProps } from './FindTabs';
 import { PassageD } from '../../../model';
 
@@ -16,8 +16,6 @@ interface IProps {
 }
 
 export const useHandleLink = ({ passage, setLink }: IProps) => {
-  const [links, setLinks] = useState<Tpl>({});
-
   return (kind: string) =>
     (_event: SyntheticEvent, newValue: OptionProps | null) => {
       const book = passage?.attributes?.book;
@@ -30,7 +28,6 @@ export const useHandleLink = ({ passage, setLink }: IProps) => {
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
           : '';
-        setLinks((prev) => ({ ...prev, [kind]: link }));
       }
       setLink?.(link);
     };
