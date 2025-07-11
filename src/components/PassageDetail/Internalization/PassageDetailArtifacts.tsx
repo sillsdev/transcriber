@@ -783,7 +783,7 @@ export function PassageDetailArtifacts() {
           {isScripture && (
             <Grid item>
               <AltButton onClick={() => handleFindVisible(true)}>
-                <Badge badgeContent={ts.ai}>{t.research}</Badge>
+                <Badge badgeContent={`(${ts.ai})`}>{t.research}</Badge>
               </AltButton>
             </Grid>
           )}
