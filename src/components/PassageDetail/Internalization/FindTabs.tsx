@@ -6,7 +6,7 @@ import { Badge } from '@mui/material';
 import FindOther from './FindOther';
 import CreateAiRes from './CreateAiRes';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, SyntheticEvent } from 'react';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { BibleResource } from '../../../model/bible-resource';
 import { IFindResourceStrings, ISharedStrings } from '../../../model';
@@ -102,7 +102,7 @@ export default function FindTabs({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canAdd]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

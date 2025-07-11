@@ -1010,7 +1010,7 @@ export function PassageDetailArtifacts() {
         <BigDialog
           title={t.audioScripture}
           isOpen={Boolean(audioScriptureVisible)}
-          onOpen={(_open: boolean) => setAudioScriptureVisible(false)}
+          onOpen={() => setAudioScriptureVisible(false)}
           bp={BigDialogBp.sm}
           setCloseRequested={setBiblebrainClose}
         >

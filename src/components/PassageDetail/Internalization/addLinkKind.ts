@@ -30,7 +30,7 @@ export const useHandleLink = ({ passage, setLink }: IProps) => {
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
           : '';
-        setLinks({ ...links, [kind]: link });
+        setLinks((prev) => ({ ...prev, [kind]: link }));
       }
       setLink?.(link);
     };
