@@ -4474,6 +4474,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.audioScripture">
+         <segment>
+            <source>Audio Scripture</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
             <source>{0} for the Book</source>
@@ -4675,6 +4681,12 @@
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.research">
+         <segment>
+            <source>Research</source>
             <target/>
          </segment>
       </unit>

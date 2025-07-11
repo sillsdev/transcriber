@@ -3,11 +3,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { Badge } from '@mui/material';
-import FindBibleBrain from './FindBibleBrain';
 import FindOther from './FindOther';
 import CreateAiRes from './CreateAiRes';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, SyntheticEvent } from 'react';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { BibleResource } from '../../../model/bible-resource';
 import { IFindResourceStrings, ISharedStrings } from '../../../model';
@@ -15,10 +14,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector, sharedSelector } from '../../../selector';
 import FindAquifer from './FindAquifer';
 import FaithbridgeIframe from './FaithbridgeIframe';
-import { usePassageType } from '../../../crud/usePassageType';
-import { related } from '../../../crud';
-import { PassageTypeEnum } from '../../../model/passageType';
-import { Aquifer, BibleBrain, FaithBridge } from '../../../assets/brands';
+import { Aquifer, FaithBridge } from '../../../assets/brands';
+import { useHandleLink } from './addLinkKind';
 
 export enum scopeI {
   passage,
@@ -36,13 +33,6 @@ export namespace scopeI {
     return (scopeI as any)[scope];
   }
 }
-interface Tpl {
-  [key: string]: string | undefined;
-}
-
-const hrefTpls: Tpl = {
-  bibleBrain: 'https://live.bible.is/bible/{0}/{1}/{2}',
-};
 
 export interface OptionProps {
   label: string;
@@ -80,25 +70,21 @@ function a11yProps(index: number) {
 
 interface FindTabsProps {
   onClose?: () => void;
-  closeRequested: boolean;
   canAdd: boolean;
   onMarkdown: (query: string, audioUrl: string, transcript: string) => void;
 }
 
 export default function FindTabs({
   onClose,
-  closeRequested,
   canAdd,
   onMarkdown,
 }: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
-  const { getPassageTypeFromId } = usePassageType();
-  const [biblebrain, setBiblebrain] = useState(true);
   const [aquifer, setAquifer] = useState(true);
   const [resources, setResources] = useState<BibleResource[]>([]);
-  const [links, setLinks] = useState<Tpl>({});
   const [link, setLink] = useState<string>();
+  const handleLink = useHandleLink({ passage, setLink });
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -113,32 +99,12 @@ export default function FindTabs({
 
   useEffect(() => {
     setAquifer(canAdd);
-    const pt = getPassageTypeFromId(related(passage, 'passagetype'));
-    setBiblebrain(canAdd && pt === PassageTypeEnum.PASSAGE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, canAdd]);
+  }, [canAdd]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  const handleLink =
-    (kind: string) =>
-    (_event: SyntheticEvent, newValue: OptionProps | null) => {
-      const book = passage?.attributes?.book;
-      let link = newValue?.value ?? '';
-      if (hrefTpls[kind]) {
-        const chapter = parseInt(passage?.attributes?.reference ?? '1');
-        link = newValue?.value
-          ? hrefTpls[kind]
-              ?.replace('{0}', newValue?.value ?? '')
-              ?.replace('{1}', book ?? 'MAT')
-              ?.replace('{2}', chapter.toString()) ?? ''
-          : '';
-        setLinks({ ...links, [kind]: link });
-      }
-      setLink(link);
-    };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -148,54 +114,39 @@ export default function FindTabs({
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {aquifer && (
-            <Tab
-              label={t.findBrandedContent.replace('{0}', Aquifer)}
-              {...a11yProps(0)}
-            />
-          )}
-          {biblebrain && (
-            <Tab
-              label={t.findBrandedContent.replace('{0}', BibleBrain)}
-              {...a11yProps(aquifer ? 1 : 0)}
-            />
-          )}
           <Tab
-            label={aquifer || biblebrain ? t.findOther : t.findResource}
-            {...a11yProps(aquifer ? (biblebrain ? 2 : 1) : 0)}
+            label={<Badge badgeContent={ts.ai}>{FaithBridge}</Badge>}
+            {...a11yProps(0)}
           />
           <Tab
             label={<Badge badgeContent={ts.ai}>{t.create}</Badge>}
-            {...a11yProps(aquifer ? (biblebrain ? 3 : 2) : 1)}
+            {...a11yProps(1)}
           />
+          {aquifer && (
+            <Tab
+              label={t.findBrandedContent.replace('{0}', Aquifer)}
+              {...a11yProps(2)}
+            />
+          )}
           <Tab
-            label={<Badge badgeContent={ts.ai}>{FaithBridge}</Badge>}
-            {...a11yProps(aquifer ? (biblebrain ? 4 : 3) : 2)}
+            label={aquifer ? t.findOther : t.findResource}
+            {...a11yProps(aquifer ? 3 : 2)}
           />
         </Tabs>
       </Box>
+      <CustomTabPanel value={value} index={0}>
+        <FaithbridgeIframe onMarkdown={onMarkdown} onClose={onClose} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <CreateAiRes resources={resources} onTab={() => setValue(0)} />
+      </CustomTabPanel>
       {aquifer && (
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel value={value} index={2}>
           <FindAquifer onClose={onClose} />
         </CustomTabPanel>
       )}
-      {biblebrain && (
-        <CustomTabPanel value={value} index={aquifer ? 1 : 0}>
-          <FindBibleBrain
-            handleLink={handleLink}
-            onClose={onClose}
-            closeRequested={closeRequested}
-          />
-        </CustomTabPanel>
-      )}
-      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 2 : 1) : 0}>
+      <CustomTabPanel value={value} index={aquifer ? 3 : 2}>
         <FindOther handleLink={handleLink} resources={resources} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 3 : 2) : 1}>
-        <CreateAiRes resources={resources} onTab={() => setValue(4)} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={aquifer ? (biblebrain ? 4 : 3) : 2}>
-        <FaithbridgeIframe onMarkdown={onMarkdown} onClose={onClose} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Box>
