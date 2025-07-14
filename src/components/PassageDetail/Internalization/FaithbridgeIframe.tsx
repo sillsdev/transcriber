@@ -141,17 +141,24 @@ export const FaithbridgeIframe = ({
         );
       });
       const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
+      let responseContent = data?.messages?.[1]?.content || '';
+      responseContent = responseContent
+        .replace(/<img.* title="([^"]*)" src="([^"]*)".*>/g, '![$1]($2)')
+        .replace(
+          /<video.*\n.* src="([^"]*)".*\n.*\n.*<\/video>/g,
+          '[video]($1)'
+        );
       Promise.all(contentPromises)
         .then((responses: AquiferContent[]) => {
           const contents = responses.map((response) => {
-            return `${response.name} (${response.grouping.name})`;
+            return `- ${response.name} (${response.grouping.name})`;
           });
-          let allContents = contents.join('\n\n');
+          let allContents = contents.join('\n');
           if (allContents) allContents = `\n\n**Sources**:\n\n${allContents}`;
           onMarkdown(
             query,
             data?.messages?.[1]?.audioUrl || '',
-            (data?.messages?.[1]?.content || '') + allContents
+            responseContent + allContents
           );
           setFetching(false);
           onClose?.();
