@@ -53,6 +53,7 @@ export function SpeakerName({
     onRights && onRights(false);
     if (noNewVoice) {
       showMessage(t.noVoiceCreation);
+      onChange?.(name);
       return;
     }
     setShowDialog(true);
