@@ -317,6 +317,20 @@
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="artifactType.activity">
+        <source>Activity</source>
+        <target state="needs-translation">Activity</target>
+        <context-group>
+          <context context-type="sourcefile">AlertDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="artifactType.airesource">
+        <source>AI Generated</source>
+        <target state="needs-translation">AI Generated</target>
+        <context-group>
+          <context context-type="sourcefile">AlertDialog.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="artifactType.backtranslation">
         <source>Phrase Back Translation</source>
         <target state="translated">词语回译</target>
@@ -334,6 +348,20 @@
       <trans-unit id="artifactType.graphic">
         <source>Graphic</source>
         <target state="needs-translation">Graphic</target>
+        <context-group>
+          <context context-type="sourcefile">AlertDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="artifactType.intellectualproperty">
+        <source>Intellectual Property</source>
+        <target state="needs-translation">Intellectual Property</target>
+        <context-group>
+          <context context-type="sourcefile">AlertDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="artifactType.keyterm">
+        <source>Key Term</source>
+        <target state="needs-translation">Key Term</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
@@ -401,9 +429,30 @@
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="assignmentTable.addScheme">
+        <source>Add Permission Scheme</source>
+        <target state="needs-translation">Add Permission Scheme</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignmentTable.addScheme2">
+        <source>Add Assignment Scheme</source>
+        <target state="needs-translation">Add Assignment Scheme</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="assignmentTable.assignSec">
-        <source>Assign {0}</source>
-        <target state="translated">分配 {0}</target>
+        <source>Configure Permissions</source>
+        <target state="needs-translation">Configure Permissions</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignmentTable.assignSec2">
+        <source>Configure Assignments</source>
+        <target state="needs-translation">Configure Assignments</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
@@ -423,8 +472,15 @@
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.removeSec">
-        <source>Remove Assignment</source>
-        <target state="translated">解除任务</target>
+        <source>Remove Permissions</source>
+        <target state="needs-translation">Remove Permissions</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignmentTable.removeSec2">
+        <source>Remove Assignments</source>
+        <target state="needs-translation">Remove Assignments</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
@@ -444,8 +500,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.selectRowsToAssign">
-        <source>Please select row(s) to assign.</source>
-        <target state="translated">请选择要分配的文件。</target>
+        <source>Please select row(s) to configure.</source>
+        <target state="needs-translation">Please select row(s) to configure.</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
@@ -471,9 +527,86 @@
           <context context-type="sourcefile">AssignmentTable.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="assignSection.assignment">
+        <source>{0} Permission</source>
+        <target state="needs-translation">{0} Permission</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.assignment2">
+        <source>{0} Assignment</source>
+        <target state="needs-translation">{0} Assignment</target>
+        <context-group>
+          <context context-type="sourcefile">assignmentTable.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="assignSection.close">
         <source>Close</source>
         <target state="translated">关闭</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.confirmDelete">
+        <source>Confirm Delete</source>
+        <target state="needs-translation">Confirm Delete</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.confirmModify">
+        <source>Confirm Modify</source>
+        <target state="needs-translation">Confirm Modify</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.delete">
+        <source>Delete</source>
+        <target state="needs-translation">Delete</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.deleteSections">
+        <source>Delete will remove permissions from {0} {1}</source>
+        <target state="needs-translation">Delete will remove permissions from {0} {1}</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.duplicateName">
+        <source>Duplicate Permission Scheme name</source>
+        <target state="needs-translation">Duplicate Permission Scheme name</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.duplicateName2">
+        <source>Duplicate Assignment Scheme name</source>
+        <target state="needs-translation">Duplicate Assignment Scheme name</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.modifySections">
+        <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
+        <target state="needs-translation">{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.noAssignment">
+        <source>Unassigned</source>
+        <target state="needs-translation">Unassigned</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.noRestriction">
+        <source>No Restriction</source>
+        <target state="needs-translation">No Restriction</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
@@ -485,9 +618,30 @@
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="assignSection.schemeName">
+        <source>Permission Scheme Name</source>
+        <target state="needs-translation">Permission Scheme Name</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.schemeName2">
+        <source>Assignment Scheme Name</source>
+        <target state="needs-translation">Assignment Scheme Name</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="assignSection.title">
-        <source>Assign {0}</source>
-        <target state="translated">分配 {0}</target>
+        <source>Configure Permission Scheme</source>
+        <target state="needs-translation">Configure Permission Scheme</target>
+        <context-group>
+          <context context-type="sourcefile">AssignSection.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="assignSection.title2">
+        <source>Configure Assignment Scheme</source>
+        <target state="needs-translation">Configure Assignment Scheme</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
@@ -997,22 +1151,22 @@
         </context-group>
       </trans-unit>
       <trans-unit id="cards.recognizePrompt">
-        <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-        <target state="needs-translation">Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</target>
+        <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
+        <target state="needs-translation">Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.recognizeSpeech">
-        <source>Recognize Speech</source>
-        <target state="needs-translation">Recognize Speech</target>
+        <source>Auto Transcription</source>
+        <target state="needs-translation">Auto Transcription</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.recognizeSpeechSettings">
-        <source>Recognize Speech Settings</source>
-        <target state="needs-translation">Recognize Speech Settings</target>
+        <source>Auto Transcription Settings</source>
+        <target state="needs-translation">Auto Transcription Settings</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
@@ -1062,6 +1216,13 @@
       <trans-unit id="cards.notesProject">
         <source>Project with Notes</source>
         <target state="translated">带笔记的项目</target>
+        <context-group>
+          <context context-type="sourcefile">ProjectButtons.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.projectPermissions">
+        <source>Permissions may be set for projects of this team.</source>
+        <target state="needs-translation">Permissions may be set for projects of this team.</target>
         <context-group>
           <context context-type="sourcefile">ProjectButtons.tsx</context>
         </context-group>
@@ -1353,6 +1514,13 @@
           <context context-type="sourcefile">SpeakerName.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="community.noVoiceCreation">
+        <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
+        <target state="needs-translation">New Voice change samples must be created before a recording is waiting to be saved.</target>
+        <context-group>
+          <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="community.playTest">
         <source>Play Test</source>
         <target state="translated">播放测试</target>
@@ -1563,9 +1731,16 @@
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="discussionCard.adminsAlways">
+        <source>Admins are always allowed.</source>
+        <target state="needs-translation">Admins are always allowed.</target>
+        <context-group>
+          <context context-type="sourcefile">DiscussionCard.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="discussionCard.assign">
-        <source>Assign to a Group or Team Member</source>
-        <target state="translated">分配给团队成员</target>
+        <source>Assign</source>
+        <target state="needs-translation">Assign</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1578,8 +1753,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.groupuser">
-        <source>Group/Team Member</source>
-        <target state="translated">组/团队成员</target>
+        <source>Peer Group / Member {0}</source>
+        <target state="needs-translation">Peer Group / Member {0}</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1643,6 +1818,20 @@
       <trans-unit id="discussionCard.move">
         <source>Select step for discussion</source>
         <target state="translated">选择要讨论的步骤</target>
+        <context-group>
+          <context context-type="sourcefile">DiscussionCard.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="discussionCard.none">
+        <source>None of the above</source>
+        <target state="needs-translation">None of the above</target>
+        <context-group>
+          <context context-type="sourcefile">DiscussionCard.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="discussionCard.onlyAdmin">
+        <source>Only Admins</source>
+        <target state="needs-translation">Only Admins</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1920,6 +2109,69 @@
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="faithbridge.addContent">
+        <source>Add {0} as Resource</source>
+        <target state="needs-translation">Add {0} as Resource</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.audio">
+        <source>audio</source>
+        <target state="needs-translation">audio</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.audioResources">
+        <source>Request Audio</source>
+        <target state="needs-translation">Request Audio</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.error">
+        <source>Error: </source>
+        <target state="needs-translation">Error: </target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.loading">
+        <source>Loading result...</source>
+        <target state="needs-translation">Loading result...</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.newChat">
+        <source>New Chat</source>
+        <target state="needs-translation">New Chat</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.noInfo">
+        <source>No information found</source>
+        <target state="needs-translation">No information found</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.text">
+        <source>text</source>
+        <target state="needs-translation">text</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="faithbridge.updating">
+        <source>Including sources in text</source>
+        <target state="needs-translation">Including sources in text</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="filterMenu.all">
         <source>All</source>
         <target state="translated">全部</target>
@@ -1986,6 +2238,13 @@
       <trans-unit id="findResource.add">
         <source>Add</source>
         <target state="needs-translation">Add</target>
+        <context-group>
+          <context context-type="sourcefile">findResource.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="findResource.addError">
+        <source>Aquifer add failed </source>
+        <target state="needs-translation">Aquifer add failed </target>
         <context-group>
           <context context-type="sourcefile">findResource.tsx</context>
         </context-group>
@@ -2186,6 +2445,13 @@
           <context context-type="sourcefile">FindAquifer.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="findResource.next">
+        <source>Next page</source>
+        <target state="needs-translation">Next page</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="findResource.oralVersion">
         <source>oral-version</source>
         <target state="needs-translation">oral-version</target>
@@ -2212,6 +2478,13 @@
         <target state="needs-translation">Preview</target>
         <context-group>
           <context context-type="sourcefile">findResource.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="findResource.previous">
+        <source>Previous page</source>
+        <target state="needs-translation">Previous page</target>
+        <context-group>
+          <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="findResource.query">
@@ -2268,6 +2541,13 @@
         <target state="needs-translation">section</target>
         <context-group>
           <context context-type="sourcefile">findResource.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="findResource.showing">
+        <source>{0} to {1} of {2} {3} results</source>
+        <target state="needs-translation">{0} to {1} of {2} {3} results</target>
+        <context-group>
+          <context context-type="sourcefile">FindAquifer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="findResource.source">
@@ -2907,6 +3187,13 @@
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="integration.notPermitted">
+        <source>You're not permitted to sync to Paratext</source>
+        <target state="needs-translation">You're not permitted to sync to Paratext</target>
+        <context-group>
+          <context context-type="sourcefile">integration.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="integration.offline">
         <source>Offline</source>
         <target state="translated">离线</target>
@@ -3204,6 +3491,13 @@
       <trans-unit id="invite.newInviteTask">
         <source>Enter the email address of the person to invite.</source>
         <target state="translated">输入要邀请的人的电子邮件地址。</target>
+        <context-group>
+          <context context-type="sourcefile">Invite.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="invite.newInviteTask2">
+        <source>Separate multiple email addresses with a semicolon (';').</source>
+        <target state="needs-translation">Separate multiple email addresses with a semicolon (';').</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -4216,6 +4510,20 @@
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="mediaTab.confirmChange">
+        <source>Confirm Change</source>
+        <target state="needs-translation">Confirm Change</target>
+        <context-group>
+          <context context-type="sourcefile">MediaTab.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaTab.confirmValue">
+        <source>Replace the current rights holder with {0}?</source>
+        <target state="needs-translation">Replace the current rights holder with {0}?</target>
+        <context-group>
+          <context context-type="sourcefile">MediaTab.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="mediaTab.date">
         <source>Date</source>
         <target state="translated">日期</target>
@@ -4496,6 +4804,13 @@
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="mediaTitle.recordOrUpload">
+        <source>Record or Upload</source>
+        <target state="needs-translation">Record or Upload</target>
+        <context-group>
+          <context context-type="sourcefile">MediaTab.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="mediaTitle.recording">
         <source>Recording...</source>
         <target state="needs-translation">Recording...</target>
@@ -4517,6 +4832,41 @@
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="mediaTitle.provideAudio">
+        <source>Provide audio for '{0}'</source>
+        <target state="needs-translation">Provide audio for '{0}'</target>
+        <context-group>
+          <context context-type="sourcefile">MediaTab.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaTitle.unsavedChanges">
+        <source>Please cancel, save or upload.</source>
+        <target state="needs-translation">Please cancel, save or upload.</target>
+        <context-group>
+          <context context-type="sourcefile">TitleTabs.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaTitle.upload">
+        <source>Upload</source>
+        <target state="needs-translation">Upload</target>
+        <context-group>
+          <context context-type="sourcefile">TitleTabs.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaTitle.uploadFailed">
+        <source>Upload Failed!</source>
+        <target state="needs-translation">Upload Failed!</target>
+        <context-group>
+          <context context-type="sourcefile">TitleTabs.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaTitle.uploadFailStatus">
+        <source>{0} Upload Failed!</source>
+        <target state="needs-translation">{0} Upload Failed!</target>
+        <context-group>
+          <context context-type="sourcefile">TitleTabs.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="mediaUpload.cancel">
         <source>Cancel</source>
         <target state="translated">取消</target>
@@ -4534,6 +4884,13 @@
       <trans-unit id="mediaUpload.dragDropSingle">
         <source>Drag and drop a file here, or click here to browse for the file.</source>
         <target state="translated">拖放文件到此处，或者点击这里浏览文件。</target>
+        <context-group>
+          <context context-type="sourcefile">MediaUpload.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="mediaUpload.faithbridgeTitle">
+        <source>{0} Resource</source>
+        <target state="needs-translation">{0} Resource</target>
         <context-group>
           <context context-type="sourcefile">MediaUpload.tsx</context>
         </context-group>
@@ -4860,6 +5217,13 @@
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="passageDetailArtifacts.audioScripture">
+        <source>Audio Scripture</source>
+        <target state="needs-translation">Audio Scripture</target>
+        <context-group>
+          <context context-type="sourcefile">AddResource.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="passageDetailArtifacts.bookLevel">
         <source>{0} for the Book</source>
         <target state="needs-translation">{0} for the Book</target>
@@ -5098,6 +5462,13 @@
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="passageDetailArtifacts.research">
+        <source>Research</source>
+        <target state="needs-translation">Research</target>
+        <context-group>
+          <context context-type="sourcefile">AddResource.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="passageDetailArtifacts.resource">
         <source>Resource</source>
         <target state="translated">资源</target>
@@ -5199,6 +5570,13 @@
       <trans-unit id="passageDetailArtifacts.titleDesc">
         <source>for {0}</source>
         <target state="needs-translation">for {0}</target>
+        <context-group>
+          <context context-type="sourcefile">AddResource.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="passageDetailArtifacts.transcription">
+        <source>AI Audio Resource Transcript</source>
+        <target state="needs-translation">AI Audio Resource Transcript</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -5455,6 +5833,13 @@
           <context context-type="sourcefile">passageType.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="peer.assignment">
+        <source>assignment</source>
+        <target state="needs-translation">assignment</target>
+        <context-group>
+          <context context-type="sourcefile">GroupDialog.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="peer.peerDescription">
         <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
         <target state="translated">管理员组允许您将任务分配给一个小组而不是个人。</target>
@@ -5469,9 +5854,23 @@
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="peer.inSchemeUse">
+        <source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
+        <target state="needs-translation">This group is referenced in {0} {2} steps in {1} {2} schemes</target>
+        <context-group>
+          <context context-type="sourcefile">GroupDialog.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="peer.inUse">
         <source>Name already in use</source>
         <target state="translated">名称已被使用</target>
+        <context-group>
+          <context context-type="sourcefile">GroupDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="peer.permission">
+        <source>permission</source>
+        <target state="needs-translation">permission</target>
         <context-group>
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
@@ -5598,13 +5997,6 @@
       <trans-unit id="permission.consultantInTrainingTip">
         <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
         <target state="translated">CIT的评论将仅对导师可见直到一个导师批准此评论。</target>
-        <context-group>
-          <context context-type="sourcefile">GroupDialog.tsx</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="permission.nsp">
-        <source>General</source>
-        <target state="translated">通用</target>
         <context-group>
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
@@ -5918,8 +6310,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.confirmPublishSection">
-        <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
-        <target state="needs-translation">If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</target>
+        <source>If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+        <target state="needs-translation">If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
@@ -6002,8 +6394,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.paratextRequired">
-        <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
-        <target state="needs-translation">You must be a {0} user with access to FOBAI resources to use this feature.</target>
+        <source>You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</source>
+        <target state="needs-translation">You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -6222,252 +6614,294 @@
         <source>Add</source>
         <target state="translated">添加</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.addMember">
         <source>Complete User Profile</source>
         <target state="translated">完整用户资料</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.additionalSettings">
+        <source>Additional Settings</source>
+        <target state="needs-translation">Additional Settings</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.cancel">
         <source>Cancel</source>
         <target state="translated">取消</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.checkingParatext">
         <source>Checking for {0} account...</source>
         <target state="needs-translation">Checking for {0} account...</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.close">
         <source>Close</source>
         <target state="translated">关闭</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.completeProfile">
         <source>Complete User Profile</source>
         <target state="translated">完整用户资料</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.defaultLocale">
         <source>Default locale set.</source>
         <target state="translated">设置默认区域</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.defaultTimezone">
         <source>Default timezone set.</source>
         <target state="translated">默认时区设置。</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.deleteExplained">
-        <source>Deleting your user will block you from using the program and remove references to your work.</source>
-        <target state="translated">删除您的用户将阻止您使用程序并删除您工作的引用。</target>
+        <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
+        <target state="needs-translation">Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.deleteUser">
         <source>Delete User</source>
         <target state="translated">删除用户</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.deleteWarning">
+        <source>The following action cannot be undone:</source>
+        <target state="needs-translation">The following action cannot be undone:</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.discardChanges">
         <source>Discard unsaved Changes?</source>
         <target state="translated">要放弃未保存的改动吗？</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.discardChangesExplained">
         <source>Discard unsaved Changes? ({0})</source>
         <target state="translated">要放弃未保存的改动吗({0})？</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.edit">
+        <source>Edit Profile</source>
+        <target state="needs-translation">Edit Profile</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.editMember">
+        <source>Edit Member Profile</source>
+        <target state="needs-translation">Edit Member Profile</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.email">
         <source>Email</source>
         <target state="translated">电子邮件</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.family">
         <source>Family Name</source>
         <target state="translated">姓</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.given">
         <source>Given Name</source>
         <target state="translated">名字</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.installParatext">
         <source>Install {0} to be able to sync.</source>
         <target state="needs-translation">Install {0} to be able to sync.</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.linkingExplained">
         <source>Log out and log in with {0} button</source>
         <target state="needs-translation">Log out and log in with {0} button</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.locale">
         <source>Preferred Language</source>
         <target state="translated">首选语言</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.locked">
         <source>Locked</source>
         <target state="translated">锁住</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.logout">
         <source>Logout</source>
         <target state="translated">登出</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.name">
         <source>Full Name</source>
         <target state="translated">姓名</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.nameNotEmail">
         <source>Please choose a name other than your email address.</source>
         <target state="translated">请选择您的电子邮件地址以外的名称。</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.next">
         <source>Next</source>
         <target state="translated">下一个</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.notLinked">
         <source>Not linked to {0}</source>
         <target state="needs-translation">Not linked to {0}</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.paratextLinked">
         <source>Linked to {0}</source>
         <target state="needs-translation">Linked to {0}</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.paratextLinking">
         <source>Linking to {0}</source>
         <target state="needs-translation">Linking to {0}</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.paratextNotLinked">
         <source>Link to {0}</source>
         <target state="needs-translation">Link to {0}</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.phone">
         <source>Phone</source>
         <target state="translated">手机号码</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.role">
         <source>Team Role</source>
         <target state="translated">团队角色</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.save">
         <source>Save</source>
         <target state="translated">保存</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.sendDigest">
         <source>Receive Email Notifications and Digests</source>
         <target state="translated">接收电子邮件通知和摘要</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.sharedContentCreator">
         <source>Allow user to create shared content projects.</source>
         <target state="translated">允许用户创建共享内容项目。</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.syncFrequency">
         <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
         <target state="needs-translation">Frequency of data sync in minutes.  0 to turn off sync.</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.syncFrequencyEnable">
+        <source>Enable Data Sync:</source>
+        <target state="needs-translation">Enable Data Sync:</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="profile.syncFrequencyLabel">
+        <source>Frequency:</source>
+        <target state="needs-translation">Frequency:</target>
+        <context-group>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.timezone">
         <source>Time zone</source>
         <target state="translated">时区</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.userExists">
         <source>This offline user exists.</source>
         <target state="translated">此离线用户存在。</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.userProfile">
         <source>User profile</source>
         <target state="translated">用户资料</target>
         <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
+          <context context-type="sourcefile">ProfileDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projButtons.categoryTitle">
@@ -6695,8 +7129,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="publishTo.Internalization">
-        <source>Internalization Resources for other projects</source>
-        <target state="needs-translation">Internalization Resources for other projects</target>
+        <source>Internalization Resources for other APM projects</source>
+        <target state="needs-translation">Internalization Resources for other APM projects</target>
         <context-group>
           <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
         </context-group>
@@ -7010,8 +7444,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="scriptureTableFilter.assignedToMe">
-        <source>Only rows with discussions assigned to me</source>
-        <target state="translated">只分配给我的讨论记录</target>
+        <source>Hide rows assigned to others</source>
+        <target state="needs-translation">Hide rows assigned to others</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -7068,6 +7502,13 @@
       <trans-unit id="scriptureTableFilter.maximum">
         <source>Maximum</source>
         <target state="translated">最大</target>
+        <context-group>
+          <context context-type="sourcefile">ScriptureTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="scriptureTableFilter.reset">
+        <source>Reset</source>
+        <target state="needs-translation">Reset</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -7527,6 +7968,20 @@
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="shared.scheme">
+        <source>Permission Scheme</source>
+        <target state="needs-translation">Permission Scheme</target>
+        <context-group>
+          <context context-type="sourcefile">drawer.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared.scheme2">
+        <source>Assignment Scheme</source>
+        <target state="needs-translation">Assignment Scheme</target>
+        <context-group>
+          <context context-type="sourcefile">drawer.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="shared.select">
         <source>Select</source>
         <target state="translated">选择</target>
@@ -7572,6 +8027,13 @@
       <trans-unit id="shared.uploadRights">
         <source>Upload Rights File</source>
         <target state="translated">上传权利文件</target>
+        <context-group>
+          <context context-type="sourcefile">PlanSheet.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared.uploadSuccess">
+        <source>Upload Successful</source>
+        <target state="needs-translation">Upload Successful</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -8221,8 +8683,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.beginRecognize">
-        <source>Begin Recognition</source>
-        <target state="needs-translation">Begin Recognition</target>
+        <source>Begin Auto Transcription</source>
+        <target state="needs-translation">Begin Auto Transcription</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -8573,6 +9035,13 @@
       <trans-unit id="transcriptionTab.writingDownloadFile">
         <source>Writing file...It could take up to 6 minutes to resume progress.</source>
         <target state="translated">正在写入文件...可能需要6分钟才能继续进度。</target>
+        <context-group>
+          <context context-type="sourcefile">ProjectDownload.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriptionTab.nopermission">
+        <source>You do not have permission to download the project.</source>
+        <target state="needs-translation">You do not have permission to download the project.</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownload.tsx</context>
         </context-group>
@@ -9312,6 +9781,13 @@
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="vProject.basic">
+        <source>Basic</source>
+        <target state="needs-translation">Basic</target>
+        <context-group>
+          <context context-type="sourcefile">addCard.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="vProject.cancel">
         <source>Cancel</source>
         <target state="translated">取消</target>
@@ -9473,6 +9949,13 @@
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="vProject.newTag">
+        <source>New Tag</source>
+        <target state="needs-translation">New Tag</target>
+        <context-group>
+          <context context-type="sourcefile">addCard.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="vProject.organizedBy">
         <source>Term for organizing layout</source>
         <target state="translated">组织布局的词语</target>
@@ -9490,6 +9973,27 @@
       <trans-unit id="vProject.pericopes">
         <source>Pericope/Pericopes</source>
         <target state="translated">段</target>
+        <context-group>
+          <context context-type="sourcefile">LastEdit.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="vProject.permissionSettings">
+        <source>Permissions</source>
+        <target state="needs-translation">Permissions</target>
+        <context-group>
+          <context context-type="sourcefile">LastEdit.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="vProject.permissionEditSheet">
+        <source>Can Edit Spreadsheet</source>
+        <target state="needs-translation">Can Edit Spreadsheet</target>
+        <context-group>
+          <context context-type="sourcefile">LastEdit.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="vProject.permissionPublish">
+        <source>Can Publish</source>
+        <target state="needs-translation">Can Publish</target>
         <context-group>
           <context context-type="sourcefile">LastEdit.tsx</context>
         </context-group>
@@ -10146,29 +10650,29 @@
         </context-group>
       </trans-unit>
       <trans-unit id="wsAudioPlayer.recognizeProgress">
-        <source>Recognize Speech in Progress</source>
-        <target state="needs-translation">Recognize Speech in Progress</target>
+        <source>Auto Transcription in Progress</source>
+        <target state="needs-translation">Auto Transcription in Progress</target>
         <context-group>
           <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="wsAudioPlayer.recognizePrompt">
-        <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-        <target state="needs-translation">Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</target>
+        <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
+        <target state="needs-translation">Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</target>
         <context-group>
           <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="wsAudioPlayer.recognizeSpeech">
-        <source>Recognize Speech {0}</source>
-        <target state="needs-translation">Recognize Speech {0}</target>
+        <source>Auto Transcription {0}</source>
+        <target state="needs-translation">Auto Transcription {0}</target>
         <context-group>
           <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="wsAudioPlayer.recognizeSpeechSettings">
-        <source>Recognize Speech Settings</source>
-        <target state="needs-translation">Recognize Speech Settings</target>
+        <source>Auto Transcription Settings</source>
+        <target state="needs-translation">Auto Transcription Settings</target>
         <context-group>
           <context context-type="sourcefile">PassageDetailPlayer.tsx</context>
         </context-group>

@@ -271,6 +271,18 @@
             <target>Titre</target>
          </segment>
       </unit>
+      <unit id="artifactType.activity">
+         <segment>
+            <source>Activity</source>
+            <target>Activité</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.airesource">
+         <segment>
+            <source>AI Generated</source>
+            <target>AI Generated</target>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
@@ -287,6 +299,18 @@
          <segment>
             <source>Graphic</source>
             <target>Graphique</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.intellectualproperty">
+         <segment>
+            <source>Intellectual Property</source>
+            <target>Propriété intellectuelle</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.keyterm">
+         <segment>
+            <source>Key Term</source>
+            <target>Terme clé</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -1783,6 +1807,60 @@
             <target>Veuillez vérifier en cliquant sur le lien dans l'e-mail d'autorisation envoyé à votre compte.</target>
          </segment>
       </unit>
+      <unit id="faithbridge.addContent">
+         <segment>
+            <source>Add {0} as Resource</source>
+            <target>Ajouter {0} comme ressource</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.audio">
+         <segment>
+            <source>audio</source>
+            <target>audio</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.audioResources">
+         <segment>
+            <source>Request Audio</source>
+            <target>Demander de l'audio</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.error">
+         <segment>
+            <source>Error: </source>
+            <target>Erreur : </target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.loading">
+         <segment>
+            <source>Loading result...</source>
+            <target>Chargement du résultat...</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.newChat">
+         <segment>
+            <source>New Chat</source>
+            <target>Nouvelle discussion</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.noInfo">
+         <segment>
+            <source>No information found</source>
+            <target>Aucune information trouvée</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.text">
+         <segment>
+            <source>text</source>
+            <target>texte</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.updating">
+         <segment>
+            <source>Including sources in text</source>
+            <target>Inclure les sources dans le texte</target>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>
@@ -1841,6 +1919,12 @@
          <segment>
             <source>Add</source>
             <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="findResource.addError">
+         <segment>
+            <source>Aquifer add failed </source>
+            <target>L'ajout d'un aquifère a échoué </target>
          </segment>
       </unit>
       <unit id="findResource.aiDesc">
@@ -2011,6 +2095,12 @@
             <target>Nom</target>
          </segment>
       </unit>
+      <unit id="findResource.next">
+         <segment>
+            <source>Next page</source>
+            <target>Page suivante</target>
+         </segment>
+      </unit>
       <unit id="findResource.oralVersion">
          <segment>
             <source>oral-version</source>
@@ -2033,6 +2123,12 @@
          <segment>
             <source>Preview</source>
             <target>Aperçu</target>
+         </segment>
+      </unit>
+      <unit id="findResource.previous">
+         <segment>
+            <source>Previous page</source>
+            <target>Page précédente</target>
          </segment>
       </unit>
       <unit id="findResource.query">
@@ -2081,6 +2177,12 @@
          <segment>
             <source>section</source>
             <target>section</target>
+         </segment>
+      </unit>
+      <unit id="findResource.showing">
+         <segment>
+            <source>{0} to {1} of {2} {3} results</source>
+            <target>De {0} à {1} de {2} Résultats {3}</target>
          </segment>
       </unit>
       <unit id="findResource.source">
@@ -4087,6 +4189,12 @@
             <target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
          </segment>
       </unit>
+      <unit id="mediaUpload.faithbridgeTitle">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} Ressource</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.githubSupport">
          <segment>
             <source>Github markdown syntax supported</source>
@@ -4363,6 +4471,12 @@
             <target>Afficher les ressources pour tous les passages</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.audioScripture">
+         <segment>
+            <source>Audio Scripture</source>
+            <target>Écriture audio</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
             <source>{0} for the Book</source>
@@ -4567,6 +4681,12 @@
             <target>Référence</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.research">
+         <segment>
+            <source>Research</source>
+            <target>Recherche</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.resource">
          <segment>
             <source>Resource</source>
@@ -4655,6 +4775,12 @@
          <segment>
             <source>for {0}</source>
             <target>pour {0}</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.transcription">
+         <segment>
+            <source>AI Audio Resource Transcript</source>
+            <target>AI Ressource audio Transcription</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.type">

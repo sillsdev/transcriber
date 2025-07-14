@@ -271,6 +271,18 @@
             <target>Judul</target>
          </segment>
       </unit>
+      <unit id="artifactType.activity">
+         <segment>
+            <source>Activity</source>
+            <target>Aktivitas</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.airesource">
+         <segment>
+            <source>AI Generated</source>
+            <target>AI yang Dihasilkan</target>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
@@ -287,6 +299,18 @@
          <segment>
             <source>Graphic</source>
             <target>Gambar</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.intellectualproperty">
+         <segment>
+            <source>Intellectual Property</source>
+            <target>Kekayaan Intelektual</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.keyterm">
+         <segment>
+            <source>Key Term</source>
+            <target>Istilah Kunci</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -346,25 +370,25 @@
       <unit id="assignmentTable.addScheme">
          <segment>
             <source>Add Permission Scheme</source>
-            <target>Tambahkan Skema Izin</target>
+            <target>Tambah Skema Perizinan</target>
          </segment>
       </unit>
       <unit id="assignmentTable.addScheme2">
          <segment>
             <source>Add Assignment Scheme</source>
-            <target>Tambahkan Skema Penugasan</target>
+            <target>Tambah Skema Tugas</target>
          </segment>
       </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
             <source>Configure Permissions</source>
-            <target>Mengonfigurasi Izin</target>
+            <target>Atur Perizinan</target>
          </segment>
       </unit>
       <unit id="assignmentTable.assignSec2">
          <segment>
             <source>Configure Assignments</source>
-            <target>Mengonfigurasi Penugasan</target>
+            <target>Atur Tugas</target>
          </segment>
       </unit>
       <unit id="assignmentTable.delete">
@@ -388,7 +412,7 @@
       <unit id="assignmentTable.removeSec2">
          <segment>
             <source>Remove Assignments</source>
-            <target>Menghapus Penugasan</target>
+            <target>Hapus Tugas</target>
          </segment>
       </unit>
       <unit id="assignmentTable.role">
@@ -406,7 +430,7 @@
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
             <source>Please select row(s) to configure.</source>
-            <target>Pilih baris yang akan dikonfigurasi.</target>
+            <target>Pilih baris yang akan diatur konfigurasinya.</target>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToRemove">
@@ -436,7 +460,7 @@
       <unit id="assignSection.assignment2">
          <segment>
             <source>{0} Assignment</source>
-            <target>{0} Penugasan</target>
+            <target>{0} Tugas</target>
          </segment>
       </unit>
       <unit id="assignSection.close">
@@ -448,13 +472,13 @@
       <unit id="assignSection.confirmDelete">
          <segment>
             <source>Confirm Delete</source>
-            <target>Konfirmasi Hapus</target>
+            <target>Konfirmasi Penghapusan</target>
          </segment>
       </unit>
       <unit id="assignSection.confirmModify">
          <segment>
             <source>Confirm Modify</source>
-            <target>Konfirmasi Ubah</target>
+            <target>Konfirmasi Pengeditan</target>
          </segment>
       </unit>
       <unit id="assignSection.delete">
@@ -466,37 +490,37 @@
       <unit id="assignSection.deleteSections">
          <segment>
             <source>Delete will remove permissions from {0} {1}</source>
-            <target>Menghapus akan menghapus izin dari {0} {1}</target>
+            <target>Kalau dihapus, izin dihilangkan dari {0} {1}</target>
          </segment>
       </unit>
       <unit id="assignSection.duplicateName">
          <segment>
             <source>Duplicate Permission Scheme name</source>
-            <target>Menggandakan nama Skema Izin</target>
+            <target>Salin nama Skema Perizinan</target>
          </segment>
       </unit>
       <unit id="assignSection.duplicateName2">
          <segment>
             <source>Duplicate Assignment Scheme name</source>
-            <target>Nama Skema Penugasan Duplikat</target>
+            <target>Salin nama Skema Tugas</target>
          </segment>
       </unit>
       <unit id="assignSection.modifySections">
          <segment>
             <source>{0} {1} are selelected but modifying the permissions will change all {2} {3} with this permission scheme</source>
-            <target>{0} {1} dipilih tetapi mengubah izin akan mengubah semua {2} {3} dengan skema izin ini</target>
+            <target>{0} {1} dipilih, tetapi kalau izin diubah, akan digubah juga semua {2} {3} dengan skema izin ini</target>
          </segment>
       </unit>
       <unit id="assignSection.noAssignment">
          <segment>
             <source>Unassigned</source>
-            <target>Tidak ditugaskan</target>
+            <target>Belum ditugaskan</target>
          </segment>
       </unit>
       <unit id="assignSection.noRestriction">
          <segment>
             <source>No Restriction</source>
-            <target>Tidak Ada Batasan</target>
+            <target>Tidak Ada Batas</target>
          </segment>
       </unit>
       <unit id="assignSection.role">
@@ -508,25 +532,25 @@
       <unit id="assignSection.schemeName">
          <segment>
             <source>Permission Scheme Name</source>
-            <target>Nama Skema Izin</target>
+            <target>Nama Skema Perizinan</target>
          </segment>
       </unit>
       <unit id="assignSection.schemeName2">
          <segment>
             <source>Assignment Scheme Name</source>
-            <target>Nama Skema Penugasan</target>
+            <target>Nama Skema Tugas</target>
          </segment>
       </unit>
       <unit id="assignSection.title">
          <segment>
             <source>Configure Permission Scheme</source>
-            <target>Mengonfigurasi Skema Izin</target>
+            <target>Atur Skema Perizinan</target>
          </segment>
       </unit>
       <unit id="assignSection.title2">
          <segment>
             <source>Configure Assignment Scheme</source>
-            <target>Mengonfigurasi Skema Penugasan</target>
+            <target>Atur Skema Tugas</target>
          </segment>
       </unit>
       <unit id="assignSection.users">
@@ -964,7 +988,7 @@
       <unit id="cards.recognizePrompt">
          <segment>
             <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target>Pilih bahasa yang akan ditranskripsikan secara otomatis. Jika bahasa tidak tersedia, pilih bahasa yang terkait erat dengan sistem penulisan yang serupa.</target>
+            <target>Pilih bahasa yang akan dikenali. Kalau bahasa itu tidak tersedia, pilih bahasa serumpun dengan ejaan yang mirip.</target>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeech">
@@ -1024,7 +1048,7 @@
       <unit id="cards.projectPermissions">
          <segment>
             <source>Permissions may be set for projects of this team.</source>
-            <target>Izin dapat diatur untuk proyek-proyek tim ini.</target>
+            <target>Perizinan dapat ditetapkan untuk proyek-proyek tim ini.</target>
          </segment>
       </unit>
       <unit id="cards.sync">
@@ -1276,7 +1300,7 @@
       <unit id="community.noVoiceCreation">
          <segment>
             <source>New Voice change samples must be created before a recording is waiting to be saved.</source>
-            <target>Sampel perubahan suara baru harus dibuat sebelum rekaman menunggu untuk disimpan.</target>
+            <target>Contoh perubahan suara baru harus dibuat sebelum ada rekaman yang siap disimpan.</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1468,7 +1492,7 @@
       <unit id="discussionCard.assign">
          <segment>
             <source>Assign</source>
-            <target>Tetapkan</target>
+            <target>Tugaskan</target>
          </segment>
       </unit>
       <unit id="discussionCard.earlierVersion">
@@ -1480,7 +1504,7 @@
       <unit id="discussionCard.groupuser">
          <segment>
             <source>Peer Group / Member {0}</source>
-            <target>Kelompok Rekan Sejawat / Anggota {0}</target>
+            <target>Kelompok / Anggota {0}</target>
          </segment>
       </unit>
       <unit id="discussionCard.assignGroup">
@@ -1540,7 +1564,7 @@
       <unit id="discussionCard.none">
          <segment>
             <source>None of the above</source>
-            <target>Tidak satu pun dari yang di atas</target>
+            <target>Bukan dari salah satu di atas</target>
          </segment>
       </unit>
       <unit id="discussionCard.onlyAdmin">
@@ -1672,7 +1696,7 @@
       <unit id="electronImport.importComplete">
          <segment>
             <source>Import Complete</source>
-            <target>Impor Selesai</target>
+            <target>Selesai Diimpor</target>
          </segment>
       </unit>
       <unit id="electronImport.importCreated">
@@ -1784,6 +1808,60 @@
             <target>Mohon verifikasi dengan cara mengklik link di email otorisasi yang telah dikirim ke akun Anda.</target>
          </segment>
       </unit>
+      <unit id="faithbridge.addContent">
+         <segment>
+            <source>Add {0} as Resource</source>
+            <target>Tambahkan {0} sebagai Sumber Daya</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.audio">
+         <segment>
+            <source>audio</source>
+            <target>audio</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.audioResources">
+         <segment>
+            <source>Request Audio</source>
+            <target>Minta Audio</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.error">
+         <segment>
+            <source>Error: </source>
+            <target>Kesalahan: </target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.loading">
+         <segment>
+            <source>Loading result...</source>
+            <target>Memuat hasil...</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.newChat">
+         <segment>
+            <source>New Chat</source>
+            <target>Obrolan Baru</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.noInfo">
+         <segment>
+            <source>No information found</source>
+            <target>Tidak ada informasi yang ditemukan</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.text">
+         <segment>
+            <source>text</source>
+            <target>teks</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.updating">
+         <segment>
+            <source>Including sources in text</source>
+            <target>Memasukkan sumber dalam teks</target>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>
@@ -1842,6 +1920,12 @@
          <segment>
             <source>Add</source>
             <target>Tambahkan</target>
+         </segment>
+      </unit>
+      <unit id="findResource.addError">
+         <segment>
+            <source>Aquifer add failed </source>
+            <target>Penambahan akuifer gagal </target>
          </segment>
       </unit>
       <unit id="findResource.aiDesc">
@@ -2012,6 +2096,12 @@
             <target>Nama</target>
          </segment>
       </unit>
+      <unit id="findResource.next">
+         <segment>
+            <source>Next page</source>
+            <target>Halaman berikutnya</target>
+         </segment>
+      </unit>
       <unit id="findResource.oralVersion">
          <segment>
             <source>oral-version</source>
@@ -2034,6 +2124,12 @@
          <segment>
             <source>Preview</source>
             <target>Tampilan Awal</target>
+         </segment>
+      </unit>
+      <unit id="findResource.previous">
+         <segment>
+            <source>Previous page</source>
+            <target>Halaman sebelumnya</target>
          </segment>
       </unit>
       <unit id="findResource.query">
@@ -2082,6 +2178,12 @@
          <segment>
             <source>section</source>
             <target>bagian</target>
+         </segment>
+      </unit>
+      <unit id="findResource.showing">
+         <segment>
+            <source>{0} to {1} of {2} {3} results</source>
+            <target>{0} ke {1} dari {2} Hasil {3}</target>
          </segment>
       </unit>
       <unit id="findResource.source">
@@ -2423,7 +2525,7 @@
       <unit id="import.importComplete">
          <segment>
             <source>Import Complete</source>
-            <target>Impor Selesai</target>
+            <target>Selesai Diimpor</target>
          </segment>
       </unit>
       <unit id="import.imported">
@@ -2633,7 +2735,7 @@
       <unit id="integration.notPermitted">
          <segment>
             <source>You're not permitted to sync to Paratext</source>
-            <target>Anda tidak diizinkan untuk menyinkronkan ke Paratext</target>
+            <target>Anda tidak diperbolehkan untuk melakukan sinkronisasi dengan Paratext</target>
          </segment>
       </unit>
       <unit id="integration.offline">
@@ -2897,7 +2999,7 @@
       <unit id="invite.newInviteTask2">
          <segment>
             <source>Separate multiple email addresses with a semicolon (';').</source>
-            <target>Pisahkan beberapa alamat email dengan tanda titik koma (';').</target>
+            <target>Pisahkan lebih dari satu alamat email dengan titik koma ;</target>
          </segment>
       </unit>
       <unit id="invite.noProjects">
@@ -3773,7 +3875,7 @@
       <unit id="mediaTab.confirmValue">
          <segment>
             <source>Replace the current rights holder with {0}?</source>
-            <target>Mengganti pemegang hak saat ini dengan {0}?</target>
+            <target>Ganti pemilik hak cipta yang sekarang dengan {0}?</target>
          </segment>
       </unit>
       <unit id="mediaTab.date">
@@ -4043,19 +4145,19 @@
       <unit id="mediaTitle.provideAudio">
          <segment>
             <source>Provide audio for '{0}'</source>
-            <target>Berikan audio untuk '{0}'</target>
+            <target>Sediakan audio untuk '{0}'</target>
          </segment>
       </unit>
       <unit id="mediaTitle.unsavedChanges">
          <segment>
             <source>Please cancel, save or upload.</source>
-            <target>Batalkan, simpan, atau unggah.</target>
+            <target>Batal, simpan, atau unggah.</target>
          </segment>
       </unit>
       <unit id="mediaTitle.upload">
          <segment>
             <source>Upload</source>
-            <target>Mengunggah</target>
+            <target>Unggah</target>
          </segment>
       </unit>
       <unit id="mediaTitle.uploadFailed">
@@ -4086,6 +4188,12 @@
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
             <target>Seret dan lepas berkas di sini, atau klik di sini untuk menjelajahi berkas.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.faithbridgeTitle">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} Sumber</target>
          </segment>
       </unit>
       <unit id="mediaUpload.githubSupport">
@@ -4364,6 +4472,12 @@
             <target>Tampilkan sumber untuk semua bagian</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.audioScripture">
+         <segment>
+            <source>Audio Scripture</source>
+            <target>Kitab Suci Audio</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
             <source>{0} for the Book</source>
@@ -4568,6 +4682,12 @@
             <target>Acuan</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.research">
+         <segment>
+            <source>Research</source>
+            <target>Penelitian</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.resource">
          <segment>
             <source>Resource</source>
@@ -4656,6 +4776,12 @@
          <segment>
             <source>for {0}</source>
             <target>untuk {0}</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.transcription">
+         <segment>
+            <source>AI Audio Resource Transcript</source>
+            <target>Transkrip Sumber Audio AI</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.type">
@@ -4877,7 +5003,7 @@
       <unit id="peer.assignment">
          <segment>
             <source>assignment</source>
-            <target>penugasan</target>
+            <target>tugas</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4895,7 +5021,7 @@
       <unit id="peer.inSchemeUse">
          <segment>
             <source>This group is referenced in {0} {2} steps in {1} {2} schemes</source>
-            <target>Grup ini direferensikan dalam {0} {2} langkah dalam {1} {2} skema</target>
+            <target>Ada acuan kepada kelompok ini di langkah {0} {2} di skema {1} {2}</target>
          </segment>
       </unit>
       <unit id="peer.inUse">
@@ -5285,7 +5411,7 @@
       <unit id="planSheet.confirmPublishSection">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes (except linked notes) in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
-            <target>Jika Anda memilih untuk menerbitkan, {0} dan versi terbaru dari semua bagian dan catatan (kecuali catatan yang ditautkan) dalam {0} ini akan ditandai sebagai diterbitkan. Jika Anda sebelumnya telah menerbitkan dan sekarang memilih untuk tidak menerbitkan, bagian dan catatan akan ditandai sebagai tidak diterbitkan.</target>
+            <target>Jika Anda memilih untuk menerbitkan, {0} dan versi terbaru dari semua bagian dan catatan (kecuali catatan dengan tautan) dalam {0} ini akan ditandai sebagai diterbitkan. Jika Anda sebelumnya telah menerbitkan dan sekarang memilih untuk tidak menerbitkan, bagian dan catatan akan ditandai sebagai tidak diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSectionNoPropagate">
@@ -5357,7 +5483,7 @@
       <unit id="planSheet.paratextRequired">
          <segment>
             <source>You must be a {0} user with access to FOBAI resources and project Editor or Publisher permission to use this feature.</source>
-            <target>Anda harus menjadi pengguna {0} dengan akses ke sumber daya FOBAI dan izin Editor atau Penerbit proyek untuk menggunakan fitur ini.</target>
+            <target>Hanya pengguna {0} dengan akses ke sumber FOBAI dan izin Editor atau Penerbit proyek dapat menggunakan fitur ini.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -5597,7 +5723,7 @@
       <unit id="profile.deleteExplained">
          <segment>
             <source>Deleting your user will block you from using the program and remove references to your work. Are you sure you want to do this?</source>
-            <target>Menghapus pengguna Anda akan memblokir Anda untuk menggunakan program ini dan menghapus referensi ke pekerjaan Anda. Apakah Anda yakin ingin melakukan ini?</target>
+            <target>Apabila Anda menghapus pengguna, maka Anda tidak dapat menggunakan program ini dan hasil kerja Anda tidak terhubung lagi dengan nama Anda. Yakin mau menghapus pengguna?</target>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
@@ -5609,7 +5735,7 @@
       <unit id="profile.deleteWarning">
          <segment>
             <source>The following action cannot be undone:</source>
-            <target>Tindakan berikut ini tidak dapat dibatalkan:</target>
+            <target>Tindakan berikut tidak bisa dibatalkan:</target>
          </segment>
       </unit>
       <unit id="profile.discardChanges">
@@ -5987,7 +6113,7 @@
       <unit id="publishTo.Internalization">
          <segment>
             <source>Internalization Resources for other APM projects</source>
-            <target>Sumber daya internalisasi untuk proyek APM lainnya</target>
+            <target>Sumber Internalisasi untuk proyek APM lain</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -6257,7 +6383,7 @@
       <unit id="scriptureTableFilter.assignedToMe">
          <segment>
             <source>Hide rows assigned to others</source>
-            <target>Menyembunyikan baris yang ditugaskan ke orang lain</target>
+            <target>Sembunyikan baris yang menjadi tugas orang lain</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.clear">
@@ -6311,7 +6437,7 @@
       <unit id="scriptureTableFilter.reset">
          <segment>
             <source>Reset</source>
-            <target>Atur Ulang</target>
+            <target>Reset</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
@@ -6707,13 +6833,13 @@
       <unit id="shared.scheme">
          <segment>
             <source>Permission Scheme</source>
-            <target>Skema Izin</target>
+            <target>Skema Perizinan</target>
          </segment>
       </unit>
       <unit id="shared.scheme2">
          <segment>
             <source>Assignment Scheme</source>
-            <target>Skema Penugasan</target>
+            <target>Skema Tugas</target>
          </segment>
       </unit>
       <unit id="shared.select">
@@ -6761,7 +6887,7 @@
       <unit id="shared.uploadSuccess">
          <segment>
             <source>Upload Successful</source>
-            <target>Unggah Berhasil</target>
+            <target>Pengunggahan Berhasil</target>
          </segment>
       </unit>
       <unit id="shared.user">
@@ -7319,7 +7445,7 @@
       <unit id="transcriber.beginRecognize">
          <segment>
             <source>Begin Auto Transcription</source>
-            <target>Memulai Transkripsi Otomatis</target>
+            <target>Mulai Transkripsi Secara Otomatis</target>
          </segment>
       </unit>
       <unit id="transcriber.comment">
@@ -7625,7 +7751,7 @@
       <unit id="transcriptionTab.nopermission">
          <segment>
             <source>You do not have permission to download the project.</source>
-            <target>Anda tidak memiliki izin untuk mengunduh proyek.</target>
+            <target>Anda tidak memiliki hak untuk mengunduh proyek.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloading">
@@ -8261,7 +8387,7 @@
       <unit id="vProject.basic">
          <segment>
             <source>Basic</source>
-            <target>Dasar</target>
+            <target>Sederhana</target>
          </segment>
       </unit>
       <unit id="vProject.cancel">
@@ -8405,7 +8531,7 @@
       <unit id="vProject.newTag">
          <segment>
             <source>New Tag</source>
-            <target>Tag Baru</target>
+            <target>Markah Baru</target>
          </segment>
       </unit>
       <unit id="vProject.organizedBy">
@@ -8429,7 +8555,7 @@
       <unit id="vProject.permissionSettings">
          <segment>
             <source>Permissions</source>
-            <target>Izin</target>
+            <target>Perizinan</target>
          </segment>
       </unit>
       <unit id="vProject.permissionEditSheet">
@@ -9005,13 +9131,13 @@
       <unit id="wsAudioPlayer.recognizeProgress">
          <segment>
             <source>Auto Transcription in Progress</source>
-            <target>Transkripsi Otomatis Sedang Berlangsung</target>
+            <target>Transkripsi Otomatis Sedang Diproses</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
             <source>Choose the language to auto transcribe. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target>Pilih bahasa yang akan ditranskripsikan secara otomatis. Jika bahasa tidak tersedia, pilih bahasa yang terkait erat dengan sistem penulisan yang serupa.</target>
+            <target>Pilih bahasa yang akan dikenali. Kalau bahasa itu tidak tersedia, pilih bahasa serumpun dengan ejaan yang mirip.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
