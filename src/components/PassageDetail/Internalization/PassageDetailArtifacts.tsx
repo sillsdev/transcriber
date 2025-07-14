@@ -853,6 +853,7 @@ export function PassageDetailArtifacts() {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
+        cancelReset={resetEdit}
         artifactState={artifactState}
         uploadType={uploadType}
         ready={() => true}

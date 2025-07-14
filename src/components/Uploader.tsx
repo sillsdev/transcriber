@@ -46,6 +46,7 @@ interface IProps {
   ready?: () => boolean; // if false control is disabled
   // createProject?: (name: string) => Promise<string>;
   cancelled: React.MutableRefObject<boolean>;
+  cancelReset?: () => void; // reset the cancelled state
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
@@ -74,6 +75,7 @@ export const Uploader = (props: IProps) => {
     onOpen,
     showMessage,
     cancelled,
+    cancelReset,
     multiple,
     importList,
     artifactState,
@@ -367,6 +369,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (cancelled) cancelled.current = true;
+    cancelReset?.();
     restoreScroll();
   };
 
