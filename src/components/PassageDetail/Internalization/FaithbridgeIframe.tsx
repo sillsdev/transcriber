@@ -143,7 +143,10 @@ export const FaithbridgeIframe = ({
       const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
       let responseContent = data?.messages?.[1]?.content || '';
       responseContent = responseContent
-        .replace(/<img.* src="([^"]*)".*>/g, '![image]($1)')
+        .replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*>/g, '![$2]($1)')
+        .replace(/<img[^>]*alt="([^"]*)"[^>]*src="([^"]*)"[^>]*>/g, '![$1]($2)')
+        // fallback for images without alt attribute
+        .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '![image]($1)')
         .replace(
           /<video.*\n.* src="([^"]*)".*\n.*\n.*<\/video>/g,
           '[video]($1)'
