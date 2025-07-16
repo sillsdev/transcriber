@@ -152,7 +152,7 @@ export const FaithbridgeIframe = ({
         .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '![image]($1)')
         .replace(
           /<video.*\n?.* src="([^"]*)".*\n?.*\n?.*<\/video>/g,
-          '[video]($1)'
+          `[${t.video}]($1)`
         );
       Promise.all(contentPromises)
         .then((responses: AquiferContent[]) => {
