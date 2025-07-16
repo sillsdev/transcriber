@@ -143,10 +143,16 @@ export const FaithbridgeIframe = ({
       const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
       let responseContent = data?.messages?.[1]?.content || '';
       responseContent = responseContent
-        .replace(/<img.* title="([^"]*)" src="([^"]*)".*>/g, '![$1]($2)')
         .replace(
-          /<video.*\n.* src="([^"]*)".*\n.*\n.*<\/video>/g,
-          '[video]($1)'
+          /<img\b[^>]*\b(src|alt)="([^"]*)"[^>]*\b(alt|src)="([^"]*)"[^>]*>/g,
+          (_match, attr1, val1, _attr2, val2) =>
+            attr1 === 'alt' ? `![${val1}](${val2})` : `![${val2}](${val1})`
+        )
+        // fallback for images without alt attribute
+        .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '![image]($1)')
+        .replace(
+          /<video.*\n?.* src="([^"]*)".*\n?.*\n?.*<\/video>/g,
+          `[${t.video}]($1)`
         );
       Promise.all(contentPromises)
         .then((responses: AquiferContent[]) => {
@@ -168,7 +174,7 @@ export const FaithbridgeIframe = ({
           onMarkdown(
             query,
             data?.messages?.[1]?.audioUrl || '',
-            data?.messages?.[1]?.content || ''
+            responseContent
           );
           setFetching(false);
           onClose?.();

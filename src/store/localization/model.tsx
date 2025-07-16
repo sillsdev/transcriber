@@ -378,6 +378,7 @@ export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
     "noInfo": string;
     "text": string;
     "updating": string;
+    "video": string;
 };
 
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
