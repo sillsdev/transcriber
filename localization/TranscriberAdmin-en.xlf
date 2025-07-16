@@ -1864,6 +1864,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="faithbridge.video">
+         <segment>
+            <source>video</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>

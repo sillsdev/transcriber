@@ -406,6 +406,7 @@ const initialState = {
 			"noInfo": "No information found",
 			"text": "text",
 			"updating": "Including sources in text",
+			"video": "video",
 		}
 	}),
 	"filterMenu": new LocalizedStrings({
