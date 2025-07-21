@@ -87,12 +87,6 @@ export const useWfOnlineSave = (props: IProps) => {
         let rec = {
           issection: true,
           level: w.level,
-          published: isPublished(w.published || []),
-          publishTo: setPublishTo(w.published || []),
-          titlemediafile:
-            (w?.titleMediaId?.id &&
-              (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||
-            '',
           changed: !w.deleted && isSectionUpdated(w, lastSaved),
           deleted: w.deleted,
           id: isSectionAdding(w)
@@ -105,6 +99,12 @@ export const useWfOnlineSave = (props: IProps) => {
             ...rec,
             sequencenum: w.sectionSeq.toString(),
             title: w?.title || '',
+            published: isPublished(w.published || []),
+            publishTo: setPublishTo(w.published || []),
+            titlemediafile:
+              (w?.titleMediaId?.id &&
+                (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||
+              '',
           };
           anychanged = true;
         }
