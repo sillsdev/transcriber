@@ -697,7 +697,26 @@ export function PassageDetailArtifacts() {
       cnt += 1;
       setComplete(Math.min((cnt * 100) / total, 100));
     }
+    // Ensure setComplete(0) is always called after processing
     setComplete(0);
+  };
+
+  const handleTextChange = (text: string) => {
+    textRef.current = text;
+    const ct = mediaContentType(mediaRef.current);
+    if (ct === MarkDownType) {
+      const newAllow = text.trim() !== '';
+      if (allowEditSave !== newAllow) {
+        setAllowEditSave(newAllow);
+      }
+      return;
+    }
+    const validUrl = isUrl(text);
+    if (ct === UriLinkType) {
+      if (allowEditSave !== validUrl) {
+        setAllowEditSave(validUrl);
+      }
+    }
   };
 
   useEffect(() => {
@@ -973,16 +992,7 @@ export function PassageDetailArtifacts() {
           initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
-          onTextChange={(text) => {
-            textRef.current = text;
-            const validUrl = isUrl(text);
-            if (
-              mediaContentType(mediaRef.current) === UriLinkType &&
-              allowEditSave !== validUrl
-            ) {
-              setAllowEditSave(validUrl);
-            }
-          }}
+          onTextChange={handleTextChange}
           sectDesc={sectDesc}
           passDesc={passDesc}
         />
