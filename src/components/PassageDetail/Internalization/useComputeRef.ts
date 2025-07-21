@@ -6,6 +6,13 @@ import { parseRef } from '../../../crud/passage';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 
+const sortAscend = (a: PassageD, b: PassageD) =>
+  a.attributes.sequencenum - b.attributes.sequencenum;
+const sortDescend = (a: PassageD, b: PassageD) =>
+  b.attributes.sequencenum - a.attributes.sequencenum;
+const findPassage = (p: PassageD) =>
+  passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE;
+
 export const useComputeRef = () => {
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
@@ -80,20 +87,11 @@ export const useComputeRef = () => {
 
   const computeSectionRef = (passage: PassageD) => {
     const sectionId = related(passage, 'section');
-    const firstPassage = passages
-      .filter((p) => related(p, 'section') === sectionId)
-      .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum)
-      .find(
-        (p) =>
-          passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE
-      );
-    const lastPassage = passages
-      .filter((p) => related(p, 'section') === sectionId)
-      .sort((a, b) => b.attributes.sequencenum - a.attributes.sequencenum)
-      .find(
-        (p) =>
-          passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE
-      );
+    const sectPass = passages.filter(
+      (p) => related(p, 'section') === sectionId
+    );
+    const firstPassage = sectPass.sort(sortAscend).find(findPassage);
+    const lastPassage = sectPass.sort(sortDescend).find(findPassage);
     parseRef(firstPassage as PassageD);
     parseRef(lastPassage as PassageD);
     if (

@@ -116,7 +116,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
     setScope(scopeOptions[0]);
     setType(aiQueries[0]?.type.replace('-', ' '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aiQueries, scopeOptions]);
+  }, [t, organizedBy]);
 
   const computeQuery = async (type: string, scope: string) => {
     // the localized name Matthew should never be used b/c book data will have it.

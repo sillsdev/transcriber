@@ -45,6 +45,9 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { useComputeRef } from './useComputeRef';
 
+// Regex to match passage references in the form "chapter:verse-chapter:verse"
+const PASSAGE_REF_REGEX = /(\d+):(\d+)-(\d+)?:?(\d+)?/g;
+
 const StyledStack = styled(Stack)(() => ({
   '& .MuiDataGrid-footerContainer': {
     display: 'none!important',
@@ -240,7 +243,7 @@ export default function FindAquifer({ onClose }: IProps) {
     if (pt === PassageTypeEnum.NOTE) {
       // Handle note-specific logic here
       const refs = computeSectionRef(passage);
-      const m = /(\d+):(\d+)-(\d+)?:?(\d+)?/g.exec(refs);
+      const m = PASSAGE_REF_REGEX.exec(refs);
       if (m) {
         passage.attributes.startChapter = parseInt(m[1]);
         passage.attributes.startVerse = parseInt(m[2]);
