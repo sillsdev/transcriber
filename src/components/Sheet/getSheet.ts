@@ -317,9 +317,9 @@ export const getSheet = ({
             : IMediaShare.NotPublic;
 
         if (item.mediaShared === IMediaShare.OldVersionOnly) {
-          var all = getAllMediaRecs(related(mediaRec, 'passage'), memory, null);
-          var pub = all.find((m) => m.attributes.readyToShare);
-          var oldpublished = getPublishTo(
+          const all = getAllMediaRecs(related(mediaRec, 'passage'), memory, null);
+          const pub = all.find((m) => m.attributes.readyToShare);
+          const oldpublished = getPublishTo(
             pub?.attributes?.publishTo || '{}',
             hasPublishing,
             projectShared,
