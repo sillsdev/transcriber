@@ -697,6 +697,7 @@ export function PassageDetailArtifacts() {
       cnt += 1;
       setComplete(Math.min((cnt * 100) / total, 100));
     }
+    // Ensure setComplete(0) is always called after processing
     setComplete(0);
   };
 
