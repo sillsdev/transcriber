@@ -25,6 +25,7 @@ import { AlertSeverity, useSnackBar } from '../../../hoc/SnackBar';
 import { axiosGet } from '../../../utils/axios';
 import { TokenContext } from '../../../context/TokenProvider';
 import { AquiferContent } from './FindAquifer';
+import { usePassageRef } from './usePassageRef';
 
 interface IFaithbridgeIframeProps {
   onMarkdown: (query: string, audioUrl: string, transcript: string) => void;
@@ -57,6 +58,7 @@ export const FaithbridgeIframe = ({
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
   const { showMessage } = useSnackBar();
+  const passageRef = usePassageRef();
   const onlineTimer = React.useRef<NodeJS.Timeout | null>(null);
   const token = useContext(TokenContext).state.accessToken ?? '';
 
@@ -104,11 +106,8 @@ export const FaithbridgeIframe = ({
   }, [connected]);
 
   React.useEffect(() => {
-    setVerseRef(
-      `${passage?.attributes?.book || 'MAT'} ${
-        passage?.attributes?.reference || '1:1'
-      }`
-    );
+    setVerseRef(passageRef(passage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage]);
 
   React.useEffect(() => {

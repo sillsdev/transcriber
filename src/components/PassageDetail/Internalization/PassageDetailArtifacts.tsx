@@ -37,7 +37,6 @@ import {
   IArtifactCategory,
   ArtifactCategoryType,
   mediaFileName,
-  passageRefText,
   usePlanType,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
@@ -94,6 +93,7 @@ import { mediaContentType } from '../../../utils/contentType';
 import { useStepPermissions } from '../../../utils/useStepPermission';
 import FindBibleBrain from './FindBibleBrain';
 import { useHandleLink } from './addLinkKind';
+import { useComputeRef } from './useComputeRef';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -205,6 +205,7 @@ export function PassageDetailArtifacts() {
   const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
   const handleLink = useHandleLink({ passage, setLink });
+  const { computeSectionRef } = useComputeRef();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -880,8 +881,8 @@ export function PassageDetailArtifacts() {
         }
       />
       <BigDialog
-        title={t.findResource.replace('{0}', passageRefText(passage))}
-        description=<Typography>{t.findResourceDesc}</Typography>
+        title={t.findResource.replace('{0}', computeSectionRef(passage) ?? '')}
+        description={<Typography>{t.findResourceDesc}</Typography>}
         isOpen={findOpen}
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
