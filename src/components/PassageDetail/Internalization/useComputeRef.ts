@@ -3,6 +3,8 @@ import related from '../../../crud/related';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { PassageD, SectionD } from '../../../model';
 import { parseRef } from '../../../crud/passage';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
 
 export const useComputeRef = () => {
   const passages = useOrbitData<PassageD[]>('passage');
@@ -78,15 +80,22 @@ export const useComputeRef = () => {
 
   const computeSectionRef = (passage: PassageD) => {
     const sectionId = related(passage, 'section');
-    const firstPassage = passages.find(
-      (p) =>
-        related(p, 'section') === sectionId && p.attributes.sequencenum === 1
-    );
+    const firstPassage = passages
+      .filter((p) => related(p, 'section') === sectionId)
+      .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum)
+      .find(
+        (p) =>
+          passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE
+      );
     const lastPassage = passages
       .filter((p) => related(p, 'section') === sectionId)
-      .sort((a, b) => b.attributes.sequencenum - a.attributes.sequencenum)[0];
+      .sort((a, b) => b.attributes.sequencenum - a.attributes.sequencenum)
+      .find(
+        (p) =>
+          passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE
+      );
     parseRef(firstPassage as PassageD);
-    parseRef(lastPassage);
+    parseRef(lastPassage as PassageD);
     if (
       firstPassage?.attributes.startChapter ===
       lastPassage?.attributes.endChapter
