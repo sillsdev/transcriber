@@ -125,7 +125,7 @@ export function DiscussionMenu(props: IProps) {
             <ListItemText primary={t.setSegment} />
           </StyledMenuItem>
         )}
-        {resolved !== undefined && (
+        {(!offline || offlineOnly) && resolved !== undefined && (
           <StyledMenuItem
             id="move"
             aria-hidden={!Boolean(anchorEl)}
