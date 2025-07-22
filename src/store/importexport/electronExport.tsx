@@ -106,22 +106,21 @@ export async function electronExport(
   const fileName = (
     projRec: ProjectD,
     localizedArtifactType: string,
+    suffix: string,
     ext: string
   ) =>
-    'APM' +
-    idStr('user', userid) +
-    '_' +
-    idStr('project', projRec.id) +
-    '_' +
-    cleanFileName(projRec.attributes.name + localizedArtifactType) +
-    '.' +
-    ext;
+    `APM${idStr('user', userid)}_${idStr(
+      'project',
+      projRec.id
+    )}_${cleanFileName(
+      projRec.attributes.name + localizedArtifactType
+    )}${cleanFileName(suffix)}.${ext}`;
 
   const itfb_fileName = (projRec: ProjectD) =>
     new Date().getDate().toString() +
     new Date().getHours().toString() +
     '_' +
-    fileName(projRec, '', 'itf');
+    fileName(projRec, '', importedDate?.toISOString() ?? '', 'itf');
 
   const backupName =
     new Date().getDate().toString() +
@@ -922,6 +921,7 @@ export async function electronExport(
     } else {
       op = getOfflineProject(projRec.id);
       imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
+      importedDate = imported;
     }
 
     if (!scripturePackage) {
@@ -1049,8 +1049,20 @@ export async function electronExport(
         : [ExportType.AUDIO, ExportType.BURRITO, ExportType.ELAN].includes(
             exportType
           )
-        ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
-        : fileName(projects[ix], localizedArtifact, exportType);
+        ? fileName(
+            projects[ix],
+            `${localizedArtifact}_${exportType}`,
+            '',
+            'zip'
+          )
+        : exportType === ExportType.ITF
+        ? fileName(
+            projects[ix],
+            localizedArtifact,
+            importedDate?.toISOString() ?? '',
+            exportType
+          )
+        : fileName(projects[ix], localizedArtifact, '', exportType);
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
@@ -1068,7 +1080,12 @@ export async function electronExport(
         );
         await ipc?.zipAddZip(
           backupZip,
-          fileName(projects[ix], localizedArtifact, ExportType.ITF),
+          fileName(
+            projects[ix],
+            localizedArtifact,
+            importedDate?.toISOString() ?? '',
+            ExportType.ITF
+          ),
           itf.zip,
           projects[ix].attributes.name
         );
