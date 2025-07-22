@@ -9,7 +9,9 @@ export const nextNum = (
 ) => {
   if (!passageType || passageType === PassageTypeEnum.PASSAGE)
     return Math.floor(lastNum + 1);
-  else return lastNum + 0.01;
+  else {
+    return Math.round((lastNum + 0.01) * 100) / 100;
+  }
 };
 
 export const getMinSection = (ws: ISheet[]) => {
@@ -61,7 +63,7 @@ export const shtResequence = (ws: ISheet[], sec = 1) => {
         change = true;
         cur = { ...cur, passageSeq: pas, passageUpdated: updatedAt };
       }
-      if (cur.sectionSeq !== sec) {
+      if (cur.sectionSeq > 0 && cur.sectionSeq !== sec) {
         change = true;
         cur = { ...cur, sectionSeq: sec, sectionUpdated: updatedAt };
       }
