@@ -352,8 +352,7 @@ export function PassageDetailItem(props: IProps) {
 
   const editStep = useMemo(
     () => canDoSectionStep(currentstep, section),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentstep, section]
+    [canDoSectionStep, currentstep, section]
   );
 
   return (
