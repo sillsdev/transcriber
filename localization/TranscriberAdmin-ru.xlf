@@ -274,13 +274,13 @@
       <unit id="artifactType.activity">
          <segment>
             <source>Activity</source>
-            <target>Activity</target>
+            <target>Деятельность</target>
          </segment>
       </unit>
       <unit id="artifactType.airesource">
          <segment>
             <source>AI Generated</source>
-            <target>AI Generated</target>
+            <target>Сгенерированный ИИ</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -304,13 +304,13 @@
       <unit id="artifactType.intellectualproperty">
          <segment>
             <source>Intellectual Property</source>
-            <target>Intellectual Property</target>
+            <target>Интеллектуальная собственность</target>
          </segment>
       </unit>
       <unit id="artifactType.keyterm">
          <segment>
             <source>Key Term</source>
-            <target>Key Term</target>
+            <target>Ключевой термин</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -796,7 +796,7 @@
       <unit id="cards.creatorEmail">
          <segment>
             <source>Email</source>
-            <target>Email</target>
+            <target>Электронная почта</target>
          </segment>
       </unit>
       <unit id="cards.creatorOK">
@@ -1810,31 +1810,31 @@
       <unit id="faithbridge.addContent">
          <segment>
             <source>Add {0} as Resource</source>
-            <target>Add {0} as Resource</target>
+            <target>Добавить {0} в качестве ресурса</target>
          </segment>
       </unit>
       <unit id="faithbridge.audio">
          <segment>
             <source>audio</source>
-            <target>audio</target>
+            <target>аудио</target>
          </segment>
       </unit>
       <unit id="faithbridge.audioResources">
          <segment>
             <source>Request Audio</source>
-            <target>Request Audio</target>
+            <target>Запрос аудио</target>
          </segment>
       </unit>
       <unit id="faithbridge.error">
          <segment>
             <source>Error: </source>
-            <target>Error: </target>
+            <target>Ошибка:</target>
          </segment>
       </unit>
       <unit id="faithbridge.loading">
          <segment>
             <source>Loading result...</source>
-            <target>Loading result...</target>
+            <target>Загрузка результата...</target>
          </segment>
       </unit>
       <unit id="faithbridge.newChat">
@@ -1859,6 +1859,12 @@
          <segment>
             <source>Including sources in text</source>
             <target>Включение источников в текст</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.video">
+         <segment>
+            <source>video</source>
+            <target/>
          </segment>
       </unit>
       <unit id="filterMenu.all">
@@ -2710,7 +2716,7 @@
       <unit id="integration.exportSectionNumbers">
          <segment>
             <source>Sync {0} Numbers</source>
-            <target>Sync {0} Numbers</target>
+            <target>Синхронизация {0} чисел</target>
          </segment>
       </unit>
       <unit id="integration.invalidReferences">
@@ -3742,7 +3748,7 @@
       <unit id="main.walkThru">
          <segment>
             <source>Access Walk Through</source>
-            <target>Access Walk Through</target>
+            <target>Доступ к просмотру</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">

@@ -657,7 +657,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target>如果您有一个现有的 胆敢项目，您想要链接到此通道，请点击漫游。 要创建一个自动创建名称的新的 胆敢的项目，请点击创建 。</target>
          </segment>
       </unit>
@@ -1707,7 +1707,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target>此文件没有从最新版本导出。从在线版本中导出您的 PTF 文件。</target>
          </segment>
       </unit>
@@ -1749,7 +1749,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target>此文件已用程序的新版本导出。 您需要在导入之前下载最新版本！如果您继续，一些数据可能无法正确导入。</target>
          </segment>
       </unit>
@@ -1797,7 +1797,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
+            <source>I'm verified!  Carry on!</source>
             <target>我已验证了！骑车！</target>
          </segment>
       </unit>
@@ -1859,6 +1859,12 @@
          <segment>
             <source>Including sources in text</source>
             <target>在文本中包含来源</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.video">
+         <segment>
+            <source>video</source>
+            <target/>
          </segment>
       </unit>
       <unit id="filterMenu.all">
@@ -2571,7 +2577,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系技术支持。 如果继续使用应用程序，您将丢失离线更改。</target>
          </segment>
       </unit>
@@ -2637,7 +2643,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target>ITF 不包含当前音频项目。它包含音频项目 {0}。</target>
          </segment>
       </unit>
@@ -3543,7 +3549,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target>邀请不被接受。您必须使用邀请函发送到的电子邮箱登录。</target>
          </segment>
       </unit>
@@ -5115,7 +5121,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target>我们需要这个组吗？或者只是使用团队管理员？ 这个组中的人将能够采取任何步骤，即使它被分配给他们不在的组。</target>
          </segment>
       </unit>
@@ -5127,7 +5133,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target>也不确定是否需要此权限，因为不清楚顾问在此软件中做了哪些特殊事情。 独立顾问的评论将对所有团队成员可见。</target>
          </segment>
       </unit>
@@ -5151,13 +5157,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target>导师的评论只对CIT成员可见。导师可批准CIT成员的评论然后向其余成员显示可见。</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
             <target>没有特殊权限的管理员组。用来分配讨论到各个团队。</target>
          </segment>
       </unit>
@@ -5883,7 +5889,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target>数据同步频率（分钟）。 0 表示关闭同步。</target>
          </segment>
       </unit>
@@ -6645,13 +6651,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>您的 {Pt} 登录已过期，无法自动更新。 请退出并重新登录。</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>您的登录已过期，不能自动更新。请注销并重新登录。</target>
          </segment>
       </unit>
@@ -7629,7 +7635,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target>听写本由{0}更新。保持改变？{1}</target>
          </segment>
       </unit>
@@ -7839,7 +7845,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target>无法导出音频项目。导出文件太大。</target>
          </segment>
       </unit>
@@ -7881,7 +7887,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target>您在本地有新的更改，但未包含在 PTF 导出中。 请同时导出一个 itf 文件以记录所有更改。</target>
          </segment>
       </unit>
@@ -8745,7 +8751,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target>设置音频项目，将工作分成可分配给各种听写员和编辑员的片段。 听写员和编辑员可以通过下载或导入音频项目在线或离线工作。</target>
          </segment>
       </unit>
@@ -8763,7 +8769,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target>在线设置了一个音频项目。 听写者和编辑者可以在线工作，通过选择在音频项目卡菜单上的离线可用选项，或通过导入离线选项。</target>
          </segment>
       </unit>
@@ -9021,7 +9027,7 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
             <target>人工智能服务进行中... 这是一项远程服务，如果录制内容较多，或有其他请求排在您的请求之前，则可能需要很长时间。</target>
          </segment>
       </unit>

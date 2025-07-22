@@ -280,7 +280,7 @@
       <unit id="artifactType.airesource">
          <segment>
             <source>AI Generated</source>
-            <target>AI Generated</target>
+            <target>Generado por IA</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -304,13 +304,13 @@
       <unit id="artifactType.intellectualproperty">
          <segment>
             <source>Intellectual Property</source>
-            <target>Intellectual Property</target>
+            <target>Propiedad intelectual</target>
          </segment>
       </unit>
       <unit id="artifactType.keyterm">
          <segment>
             <source>Key Term</source>
-            <target>Key Term</target>
+            <target>Término clave</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -1859,6 +1859,12 @@
          <segment>
             <source>Including sources in text</source>
             <target>Inclusión de fuentes en texto</target>
+         </segment>
+      </unit>
+      <unit id="faithbridge.video">
+         <segment>
+            <source>video</source>
+            <target/>
          </segment>
       </unit>
       <unit id="filterMenu.all">
@@ -3832,7 +3838,7 @@
       <unit id="mediaTab.autoMatch">
          <segment>
             <source>Auto Match</source>
-            <target>Auto Match</target>
+            <target>Coincidencia automática</target>
          </segment>
       </unit>
       <unit id="mediaTab.availablePassages">

@@ -24,7 +24,7 @@
 		<xsl:choose>
 			<xsl:when test="count($crowdNode) = 0"/>
 			<xsl:when
-				test="normalize-space(xlf:source/text()) != normalize-space($crowdNode/xl2:source/text()) or (normalize-space(xlf:target/text()) = '' and xl2:target/@state != 'translated')">
+				test="normalize-space(xlf:source/text()) != normalize-space($crowdNode/xl2:source/text()) or ((count(xlf:target/text()) = 0 or normalize-space(xlf:target/text()) = '') and $crowdNode/xl2:target/@state != 'translated')">
 				<xsl:value-of select="parent::*/@id"/>
 				<xsl:text>&#x9;</xsl:text>
 				<xsl:value-of select="$crowdNode/xl2:source"/>

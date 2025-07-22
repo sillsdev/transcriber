@@ -280,7 +280,7 @@
       <unit id="artifactType.airesource">
          <segment>
             <source>AI Generated</source>
-            <target>AI Generated</target>
+            <target>Généré par l'IA</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -1861,6 +1861,12 @@
             <target>Inclure les sources dans le texte</target>
          </segment>
       </unit>
+      <unit id="faithbridge.video">
+         <segment>
+            <source>video</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="filterMenu.all">
          <segment>
             <source>All</source>
@@ -2146,7 +2152,7 @@
       <unit id="findResource.queryBuilder">
          <segment>
             <source>AI Query Builder</source>
-            <target>AI Query Builder</target>
+            <target>Constructeur de requêtes pour l'IA</target>
          </segment>
       </unit>
       <unit id="findResource.reset">
