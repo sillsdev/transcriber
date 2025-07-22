@@ -13,6 +13,7 @@ var mockMemory = {
   },
 };
 var mockHasPermission = true;
+var mockRef = 'MAT 1:1-5';
 
 // Mock dependencies
 jest.mock('../utils', () => ({
@@ -88,6 +89,10 @@ jest.mock('../utils/useStepPermission', () => ({
 
 jest.mock('../utils/axios', () => ({
   axiosGet: jest.fn(),
+}));
+
+jest.mock('../components/PassageDetail/Internalization/usePassageRef', () => ({
+  usePassageRef: () => jest.fn().mockReturnValue(mockRef),
 }));
 
 // Mock the useFaithbridgeResult hook
@@ -167,6 +172,7 @@ describe('FaithbridgeIframe', () => {
     mockRemoteId.mockReturnValue('remote-user-123');
     mockGenerateUUID.mockReturnValue('mock-uuid-123');
     mockHasPermission = true;
+    mockRef = 'MAT 1:1-5';
   });
 
   describe('initialization', () => {
@@ -702,10 +708,11 @@ describe('FaithbridgeIframe', () => {
           id: 'passage-123',
           attributes: {
             book: 'MAT',
-            reference: '1:1-5, 10-15',
+            reference: '1:1-5; 10-15',
           },
         },
       });
+      mockRef = 'MAT 1:1-5; 10-15';
 
       wrapper(
         <FaithbridgeIframe onMarkdown={mockOnMarkdown} onClose={mockOnClose} />
@@ -714,7 +721,7 @@ describe('FaithbridgeIframe', () => {
       const iframe = screen.getByTitle('FaithBridge');
       expect(iframe).toHaveAttribute(
         'src',
-        expect.stringContaining('verseRef=MAT+1%3A1-5%2C+10-15')
+        expect.stringContaining('verseRef=MAT+1%3A1-5%3B+10-15')
       );
     });
 
@@ -781,6 +788,7 @@ describe('FaithbridgeIframe', () => {
           },
         },
       });
+      mockRef = 'JHN 3:16';
 
       // Re-render with new passage data
       rerender(
