@@ -349,8 +349,8 @@ export function Loading() {
           localStorage.setItem(localUserKey(LocalKey.time), currentDateTime());
           if (isElectron) finishRemoteLoad();
           else {
-            await backup.reset();
-            await backup.cache.openDB();
+            await backup?.reset();
+            await backup?.cache.openDB();
             setProjectsLoaded([]);
             finishRemoteLoad();
           }

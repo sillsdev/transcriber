@@ -1144,6 +1144,7 @@ export function ScriptureTable(props: IProps) {
         await graphicCreate({ resourceType, resourceId, info });
       }
     }
+    if (images.length > 0) showMessage(ts.uploadSuccess);
     setUploadType(undefined);
   };
 
@@ -1912,9 +1913,9 @@ export function ScriptureTable(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     uploadItem.current = undefined;
+    if (!cancelled.current) setUploadVisible(false);
     if (importList) {
       setImportList(undefined);
-      setUploadVisible(false);
     }
   };
   const isReady = () => true;

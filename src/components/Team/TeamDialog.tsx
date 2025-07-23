@@ -463,7 +463,7 @@ export function TeamDialog(props: IProps) {
               name === '' ||
               nameInUse(name) ||
               !changed ||
-              bibleIdError !== ''
+              (bibleIdError !== '' && bibleId.length > 0)
             }
           >
             {mode === DialogMode.add ? t.add : t.save}

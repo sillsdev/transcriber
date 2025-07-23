@@ -572,7 +572,7 @@ export function DataChanges(props: PropsWithChildren) {
 
   const updateBusy = useCallback(() => {
     const checkBusy =
-      user === '' ||
+      getGlobal('user') === '' ||
       (remote && remote.requestQueue.length !== 0) ||
       getGlobal('orbitRetries') < OrbitNetworkErrorRetries;
     //we know we're offline, or we've retried something so maybe we're offline

@@ -24,6 +24,7 @@ import { PassageTypeEnum } from '../model/passageType';
 
 export const useNotes = () => {
   const sharedResources = useOrbitData<SharedResourceD[]>('sharedresource');
+  const passages = useOrbitData<PassageD[]>('passage');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const planType = usePlanType();
@@ -61,22 +62,16 @@ export const useNotes = () => {
     );
   };
   const noteRefs = (passage: PassageD): string[] => {
-    const section = findRecord(
-      memory,
-      'section',
-      related(passage, 'section') as string
-    ) as SectionD;
-    const secRefs: string[] = [];
-    const passages = memory?.cache.query((q) =>
-      q.findRelatedRecords(section, 'passages')
-    ) as PassageD[];
-    passages.sort(bySeq).forEach((recId) => {
-      const passRec = findRecord(memory, 'passage', recId.id) as Passage;
-      const passType = passageTypeFromRef(passRec.attributes.reference, false); //do I need to figure out flat??
-      if (passType === PassageTypeEnum.PASSAGE)
-        secRefs.push(passRec.attributes.reference);
-    });
-    return secRefs;
+    const sectionId = related(passage, 'section') as string;
+    return passages
+      .filter(
+        (p) =>
+          related(p, 'section') === sectionId &&
+          passageTypeFromRef(p.attributes.reference, false) ===
+            PassageTypeEnum.PASSAGE
+      )
+      .sort(bySeq)
+      .map((p) => p.attributes.reference);
   };
   const noteSource = (r: SharedResource): string => {
     const rec = findRecord(

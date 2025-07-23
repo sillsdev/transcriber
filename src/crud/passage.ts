@@ -47,7 +47,7 @@ export function getStartChapter(ref: string | undefined) {
   return m ? parseInt(m[1]) : 0;
 }
 export function parseRef(p: Passage) {
-  var a = p.attributes;
+  var a = p?.attributes;
   if (!a) return;
   if (a.startChapter === undefined || a.startChapter === null) {
     if (a.book === '' || (a.reference ?? '') === '') {

@@ -1,169 +1,28 @@
-audio-project-manager (4.2.0.0)  experimental; urgency=high
+audio - project - manager(4.3.0.0)  experimental; urgency = high
 
- * add creator user to new discussion for offline
- * Add readOnly view for members
- * Allow settings without recording
- * ask for confirmation is the user doesn't use add
- * assign sections to new scheme
- * change all section assignments or permissions in one call
- * change message to have them create voice samples first
- * check permission for community testing and phrase back translation
- * require rights statement before enabling voice conversion
- * create new scheme with name and an assigment for each workflow step
- * default to no permissions for personal team
- * Everyone can see title rows if publishing is enabled.
- * for discussion card use the combined control for add as well as edit
- * give message if trying to add a new voice in phrase back translation
- * if no permission scheme assigned, show section and passages.
- * if permission enabled only admin can change multi-step status
- * only show if it is assigned to user or group containing user
- * Make default team permission setting false
- * passage shows current step assignment
- * project card icons not shown for admin.  Make white
- * put scheme in table
- * remove and Export from can Publish
- * save is disabled unless a change has been made
- * save new scheme
- * save the rights even if the graphic isn't changed
- * section shows scheme
- * set default to false for personal teams
- * show existing schemes
- * show permissions on project card
- * show publish globe to everyone
- * show users how many groups will be affected by removing a group
- * Show what reference we're using in note find
- * sort list of rights holders
- * sort note list by title
- * standardize permission name format on project advanced
- * update ai result name to ai instead of nr
- * update language picker to 2.5.1
- * update to give message on upload failure.
- * use caseless trimmed compares
- * view mode for users without permissions
- * wait to set category selection until the list is there
- * Workflow permissions (#1890)
- * Workflow Permsissions - Internalization step done
- * TT-1522 setting line height by font size (#1950)
- * TT-3785 Record step can be assigned
- * TT-4854 Updated New Project / Project Settings dialog (#1872)
- * TT-4857 New Profile Dialog (#1871)
- * TT-4900 add player close button (#1937)
- * TT-5307 Pasting publishing sheets (#1879)
- * TT-5488 Enable Select All (#1880)
- * TT-5817 remove members from peer groups
- * TT-5879 only allow creator to edit, delete, resolve.  anyone can assign. (#1901)
- * TT-5895 Show my work
- * TT-5895b rewording hide filter
- * TT-6209 Allow saving text resource (#1932)
- * TT-6223 stories checkbox not saved on new projects (#1898)
- * TT-6272 Back Translate - new voice (#1957)
- * TT-6273 disable personalize while saving (#1929)
- * TT-6321 big files sent as s3 links to aero - noise remove tested (#1942)
- * TT-6337, TT-6341 go to team screen if invalid url (#1899)
- * TT-6346 All assignment to all members
- * TT-6346, TT-6347 Sheet permissions and publish/export permissions (#1883)
- * TT-6346c Show All members
- * TT-6346d change All members to Only Admins
- * TT-6348 assignment update (#1891)
- * TT-6348b sort scheme names on menu
- * TT-6355 Remember size choice
- * TT-6357 set the permissions correctly (#1878)
- * TT-6358 don't show permissions for personal team
- * TT-6359 No Change user on edit (#1885)
- * TT-6360 user info datachanges
- * TT-6364 No refresh for offline only (#1884)
- * TT-6367 select all only selects section rows (#1882)
- * TT-6369 restore the missing buttons
- * TT-6373 change title of flat spreadsheet (#1927)
- * TT-6374 update counts for Assignments and Transcriptions
- * TT-6376 TT-6385 update Category List
- * TT-6378 TT-6384 project sheet permissions
- * TT-6383 member with sheet can delete
- * TT-6387 Admin and sheet user can modify audio tab
- * TT-6390 removing assignments when none present
- * TT-6391 Update assignment column (#1894)
- * TT-6393 Changing User to Peer assignment (#1895)
- * TT-6393b Change font size avoid wrap
- * TT-6394 Add information on Peer Group use (#1945)
- * TT-6396 use permission for KeyTerm step
- * TT-6396b no record of key term w/o permission (#1896)
- * TT-6397 scheme must have name
- * TT-6398 duplicates must be in the same organization
- * TT-6400 Recompute duplicate name on delete
- * TT-6403 Update Configure Scheme
- * TT-6404 Assigning from spreadsheet
- * TT-6406 Transcriber permission
- * TT-6407 Assignment count
- * TT-6408 Sync to Paratext checks permission
- * TT-6409 hide assignment tab and column for personal and offlineOnly (#1930)
- * TT-6410 permissions scheme don't save if invalid scheme (#1909)
- * TT-6411 change required to save scheme
- * TT-6413 No Transcriber or Editor on Transcription Tab (#1925)
- * TT-6419 Add TW to help menu (#1897)
- * TT-6421 Only remove secs without passages (#1916)
- * TT-6422 Allow record with vernacular permission
- * TT-6424 recover from failed upload (#1939)
- * TT-6425 permission scheme datachanges (#1923)
- * TT-6426 Permit flat title editing (#1913)
- * TT-6428 Title persist without passages (#1912)
- * TT-6429 edit topic if new (#1917)
- * TT-6433 bulk email invitations
- * TT-6435 display resource images offline (#1903)
- * TT-6436 Phrase Back Translation Permission (#1918)
- * TT-6437 default creator to current user if none assigned
- * TT-6439 Change tip on close to reset (#1938)
- * TT-6445 Add reset and clear options for filter (#1907)
- * TT-6446 Notice missing aquifer files, ignore markdown and links (#1910)
- * TT-6448 Default sheet filter to clear (#1914)
- * TT-6450 anyone can export (#1920)
- * TT-6451 TT-6454 Called Assignments if no Permissions
- * TT-6452 Filter empty sections when filtering for assigned (#1919)
- * TT-6453 Consultant Check Permission (#1921)
- * TT-6455 hide unassigned sections
- * TT-6457 Allow movements to be assigned (#1922)
- * TT-6459 Remove state column from Assignment tab (#1924)
- * TT-6464 only the user who can resolve can set the segment
- * TT-6467 Progress while saving schemes
- * TT-6468 use Permission instead of Assignment on steps
- * TT-6469 save before assign (#1936)
- * TT-6470 Sync from Project card on team screen (#1933)
- * TT-6472 don't hide rows for flat projects
- * TT-6475 save as default disabled while filter disabled.
- * TT-6476 allow changing graphic rights (#1956)
- * TT-6477 recognize speech to auto transcription
- * TT-6479 Unassigned sections are available to everyone (#1949)
- * TT-6480 No exit when going offline with download (#1934)
- * TT-6481 no offline team sheet edit
- * TT-6483 upgrade auth0 to latest
- * TT-6485 Dialog for Record or Upload titles (#1943)
- * TT-6489 clear checks on assign/remove complete
- * TT-6490 No logout button for existing user (#1935)
- * TT-6493 Multistep status (#1948)
- * TT-6494 no chapter number description
- * TT-6497 avoid race on second compare play
- * TT-6504 wait for big file to finish writing when querying (#1946)
- * TT-6507 Don't set changed unless upload successful (#1947)
- * TT-6509 Force cancel or save on title
- * TT-6510 improve record or upload icon
- * TT-6511 only allow save after recording
- * TT-6513 title upload successful message
- * TT-6516 add APM to internalization publishing destination
- * TT-6523 no helper message when adding peer groups
- * TT-6524 Upgrade default Audacity file for latest Audacity version
- * TT-6525 Completely remove scheme when deleting
- * TT-6526 Don't lose new links in worksheet save (#1955)
- * TT-6531 use permission to set reopen status
- * TT-6536 scheme assign save - allow user to unassign a step
- * TT-6536b show value of empty step permission or assignment control
- * TT-6539, TT-6538, TT-6537 handle duplicate invitation emails
- * TT-6542 allow recording continuously
- * TT-6546 propagate to all except linked notes(#1958)
- * TT-6557 Allow adding to recording - save as a new version
- * TT-???? Reset projects when turning off team permissions
+ * TT - 6167 allow loading more aquifer resources (#1968)
+ * TT-6532 notice if the admin changes permissions (#1972)
+ * TT-6572 wait for remote scheme id before assigning sections (#1965)
+ * TT-6583 Add Faithbridge tab (#1969)
+ * TT-6585 reset voice name when PBT doesn't allow voice change
+ * TT-6591 you must be online message if not connected
+ * TT-6592 Always show acquifer counts
+ * TT-6593 no sorting or filtering for preview column
+ * TT-6595 no adding resources offline
+ * TT-6596 no query for subsequent pages
+ * TT-6598 show success message after upload graphic (#1977)
+ * TT-6599 Close graphic uploader when done (#1976)
+ * TT-6609 allow image and video responses in chat
+ * TT-6610 use permission to control edit and delete on resources
+ * TT-6614 set ai generated for text (#1980)
+ * TT-6614 add transcription display for audio media (#1981)
+ * TT-6617 No offline only faithbridge audio (#1982)
+ * TT-6627-8 rename find to research and move Scriptures to add (#1983)
+ * TT-6655 use the reference for note resource research
 
--- Greg Trihus <greg_trihus@sil.org>  Tue, 17 Jun 2025 15:36:00 -0600
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jul 2025 17:33:00 - 0600
 
-audio-project-manager (4.1.0.0)  experimental; urgency=high
+audio - project - manager(4.1.0.0)  experimental; urgency = high
 
 * Add SplitButton for ASR
  * Add ai for noise removal, voice change, and transcribe (#1815)
@@ -209,23 +68,23 @@ audio-project-manager (4.1.0.0)  experimental; urgency=high
  * return multiple tasks if timing available (#1841)
  * treat Chinese special case
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 3 Mar 2024 15:36:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 3 Mar 2024 15:36:00 - 0600
 
-audio-project-manager (3.3.2.0)  experimental; urgency=high
+audio - project - manager(3.3.2.0)  experimental; urgency = high
 
- * TT-6202 maintain complete steps after transcriber submit
+ * TT - 6202 maintain complete steps after transcriber submit
 
- -- Greg Trihus <greg_trihus@sil.org>  Tue, 10 Dec 2024 21:32:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 10 Dec 2024 21:32:00 - 0600
 
-audio-project-manager (3.3.1.0)  experimental; urgency=high
+audio - project - manager(3.3.1.0)  experimental; urgency = high
 
- * TT-6201 type error uploading and attaching audio
+ * TT - 6201 type error uploading and attaching audio
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Dec 2024 14:21:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Dec 2024 14:21:00 - 0600
 
-audio-project-manager (3.3.0.0)  experimental; urgency=high
+audio - project - manager(3.3.0.0)  experimental; urgency = high
 
- * TT-6196 allow re-arranging workflow with hidden items (#1807)
+ * TT - 6196 allow re-arranging workflow with hidden items (#1807)
  * TT-6193 reset cancel before NR (#1805)
  * TT-6187 make setcompleteTo work offline (#1795)
  * TT-6186 don't publish offline (#1799)
@@ -337,32 +196,32 @@ audio-project-manager (3.3.0.0)  experimental; urgency=high
  * TT-3164 When joining a team download the bible info (#1758)
  * TT-3023 TT-3024 TT-4798 Add Link & Activity & Recorded Resource (#1709)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Dec 2024 21:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Dec 2024 21:33:00 - 0600
 
-audio-project-manager (3.2.4.0)  experimental; urgency=high
+audio - project - manager(3.2.4.0)  experimental; urgency = high
 
- * TT-6038 Internalization player glitches
+ * TT - 6038 Internalization player glitches
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Oct 2024 16:49:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Oct 2024 16:49:00 - 0600
 
-audio-project-manager (3.2.3.0)  experimental; urgency=high
+audio - project - manager(3.2.3.0)  experimental; urgency = high
 
- * TT-6045 Handle Audacity 3.6.x (#1710)
+ * TT - 6045 Handle Audacity 3.6.x (#1710)
  * TT-5995 Fix Audacity creation date
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Sep 2024 19:30:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Sep 2024 19:30:00 - 0600
 
-audio-project-manager (3.2.2.0)  experimental; urgency=high
+audio - project - manager(3.2.2.0)  experimental; urgency = high
 
  * Fix crash on PBT and WBT
  * allow transcription of WBT
  * show report of WBT to consultant
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 19 Aug 2024 12:03:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 19 Aug 2024 12:03:00 - 0600
 
- audio-project-manager (3.2.0.0)  experimental; urgency=high
+ audio - project - manager(3.2.0.0)  experimental; urgency = high
 
- * TT-5940 No Discussion without audio
+ * TT - 5940 No Discussion without audio
  * TT-5936 Indicate publish level (#1632)
  * TT-5928 No Mark Verses in General Project (#1631)
  * TT-5924 Offline Workflow with Mark Verses (#1633)
@@ -400,25 +259,25 @@ audio-project-manager (3.2.2.0)  experimental; urgency=high
  * Download file needed for audacity
  * Download any new files created by others
 
- -- Greg Trihus <greg_trihus@sil.org>  Fri, 9 Aug 2024 22:23:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Fri, 9 Aug 2024 22:23:00 - 0600
 
-audio-project-manager (3.1.1.0)  experimental; urgency=high
+audio - project - manager(3.1.1.0)  experimental; urgency = high
 
  * fix loading crashes reported by a few users
  * remove horizontal scroll bar from language picker
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 May 2024 14:47:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 May 2024 14:47:00 - 0600
 
-audio-project-manager (3.1.0.0)  experimental; urgency=high
+audio - project - manager(3.1.0.0)  experimental; urgency = high
 
  * update language picker
  * fix desktop transcription and export
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 1 May 2024 16:06:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 1 May 2024 16:06:00 - 0600
 
-audio-project-manager (3.0.0.0)  experimental; urgency=high
+audio - project - manager(3.0.0.0)  experimental; urgency = high
 
- * TT-2526 Update Project Card Counts (#1526)
+ * TT - 2526 Update Project Card Counts (#1526)
  * TT-3103 Remember when User completes Resource (#1542)
  * TT-5076 move discussion to another step
  * TT-5101 TT-5415 note searching (#1407)
@@ -554,17 +413,17 @@ audio-project-manager (3.0.0.0)  experimental; urgency=high
  * Use resource id to create graphic name (#1606)
  * varibale rate .mp3 files the position may be slightly off sometimes. (#1582)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Apr 2024 14:49:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Apr 2024 14:49:00 - 0600
 
-audio-project-manager (2.16.9.0)  experimental; urgency=high
+audio - project - manager(2.16.9.0)  experimental; urgency = high
 
   * update sanity check checksum logic
 
- -- Greg Trihus <greg_trihus@sil.org>  Fri, 17 Nov 2023 14:49:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Fri, 17 Nov 2023 14:49:00 - 0600
 
-audio-project-manager (2.16.8.0)  experimental; urgency=high
+audio - project - manager(2.16.8.0)  experimental; urgency = high
 
-  * TT-1611 Fix deep link (#1385)
+  * TT - 1611 Fix deep link (#1385)
   * TT-4800 All can choose version (#1377)
   * TT-4800 Allow any version to be latest (#1346)
   * TT-5243 only use remote records to calc checksum (#1355)
@@ -609,11 +468,11 @@ audio-project-manager (2.16.8.0)  experimental; urgency=high
   * TT-5450 Don't add discussions if no media
   * TT-5450 No discussion on PBT without recording
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 16 Nov 2023 10:19:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 16 Nov 2023 10:19:00 - 0600
 
-audio-project-manager (2.16.6.0)  experimental; urgency=high
+audio - project - manager(2.16.6.0)  experimental; urgency = high
 
-  * TT-3040 Category Edit (#1239)
+  * TT - 3040 Category Edit(#1239)
   * TT-3312 Capture back translation language (#1238)
   * TT-3845 additional localization
   * TT-3845 consultant check tool (#1265)
@@ -669,17 +528,17 @@ audio-project-manager (2.16.6.0)  experimental; urgency=high
   * TT-5524 Unique names for files created off line vs on line (#1282)
   * update language picker
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 23 Aug 2023 10:19:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 23 Aug 2023 10:19:00 - 0600
 
-audio-project-manager (2.16.4.0)  experimental; urgency=high
+audio - project - manager(2.16.4.0)  experimental; urgency = high
 
   * fixed shared resource loading
   * fix linux build
   * document Mac build
 
- -- Greg Trihus <greg_trihus@sil.org>  Tue, 11 May 2023 11:21:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Tue, 11 May 2023 11:21:00 - 0600
 
-audio-project-manager (2.16.3.0)  experimental; urgency=high
+audio - project - manager(2.16.3.0)  experimental; urgency = high
 
   * load testing is related to handling larger projects
   * Shared resources are easier to search
@@ -692,42 +551,42 @@ audio-project-manager (2.16.3.0)  experimental; urgency=high
   * A new set of four oral Bible translation work flows have been added.
   * When passages are pulled from Paratext the verse sorting is fixed
 
- -- Greg Trihus <greg_trihus@sil.org>  Tue, 9 May 2023 21:08:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 9 May 2023 21:08:00 - 0600
 
-audio-project-manager (2.16.2.0)  experimental; urgency=high
+audio - project - manager(2.16.2.0)  experimental; urgency = high
 
   * Upgrade Electronjs 22.0 and React 18
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 22 Dec 2022 17:13:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 22 Dec 2022 17:13:00 - 0600
 
-audio-project-manager (2.16.1.0)  experimental; urgency=high
-
-  * Fix Desktop start
-
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 14 Mar 2023 13:49:00 -0600
-
-audio-project-manager (2.16.1.0)  experimental; urgency=high
+audio - project - manager(2.16.1.0)  experimental; urgency = high
 
   * Fix Desktop start
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 9 Dec 2022 16:27:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 14 Mar 2023 13:49:00 - 0600
 
-audio-project-manager (2.16.0.1)  experimental; urgency=high
+audio - project - manager(2.16.1.0)  experimental; urgency = high
+
+  * Fix Desktop start
+
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 9 Dec 2022 16:27:00 - 0600
+
+audio - project - manager(2.16.0.1)  experimental; urgency = high
 
   * Audio Project Manager rebranding
   * fix Linux build
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 13 Oct 2022 10:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 13 Oct 2022 10:33:00 - 0600
 
-sil-transcriber (2.15.9.0)  experimental; urgency=high
+sil - transcriber(2.15.9.0)  experimental; urgency = high
 
   * include latest Indonesian localizations
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 7 Jul 2022 10:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 7 Jul 2022 10:33:00 - 0600
 
-sil-transcriber (2.15.8.7)  experimental; urgency=high
+sil - transcriber(2.15.8.7)  experimental; urgency = high
 
-  * TT-3100 Resource Delete Confirm (#812)
+  * TT - 3100 Resource Delete Confirm (#812)
   * TT-3393 Resource tool tips
   * TT-3798 Passage Resources (#811)
   * TT-3805 update test for visual resource
@@ -753,23 +612,23 @@ sil-transcriber (2.15.8.7)  experimental; urgency=high
   * TT-4039 no offline resouce edits
   * update help
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 30 Jun 2022 13:01:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 30 Jun 2022 13:01:00 - 0600
 
-sil-transcriber (2.15.7.0)  experimental; urgency=high
+sil - transcriber(2.15.7.0)  experimental; urgency = high
 
   * fix local Paratext sync - code does not end in dash
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 24 Jun 2022 08:33:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 24 Jun 2022 08:33:00 - 0600
 
-sil-transcriber (2.15.6.0)  experimental; urgency=high
+sil - transcriber(2.15.6.0)  experimental; urgency = high
 
   * fix local Paratext sync with complicated language code
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jun 2022 11:13:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jun 2022 11:13:00 - 0600
 
-sil-transcriber (2.15.5.4)  experimental; urgency=high
+sil - transcriber(2.15.5.4)  experimental; urgency = high
 
-  * TT-3895 Allow playing resources multiple times
+  * TT - 3895 Allow playing resources multiple times
   * TT-3957 Allow working through all passages of a section
   * TT-3958 All discussions to be visible on the record step
   * TT-3959 Discussion scroll bar
@@ -782,29 +641,29 @@ sil-transcriber (2.15.5.4)  experimental; urgency=high
   * TT-3976 Complete Unsaved Recording save without error
   * update help
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 18 May 2022 11:54:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 18 May 2022 11:54:00 - 0600
 
-sil-transcriber (2.15.4.0)  experimental; urgency=high
+sil - transcriber(2.15.4.0)  experimental; urgency = high
 
   * export audio available online too
   * revert upgrade api to use EC2 for production
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 - 0600
 
-sil-transcriber (2.15.3.0)  experimental; urgency=high
+sil - transcriber(2.15.3.0)  experimental; urgency = high
 
   * export audio only available offline
   * revert upgrade api to use dotnet 3.1 and latest lambda
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Apr 2022 21:40:00 - 0600
 
-sil-transcriber (2.15.2.0)  experimental; urgency=high
+sil - transcriber(2.15.2.0)  experimental; urgency = high
 
   * upgrade api to use dotnet 3.1 and latest lambda
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Apr 2022 12:19:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Apr 2022 12:19:00 - 0600
 
-sil-transcriber (2.15.1.0)  experimental; urgency=high
+sil - transcriber(2.15.1.0)  experimental; urgency = high
 
   * Add Filtering and sorting
   * TT-3273 show assigned discussions (#771)
@@ -842,24 +701,24 @@ sil-transcriber (2.15.1.0)  experimental; urgency=high
   * TT-3908 Show transcription on tab (#790)
   * Update localization and help
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 19 Apr 2022 12:00:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 19 Apr 2022 12:00:00 - 0600
 
-sil-transcriber (2.14.5.0)  experimental; urgency=high
+sil - transcriber(2.14.5.0)  experimental; urgency = high
 
   * update Indonesian localization
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 24 Mar 2022 08:47:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 24 Mar 2022 08:47:00 - 0600
 
-sil-transcriber (2.14.4.0)  experimental; urgency=high
+sil - transcriber(2.14.4.0)  experimental; urgency = high
 
-  * TT-3823 compare tool sort (#755)
+  * TT - 3823 compare tool sort (#755)
   * TT-3822 fix strings (#755)
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 22 Mar 2022 16:19:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 22 Mar 2022 16:19:00 - 0600
 
-sil-transcriber (2.14.3.0)  experimental; urgency=high
+sil - transcriber(2.14.3.0)  experimental; urgency = high
 
-  * TT-1282 TC425 Check for missing team id (#751)
+  * TT - 1282 TC425 Check for missing team id (#751)
   * TT-1523 Resetting sync message (#745)
   * TT-1742 Remove last saved from data sheet (#747)
   * TT-1948b Update workflow localization
@@ -875,9 +734,9 @@ sil-transcriber (2.14.3.0)  experimental; urgency=high
   * TT-3809 make transcribe icon look disabled when it is disabled (#743)
   * TT-3811 add ids for automated testing (#750)
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 21 Mar 2022 11:14:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 21 Mar 2022 11:14:00 - 0600
 
-sil-transcriber (2.14.2.0)  experimental; urgency=high
+sil - transcriber(2.14.2.0)  experimental; urgency = high
 
   * PDF Resources
   * TT-1282-TC425 Remove user-id on delete (#726)
@@ -889,33 +748,33 @@ sil-transcriber (2.14.2.0)  experimental; urgency=high
   * TT-3426 pull static tables when remote present (#724)
   * TT-3767 handle case where item index is temporarily past rowData length after a delete (#718)
   * TT-3769 Calculating step complete (#723)
-  * TT-3771 clear import directory of old files before new import (#719)
-  * TT-3774 Add warning if import file is from a newer schema version. (#733)
-  * TT-3777 Importing old versions (#728)
-  * TT-3777 if version of import file is < 4, move passage.state to mediafile
-  * TT-3780 PDF Resources (#729)
-  * TT-3781 Remove unneeded schema (#725)
-  * TT-3782 limit user list to current org's users (#716)
-  * TT-3784 allow anyone (of that role or higher) to unassign section (#735)
-  * TT-3786 split backtranslate tool into whole/phrase.  Add topic to com (#730)
-  * TT-3793 delete discussions and comments before loading project (#727)
-  * TT-3794 BT,Retell,QA sort by creation date in transcription task list (#732)
-  * TT-3794b widen columns for tool names (#734)
-  * TT-3798a sort checked resources to the bottom of the list
-  * TT-3799 remove project name from elan export name (#731)
-  * Update localization
+  * TT-3771 clear import directory of old files before new import(#719)
+  *TT - 3774 Add warning if import file is from a newer schema version. (#733)
+  *TT - 3777 Importing old versions(#728)
+  *TT - 3777 if version of import file is < 4, move passage.state to mediafile
+  * TT - 3780 PDF Resources(#729)
+  *TT - 3781 Remove unneeded schema(#725)
+  *TT - 3782 limit user list to current org's users (#716)
+  * TT - 3784 allow anyone(of that role or higher) to unassign section(#735)
+  *TT - 3786 split backtranslate tool into whole / phrase.Add topic to com(#730)
+  *TT - 3793 delete discussions and comments before loading project(#727)
+  *TT - 3794 BT, Retell, QA sort by creation date in transcription task list(#732)
+  *TT - 3794b widen columns for tool names(#734)
+  *TT - 3798a sort checked resources to the bottom of the list
+  * TT - 3799 remove project name from elan export name(#731)
+  *Update localization
   * Uploading PDF
   * latest supported typescript is 4.4.4
-  * prevent over populating orgWorkflowsteps (#717)
-  * refactor useExternalLink logic
-  * remove autosegment from community test.  Single segment still available.
-  * split backtranslate tool into whole/phrase.  Add topic to community test.
+  * prevent over populating orgWorkflowsteps(#717)
+  *refactor useExternalLink logic
+  * remove autosegment from community test.Single segment still available.
+  * split backtranslate tool into whole / phrase.Add topic to community test.
   * update dependencies for release
   * updated help
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 12 Mar 2022 19:21:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Wed, 12 Mar 2022 19:21:00 - 0600
 
-sil-transcriber (2.14.1.0)  experimental; urgency=high
+sil - transcriber(2.14.1.0)  experimental; urgency = high
 
   * Match reporting progress
   * add integration to static pull (#715)
@@ -941,11 +800,11 @@ sil-transcriber (2.14.1.0)  experimental; urgency=high
   * TT-3313 use Refs for callbacks (#710)
   * TT-3581 do not reset values when hiding dialog
 
- -- Greg Trihus <greg_trihus@sil.org>  Wed, 2 Mar 2022 14:21:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Wed, 2 Mar 2022 14:21:00 - 0600
 
-sil-transcriber (2.14.0.0)  experimental; urgency=high
+sil - transcriber(2.14.0.0)  experimental; urgency = high
 
-  * TT-3476 allow unhiding steps
+  * TT - 3476 allow unhiding steps
   * TT-3447 playing on audio table
   * TT-3397b only check version for vernacular
   * TT-3397, 3413 paratext export (#678)
@@ -970,9 +829,9 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * TT-3425 update createmedia with userid
   * add recordedbyuserid
   * TT-3425 update createmedia with userid (#680)
-  * TT=3425 ensure all new fields are captured correctly (#679)
+  * TT=3425 ensure all new fields are captured correctly(#679)
   * TT-3282 finalize offline data (#677)
-  * Add discussion,resource flags to artifactcategory
+  * Add discussion, resource flags to artifactcategory
   * add ids to Reject dialog (#676)
   * TT-3416 Select passage (#675)
   * Use no artifactType on mediafile to be vernacular (#673)
@@ -1073,7 +932,7 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * TT-3345 add retell and qanda artifacttype to offline.
   * TT-3310 check discussion comment status before refreshing list (#629)
   * TT-3310 check discussion comment status before refreshing list
-  * remove doSave,useRemoteSave
+  * remove doSave, useRemoteSave
   * use toolChanged functions in UnsavedContext
   * TT-3370 update table names
   * TT-3362b handle all steps checked
@@ -1090,7 +949,7 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * TT-3079 handle member-owners (#631)
   * add localization for DiscussionMenu (#630)
   * add menu item to reattach discussion to new seleted segment
-  * TT-3308b disable cancel while recording
+  *TT - 3308b disable cancel while recording
   * TT-3307b Remove unused code
   * TT-3308 comment editor track recording status and disable save (#628)
   * TT-2786 reset cancelled flag each time dialog is opened (#627)
@@ -1113,9 +972,9 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * TT-3293 reset recording flag when the recording comment closes for whatever reason
   * remove recording message when changing steps...only care if changed
   * TT-3300 capture keydown for the whole window instead of using a div (#615)
-  * TT-3292 Reset comment (#614)
-  * TT-3295 Jump to end after a record (#613)
-  * Start at beginning if at end when start to play
+  *TT - 3292 Reset comment(#614)
+  *TT - 3295 Jump to end after a record(#613)
+  *Start at beginning if at end when start to play
   * TT-3284 use attachMedia for offline record because it updates passage and adds passagestate ops (#612)
   * TT-3288 Don't abort cancel (#611)
   * previous code had a time out that aborted the cancel
@@ -1145,8 +1004,8 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * TT-3281 Disable controls until resource selected (#598)
   * TT-3130b remove CheckUploadLocal
   * TT-2997 handle deleted rows in addSection, addPassage, versions (#596)
-  * TT-3247 team check, fix TT-3276, TT-3277 (#593)
-  * Team Check UI
+  *TT - 3247 team check, fix TT - 3276, TT - 3277(#593)
+  *Team Check UI
   * use fromLocalizedArtifactCategory
   * controlled media player
   * Capture category on uploaded media
@@ -1155,232 +1014,232 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * update media player with prettier message
   * spelling and type changes
   *
-  * TT-3130 itf upload created files now so remove CheckUploadLocal (#595)
-  * TT-3130 itf upload created files now so remove CheckUploadLocal
+  *TT - 3130 itf upload created files now so remove CheckUploadLocal(#595)
+  *TT - 3130 itf upload created files now so remove CheckUploadLocal
   * catch src missing error on mediaplayer
   * avoid console errors on discussion selects
   * handle error inside MediaPlayer
-  * TT-3274 make sure vernacular is first (#594)
-  * TT-3274 make sure vernacular is first
+  * TT - 3274 make sure vernacular is first(#594)
+  *TT - 3274 make sure vernacular is first
   * resource type is empty
   * use equal sign to keep first things first
   * handle other sort equal cases
-  * TT-3061 set artifact type for offline media (#588)
-  * TT-3270 turn off saveRef when doSave is turned off (#589)
-  * TT-2956 handle project exists but no offline project (#591)
-  * TT-3094 check offline matches remoteId (#590)
-  * TT-3128 Add new item to end of workflow (#587)
-  * TT-3229 Edit Workflow title with team name (#586)
-  * TT-3255 fix setting of last step complete (#584)
-  * TT-3262 fix error playing ogg from version screen (#583)
-  * add mediaPlaying props
-  * move mediaPlaying inside AudioTable
-  * TT-3256, TT-3257 Handle offline EditWorkflow cases (#585)
-  * move detail button to left side.
-  * TT-3261 Playing comment from another passage (#582)
-  * TT-3246b fix planid reference for new projects (#581)
-  * TT-3246 Passage Detail Record Tool (#580)
-  * Separate PassageRecord and PassageRecordDlg
+  *TT - 3061 set artifact type for offline media (#588)
+  *TT - 3270 turn off saveRef when doSave is turned off (#589)
+  *TT - 2956 handle project exists but no offline project(#591)
+  *TT - 3094 check offline matches remoteId (#590)
+  *TT - 3128 Add new item to end of workflow (#587)
+  *TT - 3229 Edit Workflow title with team name (#586)
+  *TT - 3255 fix setting of last step complete (#584)
+  *TT - 3262 fix error playing ogg from version screen(#583)
+  *add mediaPlaying props
+  *move mediaPlaying inside AudioTable
+  * TT - 3256, TT - 3257 Handle offline EditWorkflow cases (#585)
+  *move detail button to left side.
+  * TT - 3261 Playing comment from another passage(#582)
+  *TT - 3246b fix planid reference for new projects(#581)
+  *TT - 3246 Passage Detail Record Tool(#580)
+  *Separate PassageRecord and PassageRecordDlg
   * use tool instead of name to search for Internalization
-  * TT-3260 use useRemoteSave and change confirm message to match existing confirm message
-  * TT-3251 add edit workflow to personal projects (#579)
-  * TT-3242 Allow discussion add with just range (#578)
-  * TT-3245 only locate on current (#577)
-  * TT-3109 reset discussion fields on add (#576)
-  * TT-3055b uncategorized
+  * TT - 3260 use useRemoteSave and change confirm message to match existing confirm message
+  * TT - 3251 add edit workflow to personal projects(#579)
+  *TT - 3242 Allow discussion add with just range(#578)
+  *TT - 3245 only locate on current(#577)
+  *TT - 3109 reset discussion fields on add(#576)
+  *TT - 3055b uncategorized
   * update localization strings, especially for French
-  * TT-3055 add category filter menu item (#575)
-  * bring up dialog with active categories with counts
+  * TT - 3055 add category filter menu item(#575)
+  *bring up dialog with active categories with counts
   * selecting a category includes those items
   * if no categories are selected, all items are included
-  * TT-3251 make sure steps complete
-  * TT-3200b show workflow steps colors
-  * TT-3250 check for projectId as null (#574)
-  * TT-3200 track whether each step is complete - track completion history (#573)
-  * Save completed steps in array
+  * TT - 3251 make sure steps complete
+  * TT - 3200b show workflow steps colors
+  * TT - 3250 check for projectId as null(#574)
+  *TT - 3200 track whether each step is complete - track completion history(#573)
+  *Save completed steps in array
   * add step complete change to passage history
   * remove orgworkflowstep relationship from passage
-  * Use Enum for tool slugs (#572)
-  * TT-3210b (#568)
-  * TT-3219b change stop tooltips to pause (#566)
-  * change stop to pause in mediaActions
+  * Use Enum for tool slugs(#572)
+  *TT - 3210b(#568)
+  *TT - 3219b change stop tooltips to pause(#566)
+  *change stop to pause in mediaActions
   * remove stop on wsPlayer
   * show status message on record
   * disable save while working
   * updated strings
   * remove pause
-  * TT-3180 discussion ux subject segments (#571)
-  * Revert "TT-3108 refactor and simplify (#550)"
+  * TT - 3180 discussion ux subject segments(#571)
+  *Revert "TT-3108 refactor and simplify (#550)"
   * This reverts commit e49c82b5a20642a938fcf21462e4cba0f9b4115b.
-  * TT-3180 don't reset after setting subject
-  * TT-1513 Set Project too (#569)
-  * TT-3198 Offline discussions, comments, mediafiles (#564)
-  * handle discussions, comments, mediafiles created offline in the sync
+  * TT - 3180 don't reset after setting subject
+  * TT - 1513 Set Project too(#569)
+  *TT - 3198 Offline discussions, comments, mediafiles(#564)
+  *handle discussions, comments, mediafiles created offline in the sync
   * mediafile will be uploaded during datachange
   * cleanup console.logs
-  * fix react-orbitjs
-  * TT-3219b change stop tooltips to pause (#566)
-  * change stop to pause in mediaActions
+  * fix react - orbitjs
+  * TT - 3219b change stop tooltips to pause(#566)
+  *change stop to pause in mediaActions
   * remove stop on wsPlayer
-  * TT-2103 (TC318) - handle error property of null (#565)
-  * TT-3127 Deep links (#563)
-  * TT-2287 Version 1 (#562)
+  * TT - 2103(TC318) - handle error property of null(#565)
+  *TT - 3127 Deep links(#563)
+  *TT - 2287 Version 1(#562)
   *
-  * TT-3204 Connection Mode (#561)
-  * make choice look like button
+  *TT - 3204 Connection Mode(#561)
+  *make choice look like button
   * change text on user menu
-  * TT-3127 navigate to detail (#560)
-  * TT-3127 navigate to detail page
-  * TT-3127 remove deep link when user deleted
-  * TT-3201 reset artifactCategory (#559)
-  * TT-3211 do not remember loaded file extension (#558)
-  * TT-3195 turn editing off if comment deleted (#557)
-  * TT-3222 show steps/reference if needed (#556)
-  * TT-3193 Handle play/pause for MediaPlayer (#554)
-  * use passage id only if empty try 2 (#553)
-  * TC325 use passage id only if no reference (#552)
-  * TT-3193 play/pause icon in comment (#551)
-  * TT-3108 refactor and simplify (#550)
-  * TT-3203 call cb on team edit (#549)
-  * TT-3180b localization of discussion card tip (#548)
-  * TT-3205 ogg encoding (#547)
+  * TT - 3127 navigate to detail(#560)
+  *TT - 3127 navigate to detail page
+  * TT - 3127 remove deep link when user deleted
+  * TT - 3201 reset artifactCategory(#559)
+  *TT - 3211 do not remember loaded file extension(#558)
+  *TT - 3195 turn editing off if comment deleted(#557)
+  *TT - 3222 show steps / reference if needed(#556)
+  *TT - 3193 Handle play / pause for MediaPlayer(#554)
+  *use passage id only if empty try 2(#553)
+  *TC325 use passage id only if no reference(#552)
+  *TT - 3193 play / pause icon in comment(#551)
+  *TT - 3108 refactor and simplify(#550)
+  *TT - 3203 call cb on team edit(#549)
+  *TT - 3180b localization of discussion card tip(#548)
+  *TT - 3205 ogg encoding(#547)
   * try again...
-  * Save most audio as ogg.  Only allow choice for vernacular.
+  *Save most audio as ogg.Only allow choice for vernacular.
   * allow wave from add project
-  * cleanup
+  *cleanup
   * add license for opusenc
-  * unexpected error handler passed in to export functions (#546)
-  * handle error on one project of multiple project download
+  * unexpected error handler passed in to export functions(#546)
+  *handle error on one project of multiple project download
   *
-  * TT-3180 show selected segment (#545)
-  * Put segment bounds on subject of new discussion
+  *TT - 3180 show selected segment(#545)
+  *Put segment bounds on subject of new discussion
   * always add 0 for decimal place
-  * TT-3180 handle title wrap (#544)
-  * put file name in tool tip
+  * TT - 3180 handle title wrap(#544)
+  *put file name in tool tip
   * put category as chip on comment count line
-  * TT-3045 Recording comments (#543)
-  * TT-3045 Recording comments
+  * TT - 3045 Recording comments(#543)
+  *TT - 3045 Recording comments
   * attach comment
   * to passage
   * to comment artifact
   * plays comment
   * without disturbing passage
   * Allow editing comment
-  * TT-3174 3187 3188 strings and busy saving team (#542)
-  * TT-3187TT-3188 updated strings
-  * TT-3174 disable add,cancel while saving add busy bar
+  * TT - 3174 3187 3188 strings and busy saving team(#542)
+  *TT - 3187TT - 3188 updated strings
+  * TT - 3174 disable add, cancel while saving add busy bar
   * remove old string file
-  * TT-1742b update plan last updated when updating section last updated -- only when state changes (#541)
-  * TT-3166 subscribe more often for hotkeys to work here (#540)
-  * close Team dialog after edit (#539)
-  * TT-3157b change tool tip
-  * TT-3183 cleaned up strings file
-  * TT-3183 load correct steps
-  * TT-3180 discussion UX
-  * TT-3157 detail based on workflow tool
-  * TT-3174 fix team create cancel
+  * TT - 1742b update plan last updated when updating section last updated-- only when state changes(#541)
+  *TT - 3166 subscribe more often for hotkeys to work here(#540)
+  *close Team dialog after edit(#539)
+  *TT - 3157b change tool tip
+  * TT - 3183 cleaned up strings file
+  * TT - 3183 load correct steps
+  * TT - 3180 discussion UX
+  * TT - 3157 detail based on workflow tool
+  * TT - 3174 fix team create cancel
   * add workflow steps to data for:
-  * storying
+  *storying
   * drafting
   * transcribing
   * add key terms tool
   * (plan to set filter based on tool.)
-  * updated icons so eye open when shown and closed when hidden
-  * TT-3171 create workflow before close team create
-  * colorize brackets
+  *updated icons so eye open when shown and closed when hidden
+  * TT - 3171 create workflow before close team create
+  *colorize brackets
   * remove selected from filter message
-  * TT-3136 congratulations update to last refresh
-  * TT-3169 count discussions of team
-  * TT-3168 Display latest discussions
-  * TT-3049 discussion filtering
-  * the filter menu allows the user to enable or disable 5 filters
+  *TT - 3136 congratulations update to last refresh
+  * TT - 3169 count discussions of team
+  *TT - 3168 Display latest discussions
+  * TT - 3049 discussion filtering
+  *the filter menu allows the user to enable or disable 5 filters
   * the status message is updated
   * the selected discussions are displayed.
-  * TT-3141 don't include offline only users
-  * TT-3149, TT-3150 change name mangling logic
-  * TT-3150 save on exit
-  * TT-3156, TT-3153, TT-3152, TT-3151, TT-3150
+  *TT - 3141 don't include offline only users
+  * TT - 3149, TT - 3150 change name mangling logic
+  *TT - 3150 save on exit
+  * TT - 3156, TT - 3153, TT - 3152, TT - 3151, TT - 3150
   * debounce name change
-  * change vixibility icons
-  * tip showing steps hidden
+  *change vixibility icons
+  *tip showing steps hidden
   * disable show all if none
   * can't hide all steps
   * update ids
-  * TT-3049 Discussion filter (#537)
-  * TT-3021 workflow step editor (#536)
-  * choose by process when adding
-  * allow editing names or tools
+  * TT - 3049 Discussion filter (#537)
+  *TT - 3021 workflow step editor(#536)
+  *choose by process when adding
+  *allow editing names or tools
   * allow changing order
-  * allow removing steps
-  * add and restore
+  *allow removing steps
+  *add and restore
   * use edited workflow
-  * handle name change better
+  *handle name change better
   * move edit button to team screen
   * update tool names
-  * simplify team dialog
-  * TT-3126 save if user requests save (#535)
-  * TT-3103b fix test for complete (#534)
-  * TT-3137 exiting comment more (#533)
-  * TT-3036 Initialize mediaShared when pasting (#532)
-  * TT-3131 can't store widths in a state variable?  weird. (#531)
-  * TT-3103 completed resources (#527)
-  * TT-3103 completed resources
-  * Save Recource record in row
-  * TT-3125, TT-3126 reset changed when comment done (#530)
-  * TT-3128 don't attempt to move past last step (#529)
+  *simplify team dialog
+  *TT - 3126 save if user requests save(#535)
+  *TT - 3103b fix test for complete(#534)
+  *TT - 3137 exiting comment more(#533)
+  *TT - 3036 Initialize mediaShared when pasting (#532)
+  *TT - 3131 can't store widths in a state variable?  weird. (#531)
+  * TT - 3103 completed resources (#527)
+  *TT - 3103 completed resources
+  *Save Recource record in row
+  * TT - 3125, TT - 3126 reset changed when comment done(#530)
+  *TT - 3128 don't attempt to move past last step (#529)
   * auto advance to next step when marked complete
-  * TT-2295 wait for pause before going to end (#528)
-  * TT-3124 limit transcriber to vernacular media and reload media after internalization (#526)
-  * reload vernacular if moving from internalization to another step
-  * limit transcriber context to vernacular
-  * change everywhere we were getting media based on passage to only get the vernacular (for now at least)
-  * TT-3118 add a start index to datachanges.  Track where to start along with the date. (#525)
-  * TT-3121 adjust height for header
-  * TT-3098 check for null in rowData
-  * TT-3091 disable ready to share when passage.id is null also (#524)
-  * TT-3064, TT-3109 Discussion fields cleared (#523)
-  * TT-3064, TT-3109 Discussion fields cleared
+  * TT - 2295 wait for pause before going to end(#528)
+  *TT - 3124 limit transcriber to vernacular media and reload media after internalization (#526)
+  *reload vernacular if moving from internalization to another step
+  *limit transcriber context to vernacular
+  *change everywhere we were getting media based on passage to only get the vernacular(for now at least)
+  *TT - 3118 add a start index to datachanges.  Track where to start along with the date. (#525)
+  *TT - 3121 adjust height for header
+  * TT - 3098 check for null in rowData
+  * TT - 3091 disable ready to share when passage.id is null also(#524)
+  *TT - 3064, TT - 3109 Discussion fields cleared(#523)
+  *TT - 3064, TT - 3109 Discussion fields cleared
   * add localization
-  * TT-3099 Show new sections as unassigned
-  * TT-3063 subscribe hotkeys judiciously (#522)
-  * TT-3112 Only load the vernacular media on audio tab and version dlg.  Load all in export. (#521)
-  * "Available offline is untested as of yet because desktop is not logging in
+  * TT - 3099 Show new sections as unassigned
+  * TT - 3063 subscribe hotkeys judiciously(#522)
+  *TT - 3112 Only load the vernacular media on audio tab and version dlg.  Load all in export. (#521)
+  *"Available offline is untested as of yet because desktop is not logging in
   * Uploader also not tested well...perhaps we shouldn't be versioning resource uploads?
-  * TT-3086 Only save recording if content (#520)
-  * TT-3099 No avatar if null (#519)
-  * TT-3066 Don't allow detail screens for offline only (#518)
+  * TT - 3086 Only save recording if content(#520)
+  *TT - 3099 No avatar if null(#519)
+  *TT - 3066 Don't allow detail screens for offline only (#518)
   * they are primarily oriented towards collaboration and
   * don't make sense for a single user project
-  * TT-37117 Show Versions dialog from audio actions (#517)
-  * TT-3098 Reorder to account for non resource
+  * TT - 37117 Show Versions dialog from audio actions (#517)
+  *TT - 3098 Reorder to account for non resource
   * Check Paratext for the invite's email (#516)
-  * MUST ADD users:read to the Paratext-Transcriber scope on auth0
+  * MUST ADD users: read to the Paratext - Transcriber scope on auth0
   * update help
-  * Split datachanges into 2 calls (#515)
+  * Split datachanges into 2 calls(#515)
   * for electron, do each project separately
-  * TT-3010 Load and refresh workflow steps (#512)
-  * TT-3052 No error without avatar (#513)
-  * use topic for discussion
+  * TT - 3010 Load and refresh workflow steps(#512)
+  *TT - 3052 No error without avatar(#513)
+  *use topic for discussion
   * fix missing key on discussion list
-  * TT-3027 Look up user or return dummy user (#510)
-  * Look up user or return dummy user
+  * TT - 3027 Look up user or return dummy user(#510)
+  *Look up user or return dummy user
   * handle user already deleted case
-  * TT-3088, TT-3089 Shared media resource (#511)
-  * TT-3088, TT-3089 Shared media resource
+  *TT - 3088, TT - 3089 Shared media resource(#511)
+  *TT - 3088, TT - 3089 Shared media resource
   * select category selects resource
   * resource category is not required
   * only enable select when one selected
   * use resourcePassageId because we won't have the passage locally
-  * TT-3060 wait for remoteid, only allow category add for admins (#509)
-  * only allow category add for admins
+  * TT - 3060 wait for remoteid, only allow category add for admins(#509)
+  *only allow category add for admins
   * wait for remoteId before checking matching offline status
   * don't wait if they've gone offline since offering add category and adding a category
-  * TT-3036 initialize mediaShared on new passage (#508)
-  * disable ready to share until associated with a passage
-  * TT-3087 allow clear to be undone (#507)
-  * TT-3061 offline add in offline projects (#506)
-  * TT-3078 cannot be going back and forth from lowercase to camelcase. (#505)
-  * keep all roles as is using RoleNames
+  * TT - 3036 initialize mediaShared on new passage(#508)
+  *disable ready to share until associated with a passage
+  * TT - 3087 allow clear to be undone(#507)
+  *TT - 3061 offline add in offline projects(#506)
+  *TT - 3078 cannot be going back and forth from lowercase to camelcase. (#505)
+  *keep all roles as is using RoleNames
   * TT-3081 teams are not deleted by foreign key now, so delete any teams the deleted user was the only member of (#504)
   * add PeerReviewer to editor role for testing (#503)
   * try to wait for database migration
@@ -1405,45 +1264,45 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * refactor useOfflineSetup
   * tool names as look up keys
   * string tweaks (#496)
-  * TT-3039 check blank and duplicate new categories (#495)
-  * TT-30229 No discussions without media (#493)
-  * TT-3038 role dropdown now returns id (#494)
-  * TT-3009 Delete local data and API data for teams and projects (#492)
-  * delete all data when deleting project or team
+  * TT-3039 check blank and duplicate new categories(#495)
+  *TT - 30229 No discussions without media(#493)
+  *TT - 3038 role dropdown now returns id(#494)
+  *TT - 3009 Delete local data and API data for teams and projects(#492)
+  *delete all data when deleting project or team
   * delete all data if offline
   * Fix passage and section data on Detail Context
-  * TT-3043 Create more space for text on wokflow step (#491)
-  * try again on unique id (#490)
-  * TT-2978 don't copy mediafile when copying row (#489)
-  * TT-3015 refresh Audio tab after media delete (#483)
-  * TT-3015 refresh Audio tab after media delete
+  * TT - 3043 Create more space for text on wokflow step(#491)
+  * try again on unique id(#490)
+  *TT - 2978 don't copy mediafile when copying row (#489)
+  * TT - 3015 refresh Audio tab after media delete(#483)
+  *TT - 3015 refresh Audio tab after media delete
   * wait for delete before setting busy flag
-  * TT-3013 Don't auto play if no vernacular (#488)
-  * Project Admin to Owner (#487)
-  * TT-2976 handle Shift hotkey correctly (#486)
-  * TT-3007 handle empty recording (#484)
-  * only capture before buffer on stop and start recording, not on every buffer push
-  * TT-3016 delete resource media with resource (#482)
-  * TT-3020b Admin only completion and reordering (#481)
-  * TT-3014 change wfIndex to psgCompletedIndex (#480)
-  * fix unsetting complete flag
-  * TT-3018 display workflow offline (#479)
-  * TT-3005b Only show Ready to share in AudioTable if project shared (#478)
-  * more shared flag in expansion
-  * TT-3020 Only admin modifies internalization (#477)
-  * TT-3025 Don't save empty discussion until user saves (#476)
-  * TT-3005 Add isPublic/Shared to projects (#475)
-  * Add readyToShare to mediafiles
-  * make role id unique on invitations where both are shown (#474)
-  * remove activity for now
+  * TT - 3013 Don't auto play if no vernacular (#488)
+  * Project Admin to Owner(#487)
+  *TT - 2976 handle Shift hotkey correctly(#486)
+  *TT - 3007 handle empty recording(#484)
+  *only capture before buffer on stop and start recording, not on every buffer push
+  * TT - 3016 delete resource media with resource(#482)
+  *TT - 3020b Admin only completion and reordering(#481)
+  *TT - 3014 change wfIndex to psgCompletedIndex(#480)
+  *fix unsetting complete flag
+  * TT - 3018 display workflow offline(#479)
+  *TT - 3005b Only show Ready to share in AudioTable if project shared(#478)
+  *more shared flag in expansion
+  * TT - 3020 Only admin modifies internalization(#477)
+  *TT - 3025 Don't save empty discussion until user saves (#476)
+  * TT - 3005 Add isPublic / Shared to projects(#475)
+  *Add readyToShare to mediafiles
+  * make role id unique on invitations where both are shown(#474)
+  *remove activity for now
   * other typography style changes
   * more fontWeight changes
   * all fontWeight string
   * allow types on about box
-  * Add Passage Detail screens (#473)
-  * Add artifacttype, artifactcategory, workflowstep
+  * Add Passage Detail screens(#473)
+  *Add artifacttype, artifactcategory, workflowstep
   * org versions of above
-  * discussion,comment
+  * discussion, comment
   * populate first 3 online and offline
   * Artifact Type on upload
   * remove artifactType and artifactCategory
@@ -1475,7 +1334,7 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * add getResources to PassageDetailToolbar for demo only
   * create SelectRole and SelectUser controls
   * utilize SelectRole in invites and profile
-  * finish version 1 of discussions - w/o mediafile source or audio comments
+  * finish version 1 of discussions - w / o mediafile source or audio comments
   * sortable resource table
   * refactor internalization
   * uploaded and shared resources
@@ -1497,20 +1356,20 @@ sil-transcriber (2.14.0.0)  experimental; urgency=high
   * add select to shared string
   * adjusted width of discusison
   * Add missing steps
-  * TT-2985 unassign when removing user from org or deleting user (#471)
-  * move user delete to user RemoveUserFromOrg to be consistent
-  * Undo on delete or insert (#472)
-  * Update Help
+  * TT - 2985 unassign when removing user from org or deleting user(#471)
+  *move user delete to user RemoveUserFromOrg to be consistent
+  * Undo on delete or insert(#472)
+  *Update Help
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 21 Feb 2022 15:56:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Mon, 21 Feb 2022 15:56:00 - 0600
 
-sil-transcriber (2.13.5.0)  experimental; urgency=high
+sil - transcriber(2.13.5.0)  experimental; urgency = high
 
-  * TT-2955 Audacity Integration
+  * TT - 2955 Audacity Integration
 
- -- Greg Trihus <greg_trihus@sil.org>  Tue, 3 Nov 2021 9:24:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 3 Nov 2021 9:24:00 - 0600
 
-sil-transcriber (2.13.4.0)  experimental; urgency=high
+sil - transcriber(2.13.4.0)  experimental; urgency = high
 
   * Remove Audacity features from this release
   * Set Audacity Exists and don't allow create if files missing
@@ -1518,347 +1377,347 @@ sil-transcriber (2.13.4.0)  experimental; urgency=high
   * TT-2948 Plan Column Headers (#464)
   * TT-2937 upgrade wave surfer (#465)
   * updated help
-  * TT-2945 About Link in new window (#463)
-  * TT-2946 Handle missing Audacity folder setting (#462)
-  * TT-2941 get off line spreadsheets in Desktop
-  * TT-2535 Audacity Import (#460)
-  * Add a tip to the audacity manager (#457)
-  * TT-2828d Audacity errors (#454)
-  * Report errors in Audacity linkage
-  * TT-2939 Unique Audacity Names (#453)
-  * TT-2932b Remove passage column from flat filter (#455)
-  * Filtered task table doesn't have a passage column if in flat mode
-  * Update import message (#456)
-  * Duplicate disabled checks for hot keys (#451)
-  * TT-2875 try to set busy indicator when segmenting (doesn't really show up) (#450)
-  * de-bounce zoom requests to avoid multiple redraws
+  * TT-2945 About Link in new window(#463)
+  *TT - 2946 Handle missing Audacity folder setting(#462)
+  *TT - 2941 get off line spreadsheets in Desktop
+  * TT - 2535 Audacity Import(#460)
+  *Add a tip to the audacity manager(#457)
+  *TT - 2828d Audacity errors(#454)
+  *Report errors in Audacity linkage
+  * TT - 2939 Unique Audacity Names(#453)
+  *TT - 2932b Remove passage column from flat filter (#455)
+  *Filtered task table doesn't have a passage column if in flat mode
+  * Update import message(#456)
+  *Duplicate disabled checks for hot keys(#451)
+  *TT - 2875 try to set busy indicator when segmenting(doesn't really show up) (#450)
+  * de - bounce zoom requests to avoid multiple redraws
   * allow segmenting to finish before closing parameters
-  * TT-2880b Check data sheet screen position on down arrow (#448)
-  * TT-2934 don't cleanup mediaRecorder until closed instead of on stop. (#446)
-  * TT-2929 handle flat work flow with passages better (#445)
-  * TT-2933 reset audioBlob if fetching new media (#444)
-  * TT-2932 remove passage columns (#443)
-  * TT-2828 error reporting (#442)
-  * show details on crash screen
-  * TT-2928 transcribe while saving (#441)
-  * let saving finish before navigating to transcriber
-  * TT-2927 uploading without passage (#440)
-  * TT-2832 Pull media on export (#439)
-  * TT-2926 on record dialog use stop icon (#437)
-  * TT-2821b fix duration update to account for local paths (#436)
-  * reset audio blob when switching tasks
+  * TT - 2880b Check data sheet screen position on down arrow(#448)
+  *TT - 2934 don't cleanup mediaRecorder until closed instead of on stop. (#446)
+  * TT - 2929 handle flat work flow with passages better(#445)
+  *TT - 2933 reset audioBlob if fetching new media(#444)
+  *TT - 2932 remove passage columns(#443)
+  *TT - 2828 error reporting(#442)
+  *show details on crash screen
+  * TT - 2928 transcribe while saving(#441)
+  *let saving finish before navigating to transcriber
+  * TT - 2927 uploading without passage(#440)
+  *TT - 2832 Pull media on export(#439)
+  *TT - 2926 on record dialog use stop icon(#437)
+  *TT - 2821b fix duration update to account for local paths(#436)
+  *reset audio blob when switching tasks
   * replace wave surfer's loadBlob because it errors when user clicks around
-  * TT-2884 notify parent on single region create and update (#435)
-  * TT-2892 put the team list in the context so the state changes when the team list changes (#434)
-  * TT-2883 update numRegions if changed from parent (#433)
-  * TT-2817 position transcription at end after load (#428)
-  * only position if at beginning
-  * TT-2442 use book abbreviation instead of short (#427)
-  * change record hot key back to ctrl 9 (#426)
-  * TT-2908 add state to useEffect in case index doesn't change (#425)
+  * TT - 2884 notify parent on single region create and update(#435)
+  *TT - 2892 put the team list in the context so the state changes when the team list changes(#434)
+  *TT - 2883 update numRegions if changed from parent (#433)
+  *TT - 2817 position transcription at end after load(#428)
+  *only position if at beginning
+  * TT - 2442 use book abbreviation instead of short(#427)
+  *change record hot key back to ctrl 9(#426)
+  *TT - 2908 add state to useEffect in case index doesn't change (#425)
   * move trackedTask to global
   * use busyRef in setDimensions
-  * TT-2049 Set max size for audio re sizer (#423)
-  * update style if resized.
-  * TT-2823 Backing out of log in (#422)
-  * TT-2834 Auto Attach cancel (#421)
-  * TT-2542 Fix ELAN date export (#420)
-  * TT-2536 Don't allow minimized Audacity (#419)
+  * TT - 2049 Set max size for audio re sizer(#423)
+  *update style if resized.
+  * TT - 2823 Backing out of log in (#422)
+  *TT - 2834 Auto Attach cancel(#421)
+  *TT - 2542 Fix ELAN date export(#420)
+  *TT - 2536 Don't allow minimized Audacity (#419)
   * Make errors unique so state is updated.
-  * TT-2885 Use HotKeys similar to Audacity (#415)
-  * TT-2790 add busy around auto segment
-  * TT-2921 flat passage num is 1 (#417)
-  * TT-2920 Only one section on flat insert above (#414)
-  * TT-2564 Adjust status report (#413)
-  * TT-2879c reset initialPosition (#411)
-  * TT-2905 update text style with projData (#412)
-  * TT-2899b after delete - reset recorder (#410)
-  * TT-2899 reset duration after delete recording
+  * TT - 2885 Use HotKeys similar to Audacity(#415)
+  *TT - 2790 add busy around auto segment
+  * TT - 2921 flat passage num is 1(#417)
+  *TT - 2920 Only one section on flat insert above(#414)
+  *TT - 2564 Adjust status report(#413)
+  *TT - 2879c reset initialPosition(#411)
+  *TT - 2905 update text style with projData(#412)
+  *TT - 2899b after delete - reset recorder(#410)
+  *TT - 2899 reset duration after delete recording
   * really clear the wave surfer
-  * TT-2907 Add Section after delete (#409)
-  * TT-2466f Only update plan after all the rest (#406)
-  * TT-2876 fix version date sort (#402)
-  * TT-2872 handle expired media URLs (#399)
-  * TT-2790 Transcriber needs it's own busy status
-  * TT-2790 busy in text area too
-  * TT-2900 Adding flat passage (#401)
-  * TT-2901 Deleting unsaved (#400)
-  * handle deleting last item
+  * TT - 2907 Add Section after delete(#409)
+  *TT - 2466f Only update plan after all the rest(#406)
+  *TT - 2876 fix version date sort(#402)
+  *TT - 2872 handle expired media URLs(#399)
+  *TT - 2790 Transcriber needs it's own busy status
+  * TT - 2790 busy in text area too
+  * TT - 2900 Adding flat passage(#401)
+  *TT - 2901 Deleting unsaved(#400)
+  *handle deleting last item
   * handle deleting continuous
   * no delete or add while save
-  * TT-2904 handle orbit 401 errors more gracefully (#398)
-  * TT-2902 Save before record (#397)
-  * TT-2466e save pasted book value
-  * TT-2466d update sample spreadsheets
-  * TT-2880 Keep selection on screen (#396)
-  * TT-2466 re-factor work flow (#395)
-  * TT-2466c Start re-factor ScriptureTable
+  * TT - 2904 handle orbit 401 errors more gracefully(#398)
+  *TT - 2902 Save before record(#397)
+  *TT - 2466e save pasted book value
+  * TT - 2466d update sample spreadsheets
+  * TT - 2880 Keep selection on screen(#396)
+  *TT - 2466 re - factor work flow(#395)
+  *TT - 2466c Start re - factor ScriptureTable
   * column heads
-  * re-sequence
+  * re - sequence
   * use memo for column numbers
   * move logic from Scripture Table
-  * some unit tests
+  *some unit tests
   * saving local and on line
   * move to folder
   * Validate section and passage sequence
   * allow delete without saving
   * process whole work flow when saving.
-  * TT-2887b don't show delete button if off line (#394)
+  * TT - 2887b don't show delete button if off line (#394)
   * don't allow only administrator to be deleted
-  * TT-2898b set changed false if recording deleted (#393)
-  * TT-2891 minimum region length correction (#392)
-  * TC138 TT-2829 more consoles (#391)
-  * TT-2289 TT-22895 TT-2896 TT-2897 delete region or delete file, cancel resets media (#390)
-  * TT-2889 show either delete region or delete file
-  * TT-2895 save position when recording
-  * TT-2896 reset hasRegion when reload file
-  * TT-2897 if canceled in middle of fetch, reset mediaId
-  * TT-2893 call on line cb when not checking also (#389)
-  * TT-2835 turn off play when closing filter (#387)
-  * TT-2838 Do not set connected anywhere but useCheckOnline so it can restart orbit when coming back on line (#386)
-  * TT-2892 no paratext login will now return 400 (to reduce 500 errors) (#385)
-  * TT-2877 inform parent when we clear regions (#384)
-  * TT-2890 handle load Requests on recording ready (#383)
-  * TT-2887 no admin off line (#382)
-  * TT-2886 show members button to all roles (#381)
-  * TT-2873 If all done, don't check save status (#380)
-  * TT-2846 make sure everyone knows playing stops when switching tasks (#379)
-  * TT-2845 warn user if local file is missing. (#378)
-  * TT-2466b compute work flow sheet (#377)
-  * add media id to work flow
-  * TT-2839 show user orbit error messages (#376)
-  * TT-2815 remove team list (#375)
-  * remove team list on on line list
-  * remove console logs
-  * TT-2466a Load work flow (#373)
-  * TT-2466a Load work flow
-  * add deleted flat
-  * remove language name (#374)
-  * TT-2829 unable to reproduce, but put in checks for valid project (#372)
-  * TT-2829 unable to reproduce, but put in checks for valid project
-  * TT-2881 tweak labels and time setting (#371)
-  * TT-2877, TT-2878 set changed flag when regions updated (#370)
-  * ignore signature when comparing urls (#369)
-  * TT-2865b Close segment param if playing (with hot key) (#368)
-  * TT-2785 zoom limits (#367)
-  * TT-2785 Reduce maximum zoom in
-  * Figure out when we're zoomed all the way out (whole audio is showing)
+  * TT - 2898b set changed false if recording deleted(#393)
+  *TT - 2891 minimum region length correction(#392)
+  *TC138 TT - 2829 more consoles(#391)
+  *TT - 2289 TT - 22895 TT - 2896 TT - 2897 delete region or delete file, cancel resets media(#390)
+  *TT - 2889 show either delete region or delete file
+  * TT - 2895 save position when recording
+  * TT - 2896 reset hasRegion when reload file
+  * TT - 2897 if canceled in middle of fetch, reset mediaId
+  * TT - 2893 call on line cb when not checking also(#389)
+  *TT - 2835 turn off play when closing filter(#387)
+  *TT - 2838 Do not set connected anywhere but useCheckOnline so it can restart orbit when coming back on line(#386)
+  *TT - 2892 no paratext login will now return 400(to reduce 500 errors)(#385)
+  *TT - 2877 inform parent when we clear regions(#384)
+  *TT - 2890 handle load Requests on recording ready(#383)
+  *TT - 2887 no admin off line(#382)
+  *TT - 2886 show members button to all roles(#381)
+  *TT - 2873 If all done, don't check save status (#380)
+  * TT - 2846 make sure everyone knows playing stops when switching tasks(#379)
+  *TT - 2845 warn user if local file is missing. (#378)
+  *TT - 2466b compute work flow sheet(#377)
+  *add media id to work flow
+  * TT - 2839 show user orbit error messages(#376)
+  *TT - 2815 remove team list(#375)
+  *remove team list on on line list
+  *remove console logs
+  *TT - 2466a Load work flow (#373)
+  *TT - 2466a Load work flow
+  *add deleted flat
+  *remove language name (#374)
+  *TT - 2829 unable to reproduce, but put in checks for valid project (#372)
+  *TT - 2829 unable to reproduce, but put in checks for valid project
+  *TT - 2881 tweak labels and time setting (#371)
+  *TT - 2877, TT - 2878 set changed flag when regions updated (#370)
+  *ignore signature when comparing urls (#369)
+  *TT - 2865b Close segment param if playing(with hot key) (#368)
+  *TT - 2785 zoom limits (#367)
+  *TT - 2785 Reduce maximum zoom in
+  *Figure out when we're zoomed all the way out (whole audio is showing)
   * put console log back in so testers can see current zoom setting
   * remove console
-  * TT-2783 (#366)
-  * reset refs when clearing all segments (#365)
-  * TT-2462, TT-2807, TT-2822 Delete Recording with confirmation, keep duration updating (#363)
-  * TT-2462 Add delete entire recording
-  * TT-2807 confirm delete
-  * TT-2822 keep duration updated while recording
+  * TT - 2783(#366)
+  *reset refs when clearing all segments(#365)
+  *TT - 2462, TT - 2807, TT - 2822 Delete Recording with confirmation, keep duration updating(#363)
+  *TT - 2462 Add delete entire recording
+  * TT - 2807 confirm delete
+  * TT - 2822 keep duration updated while recording
   * setReady when done recording
-  * TT-2566 exit congratulations (#362)
-  * TT-2857 don't insert silence while playing (#361)
-  * TT-2455 Stop player on sync (#360)
-  * don't allow auto segment or segment parameters while playing (#359)
-  * TT-2860 add clear all (#358)
-  * TT 2821 (#356)
-  * loadBlob returns blob's url
+  * TT - 2566 exit congratulations(#362)
+  *TT - 2857 don't insert silence while playing (#361)
+  * TT - 2455 Stop player on sync(#360)
+  *don't allow auto segment or segment parameters while playing (#359)
+  * TT - 2860 add clear all(#358)
+  *TT 2821(#356)
+  *loadBlob returns blob's url
   * check if the blob's url is still the one we want
   * remove consoles
   * change cursor to busy when loading
-  * TT-2790 set busy cursor
+  * TT - 2790 set busy cursor
   * setStyle
-  * TT-2871 sequence delete, save and update (#357)
-  * make sure we always have the latest copy of rowInfo
-  * TT-2867 Show flat faster (#355)
-  * also fixes TT-2870 trying to add audio when flat not showing
-  * TT-2864 Privacy Policy contact us (#354)
-  * TT-2866 No audio filter (#353)
-  * TT-2566 Refresh on reselect (#352)
-  * TT-2569 Reset cancel on upload (#350)
-  * TT-2466 Add update in progress flag (#351)
-  * TT-2840 always initialize starting position (#349)
-  * TT-2793 Save before delete (#348)
-  * TT-2847 change segment icon (#347)
-  * TT-2800 no refresh option (#346)
-  * TT-1803 save after paste (#345)
-  * TT-2791 add number segments localization (#344)
-  * TT-2863-new-window (#343)
-  * TT-2856 fix hasRegion showing (#341)
-  * TT-2833 wait longer for switch user log out
-  * TT-2862 Update table state values after save (#340)
-  * Update help
-  * TT-2841 Policy Dialog needed for Desktop (#339)
-  * TT-2841 Update Privacy and Terms of use Policies (#337)
-  * TT-2850 initialize segments for json (#336)
-  * TT-2852 don't allow add while deleting (#335)
-  * TT-2851 Refresh with code auth (#334)
-  * TT-2793 saving flag to a ref so no race condition (#333)
-  * login on error
-  * TT-2827 redirect on logout
-  * TT-2554 reset selected table row on cancel (#332)
-  * type checks of node v14.x
+  * TT - 2871 sequence delete, save and update(#357)
+  *make sure we always have the latest copy of rowInfo
+  * TT - 2867 Show flat faster(#355)
+  *also fixes TT - 2870 trying to add audio when flat not showing
+  * TT - 2864 Privacy Policy contact us(#354)
+  *TT - 2866 No audio filter(#353)
+  *TT - 2566 Refresh on reselect(#352)
+  *TT - 2569 Reset cancel on upload(#350)
+  *TT - 2466 Add update in progress flag(#351)
+  *TT - 2840 always initialize starting position(#349)
+  *TT - 2793 Save before delete(#348)
+  *TT - 2847 change segment icon(#347)
+  *TT - 2800 no refresh option(#346)
+  *TT - 1803 save after paste(#345)
+  *TT - 2791 add number segments localization(#344)
+  *TT - 2863 - new- window(#343)
+  *TT - 2856 fix hasRegion showing(#341)
+  *TT - 2833 wait longer for switch user log out
+  *TT - 2862 Update table state values after save(#340)
+  *Update help
+  * TT - 2841 Policy Dialog needed for Desktop(#339)
+  *TT - 2841 Update Privacy and Terms of use Policies(#337)
+  *TT - 2850 initialize segments for json(#336)
+  *TT - 2852 don't allow add while deleting (#335)
+  * TT - 2851 Refresh with code auth(#334)
+  *TT - 2793 saving flag to a ref so no race condition(#333)
+  *login on error
+  * TT - 2827 redirect on logout
+  * TT - 2554 reset selected table row on cancel(#332)
+  *type checks of node v14.x
   * remove unneeded builder dependency
-  * TT-2841 Terms of Use
-  * TT-2844 handle invite flow (#330)
-  * almost always logged in now...handle this another way. (#322)
-  * add localization
+  * TT - 2841 Terms of Use
+  * TT - 2844 handle invite flow(#330)
+  *almost always logged in now...handle this another way. (#322)
+  *add localization
   * add login choices
   * Offer a logout and hope it works for them
   * remove console.logs
-  * TT-2788 TT-2789 TT-2813 create segment parameter dialog (#328)
-  * save segment parameters with regions
-  * TT-2819 expired token check (#327)
-  * Fix exit navigation for electron
+  * TT - 2788 TT - 2789 TT - 2813 create segment parameter dialog(#328)
+  *save segment parameters with regions
+  * TT - 2819 expired token check(#327)
+  *Fix exit navigation for electron
   * Update orbit token
   * set default user email address
   * handle expired refresh token
   * only display email when it's an auth0 user
   * Remove console logs
-  * update ids for automated tests (#326)
-  * set base projects and match language to those also (#321)
-  * use short name
-  * TT-2825 always go to next region (#320)
-  * TT-2821 handle stacked loads (#319)
-  * when switching tasks, the old tasks blob is loaded because the audio player refreshes before the blob is updated.
+  * update ids for automated tests(#326)
+  *set base projects and match language to those also(#321)
+  *use short name
+  * TT - 2825 always go to next region(#320)
+  *TT - 2821 handle stacked loads(#319)
+  *when switching tasks, the old tasks blob is loaded because the audio player refreshes before the blob is updated.
   * We need to move the blob into the context so it gets updated at least to empty at the same time the task is switched.
   * but for now, it's loading the old and then when that is fully loaded, loading the new.
-  * reset peaksRef.current (#318)
-  * TT-2787b add left arrow tool tip localization (#317)
-  * fix the backward compatible one region on playback (#316)
-  * remove sound touch filter - too buggy (#315)
-  * TT 2816 (#314)
-  * TT-2816 Force position to 0 when submit
-  * TT 2569 (#313)
-  * TT 2569
-  * statusInit was acting as a global state variable.  Give each screen their own status.
+  * reset peaksRef.current(#318)
+  *TT - 2787b add left arrow tool tip localization(#317)
+  *fix the backward compatible one region on playback(#316)
+  *remove sound touch filter - too buggy(#315)
+  *TT 2816(#314)
+  *TT - 2816 Force position to 0 when submit
+  * TT 2569(#313)
+  *TT 2569
+  * statusInit was acting as a global state variable.Give each screen their own status.
   * explicitly pass in off line only to upload
   * prevent mounted console error on snack bar
-  * TT-2787 Add previous region button (#312)
-  * don't allow record if playing (#311)
+  * TT - 2787 Add previous region button(#312)
+  *don't allow record if playing (#311)
   * because the url is in the context and doesn't always change on screen entry, the regions were not set by the time the blob was requested.  Wait for the blob to be loaded before passing the regions in. (#310)
-  * TT-2596b check for no regions on remove region (#309)
-  * TT-2802 Handle verified email (#308)
-  * check for verified and then load data
-  * TT-1539 reset orbit error to make off line icon disappear when back on line (#307)
-  * verify other operations on line/off line
-  * TT-2775c handle desktop case
-  * TT-2775b qa has custom login opts
-  * TT-2779 Work off line wo proj not allowed (#305)
-  * TT-2786 Multi upload with cancel (#304)
-  * TT-2775 display sign up first time (#303)
-  * TT-2775 electron show sign up 1st time
+  * TT - 2596b check for no regions on remove region(#309)
+  *TT - 2802 Handle verified email(#308)
+  *check for verified and then load data
+  * TT - 1539 reset orbit error to make off line icon disappear when back on line(#307)
+  *verify other operations on line / off line
+  * TT - 2775c handle desktop case
+  *TT - 2775b qa has custom login opts
+  * TT - 2779 Work off line wo proj not allowed(#305)
+  *TT - 2786 Multi upload with cancel(#304)
+  *TT - 2775 display sign up first time(#303)
+  *TT - 2775 electron show sign up 1st time
   * Handle on line case
-  * uses latest auth0 react method
+  *uses latest auth0 react method
   * removes need for implicit auth
   * adds need for auth code and refresh
-  * remove /callback endpoint
+  * remove / callback endpoint
   * optionally enable code rotation
-  * TT-2778 use Work On line instead of Switch User (#306)
-  * TT-2532 add sound touch to change pitch (#302)
-  * TT-2532 add sound touch to change pitch
+  * TT - 2778 use Work On line instead of Switch User(#306)
+  *TT - 2532 add sound touch to change pitch(#302)
+  *TT - 2532 add sound touch to change pitch
   * Add LGPLv2.1 license to about box
-  * TT-2455 Stop player on  Project menu (#301)
-  * player interferes with integration,etc
-  * TT-2351 fix users avatar url for Linux
-  * TT-2447 upload cancel (#300)
-  * TT 2438 start where we left off (#299)
-  * pass in initial position to audio player
+  * TT - 2455 Stop player on  Project menu(#301)
+  *player interferes with integration, etc
+  * TT - 2351 fix users avatar url for Linux
+  * TT - 2447 upload cancel(#300)
+  *TT 2438 start where we left off(#299)
+  *pass in initial position to audio player
   * if no next region, go to end and stop
-  * TT-2501 add sort by date
+  * TT - 2501 add sort by date
   * primary sort by plan number
   * secondary sort by file name
-  * tertiary sort by date (desc)
-  * TT-2443 get play buttons right
+  * tertiary sort by date(desc)
+  * TT - 2443 get play buttons right
   * if there is no audio put nothing
   * use play unless playing
   * use stop if the item is playing
-  * TT-2442 use short name for passage ref
-  * TT-2439 use in line ref instead of state
-  * TT-2757 Going on line after import (#298)
-  * TT-2755 Only set tokens when on line (#297)
-  * TT-2756b handle on line user startup (#295)
-  * TT-2745 include 0 in digit search :/ (#296)
-  * TT-2533 only send new audio if done processing last send (#292)
-  * TT-2461 Simplify record view (#291)
-  * TT-2565 ignore audio process messages that come in after playing has stopped (#293)
-  * Only auto jump if off line user (#294)
-  * update language picker for fonapi with script
+  * TT - 2442 use short name for passage ref
+  *TT - 2439 use in line ref instead of state
+  * TT - 2757 Going on line after import(#298)
+  *TT - 2755 Only set tokens when on line(#297)
+  *TT - 2756b handle on line user startup(#295)
+  *TT - 2745 include 0 in digit search:/ (#296)
+  *TT - 2533 only send new audio if done processing last send(#292)
+  *TT - 2461 Simplify record view(#291)
+  *TT - 2565 ignore audio process messages that come in after playing has stopped(#293)
+  *Only auto jump if off line user(#294)
+  *update language picker for fonapi with script
   * update help
   * fix language picker deployment
-  * TT-2572 Fix 2 channel editing. (#290)
-  * update language picker
-  * TT-2754 margin for Task header
-  * TT-2753 No upgrade alert on web (#289)
-  * Add mode button ids
-  * TT-2751 remove title - Change view switch (#288)
-  * TT-2751 Change switch and title
+  * TT - 2572 Fix 2 channel editing. (#290)
+  *update language picker
+  * TT - 2754 margin for Task header
+  * TT - 2753 No upgrade alert on web(#289)
+  *Add mode button ids
+  * TT - 2751 remove title - Change view switch (#288)
+  *TT - 2751 Change switch and title
   * Only react to mode change
-  * TT-2750 Switching to alone when alone (#287)
-  * TT-2749 cur User at top when work off line (#286)
-  * TT-2747 Getting Started title (#283)
-  * TT-2596, TT-2597, TT- 2741 fix zoom, delete, strings (#284)
-  * Sorted and updated strings
-  * TT-2748 Switch User when no off line projects (#285)
-  * TT-2746 Switch User displays User List (#282)
-  * TT-2437 Version Alert (#281)
-  * rename justify to justifyContent to remove Mui warning
-  * fix mui warnings (#279)
-  * rename createMuiTheme to createTheme
+  * TT - 2750 Switching to alone when alone(#287)
+  *TT - 2749 cur User at top when work off line(#286)
+  *TT - 2747 Getting Started title(#283)
+  *TT - 2596, TT - 2597, TT - 2741 fix zoom, delete, strings(#284)
+  *Sorted and updated strings
+  * TT - 2748 Switch User when no off line projects(#285)
+  *TT - 2746 Switch User displays User List(#282)
+  *TT - 2437 Version Alert(#281)
+  *rename justify to justifyContent to remove Mui warning
+  * fix mui warnings(#279)
+  *rename createMuiTheme to createTheme
   * remove mixins
-  * TT-2744 make directory hierarchy (#280)
-  * TT-2727-after-import (#278)
-  * TT-2727 After Import
+  * TT - 2744 make directory hierarchy(#280)
+  *TT - 2727 - after - import(#278)
+  *TT - 2727 After Import
   * turn off busy
   * select on line users working off line
   * handle off line case
   * switch to off line view if all users are off line
   * clear import status to allow returning to welcome screen
-  * user list adjustments (#277)
-  * log out when clicking avatar on log out tab
+  * user list adjustments(#277)
+  *log out when clicking avatar on log out tab
   * no user list on switch user tab
   * list team with user avatar
   * alphabetize localization files
   * use Audio Project instead of Project
   * Updated welcome and access user list localization
-  * user-list (#275)
-  * update-user-list
+  * user - list(#275)
+  *update - user - list
   * Handle initial startup
-  * wording changes (#276)
-  * TT-2049 remove resize ability from text area (#274)
-  * fix split resizing
-  * TT 2546b (#273)
-  * TT-2546b add hotkeys
+  * wording changes(#276)
+  *TT - 2049 remove resize ability from text area (#274)
+  *fix split resizing
+  * TT 2546b(#273)
+  *TT - 2546b add hotkeys
   * add removeNextRegion concept
   * fix single region delete
   * init segments
   * setChanged when segments change, indicate save needs to happen
   * fix intermittent missing last region
-  * Add Setup Team key factor (#272)
-  * Update wording on Welcome screen
-  * TT-2552 Handle Initial User (#271)
-  * Adjust welcome logic
+  * Add Setup Team key factor(#272)
+  *Update wording on Welcome screen
+  * TT - 2552 Handle Initial User(#271)
+  *Adjust welcome logic
   * create user in indexedDb
   * fix when team user can work off line
   * display user list based on welcome button choice
   * decrease space on user list title
   * Update localization
   * check projects for auto project
-  * TT 2546 auto segment (#270)
-  * detect regions and allow user interaction
+  * TT 2546 auto segment(#270)
+  *detect regions and allow user interaction
   * region dragging
   * remove split
   * tweak getRegions in progress
   * move next segment to player
   * utility function for refs in progress
   * use wave surfer state instead of ref
-  * hide more refs
+  *hide more refs
   * use split pane to make waveform bigger
   * back to ref for wave surfer because it wasn't getting cleaned up with state variable
   * add wsAddOrRemoveRegion
-  * save/load saved segments
+  * save / load saved segments
   * fix resizing
-  * fix prev/next on loaded
+  * fix prev / next on loaded
   * updated help
-  * TT 2552 8 (#269)
-  * TT-2552h welcome screen using new project look
-  * update NewProjectGrid
+  * TT 2552 8(#269)
+  *TT - 2552h welcome screen using new project look
+  *update NewProjectGrid
   * Add description to BigDialog for NewProject
   * TT-2529c New Project updates
   * Use cache busting strings name (#268)
@@ -1925,16 +1784,16 @@ sil-transcriber (2.13.4.0)  experimental; urgency=high
   * update language picker
   * Use test that waits for result
   * add new index for orbit js (#250)
-  * add single quote to filename restrictions because s3 hates them
+  *add single quote to filename restrictions because s3 hates them
   * Load Audacity Manager strings
-  * TT-1471d Audacity MVP (#249)
-  * Add Audacity to PlanActions
+  * TT - 1471d Audacity MVP(#249)
+  *Add Audacity to PlanActions
   * Add AudacityProject table
   * Set flag if audacity present
   * Only auto recheck setup if not setup
   * launching audacity
   * Update for new more menu
-  * Audacity dialog stays open
+  *Audacity dialog stays open
   * when more menu closes
   * force save before audacity
   * Allow launching Audacity from keyboard
@@ -1988,13 +1847,13 @@ sil-transcriber (2.13.4.0)  experimental; urgency=high
   * TT-1471 Audacity Setup
   * use Promise all and trap error of missing key
   * also use enum
-  * remove unused variables
+  *remove unused variables
 
- -- Greg Trihus <greg_trihus@sil.org>  Tue, 12 Oct 2021 14:39:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 12 Oct 2021 14:39:00 - 0600
 
-sil-transcriber (2.12.2.0)  experimental; urgency=high
+sil - transcriber(2.12.2.0)  experimental; urgency = high
 
-  * TT-2469 remove section update after passage update (#243)
+  * TT - 2469 remove section update after passage update (#243)
   * don't wait for update of plan so delete buttons reenable faster
   * TT-2463 Paratext sync (#241)
   * - do siblings of paragraph
@@ -2018,11 +1877,11 @@ sil-transcriber (2.12.2.0)  experimental; urgency=high
   * TT-2352 Online Desktop should act like online web (#230)
   * - Offline should always be allowed to import ptf (not from task table)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 17 Jun 2021 10:18:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 17 Jun 2021 10:18:00 - 0600
 
-sil-transcriber (2.12.1.0)  experimental; urgency=high
+sil - transcriber(2.12.1.0)  experimental; urgency = high
 
-  * TT-2303 download data to desktop on exit
+  * TT - 2303 download data to desktop on exit
   * TT-2297 display currently logged in user
   * Fix Google client not secure error
   * TT-2019 localize dates
@@ -2074,13 +1933,13 @@ sil-transcriber (2.12.1.0)  experimental; urgency=high
   * update duration when editing
   * TT-2109 Logic for isolating team audio files with slugs (#153)
   * TT-2012 New player shortcut keys (#150)
-  * TT-2104 empty player while reloading new file (#148)
-  * TT-2102 check audio permissions (#147)
+  * TT-2104 empty player while reloading new file(#148)
+  *TT - 2102 check audio permissions (#147)
   * make sure only one audio player requested
   * TT-2055 confirm on delete of passage note (#145)
   * Light background tool tips
   * TT-2076 shortcut key Provider (#143)
-  * TT-2074 click outside closes new project dialog (#142)
+  * TT-2074 click outside closes new project dialog(#142)
   * No busy on small passage save
   * TT-2070 Refresh attached passages (#140)
   * TT-2058 associating one item (#139)
@@ -2110,9 +1969,9 @@ sil-transcriber (2.12.1.0)  experimental; urgency=high
   * TT-2038 indicate possible missing book (#109)
   * TC133 wait for not busy before reopening (#108)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 7 May 2021 14:39:00 -0600
+ -- Greg Trihus <greg_trihus @sil.org>  Thu, 7 May 2021 14:39:00 -0600
 
-sil-transcriber (2.11.4.0)  experimental; urgency=high
+sil-transcriber (2.11.4.0)  experimental; urgency = high
 
   * Updated localization strings
   * TC224 remove all references to lastComment (#107)
@@ -2150,151 +2009,151 @@ sil-transcriber (2.11.4.0)  experimental; urgency=high
   * TT-2022 Canceling Unsaved dialog (#84)
   * TT-2010 give more info on electron import (#83)
   * TT-1718 update section count on localSave (#82)
-  * new user locale bug (#81)
-  * TT-1266 set User Language whenever it might change (#80)
-  * TT-2013 ITF fix (#78)
-  * - use off and on line for export
-  * TT-1962 report deleted project (#79)
-  * TT-1966 Invalid Reference error on sync (#77)
-  * TT-2009 Add new localization strings (#76)
-  * TT-1357 Fall back to en for auth0 (#75)
-  * TT-1890 wait before logging out, increase save time (#74)
-  * TT-1996, TT-1995 Backup all for on line and off line (#73)
-  * TT-1876 Copy conflict report to clipboard (#72)
-  * TT-1282 wait before logout after user delete (#71)
-  * TT-1999 remove team memberships and projects when deleting team (#70)
-  * TT-2002 auto assign current state (#69)
-  * TT-2008 only assign by role (#68)
-  * add logout on email Unverified screen in case of unverifiable email (#67)
-  * TT-2003,2004 fix pull Paratext save and select correct online/offline integration (#66)
-  * TT-1985 set version and passage if duplicate name (#65)
-  * TT-2007 Add Russian and Portuguese localization
-  * TT-1981 when syncing, save comment to history and reset it (#64)
-  * TT-2001 check for off line (#63)
+  * new user locale bug(#81)
+  *TT - 1266 set User Language whenever it might change(#80)
+  *TT - 2013 ITF fix(#78)
+  *-use off and on line for export
+  * TT-1962 report deleted project(#79)
+  *TT - 1966 Invalid Reference error on sync(#77)
+  *TT - 2009 Add new localization strings(#76)
+  *TT - 1357 Fall back to en for auth0(#75)
+  *TT - 1890 wait before logging out, increase save time(#74)
+  *TT - 1996, TT - 1995 Backup all for on line and off line(#73)
+  *TT - 1876 Copy conflict report to clipboard(#72)
+  *TT - 1282 wait before logout after user delete(#71)
+  *TT - 1999 remove team memberships and projects when deleting team(#70)
+  *TT - 2002 auto assign current state(#69)
+  *TT - 2008 only assign by role(#68)
+  *add logout on email Unverified screen in case of unverifiable email(#67)
+  *TT - 2003, 2004 fix pull Paratext save and select correct online / offline integration(#66)
+  *TT - 1985 set version and passage if duplicate name(#65)
+  *TT - 2007 Add Russian and Portuguese localization
+  * TT - 1981 when syncing, save comment to history and reset it(#64)
+  *TT - 2001 check for off line (#63)
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 9 Mar 2021 10:00:00 -0600
+ --Greg Trihus < greg_trihus@sil.org > Mon, 9 Mar 2021 10:00:00 - 0600
 
-sil-transcriber (2.11.3.0)  experimental; urgency=high
+sil - transcriber(2.11.3.0)  experimental; urgency = high
 
-  * allow creation of new offline only projects (TT-1974)
+  * allow creation of new offline only projects(TT - 1974)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Feb 2021 14:39:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Thu, 12 Feb 2021 14:39:00 - 0600
 
-sil-transcriber (2.11.2.0)  experimental; urgency=high
+sil - transcriber(2.11.2.0)  experimental; urgency = high
 
-  * TT-1993 filter role list for online roles (#59)
-  * TT-1973 Round up play seconds and total seconds
-  * TT-1990 Use correct role when online and offline (#60)
-  * TT-1781 logout affects all browser tabs (#61)
-  * TT-1274 only export if project setup complete (#62)
-  * TT-1992 open browser tab when upgrading
+  * TT - 1993 filter role list for online roles (#59)
+  *TT - 1973 Round up play seconds and total seconds
+  * TT - 1990 Use correct role when online and offline(#60)
+  *TT - 1781 logout affects all browser tabs(#61)
+  *TT - 1274 only export if project setup complete(#62)
+  *TT - 1992 open browser tab when upgrading
   * TT-1503 rejecting task removes buttons for bad recording
-  * TT-1974 No personal header offline if no personal projects
+  *TT - 1974 No personal header offline if no personal projects
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Feb 2021 12:51:00 -0600
+ --Greg Trihus<greg_trihus@sil.org> Thu, 12 Feb 2021 12:51:00 - 0600
 
-sil-transcriber (2.11.1.0)  experimental; urgency=high
+sil - transcriber(2.11.1.0)  experimental; urgency = high
 
-  * TT-1991 create folder on upload (#57)
+  * TT - 1991 create folder on upload(#57)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Feb 2021 14:07:00 -0600
+ --Greg Trihus<greg_trihus@sil.org> Thu, 9 Feb 2021 14:07:00 - 0600
 
-sil-transcriber (2.11.0.0)  experimental; urgency=high
+sil - transcriber(2.11.0.0)  experimental; urgency = high
 
-  * update project type on project settings (#56)
-  * use project type on activity state update
-  * TT-1980 Unique plan types (#55)
-  * Update help for 2.11 release (#54)
-  * TT-1961 make sure to use the correct project type (#53)
-  * TT-1982 wait for remoteId to be populated before remote save (#52)
-  * TT-1983 no user menu on landing screen, color, spacing (#51)
-  * TT-1969 enable play button after upload
-  * TT-1979 Transcription disappears
+  * update project type on project settings(#56)
+  *use project type on activity state update
+  * TT - 1980 Unique plan types(#55)
+  *Update help for 2.11 release(#54)
+  *TT - 1961 make sure to use the correct project type(#53)
+  *TT - 1982 wait for remoteId to be populated before remote save(#52)
+  *TT - 1983 no user menu on landing screen, color, spacing(#51)
+  *TT - 1969 enable play button after upload
+  * TT - 1979 Transcription disappears
     - also fixes highlight of task
     - also fixes tab in font select
     - also fixes disappearing time stamp
-  * TT-1950 store desktop version, check for updates (#50)
-  * pass in project id (#49)
-  * TT-1976b set the project type some more places! (#48)
-  * Update language picker
+  * TT - 1950 store desktop version, check for updates(#50)
+  *pass in project id(#49)
+  *TT - 1976b set the project type some more places!(#48)
+  *Update language picker
     - handle phonetic fonts
     - fix script picker
-  * Fix Intermittent/Inappropriate "Transcription Updated by another user" message (#47)
-  * TT-1976 always lowercase project type (#46)
-  * TT-550 add localized strings to reports, shaping Table (#45)
-  * TT-1975 Add new key for 64-bit Paratext (v9.1) (#44)
-  * TT-1939 only ignore all off line projects for itfs.  send # of recs back from add all (#43)
-  * TT-1959 Improve Sample Spreadsheets (#41)
-    - only show sample for current plan
-    - adjust menu option to clarify multiple samples
-  * cleanup archived memberships that come down in linked relationships (#42)
-  * carry on to logout if resetRequests gets an error
-  * TT-1933 About box (#40)
-    - Rearrange dialog
+  * Fix Intermittent / Inappropriate "Transcription Updated by another user" message(#47)
+  *TT - 1976 always lowercase project type(#46)
+  *TT - 550 add localized strings to reports, shaping Table(#45)
+  *TT - 1975 Add new key for 64 - bit Paratext(v9.1)(#44)
+  *TT - 1939 only ignore all off line projects for itfs.send # of recs back from add all (#43)
+  * TT-1959 Improve Sample Spreadsheets(#41)
+    -only show sample for current plan
+    -adjust menu option to clarify multiple samples
+  * cleanup archived memberships that come down in linked relationships(#42)
+  *carry on to logout if resetRequests gets an error
+  * TT-1933 About box(#40)
+    -Rearrange dialog
     - put thanks above products
     - list products by license
-  * TT-1965 Handle changing Paratext project integration (#39)
-  * TT-1958 Delete Off line User
-  * TT-1960 Check box for Internet use
-  * TT-1952 set role based on state
+  * TT-1965 Handle changing Paratext project integration(#39)
+  *TT - 1958 Delete Off line User
+  * TT - 1960 Check box for Internet use
+  *TT - 1952 set role based on state
     - do assignment based on current state of transcriber
-  * TT-1954 Update comment on save
-    - but not on auto save
-  * TT-1955 only upload if valid file
+  *TT - 1954 Update comment on save
+    -but not on auto save
+  *TT - 1955 only upload if valid file
   * TT-1951 upload before save
     - save row so we get passage after its saved
-  * TT-1957 no download of off line projects
-  * TT-1953 get parentheses right
+  *TT - 1957 no download of off line projects
+  *TT - 1953 get parentheses right
   * remove unused localization files
   * TT-1646 No duplicate project name
-  * TT-1944 fix import project lookup
-  * TT-1945 Attach project to right personal team
-  * TT-1942 lowercase extensions before checking (#35)
-  * user/member create/add
-  * user/member consistency
+  *TT - 1944 fix import project lookup
+  *TT - 1945 Attach project to right personal team
+  *TT - 1942 lowercase extensions before checking(#35)
+  *user / member create / add
+  * user / member consistency
   * TT-1940 Off line Team is a developer only function
-  * Filter for allowed files on media upload
+  *Filter for allowed files on media upload
   * improve invalid file
   * Filter for allowed files on media upload
-  * TT-1929 consistently use read only (#30)
-  * TT-1937 General project type is Generic
-  * TT-1930 Off line Export (#27)
-    - Logic to export and import off line data
+  * TT - 1929 consistently use read only(#30)
+  *TT - 1937 General project type is Generic
+  * TT - 1930 Off line Export(#27)
+    -Logic to export and import off line data
     - auto backup for off line
-  * TT-1927 Msg when Log in off line
-  * TT-1931 global project type to avoid Paratext options for general projects (#28)
-    - Only allow Paratext integrations for Scripture projects (#26)
-    - only set project role if no cb
-  * TT-1799, TT-1934 Fetch only real id (#25)
-  * TT-1917, TT-1333 Windows off line sync (#24)
-  * update read-me with Linux build dependencies
-  * TT-1333 Sync to local Paratext on Linux
-  * TT-1915 abort login
-  * TT-1894 No special processing on Reopen (#21)
-  * put sync to done back in (#20)
-  * TT-1916 convert duration to milliseconds
-  * TT-1918 always create off line types
-  * TT-1645 No duplicate team names (#18)
-  * TT-1897 set media id for off line only (#17)
-    - use ceil function so media duration is always greater than current
-  * TT-1878f Insert section
-  * TT-1771 Paratext local sync  (#3)
-    - process Paratext errors in shared location
+  *TT - 1927 Msg when Log in off line
+  * TT - 1931 global project type to avoid Paratext options for general projects (#28)
+    -Only allow Paratext integrations for Scripture projects (#26)
+    -only set project role if no cb
+  * TT-1799, TT - 1934 Fetch only real id(#25)
+  *TT - 1917, TT - 1333 Windows off line sync(#24)
+  *update read - me with Linux build dependencies
+  *TT - 1333 Sync to local Paratext on Linux
+  *TT - 1915 abort login
+  *TT - 1894 No special processing on Reopen(#21)
+  *put sync to done back in (#20)
+  *TT - 1916 convert duration to milliseconds
+  * TT - 1918 always create off line types
+  * TT - 1645 No duplicate team names(#18)
+  *TT - 1897 set media id for off line only(#17)
+    -use ceil function so media duration is always greater than current
+  * TT - 1878f Insert section
+  * TT - 1771 Paratext local sync(#3)
+    -process Paratext errors in shared location
     - send project ids so it can find connected project
-    - Pull Paratext text. Process \v# within transcription
+    - Pull Paratext text.Process \v# within transcription
     - pull transcription from Paratext, move Paratext errors to shared location
     - project ids to strings for local
     - reopen sync back in
-  * TT-1910b Import Project revised (#15)
-  * TT-1906 Add off line User
-  * TT-1908 ignore off line only projects during sync (#13)
-  * TT-1905 add last modified relationship (#12)
-  * TT-1904 wait for the on line save before continuing (#11)
-  * TT-1903 duration is int in database (#10)
-  * TT-1910 Import Snapshot
-  * off line deep linking (#8)
-  * TT-1878 desktop homepage (#4)
-    - desktop homepage update
+  *TT - 1910b Import Project revised(#15)
+  *TT - 1906 Add off line User
+  * TT - 1908 ignore off line only projects during sync(#13)
+  *TT - 1905 add last modified relationship(#12)
+  *TT - 1904 wait for the on line save before continuing(#11)
+  *TT - 1903 duration is int in database(#10)
+  *TT - 1910 Import Snapshot
+  * off line deep linking(#8)
+  *TT - 1878 desktop homepage(#4)
+    -desktop homepage update
     - Add off line user
     - off line setup
     - create team - update setup
@@ -2313,9 +2172,9 @@ sil-transcriber (2.11.0.0)  experimental; urgency=high
     - transcriber history uses user relation
     - plan shows spreadsheet paste
     - tabs all enabled
-    - re-factor plan save and update for off line
-    - await uploader
-    - re-factor passage state change
+    - re - factor plan save and update for off line
+    -await uploader
+    - re - factor passage state change
     - clear user on logout
     - handle cancel on user page
     - Fix transcriber history
@@ -2328,217 +2187,218 @@ sil-transcriber (2.11.0.0)  experimental; urgency=high
     - remove currentDateTime
     - Fix upload media project create
     - Fix setting user 1st time
-  * reduce flicker but allow for same message to show again (#2)
-  * TT-1875 don't check for unattached files to download (#1)
+  * reduce flicker but allow for same message to show again(#2)
+  *TT - 1875 don't check for unattached files to download (#1)
   * Update start up instructions
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 5 Feb 2021 11:04:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Thu, 5 Feb 2021 11:04:00 - 0600
 
-sil-transcriber (2.10.0.0)  experimental; urgency=high
+sil - transcriber(2.10.0.0)  experimental; urgency = high
 
-  * TT-1738 Adjust browser back again (#686)
-  * decode URI for local name (#683)
+  * TT - 1738 Adjust browser back again(#686)
+  *decode URI for local name (#683)
       handle fetch audio URL where file is not available off line
-  * update the version number when attaching to passage (#681)
-  * TT-1866 Load Project on deep link (#680)
-  * TT-1870 get latest version based on passage or plan+name if not associated (#678)
-  * TT-1841 Report off line status (#676)
-  * TT-1790 use the local path when available (#675)
+  * update the version number when attaching to passage(#681)
+  *TT - 1866 Load Project on deep link(#680)
+  *TT - 1870 get latest version based on passage or plan + name if not associated(#678)
+  *TT - 1841 Report off line status(#676)
+  *TT - 1790 use the local path when available(#675)
       copy uploaded files to the local path if electron
-  * TT-1827 Confirm Go On line (#674)
-  * TT-1858 On Report an issue, show message if off line (#671)
+  * TT - 1827 Confirm Go On line(#674)
+  *TT - 1858 On Report an issue, show message if off line(#671)
       if on line with Electron, launch in browser
-  * handle case where both errors and change report come from syncing local changes (#669)
+  * handle case where both errors and change report come from syncing local changes(#669)
       handle multiple change reports
-  * TT-1827 Add Abort Go On line menu item (#666)
-  * TT-1856 when on line use on line Paratext login (#665)
-  * TT-1769 avoid email address overlapping with form
-  * TT-1802 fix order of sections and passages when ten or more (#664)
-  * TT-1850 Remove users with no data from list of off line users (#663)
-  * TT-1505 don't allow name to be email address (#661)
-  * go On line after email verified if desktop (#660)
-  * TT-1821 only show current user`s teams (#659)
-  * TT-1849 Electron Samples (#656)
-  * start save before assign (#655)
-  * only backup off line available projects (#654)
-  * TT-1404 Change not linked message to make it clearer (#652)
-  * TT-1828 launch help on topic locally (#653)
-  * TT-1822 No on line backup since AWS backs up on line projects (#651)
-  * TT-1805 remove Import button from desktop app since it`s automatic (#650)
-  * handle electron Paratext integration (#649)
-  * TT-1842 Only show off line projects if desktop off line (#647)
-  * TT-1831 electron dates (#645)
-  * TT-1832 make avail off line when first loaded (#641)
-  * TT-1832 Make Available Menu Item (#639)
-  * TT-1810 Allow display help topic multiple times
-  * TT-1805 No PTF import when on line
-  * TT-1804 reset busy after sheet save (#638)
-  * TT-1787 Save after upload (#637)
-  * TT-1816 Allow add team from desktop if on line (#636)
-  * TT-1809 Available Off line only in Electron (#634)
-  * TT-1812 and TT-1814 on - off line logic (#635)
+  * TT - 1827 Add Abort Go On line menu item(#666)
+  *TT - 1856 when on line use on line Paratext login(#665)
+  *TT - 1769 avoid email address overlapping with form
+  * TT - 1802 fix order of sections and passages when ten or more(#664)
+  *TT - 1850 Remove users with no data from list of off line users(#663)
+  *TT - 1505 don't allow name to be email address (#661)
+  * go On line after email verified if desktop(#660)
+  *TT - 1821 only show current user`s teams(#659)
+  *TT - 1849 Electron Samples(#656)
+  *start save before assign(#655)
+  *only backup off line available projects(#654)
+  *TT - 1404 Change not linked message to make it clearer(#652)
+  *TT - 1828 launch help on topic locally(#653)
+  *TT - 1822 No on line backup since AWS backs up on line projects(#651)
+  *TT - 1805 remove Import button from desktop app since it`s automatic(#650)
+  *handle electron Paratext integration(#649)
+  *TT - 1842 Only show off line projects if desktop off line(#647)
+  *TT - 1831 electron dates(#645)
+  *TT - 1832 make avail off line when first loaded(#641)
+  *TT - 1832 Make Available Menu Item(#639)
+  *TT - 1810 Allow display help topic multiple times
+  * TT - 1805 No PTF import when on line
+  * TT - 1804 reset busy after sheet save(#638)
+  *TT - 1787 Save after upload(#637)
+  *TT - 1816 Allow add team from desktop if on line(#636)
+  *TT - 1809 Available Off line only in Electron(#634)
+  *TT - 1812 and TT - 1814 on - off line logic(#635)
       navigate to email verified screen if necessary
       improve email verified logic
-  * Remove the word `extension` from product name
-  * only check sync changes for off line projects
-  * TT-1800 off line sync (#630)
-  * Remove separate desktop help
-  * TT-1793 download data so projects can be used off line (#629)
-  * TT-1789 Handle last verse in chapter
-  * log out on exit electron (#625)
+  *Remove the word `extension` from product name
+  *only check sync changes for off line projects
+  * TT - 1800 off line sync(#630)
+  *Remove separate desktop help
+  * TT - 1793 download data so projects can be used off line(#629)
+  *TT - 1789 Handle last verse in chapter
+  * log out on exit electron(#625)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 21 Dec 2020 10:23:00 -0600
+ --Greg Trihus < greg_trihus@sil.org > Thu, 21 Dec 2020 10:23:00 - 0600
 
-sil-transcriber (2.9.2.0)  experimental; urgency=high
+sil - transcriber(2.9.2.0)  experimental; urgency = high
 
-  * TT-1792 Keey deep linking by user
-  * TT-1604 check all steps on file upload
-  * TT-1293 navigate to member profile after add
-  * TT-1775 don't allow close while export busy
-  * TT-1776 update language picker for debouncing clear previous values
-  * TT-654 Add spreadsheet samples and link to context help
-  * TT-1413 update count of media
-  * TT-1611 allow deep link to profile page
-  * TT-1767 default book to previous rowids
-  * TT-1765 clear values when upload media dialog closes
+  * TT - 1792 Keey deep linking by user
+  * TT - 1604 check all steps on file upload
+  * TT - 1293 navigate to member profile after add
+  * TT - 1775 don't allow close while export busy
+  * TT - 1776 update language picker for debouncing clear previous values
+  * TT - 654 Add spreadsheet samples and link to context help
+  * TT - 1413 update count of media
+  * TT - 1611 allow deep link to profile page
+  * TT - 1767 default book to previous rowids
+  * TT - 1765 clear values when upload media dialog closes
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 5 Nov 2020 10:59:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Thu, 5 Nov 2020 10:59:00 - 0600
 
-sil-transcriber (2.9.1.0)  experimental; urgency=high
+sil - transcriber(2.9.1.0)  experimental; urgency = high
 
   * better handling of large files
-  * TT-1762, TT-1746 fix scroll bar on upload cancel (#614)
+  * TT - 1762, TT - 1746 fix scroll bar on upload cancel(#614)
       continue to display upload progress dialog
-  * TT-1761, TT-1293 lowercase /profile (#613)
-  * TT-1701 remember the state in a ref since it is called from a timer (#612)
+  * TT-1761, TT - 1293 lowercase / profile(#613)
+  *TT - 1701 remember the state in a ref since it is called from a timer(#612)
       Rearrange so all useEffects are together at the top
-  * TT-1760 check for allUsersGroup (could have been deleted) (#611)
-  * TT-1675 Update language picker
+  * TT - 1760 check for allUsersGroup(could have been deleted)(#611)
+  *TT - 1675 Update language picker
       add phonetic script option
       debounce option display
-  * TT-1754 Use project role to decide if user can create new projects (#604)
+  * TT - 1754 Use project role to decide if user can create new projects(#604)
       Use project role determine if a person can add a project
       remove console.log
   * TT-1711 don't include media in itf backups (#610)
-  * TT-1758 remember which sections to assign but not the details (#609)
-  * TT-1730 don't add section header if there already (#608)
-  * TT-1745 account for no book col (#607)
-  * TT-1755 save comment on submit, clear comment if they turn it off (#606)
-  * missing ActivityStates.synced which shows up in history after sync
+  * TT - 1758 remember which sections to assign but not the details(#609)
+  *TT - 1730 don't add section header if there already (#608)
+  * TT - 1745 account for no book col(#607)
+  *TT - 1755 save comment on submit, clear comment if they turn it off(#606)
+  *missing ActivityStates.synced which shows up in history after sync
   * use ProjRole to determine if we're on the home page (#605)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 15 Oct 2020 23:29:00 -0600
+ -- Greg Trihus<greg_trihus@sil.org> Thu, 15 Oct 2020 23:29:00 - 0600
 
-sil-transcriber (2.9.0.0)  experimental; urgency=high
+sil - transcriber(2.9.0.0)  experimental; urgency = high
 
   * single screen team and project management
   * collaborative data sharing
-  * auto configuration on file upload
-  * simplify Paratext and Render configuration
-  * auto saving
+  *auto configuration on file upload
+  *simplify Paratext and Render configuration
+  *auto saving
   * last saved date
-  * use SIL theme
-  * localization
+  *use SIL theme
+  *localization
   * improve off line logging and saving
   * new deep linking scheme
-  * ask user to wait when busy
+  *ask user to wait when busy
   * add all Paratext books
   * better handling of large files
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 8 Oct 2020 15:29:00 -0600
+ --Greg Trihus<greg_trihus@sil.org> Thu, 8 Oct 2020 15:29:00 - 0600
 
-sil-transcriber (2.0.8.8)  experimental; urgency=high
+sil - transcriber(2.0.8.8)  experimental; urgency = high
 
-  * TT-1514 add .ogg support (#458)
-  * Update desktop help file
+  * TT - 1514 add.ogg support(#458)
+  *Update desktop help file
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Jun 2020 15:11:00 -0600
+ -- Greg Trihus<greg_trihus@sil.org> Thu, 25 Jun 2020 15:11:00 - 0600
 
-sil-transcriber (2.0.8.7)  experimental; urgency=high
+sil - transcriber(2.0.8.7)  experimental; urgency = high
 
-  * TT-1516 Auto Assign (#457)
-  * TT-1500 update language picker
+  * TT - 1516 Auto Assign(#457)
+  *TT - 1500 update language picker
   * TT-1443 Report production errors
-  * Fixes refresh (#456)
-  * Fix path for data reset
+  * Fixes refresh(#456)
+  *Fix path for data reset
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Jun 2020 13:13:00 -0600
+ --Greg Trihus < greg_trihus@sil.org > Thu, 25 Jun 2020 13:13:00 - 0600
 
-sil-transcriber (2.0.8.6)  experimental; urgency=high
+sil - transcriber(2.0.8.6)  experimental; urgency = high
 
-  * TT-1480 clear comment after reopen
-  * TT-1436 condensed passages
-  * TT-1479, TT-1366 no datachanges for electron, check for empty
+  * TT - 1480 clear comment after reopen
+  * TT - 1436 condensed passages
+  * TT - 1479, TT - 1366 no datachanges for electron, check for empty
   * TT-1478 show more of the error messages for bad itf
-  * TT-1345 limit number of online electron calls
-  * TT-1436, TT-1481 fix past rowids
-  * TT-1331 help path
-  * TT-1332 Linux reset data
-  * TT-1491 remove any selections before toggle condensed
-  * TT-1487 new language picker
+  *TT - 1345 limit number of online electron calls
+  * TT - 1436, TT - 1481 fix past rowids
+  * TT - 1331 help path
+  * TT - 1332 Linux reset data
+  * TT - 1491 remove any selections before toggle condensed
+  * TT - 1487 new language picker
   * fix error message
   * keep buttons within lines
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 18 Jun 2020 17:25:00 -0600
+ -- Greg Trihus < greg_trihus@sil.org > Thu, 18 Jun 2020 17:25:00 - 0600
 
-sil-transcriber (2.0.8.5)  experimental; urgency=high
+sil - transcriber(2.0.8.5)  experimental; urgency = high
 
-  * Minimum Lang List Size (#423)
-  * Set a minimum size for the list of languages on the language picker.
-  * TT-1017 update project integration instead of removing (#417)
-  * TT-1240 add reset data to desktop
-  * TT-1256 Fall back to Paratext 8 registry key (#414)
-  * fix import report for editor/transcriber
+  * Minimum Lang List Size(#423)
+  *Set a minimum size for the list of languages on the language picker.
+  * TT - 1017 update project integration instead of removing(#417)
+  *TT - 1240 add reset data to desktop
+  * TT - 1256 Fall back to Paratext 8 registry key(#414)
+  *fix import report for editor / transcriber
   * create history record when syncing.
   * Disable sync button when sync begins.
-  * Show messages on local sync (#413)
-  * TT-1275 only one instance of desktop ext (#442)
-  * TT-1332 add Linux icon, menu item, and deb package
-  * TT-1345 Remove 401 error in Desktop
-  * TT-1368 Continuous desktop playing (#443)
-  * TT-1391 Modify org role (#425)
-  * TT-1395 empty json (#424)
-  * TT-1397, TT-1399, TT-1401 update when data changes come in (#412)
-  * TT-1398 Multiple Plan Modify (#415)
-  * Disable Save while Associations saving
-  * TT-1402 project editing role (#427)
-  * Require project admin role to edit project
+  * Show messages on local sync(#413)
+  *TT - 1275 only one instance of desktop ext(#442)
+  *TT - 1332 add Linux icon, menu item, and deb package
+  * TT - 1345 Remove 401 error in Desktop
+  * TT - 1368 Continuous desktop playing(#443)
+  *TT - 1391 Modify org role(#425)
+  *TT - 1395 empty json(#424)
+  *TT - 1397, TT - 1399, TT - 1401 update when data changes come in (#412)
+  *TT - 1398 Multiple Plan Modify(#415)
+  *Disable Save while Associations saving
+  * TT-1402 project editing role(#427)
+  *Require project admin role to edit project
   * allow creation of new projects if role in all users is admin
-  * TT-1402 use owner in msg (#432)
-  * TT-1403 Don't display unnecessary alert (#421)
+  * TT - 1402 use owner in msg(#432)
+  *TT - 1403 Don't display unnecessary alert (#421)
   * fix pasting so it doesn't overwrite other rows
   * add comment about numbers
-  * TT-1405 Justify numbers (#426)
-  * TT-1411 now that projects are a prop, don't reset projOptions elsewhere (#431)
-  * TT-1412 disable project and org list when exporting TT-1389 disappearing pane on filter (#429)
-  * TT-1413 Handle export errors (#422)
-  * TT-1418 No old attach (#420)
-  * TT-1419 filter focus (#435)
-  * TT-1419 no dynamic filter (#439)
-  * Reload data when slider changes
-  * TT-1421 Update passage list correctly (#419)
-  * fix drawer structure error
+  * TT - 1405 Justify numbers(#426)
+  *TT - 1411 now that projects are a prop, don't reset projOptions elsewhere (#431)
+  * TT - 1412 disable project and org list when exporting TT - 1389 disappearing pane on filter(#429)
+  *TT - 1413 Handle export errors(#422)
+  *TT - 1418 No old attach(#420)
+  *TT - 1419 filter focus(#435)
+  *TT - 1419 no dynamic filter(#439)
+  *Reload data when slider changes
+  * TT - 1421 Update passage list correctly(#419)
+  *fix drawer structure error
   * fix loading when unauthorized
-  * TT-1434 Only assign one passage to a media (#433)
-  * TT-1437, TT-1444 Auto Match default (#430)
+  * TT - 1434 Only assign one passage to a media(#433)
+  *TT - 1437, TT - 1444 Auto Match default(#430)
   * include hyphen between beg and end
   * remember last edited value
   * separate defaults for Scripture and General plans
-  * TT-1442 handle more Paratext errors (#418
-  * use Ref instead of state for syncing, force dataChanges after sync
-  * rearrange comment/state change in history
-  * TT-1443 error retry count (#434)
-  * replace alert() with error reporting
-  * TT-1447 Manually remove relationships that have been deleted elsewhere (#436)
-  * TT-1449 Make play icon show again
-  * TT-1450 Add modified date to trans tab (#437)
-  * TT-1461 accept upper case extensions (#441)
+  * TT - 1442 handle more Paratext errors(#418
+  *use Ref instead of state for syncing, force dataChanges after sync
+  * rearrange comment / state change in history
+  * TT - 1443 error retry count(#434)
+  *replace alert() with error reporting
+  * TT - 1447 Manually remove relationships that have been deleted elsewhere(#436)
+  *TT - 1449 Make play icon show again
+  * TT - 1450 Add modified date to trans tab(#437)
+  *TT - 1461 accept upper case extensions(#441)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Jun 2020 15:40:00 -0600
+ --Greg Trihus<greg_trihus@sil.org> Thu, 12 Jun 2020 15: 40:
+              00 - 0600
 
-sil-transcriber (2.0.8.4)  experimental; urgency=high
+sil - transcriber(2.0.8.4)  experimental; urgency = high
 
-   * See software.sil.org/siltranscriber/sil-transcriber-2-release-0-8-4/
+   * See software.sil.org / siltranscriber / sil - transcriber - 2 - release - 0 - 8 - 4 /
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 11 Jun 2020 14:21:24 -0600
+ --Greg Trihus<greg_trihus@sil.org> Thu, 11 Jun 2020 14:21:24 - 0600
 

@@ -158,7 +158,10 @@ export const nextUpload =
 
     const acceptExtPat =
       /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
-    if (isDownloadable && !acceptExtPat.test(record.originalFile)) {
+    if (
+      isDownloadable &&
+      !acceptExtPat.test(record.originalFile.split('?')[0])
+    ) {
       sendError(n, `${files[n].name}:unsupported`);
       return;
     }
@@ -221,6 +224,7 @@ export const nextUpload =
             'source-segments': record.sourceSegments,
             'performed-by': record.performedBy,
             topic: record.topic,
+            transcription: record.transcription,
           },
           relationships: {
             'last-modified-by-user': {
@@ -288,10 +292,12 @@ export const nextUpload =
       return undefined;
     };
     var vndRecord = toVnd(record);
+    var ct = record.contentType as string;
+    var skipUpload = isNotDownloadable(ct) || ct.includes('s3link');
 
     postIt().then(async (json) => {
       if (json) {
-        if (isNotDownloadable(json.contentType)) {
+        if (skipUpload) {
           if (completeCB) completeCB(true, json, 0, '');
           return;
         }

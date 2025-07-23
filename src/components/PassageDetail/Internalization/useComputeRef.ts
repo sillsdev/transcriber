@@ -3,6 +3,15 @@ import related from '../../../crud/related';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { PassageD, SectionD } from '../../../model';
 import { parseRef } from '../../../crud/passage';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
+
+const sortAscend = (a: PassageD, b: PassageD) =>
+  a.attributes.sequencenum - b.attributes.sequencenum;
+const sortDescend = (a: PassageD, b: PassageD) =>
+  b.attributes.sequencenum - a.attributes.sequencenum;
+const findPassage = (p: PassageD) =>
+  passageTypeFromRef(p.attributes.reference) === PassageTypeEnum.PASSAGE;
 
 export const useComputeRef = () => {
   const passages = useOrbitData<PassageD[]>('passage');
@@ -78,22 +87,26 @@ export const useComputeRef = () => {
 
   const computeSectionRef = (passage: PassageD) => {
     const sectionId = related(passage, 'section');
-    const firstPassage = passages.find(
-      (p) =>
-        related(p, 'section') === sectionId && p.attributes.sequencenum === 1
+    const sectPass = passages.filter(
+      (p) => related(p, 'section') === sectionId
     );
-    const lastPassage = passages
-      .filter((p) => related(p, 'section') === sectionId)
-      .sort((a, b) => b.attributes.sequencenum - a.attributes.sequencenum)[0];
+    const firstPassage = sectPass.sort(sortAscend).find(findPassage);
+    const lastPassage = sectPass.sort(sortDescend).find(findPassage);
     parseRef(firstPassage as PassageD);
-    parseRef(lastPassage);
+    parseRef(lastPassage as PassageD);
     if (
       firstPassage?.attributes.startChapter ===
-      lastPassage?.attributes.endChapter
+      lastPassage?.attributes?.endChapter
     ) {
-      return `${firstPassage?.attributes.startChapter}:${firstPassage?.attributes.startVerse}-${lastPassage?.attributes.endVerse}`;
+      return `${firstPassage?.attributes?.startChapter || 1}:${
+        firstPassage?.attributes?.startVerse || 1
+      }-${lastPassage?.attributes?.endVerse || 1}`;
     } else {
-      return `${firstPassage?.attributes.startChapter}:${firstPassage?.attributes.startVerse}-${lastPassage?.attributes.endChapter}:${lastPassage?.attributes.endVerse}`;
+      return `${firstPassage?.attributes?.startChapter || 1}:${
+        firstPassage?.attributes?.startVerse || 1
+      }-${lastPassage?.attributes?.endChapter || 1}:${
+        lastPassage?.attributes?.endVerse || 1
+      }`;
     }
   };
   return { computeMovementRef, computeSectionRef };

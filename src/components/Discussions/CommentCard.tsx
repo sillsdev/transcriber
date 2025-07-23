@@ -142,19 +142,25 @@ export const CommentCard = (props: IProps) => {
 
   const reset = () => {
     setEditing(false);
+    saveCompleted(comment.id);
     onEditing(false);
     setChanged(false);
     savingRef.current = false;
-    uploadReset();
+  };
+
+  const resetAfterError = () => {
+    savingRef.current = false;
+    saveCompleted(comment.id);
   };
   const setChanged = (changed: boolean) => {
     const valid = editComment !== '' || canSaveRecording;
     toolChanged(comment.id, changed && valid);
   };
 
-  const saveComment = useSaveComment({ cb: reset });
-  const afterUploadCb = async (mediaId: string) => {
-    saveComment(
+  const saveComment = useSaveComment();
+
+  const doSaveComment = async (mediaId: string | undefined) => {
+    await saveComment(
       discussion.id,
       comment.id,
       editComment,
@@ -162,13 +168,16 @@ export const CommentCard = (props: IProps) => {
       approvedRef.current,
       comment.attributes?.visible
     );
+    reset();
   };
-  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
-    useRecordComment({
-      mediafileId: related(discussion, 'mediafile'),
-      commentNumber,
-      afterUploadCb,
-    });
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    if (mediaId) doSaveComment(mediaId);
+    else resetAfterError();
+  };
+  const { passageId, fileName } = useRecordComment({
+    mediafileId: related(discussion, 'mediafile'),
+    commentNumber,
+  });
   const text = comment.attributes?.commentText;
   const [mediaId, setMediaId] = useState('');
   const [oldVernVer, setOldVernVer] = useState(0);
@@ -221,11 +230,13 @@ export const CommentCard = (props: IProps) => {
   };
 
   const handleSaveEdit = (approvedChange?: boolean) => {
-    savingRef.current = true;
-    //if we're recording and can save, the comment will save after upload
-    if (!canSaveRecording) {
-      if (editComment.length > 0 || approvedChange) afterUploadCb('');
-      else saveCompleted(comment.id);
+    if (!savingRef.current) {
+      savingRef.current = true;
+      //if we're recording and can save, the comment will save after upload
+      if (!canSaveRecording) {
+        if (editComment.length > 0 || approvedChange) doSaveComment('');
+        else saveCompleted(comment.id);
+      }
     }
   };
   const handleCancelEdit = () => {
@@ -345,6 +356,7 @@ export const CommentCard = (props: IProps) => {
           {editing ? (
             <CommentEditor
               toolId={comment.id}
+              passageId={passageId}
               refresh={0}
               comment={comment.attributes?.commentText}
               onCancel={handleCancelEdit}
@@ -352,8 +364,7 @@ export const CommentCard = (props: IProps) => {
               setCanSaveRecording={setCanSaveRecording}
               onTextChange={handleTextChange}
               fileName={fileName(discussion.attributes.subject, discussion.id)}
-              uploadMethod={uploadMedia}
-              uploadSuccess={uploadSuccess}
+              afterUploadCb={afterUploadCb}
             />
           ) : (
             text && (

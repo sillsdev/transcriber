@@ -14,7 +14,11 @@ import {
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
-import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
+import {
+  getVernacularMediaRec,
+  getMediaShared,
+  getAllMediaRecs,
+} from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
 import { getStepComplete } from '../../crud/getStepComplete';
 import { toCamel } from '../../utils/toCamel';
@@ -312,15 +316,27 @@ export const getSheet = ({
             ? getMediaShared(related(mediaRec, 'passage'), memory)
             : IMediaShare.NotPublic;
 
-        const published = getPublishTo(
-          mediaRec?.attributes?.publishTo || '{}',
-          hasPublishing,
-          projectShared,
-          true
-        );
-        item.published = published;
-        item.publishStatus = publishStatus(published);
-
+        if (item.mediaShared === IMediaShare.OldVersionOnly) {
+          const all = getAllMediaRecs(related(mediaRec, 'passage'), memory, null);
+          const pub = all.find((m) => m.attributes.readyToShare);
+          const oldpublished = getPublishTo(
+            pub?.attributes?.publishTo || '{}',
+            hasPublishing,
+            projectShared,
+            true
+          );
+          item.published = oldpublished;
+          item.publishStatus = publishStatus(oldpublished);
+        } else {
+          const published = getPublishTo(
+            mediaRec?.attributes?.publishTo || '{}',
+            hasPublishing,
+            projectShared,
+            true
+          );
+          item.published = published;
+          item.publishStatus = publishStatus(published);
+        }
         const stepId = getNextStep({
           psgCompleted: getStepComplete(passage),
           orgWorkflowSteps,

@@ -4,9 +4,12 @@ import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import MediaUploadContent from './MediaUploadContent';
+import { FaithBridge } from '../assets/brands';
 
 export const UriLinkType = 'text/uri-list';
 export const MarkDownType = 'text/markdown';
+export const Mp3Type = 'audio/mpeg';
+export const FaithbridgeType = 'audio/mpeg/s3link';
 
 export enum UploadType {
   Media = 0,
@@ -19,6 +22,7 @@ export enum UploadType {
   Graphic = 7,
   Link = 8,
   MarkDown = 9,
+  FaithbridgeLink = 10,
 }
 const PROJECTRESOURCE_SIZELIMIT = 50;
 const NO_SIZELIMIT = 10000;
@@ -29,6 +33,7 @@ export const SIZELIMIT = (uploadType: UploadType) => {
       return PROJECTRESOURCE_SIZELIMIT;
     case UploadType.ITF:
     case UploadType.PTF:
+    case UploadType.FaithbridgeLink:
       return NO_SIZELIMIT;
     default:
       return parseInt(API_CONFIG.sizeLimit);
@@ -46,9 +51,9 @@ interface IProps {
   ready?: () => boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
+  inValue?: string;
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
 }
@@ -66,9 +71,9 @@ function MediaUpload(props: IProps) {
     ready,
     speaker,
     onSpeaker,
-    createProject,
     team,
     onFiles,
+    inValue,
     onValue,
     onNonAudio,
   } = props;
@@ -84,6 +89,7 @@ function MediaUpload(props: IProps) {
     t.graphicTitle,
     t.linkTitle,
     t.markdownTitle,
+    t.faithbridgeTitle.replace('{0}', FaithBridge),
   ];
   const handleCancel = () => {
     if (cancelMethod) {
@@ -110,9 +116,9 @@ function MediaUpload(props: IProps) {
         ready={ready}
         speaker={speaker}
         onSpeaker={onSpeaker}
-        createProject={createProject}
         team={team}
         onFiles={onFiles}
+        inValue={inValue}
         onValue={onValue}
         onNonAudio={onNonAudio}
       />

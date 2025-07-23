@@ -192,7 +192,7 @@ function Invite(props: IProps) {
     return (
       invitations.some(
         (invitation) =>
-          invitation.attributes.email.trim().toLowerCase() === email &&
+          invitation?.attributes?.email?.trim()?.toLowerCase() === email &&
           related(invitation, 'organization') === organization
       ) ||
       orgEmails.includes(email) ||

@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  LinearProgress,
   styled,
 } from '@mui/material';
 import path from 'path-browserify';
@@ -16,6 +17,7 @@ import { LinkEdit } from '../control/LinkEdit';
 import { MarkDownEdit } from '../control/MarkDownEdit';
 import { isUrl } from '../utils';
 import {
+  FaithbridgeType,
   MarkDownType,
   SIZELIMIT,
   UploadType,
@@ -119,9 +121,9 @@ interface IProps {
   ready?: () => boolean;
   speaker?: string;
   onSpeaker?: (speaker: string) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
+  inValue?: string;
   onValue?: (value: string) => void;
   onNonAudio?: (nonAudio: boolean) => void;
   saveText?: string;
@@ -139,9 +141,9 @@ function MediaUploadContent(props: IProps) {
     ready,
     speaker,
     onSpeaker,
-    createProject,
     team,
     onFiles,
+    inValue,
     onValue,
     onNonAudio,
     saveText,
@@ -154,6 +156,7 @@ function MediaUploadContent(props: IProps) {
   const [sizeLimit, setSizeLimit] = useState(0);
   const [acceptmime, setAcceptMime] = useState('');
   const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
+  const [progress, setProgress] = useState(false);
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
   const text = [
     t.task,
@@ -166,14 +169,15 @@ function MediaUploadContent(props: IProps) {
     t.graphicTask,
     t.linkTask,
     t.markdownTask,
+    t.faithbridgeTitle,
   ];
 
   const handleAddOrSave = () => {
     if (uploadMethod && files) {
+      setProgress(true);
       uploadMethod(files);
     }
     handleFiles(undefined);
-    onVisible(false);
   };
   const handleCancel = () => {
     handleFiles(undefined);
@@ -247,10 +251,31 @@ function MediaUploadContent(props: IProps) {
     onSpeaker && onSpeaker(speaker);
   };
   const handleValue = (newValue: string) => {
-    const type = uploadType === UploadType.Link ? UriLinkType : MarkDownType;
+    const type =
+      uploadType !== UploadType.MarkDown ? UriLinkType : MarkDownType;
     setFiles([{ name: newValue, size: newValue.length, type } as File]);
     onValue && onValue(newValue);
   };
+
+  useEffect(() => setProgress(false), []);
+
+  useEffect(() => {
+    if (inValue) {
+      setFiles([
+        {
+          name: inValue,
+          size: inValue.length,
+          type:
+            uploadType !== UploadType.MarkDown
+              ? uploadType === UploadType.FaithbridgeLink
+                ? FaithbridgeType
+                : UriLinkType
+              : MarkDownType,
+        } as File,
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inValue]);
 
   useEffect(() => {
     setAcceptExtension(
@@ -298,11 +323,14 @@ function MediaUploadContent(props: IProps) {
             name={hasRights ? speaker || '' : ''}
             onRights={handleRights}
             onChange={handleSpeaker}
-            createProject={createProject}
             team={team}
           />
         )}
-        {![UploadType.Link, UploadType.MarkDown].includes(uploadType) ? (
+        {![
+          UploadType.Link,
+          UploadType.MarkDown,
+          UploadType.FaithbridgeLink,
+        ].includes(uploadType) ? (
           <Drop>
             {hasRights ? (
               <DropTarget
@@ -317,11 +345,14 @@ function MediaUploadContent(props: IProps) {
             )}
           </Drop>
         ) : uploadType === UploadType.Link ? (
-          <LinkEdit onValue={handleValue} />
+          <LinkEdit inValue={inValue} onValue={handleValue} />
+        ) : uploadType === UploadType.MarkDown ? (
+          <MarkDownEdit inValue={inValue} onValue={handleValue} />
         ) : (
-          <MarkDownEdit onValue={handleValue} />
+          <></>
         )}
         {metaData}
+        {progress && <LinearProgress variant="indeterminate" />}
       </DialogContent>
       <DialogActions>
         <Button
@@ -343,7 +374,8 @@ function MediaUploadContent(props: IProps) {
             files.length === 0 ||
             files[0].name.trim() === '' ||
             !hasRights ||
-            (uploadType === UploadType.Link && !isUrl(files[0].name))
+            (uploadType === UploadType.Link && !isUrl(files[0].name)) ||
+            progress
           }
         >
           {saveText || t.upload}

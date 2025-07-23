@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useGlobal } from '../context/GlobalContext';
 import { useRole } from '../crud/useRole';
@@ -30,7 +30,10 @@ export const useStepPermissions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations]);
 
-  const canAlwaysDoStep = () => userIsAdmin || !permissionsOn;
+  const canAlwaysDoStep = useCallback(
+    () => userIsAdmin || !permissionsOn,
+    [permissionsOn, userIsAdmin]
+  );
 
   const canDoSectionStep = (stepId: string, section: SectionD) => {
     if (canAlwaysDoStep()) return true;
@@ -44,7 +47,6 @@ export const useStepPermissions = () => {
     if (!assigned) return true;
     const assignedgroup = related(assigned as OrgWorkflowStepD, 'group');
     const assigneduser = related(assigned as OrgWorkflowStepD, 'user');
-
     return (
       ((Boolean(assignedgroup) &&
         myGroups.findIndex((g) => g.id === assignedgroup) > -1) ||

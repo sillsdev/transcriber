@@ -14,23 +14,18 @@ import { orbitErr } from '../utils';
 import * as actions from '../store';
 import { RecordKeyMap } from '@orbit/records';
 
-interface IProps {
-  cb: () => void;
-}
-
-export const useSaveComment = (props: IProps) => {
+export const useSaveComment = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const dispatch = useDispatch();
   const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const { hasPermission, addAccess, addNeedsApproval, approve } =
     usePermissions();
-  const { cb } = props;
-  return (
+  return async (
     discussionId: string,
     commentId: string,
     commentText: string,
-    mediaRemId: string,
+    mediaRemId: string | undefined,
     approved: boolean | undefined,
     permissions?: string
   ) => {
@@ -102,13 +97,12 @@ export const useSaveComment = (props: IProps) => {
     ops.push(
       ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussionId }, user)
     );
-    memory
-      .update(ops)
-      .then(() => {
-        cb && cb();
-      })
-      .catch((err: Error) => {
-        doOrbitError(orbitErr(err, 'attach comment media'));
-      });
+    try {
+      await memory.update(ops);
+      return true;
+    } catch (err: any) {
+      doOrbitError(orbitErr(err, 'attach comment media'));
+      return false;
+    }
   };
 };

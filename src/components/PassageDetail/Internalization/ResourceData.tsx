@@ -7,8 +7,9 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactCategoryType, useOrganizedBy } from '../../../crud';
 import {
@@ -28,6 +29,8 @@ import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import { LinkEdit } from '../../../control/LinkEdit';
 import { MarkDownEdit } from '../../../control/MarkDownEdit';
 import { mediaContentType } from '../../../utils/contentType';
+import MarkDown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface IProps {
   media?: MediaFileD;
@@ -71,6 +74,8 @@ export function ResourceData(props: IProps) {
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
+  useEffect(() => setDescription(initDescription), [initDescription]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     var newValue = (event.target as HTMLInputElement).value;
@@ -141,9 +146,11 @@ export function ResourceData(props: IProps) {
               label={passDesc ?? t.passageResource}
             />
             {allowProject &&
-              ![UploadType.Link, UploadType.MarkDown].includes(
-                uploadType ?? UploadType.Resource
-              ) && (
+              ![
+                UploadType.Link,
+                UploadType.MarkDown,
+                UploadType.FaithbridgeLink,
+              ].includes(uploadType ?? UploadType.Resource) && (
                 <FormControlLabel
                   value={'general'}
                   control={<Radio />}
@@ -156,6 +163,18 @@ export function ResourceData(props: IProps) {
           </RadioGroup>
         </FormControl>
       )}
+      {media &&
+        mediaContentType(media).startsWith('audio') &&
+        Boolean(media?.attributes.transcription) && (
+          <Stack spacing={1}>
+            <Typography variant="h6" sx={{ pt: 1 }}>
+              {t.transcription}
+            </Typography>
+            <MarkDown remarkPlugins={[remarkGfm]}>
+              {media?.attributes.transcription || ''}
+            </MarkDown>
+          </Stack>
+        )}
     </Stack>
   );
 }

@@ -16,6 +16,13 @@ import { mediaTitleSelector } from '../selector';
 import { useTitleSave } from './useTitleSave';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useSnackBar } from '../hoc/SnackBar';
+import {
+  ArtifactTypeSlug,
+  useArtifactType,
+  useMediaUpload,
+  VernacularTag,
+} from '../crud';
+import { useGlobal } from '../context/GlobalContext';
 
 const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -53,7 +60,6 @@ const TitleTabs = (props: IProps) => {
   const canSaveRef = useRef(false);
   const [recording, setRecording] = useState(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const [statusText, setStatusText] = useState('');
   const saving = useRef(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -70,6 +76,14 @@ const TitleTabs = (props: IProps) => {
     // isChanged,
   } = useContext(UnsavedContext).state;
   const { showMessage } = useSnackBar();
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const { getTypeId } = useArtifactType();
+
+  const TitleId = useMemo(() => {
+    return getTypeId(ArtifactTypeSlug.Title) as string;
+    //return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
 
   const toolId = useMemo(() => 'MediaTitle-' + titlekey, [titlekey]);
   const recToolId = useMemo(() => toolId + 'rec', [toolId]);
@@ -93,14 +107,13 @@ const TitleTabs = (props: IProps) => {
     toolChanged(toolId, false);
     toolChanged(recToolId, false);
   };
-
-  const { uploadMedia } = useTitleSave({
-    myPlanId,
-    passageId,
+  const afterSave = (success: boolean) => {
+    saving.current = false;
+    if (success) reset();
+  };
+  const { afterUploadCb } = useTitleSave({
     onMediaIdChange,
-    onDialogVisible,
-    reset,
-    setUploadSuccess,
+    afterSave,
   });
 
   const handleSave = (e?: any) => {
@@ -157,8 +170,6 @@ const TitleTabs = (props: IProps) => {
         showMessage(`still saving`);
         return;
       }
-    }
-    if (r) {
       toolChanged(toolId, true);
       toolChanged(recToolId, true);
     }
@@ -176,9 +187,15 @@ const TitleTabs = (props: IProps) => {
 
   const handleClose = () => {
     reset();
-    onDialogVisible?.(false);
     setTab(0);
   };
+
+  const uploadMedia = useMediaUpload({
+    artifactId: passageId !== undefined ? VernacularTag : TitleId,
+    passageId,
+    planId: myPlanId,
+    afterUploadCb,
+  });
 
   return (
     <TabBox>
@@ -197,14 +214,16 @@ const TitleTabs = (props: IProps) => {
       </AppBar>
       {((tab || 0) === 0 || tab > last) && (
         <TitleRecord
+          passageId={passageId}
+          planId={myPlanId}
+          titleId={TitleId}
           defaultFilename={defaultFilename}
           recToolId={recToolId}
           onMyRecording={handleMyRecording}
           canSave={canSaveRecording}
           handleSetCanSave={handleSetCanSave}
-          uploadMedia={uploadMedia}
+          afterUploadCb={afterUploadCb}
           setStatusText={setStatusText}
-          uploadSuccess={uploadSuccess}
           onCancel={handleClose}
           onSave={handleSave}
         />

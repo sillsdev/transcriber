@@ -10,6 +10,7 @@ import {
   ArtifactType,
   Resource,
   SheetLevel,
+  ISharedStrings,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { PlayInPlayer } from '../../../context/PassageDetailContext';
@@ -19,7 +20,7 @@ import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
 import { AltButton } from '../../../control';
-import { SortableItem } from '.';
+import { AIGenerated, SortableItem } from '.';
 import {
   remoteIdGuid,
   useSecResCreate,
@@ -36,7 +37,6 @@ import {
   IArtifactCategory,
   ArtifactCategoryType,
   mediaFileName,
-  passageRefText,
   usePlanType,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
@@ -47,7 +47,15 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
-import { Box, BoxProps, Grid, Stack, styled, Typography } from '@mui/material';
+import {
+  Badge,
+  Box,
+  BoxProps,
+  Grid,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -68,7 +76,10 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { shallowEqual, useSelector } from 'react-redux';
-import { passageDetailArtifactsSelector } from '../../../selector';
+import {
+  passageDetailArtifactsSelector,
+  sharedSelector,
+} from '../../../selector';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
@@ -80,6 +91,9 @@ import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
 import { mediaContentType } from '../../../utils/contentType';
 import { useStepPermissions } from '../../../utils/useStepPermission';
+import FindBibleBrain from './FindBibleBrain';
+import { useHandleLink } from './addLinkKind';
+import { useComputeRef } from './useComputeRef';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -135,6 +149,7 @@ export function PassageDetailArtifacts() {
   const { getArtifactCategorys } = useArtifactCategory();
   const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [aiGenerated, setAIGenerated] = useState(false);
   const [findOpen, setFindOpen] = useState(false);
   const [visual, setVisual] = useState(false);
   const [sortKey, setSortKey] = useState(0);
@@ -142,6 +157,7 @@ export function PassageDetailArtifacts() {
   const [displayId, setDisplayId] = useState('');
   const [link, setLink] = useState<string>();
   const [markDown, setMarkDoan] = useState('');
+  const [audioScriptureVisible, setAudioScriptureVisible] = useState(false);
   const [nonAudio, setNonAudio] = useState(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
@@ -155,6 +171,7 @@ export function PassageDetailArtifacts() {
   const [artifactState] = useState<{ id?: string | null }>({});
   // const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
+  const [initDescription, setInitDescription] = useState<string>('');
   const [recordAudio, setRecordAudio] = useState<boolean>(false);
   const mediaRef = useRef<MediaFileD>();
   const textRef = useRef<string>();
@@ -173,6 +190,7 @@ export function PassageDetailArtifacts() {
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [performedBy, setPerformedBy] = useState('');
+  const [markdownValue, setMarkdownValue] = useState('');
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
   const [plan] = useGlobal('plan'); //will be constant here
@@ -181,10 +199,13 @@ export function PassageDetailArtifacts() {
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
-  const [findTabsClose, setFindTabsClose] = useState(false);
+  const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
+  const handleLink = useHandleLink({ passage, setLink });
+  const { computeSectionRef } = useComputeRef();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -362,6 +383,10 @@ export function PassageDetailArtifacts() {
     catIdRef.current = undefined;
     descriptionRef.current = '';
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
+    setUploadVisible(false);
+    setMarkdownValue('');
+    setInitDescription('');
+    setAIGenerated(false);
   };
   const handleEditResourceVisible = (v: boolean) => {
     if (!v) resetEdit();
@@ -426,9 +451,12 @@ export function PassageDetailArtifacts() {
     artifactState.id = resourceType;
     resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     if (what === 'upload') {
+      mediaRef.current = undefined;
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
       setUploadVisible(true);
+    } else if (what === 'scripture') {
+      setAudioScriptureVisible(true);
     } else if (what === 'link') {
       setUploadType(UploadType.Link);
       setRecordAudio(false);
@@ -445,6 +473,24 @@ export function PassageDetailArtifacts() {
       resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
     }
+  };
+
+  const handleMarkdownValue = (
+    query: string,
+    audioUrl: string,
+    transcript: string
+  ) => {
+    setInitDescription(query);
+    descriptionRef.current = query;
+    if (audioUrl) {
+      setUploadType(UploadType.FaithbridgeLink);
+    } else {
+      setUploadType(UploadType.MarkDown);
+    }
+    setMarkdownValue(audioUrl ? `${audioUrl}||${transcript}` : transcript);
+    setRecordAudio(false);
+    setAIGenerated(true);
+    setUploadVisible(true);
   };
 
   const passDesc = useMemo(
@@ -523,7 +569,7 @@ export function PassageDetailArtifacts() {
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
     var projRes = new Array<MediaFileD>();
-    if (mediaRemoteIds) {
+    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
         const id =
@@ -652,7 +698,26 @@ export function PassageDetailArtifacts() {
       cnt += 1;
       setComplete(Math.min((cnt * 100) / total, 100));
     }
+    // Ensure setComplete(0) is always called after processing
     setComplete(0);
+  };
+
+  const handleTextChange = (text: string) => {
+    textRef.current = text;
+    const ct = mediaContentType(mediaRef.current);
+    if (ct === MarkDownType) {
+      const newAllow = text.trim() !== '';
+      if (allowEditSave !== newAllow) {
+        setAllowEditSave(newAllow);
+      }
+      return;
+    }
+    const validUrl = isUrl(text);
+    if (ct === UriLinkType) {
+      if (allowEditSave !== validUrl) {
+        setAllowEditSave(validUrl);
+      }
+    }
   };
 
   useEffect(() => {
@@ -725,6 +790,12 @@ export function PassageDetailArtifacts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [plan]
   );
+
+  const modifiable = useMemo(
+    () => hasPermission && (!offline || offlineOnly),
+    [hasPermission, offline, offlineOnly]
+  );
+
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
@@ -732,7 +803,7 @@ export function PassageDetailArtifacts() {
           {isScripture && (
             <Grid item>
               <AltButton onClick={() => handleFindVisible(true)}>
-                {t.find}
+                <Badge badgeContent={`(${ts.ai})`}>{t.research}</Badge>
               </AltButton>
             </Grid>
           )}
@@ -789,12 +860,8 @@ export function PassageDetailArtifacts() {
             onLink={handleLinkId}
             onMarkDown={handleMarkDownId}
             onDone={handleDone}
-            onDelete={handleDelete}
-            onEdit={
-              hasPermission && (!offline || offlineOnly)
-                ? handleEdit
-                : undefined
-            }
+            onDelete={modifiable ? handleDelete : undefined}
+            onEdit={modifiable ? handleEdit : undefined}
           />
         ))}
       </VertListDnd>
@@ -806,19 +873,22 @@ export function PassageDetailArtifacts() {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
+        cancelReset={resetEdit}
         artifactState={artifactState}
         uploadType={uploadType}
         ready={() => true}
         onNonAudio={handleNonAudio}
         performedBy={performedBy}
         onSpeakerChange={(value) => setPerformedBy(value)}
+        inValue={markdownValue}
+        eafUrl={aiGenerated ? AIGenerated : ''}
         metaData={
           <ResourceData
             uploadType={uploadType}
             catAllowNew={true} //if they can upload they can add cat
             initCategory=""
             onCategoryChange={handleCategory}
-            initDescription=""
+            initDescription={initDescription}
             onDescriptionChange={handleDescription}
             catRequired={false}
             initPassRes={isPassageResource()}
@@ -830,17 +900,16 @@ export function PassageDetailArtifacts() {
         }
       />
       <BigDialog
-        title={t.findResource.replace('{0}', passageRefText(passage))}
-        description=<Typography>{t.findResourceDesc}</Typography>
+        title={t.findResource.replace('{0}', computeSectionRef(passage) ?? '')}
+        description={<Typography>{t.findResourceDesc}</Typography>}
         isOpen={findOpen}
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
-        setCloseRequested={setFindTabsClose}
       >
         <FindTabs
           onClose={() => handleFindVisible(false)}
-          closeRequested={findTabsClose}
           canAdd={hasPermission}
+          onMarkdown={handleMarkdownValue}
         />
       </BigDialog>
       <BigDialog
@@ -924,16 +993,7 @@ export function PassageDetailArtifacts() {
           initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
-          onTextChange={(text) => {
-            textRef.current = text;
-            const validUrl = isUrl(text);
-            if (
-              mediaContentType(mediaRef.current) === UriLinkType &&
-              allowEditSave !== validUrl
-            ) {
-              setAllowEditSave(validUrl);
-            }
-          }}
+          onTextChange={handleTextChange}
           sectDesc={sectDesc}
           passDesc={passDesc}
         />
@@ -956,6 +1016,21 @@ export function PassageDetailArtifacts() {
           bp={BigDialogBp.sm}
         >
           <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
+        </BigDialog>
+      )}
+      {audioScriptureVisible && (
+        <BigDialog
+          title={t.audioScripture}
+          isOpen={Boolean(audioScriptureVisible)}
+          onOpen={() => setAudioScriptureVisible(false)}
+          bp={BigDialogBp.sm}
+          setCloseRequested={setBiblebrainClose}
+        >
+          <FindBibleBrain
+            handleLink={handleLink}
+            onClose={() => setAudioScriptureVisible(false)}
+            closeRequested={biblebrainClose}
+          />
         </BigDialog>
       )}
       <LaunchLink url={link} reset={() => setLink('')} />

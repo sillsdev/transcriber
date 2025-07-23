@@ -5,6 +5,7 @@ import { LightTooltip } from '../control/LightTooltip';
 import { ToolbarGrid } from '../control/ToolbarGrid';
 import { IWsAudioPlayerSegmentStrings } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
+import type { IconBaseProps } from 'react-icons';
 import RemoveOneIcon from '@mui/icons-material/Clear';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ClearIcon from '@mui/icons-material/Delete';
@@ -15,6 +16,8 @@ import { useSelector } from 'react-redux';
 import WSSegmentParameters from './WSSegmentParameters';
 import { useSnackBar } from '../hoc/SnackBar';
 import { audioPlayerSegmentSelector } from '../selector';
+
+const Barcode = IoMdBarcode as unknown as React.FC<IconBaseProps>;
 
 interface IProps {
   ready: boolean;
@@ -153,7 +156,7 @@ function WSAudioPlayerSegment(props: IProps) {
                     onClick={handleAutoSegment}
                     disabled={!ready || playing || busyRef.current}
                   >
-                    <IoMdBarcode />
+                    <Barcode />
                   </IconButton>
                 </span>
               </LightTooltip>

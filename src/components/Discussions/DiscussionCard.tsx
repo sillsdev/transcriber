@@ -63,12 +63,7 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../Sheet/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import {
-  removeExtension,
-  startEnd,
-  useWaitForRemoteQueue,
-  waitForIt,
-} from '../../utils';
+import { removeExtension, startEnd, useWaitForRemoteQueue } from '../../utils';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -277,7 +272,7 @@ export const DiscussionCard = (props: IProps) => {
   const cardRef = useRef<any>();
   const commentText = useRef('');
   const [comment, setComment] = useState('');
-  const commentMediaId = useRef('');
+  const commentMediaId = useRef<string | undefined>();
   const [canSaveRecording, setCanSaveRecording] = useState(false);
   const { userIsAdmin } = useRole();
 
@@ -305,34 +300,39 @@ export const DiscussionCard = (props: IProps) => {
     else return NewDiscussionToolId;
   }, [discussion]);
 
-  const afterSaveCommentcb = () => {
-    saveCompleted(NewCommentToolId);
-  };
-  const saveComment = useSaveComment({ cb: afterSaveCommentcb });
-  const saveMyComment = async (mediaId: string) => {
+  const saveComment = useSaveComment();
+
+  const afterUploadCb = async (mediaId: string | undefined) => {
     commentMediaId.current = mediaId;
-    if (discussion.id) {
-      if (commentText.current || commentMediaId.current)
-        saveComment(
-          discussion.id,
-          '',
-          commentText.current,
-          commentMediaId.current,
-          undefined
-        );
-      else saveCompleted(NewCommentToolId);
-      commentText.current = '';
-      commentMediaId.current = '';
-      uploadReset();
+    if (!mediaId) {
+      saveCompleted(NewCommentToolId, ts.NoSaveOffline);
+    } else {
+      await saveDiscussion();
+      await saveMyComment();
     }
   };
+  const saveMyComment = async () => {
+    if (discussion.id && (commentText.current || commentMediaId.current)) {
+      await saveComment(
+        discussion.id,
+        '',
+        commentText.current,
+        commentMediaId.current,
+        undefined
+      );
+    }
+    saveCompleted(NewCommentToolId);
+    commentText.current = '';
+    commentMediaId.current = '';
+    onAddComplete && onAddComplete(discussion.id);
+    setEditing(false);
+    setChanged(false);
+  };
 
-  const { uploadMedia, fileName, uploadSuccess, uploadReset } =
-    useRecordComment({
-      mediafileId: mediafileId,
-      commentNumber: -1,
-      afterUploadCb: saveMyComment,
-    });
+  const { passageId, fileName } = useRecordComment({
+    mediafileId: mediafileId,
+    commentNumber: -1,
+  });
 
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
@@ -490,6 +490,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [discussion, showReference]);
 
   function selectDiscussion(discussion: Discussion) {}
+
   function discussionDescription() {
     var media = '';
     if (sourceMediafile) {
@@ -699,92 +700,85 @@ export const DiscussionCard = (props: IProps) => {
       setChanged(true);
     }
   };
+  const saveDiscussion = async () => {
+    //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
+    discussion.attributes.subject =
+      editSubject.length > 0 ? editSubject : tdcs.topic;
+    var ops: RecordOperation[] = [];
+    var t = new RecordTransformBuilder();
+    if (!discussion.id) {
+      ops.push(...AddRecord(t, discussion, user, memory));
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'creatorUser',
+          'user',
+          assignedUser?.id ?? user ?? '',
+          user
+        )
+      );
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'mediafile',
+          'mediafile',
+          mediafileId,
+          user
+        )
+      );
+    } else ops.push(...UpdateRecord(t, discussion, user));
+    ops.push(
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'orgWorkflowStep',
+        'orgworkflowstep',
+        moveTo ?? currentstep,
+        user
+      )
+    );
+    ops.push(
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'artifactCategory',
+        'artifactcategory',
+        editCategory,
+        user
+      ),
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'group',
+        'group',
+        assignedGroup?.id ?? '',
+        user
+      ),
+      ...UpdateRelatedRecord(
+        t,
+        discussion,
+        'user',
+        'user',
+        assignedUser?.id ?? '',
+        user
+      )
+    );
+    await memory.update(ops);
+  };
+
   const handleSave = async () => {
     //if there is an audio comment, start the upload
     if (canSaveRecording && !commentMediaId.current) {
       startSave(NewCommentToolId);
-      await waitForIt(
-        'comment upload',
-        () => {
-          return Boolean(commentMediaId.current);
-        },
-        () => false,
-        500
-      );
-    }
-    if (mediafileId && myChanged) {
-      //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
-      discussion.attributes.subject =
-        editSubject.length > 0 ? editSubject : tdcs.topic;
-      var ops: RecordOperation[] = [];
-      var t = new RecordTransformBuilder();
-      if (!discussion.id) {
-        ops.push(...AddRecord(t, discussion, user, memory));
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            discussion,
-            'creatorUser',
-            'user',
-            assignedUser?.id ?? user ?? '',
-            user
-          )
-        );
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            discussion,
-            'mediafile',
-            'mediafile',
-            mediafileId,
-            user
-          )
-        );
-      } else ops.push(...UpdateRecord(t, discussion, user));
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          discussion,
-          'orgWorkflowStep',
-          'orgworkflowstep',
-          moveTo ?? currentstep,
-          user
-        )
-      );
-      ops.push(
-        ...UpdateRelatedRecord(
-          t,
-          discussion,
-          'artifactCategory',
-          'artifactcategory',
-          editCategory,
-          user
-        ),
-        ...UpdateRelatedRecord(
-          t,
-          discussion,
-          'group',
-          'group',
-          assignedGroup?.id ?? '',
-          user
-        ),
-        ...UpdateRelatedRecord(
-          t,
-          discussion,
-          'user',
-          'user',
-          assignedUser?.id ?? '',
-          user
-        )
-      );
-      await memory.update(ops);
+      //we'll do the rest in afterUpload
+      return;
+    } else if (mediafileId && myChanged) {
+      await saveDiscussion();
     }
     setMoveTo(undefined);
-    saveMyComment(commentMediaId.current).then(() => {
-      onAddComplete && onAddComplete(discussion.id);
-      setEditing(false);
-      setChanged(false);
-    });
+    await saveMyComment();
   };
 
   const handleCancel = (e: any) => {
@@ -952,10 +946,10 @@ export const DiscussionCard = (props: IProps) => {
                     refresh={refresh}
                     setCanSaveRecording={setCanSaveRecording}
                     fileName={fileName(editSubject, '')}
-                    uploadMethod={uploadMedia}
+                    afterUploadCb={afterUploadCb}
+                    passageId={passageId}
                     onTextChange={handleTextChange}
                     cancelOnlyIfChanged={true}
-                    uploadSuccess={uploadSuccess}
                   />
                 )}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>

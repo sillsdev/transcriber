@@ -17,6 +17,7 @@ import { ICommentEditorStrings, ISharedStrings, IState } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { localStrings, sharedSelector } from '../../selector';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { useArtifactType } from '../../crud';
 
 const RowDiv = styled('div')(() => ({
   display: 'flex',
@@ -38,11 +39,11 @@ const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
 interface IStateProps {}
 interface IProps extends IStateProps {
   toolId: string;
+  passageId: string;
   comment: string;
   fileName: string;
   cancelOnlyIfChanged?: boolean;
-  uploadMethod: (files: File[]) => Promise<void>;
-  uploadSuccess: boolean | undefined;
+  afterUploadCb: (mediaId: string | undefined) => Promise<void>;
   refresh: number;
   onOk?: () => void;
   onCancel?: () => void;
@@ -55,11 +56,11 @@ export const commentEditorSelector = (state: IState) =>
 export const CommentEditor = (props: IProps) => {
   const {
     toolId,
+    passageId,
     comment,
     fileName,
     cancelOnlyIfChanged,
-    uploadMethod,
-    uploadSuccess,
+    afterUploadCb,
     refresh,
     onOk,
     onCancel,
@@ -87,6 +88,7 @@ export const CommentEditor = (props: IProps) => {
   const doRecordRef = useRef(false);
   const [recording, setRecording] = useState(false);
   const [myChanged, setMyChanged] = useState(false);
+  const { commentId } = useArtifactType();
 
   const {
     toolsChanged,
@@ -111,6 +113,7 @@ export const CommentEditor = (props: IProps) => {
     if (saveRequested(toolId)) handleOk();
     else if (clearRequested(toolId)) handleCancel();
     else if (changed) setStatusText(t.unsaved);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, toolId]);
 
@@ -153,9 +156,8 @@ export const CommentEditor = (props: IProps) => {
 
   const handleOk = () => {
     //start the passage recorder if it's going...
-    if (!saveRequested(toolId)) {
-      startSave(toolId);
-    }
+    startSave(toolId);
+
     onOk && onOk();
     setStatusText(t.saving);
     if (doRecordRef.current) setCommentRecording(false);
@@ -200,9 +202,10 @@ export const CommentEditor = (props: IProps) => {
       {doRecordRef.current && (
         <MediaRecord
           toolId={toolId}
+          passageId={passageId}
+          artifactId={commentId}
           onRecording={onRecording}
-          uploadMethod={uploadMethod}
-          uploadSuccess={uploadSuccess}
+          afterUploadCb={afterUploadCb}
           defaultFilename={fileName}
           allowWave={false}
           showFilename={false}

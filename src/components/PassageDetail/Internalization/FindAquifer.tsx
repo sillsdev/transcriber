@@ -1,10 +1,12 @@
 import {
   Autocomplete,
   Grid,
+  Icon,
   IconButton,
   InputAdornment,
   OutlinedInput,
   Stack,
+  styled,
   TextField,
   Typography,
 } from '@mui/material';
@@ -39,6 +41,18 @@ import BigDialog from '../../../hoc/BigDialog';
 import { Aquifer } from '../../../assets/brands';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { AxiosError } from 'axios';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
+import { useComputeRef } from './useComputeRef';
+
+// Regex to match passage references in the form "chapter:verse-chapter:verse"
+const PASSAGE_REF_REGEX = /(\d+):(\d+)-(\d+)?:?(\d+)?/g;
+
+const StyledStack = styled(Stack)(() => ({
+  '& .MuiDataGrid-footerContainer': {
+    display: 'none!important',
+  },
+}));
 
 interface AquiferSearch {
   id: number;
@@ -69,7 +83,7 @@ interface LicenseByLang {
   };
 }
 
-interface AquiferContent {
+export interface AquiferContent {
   id: number;
   name: string;
   localizedName: string;
@@ -117,6 +131,7 @@ export default function FindAquifer({ onClose }: IProps) {
   const { passage, section } = usePassageDetailContext();
   const { InternalizationStep } = useSecResCreate(section);
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [memory] = useGlobal('memory');
   const [result, setResult] = useState<AquiferSearch[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
@@ -139,8 +154,8 @@ export default function FindAquifer({ onClose }: IProps) {
   );
   const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const token = useContext(TokenContext).state.accessToken ?? '';
-  const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
-  const [offset] = useState(0); //TODO?
+  const [limit] = useState(100); // TODO: always loads max of 100 results?
+  const [offset, setOffset] = useState(0);
   const forceDataChanges = useDataChanges();
   const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
   const { userIsAdmin } = useRole();
@@ -150,6 +165,7 @@ export default function FindAquifer({ onClose }: IProps) {
   };
   const { showMessage } = useSnackBar();
   const [errorReporter] = useGlobal('errorReporter');
+  const { computeSectionRef } = useComputeRef();
 
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -172,6 +188,20 @@ export default function FindAquifer({ onClose }: IProps) {
     { columnName: 'group', width: 120 },
     { columnName: 'source', width: 200 },
     { columnName: 'preview', width: 100 },
+  ];
+  const filteringEnabled = [
+    { columnName: 'name', filteringEnabled: true },
+    { columnName: 'mediaType', filteringEnabled: true },
+    { columnName: 'group', filteringEnabled: true },
+    { columnName: 'source', filteringEnabled: true },
+    { columnName: 'preview', filteringEnabled: false },
+  ];
+  const sortingEnabled = [
+    { columnName: 'name', sortingEnabled: true },
+    { columnName: 'mediaType', sortingEnabled: true },
+    { columnName: 'group', sortingEnabled: true },
+    { columnName: 'source', sortingEnabled: true },
+    { columnName: 'preview', sortingEnabled: false },
   ];
   const columnFormatting = [
     { columnName: 'name', wordWrapEnabled: true },
@@ -209,7 +239,20 @@ export default function FindAquifer({ onClose }: IProps) {
 
   useEffect(() => {
     if (lang === null) return;
-    parseRef(passage);
+    const pt = passageTypeFromRef(passage?.attributes?.reference);
+    if (pt === PassageTypeEnum.NOTE) {
+      // Handle note-specific logic here
+      const refs = computeSectionRef(passage);
+      const m = PASSAGE_REF_REGEX.exec(refs);
+      if (m) {
+        passage.attributes.startChapter = parseInt(m[1]);
+        passage.attributes.startVerse = parseInt(m[2]);
+        passage.attributes.endChapter = parseInt(m[4] ? m[3] : m[1]);
+        passage.attributes.endVerse = parseInt(m[4] ? m[4] : m[3] ?? m[2]);
+      }
+    } else {
+      parseRef(passage);
+    }
     const { book, startChapter, startVerse, endChapter, endVerse } =
       passage.attributes;
     const paramArr = [
@@ -233,7 +276,7 @@ export default function FindAquifer({ onClose }: IProps) {
       setResult(response.items);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, lang, refresh]);
+  }, [passage, lang, refresh, offset]);
 
   useEffect(() => {
     const dataRows = result.map((item: AquiferSearch) => ({
@@ -320,12 +363,8 @@ export default function FindAquifer({ onClose }: IProps) {
         });
       })
       .catch((err) => {
-        showMessage('Aquifer add failed ' + (err as AxiosError).message);
-        logError(
-          Severity.error,
-          errorReporter,
-          infoMsg(err, 'Aquifer add failed ')
-        );
+        showMessage(t.addError + (err as AxiosError).message);
+        logError(Severity.error, errorReporter, infoMsg(err, t.addError));
       });
   };
 
@@ -335,7 +374,7 @@ export default function FindAquifer({ onClose }: IProps) {
       spacing={2}
       sx={{ alignItems: 'center', justifyContent: 'center' }}
     >
-      <Stack>
+      <StyledStack>
         <Grid
           container
           direction={'row'}
@@ -359,36 +398,38 @@ export default function FindAquifer({ onClose }: IProps) {
             />
           </Grid>
           <Grid item>
-            <LightTooltip title={t.aquiferSearchTip}>
-              <OutlinedInput
-                id="query"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      type="submit"
-                      onClick={() => setRefresh(refresh + 1)}
-                    >
-                      <SearchIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => {
-                        setQuery('');
-                        setRefresh(refresh + 1);
-                      }}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                inputProps={{
-                  'aria-label': 'query',
-                }}
-              />
-            </LightTooltip>
+            {offset === 0 && (
+              <LightTooltip title={t.aquiferSearchTip}>
+                <OutlinedInput
+                  id="query"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        type="submit"
+                        onClick={() => setRefresh(refresh + 1)}
+                      >
+                        <SearchIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setQuery('');
+                          setRefresh(refresh + 1);
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  inputProps={{
+                    'aria-label': 'query',
+                  }}
+                />
+              </LightTooltip>
+            )}
           </Grid>
-          {userIsAdmin && !isOffline && (
+          {userIsAdmin && (!isOffline || offlineOnly) && (
             <Grid item>
               <PriButton
                 onClick={handleAdd}
@@ -435,18 +476,44 @@ export default function FindAquifer({ onClose }: IProps) {
             </>
           </BigDialog>
         )}
-
-        {count > 100 && (
-          <Typography variant="h6" component="h6">{`${Math.min(
-            count,
-            100
-          )} of ${count} aquifer results`}</Typography>
+        {count > 0 && (
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+            {offset > 0 ? (
+              <IconButton
+                onClick={() => setOffset(offset - limit)}
+                title={t.previous}
+              >
+                <Icon>arrow_left</Icon>
+              </IconButton>
+            ) : (
+              <></>
+            )}
+            <Typography variant="h6" component="h6">
+              {t.showing
+                .replace('{0}', `${offset + 1}`)
+                .replace('{1}', `${Math.min(offset + limit, count)}`)
+                .replace('{2}', `${count}`)
+                .replace('{3}', Aquifer)}
+            </Typography>
+            {offset + limit < count ? (
+              <IconButton
+                onClick={() => setOffset(offset + limit)}
+                title={t.next}
+              >
+                <Icon>arrow_right</Icon>
+              </IconButton>
+            ) : (
+              <></>
+            )}
+          </Stack>
         )}
         {data.length > 0 ? (
           <DataTable
             columns={columnDefs}
             columnWidths={columnWidths}
             columnFormatting={columnFormatting}
+            filteringEnabled={filteringEnabled}
+            sortingEnabled={sortingEnabled}
             sorting={sorting}
             rows={data}
             select={handleCheck}
@@ -464,7 +531,7 @@ export default function FindAquifer({ onClose }: IProps) {
             </Grid>
           </Grid>
         )}
-      </Stack>
+      </StyledStack>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
   );

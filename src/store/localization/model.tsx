@@ -59,9 +59,13 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
+    "activity": string;
+    "airesource": string;
     "backtranslation": string;
     "comment": string;
     "graphic": string;
+    "intellectualproperty": string;
+    "keyterm": string;
     "projectresource": string;
     "qanda": string;
     "resource": string;
@@ -364,6 +368,19 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
     "verify": string;
 };
 
+export interface IFaithbridgeStrings extends Localize.LocalizedStringsMethods {
+    "addContent": string;
+    "audio": string;
+    "audioResources": string;
+    "error": string;
+    "loading": string;
+    "newChat": string;
+    "noInfo": string;
+    "text": string;
+    "updating": string;
+    "video": string;
+};
+
 export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "all": string;
     "allPassages": string;
@@ -378,6 +395,7 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
 
 export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "addError": string;
     "aiDesc": string;
     "aquiferSearchTip": string;
     "resource": string;
@@ -406,10 +424,12 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "mediaType": string;
     "movement": string;
     "name": string;
+    "next": string;
     "oralVersion": string;
     "oralVersionTpl": string;
     "passage": string;
     "preview": string;
+    "previous": string;
     "query": string;
     "querying": string;
     "queryBuilder": string;
@@ -418,6 +438,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "script": string;
     "scriptTpl": string;
     "section": string;
+    "showing": string;
     "source": string;
     "summary": string;
     "summaryTpl": string;
@@ -794,6 +815,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "faithbridgeTitle": string;
     "githubSupport": string;
     "graphicTask": string;
     "graphicTitle": string;
@@ -849,6 +871,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "add": string;
     "allLevel": string;
     "allResources": string;
+    "audioScripture": string;
     "bookLevel": string;
     "bookResource": string;
     "canceling": string;
@@ -883,6 +906,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "projectResourceConfigure": string;
     "recordResource": string;
     "reference": string;
+    "research": string;
     "resource": string;
     "resources": string;
     "resourcesDeleted": string;
@@ -898,6 +922,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "textResource": string;
     "title": string;
     "titleDesc": string;
+    "transcription": string;
     "type": string;
     "tip1a": string;
     "tip1b": string;
@@ -1838,6 +1863,7 @@ export interface ILocalizedStrings {
 	discussionMenu: IDiscussionMenuStrings;
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
+	faithbridge: IFaithbridgeStrings;
 	filterMenu: IFilterMenuStrings;
 	findResource: IFindResourceStrings;
 	grid: IGridStrings;

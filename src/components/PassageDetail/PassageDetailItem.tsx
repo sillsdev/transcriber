@@ -140,7 +140,6 @@ export function PassageDetailItem(props: IProps) {
   const [currentVersion, setCurrentVersion] = useState(1);
   const [segString, setSegString] = useState('{}');
   const [verses, setVerses] = useState('');
-  const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>();
   const cancelled = useRef(false);
   const { canDoSectionStep } = useStepPermissions();
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
@@ -149,9 +148,8 @@ export function PassageDetailItem(props: IProps) {
 
   const setUploadVisible = (value: boolean) => {
     if (value) {
-      setUploadSuccess(undefined);
       cancelled.current = false;
-    } else setUploadSuccess(!cancelled.current);
+    }
     setUploadVisiblex(value);
   };
 
@@ -264,14 +262,24 @@ export function PassageDetailItem(props: IProps) {
     }
   };
 
+  //from recorder
+  const afterUploadCb = async (mediaId: string | undefined) => {
+    afterUpload('', mediaId ? [mediaId] : undefined);
+  };
+
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    setStatusText('');
-    setTopic('');
-    saveCompleted(toolId);
-    if (importList) {
-      setImportList(undefined);
-      setUploadVisible(false);
+    if (mediaRemoteIds && mediaRemoteIds[0]) {
+      setStatusText('');
+      setTopic('');
+      saveCompleted(toolId);
       setResetMedia(true);
+      if (importList) {
+        setImportList(undefined);
+        setUploadVisible(false);
+      }
+    } else {
+      saveCompleted(toolId, ts.NoSaveOffline);
+      showMessage(ts.NoSaveOffline);
     }
   };
 
@@ -289,11 +297,6 @@ export function PassageDetailItem(props: IProps) {
       return;
     }
     setImportList(undefined);
-    setUploadVisible(true);
-  };
-  //from recorder...send it on to uploader
-  const uploadMedia = async (files: File[]) => {
-    setImportList(files);
     setUploadVisible(true);
   };
 
@@ -349,8 +352,7 @@ export function PassageDetailItem(props: IProps) {
 
   const editStep = useMemo(
     () => canDoSectionStep(currentstep, section),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentstep, section]
+    [canDoSectionStep, currentstep, section]
   );
 
   return (
@@ -477,8 +479,15 @@ export function PassageDetailItem(props: IProps) {
                         </Box>
                         <MediaRecord
                           toolId={toolId}
-                          uploadMethod={uploadMedia}
-                          uploadSuccess={uploadSuccess}
+                          passageId={
+                            related(sharedResource, 'passage') ?? passage.id
+                          }
+                          sourceSegments={JSON.stringify(getCurrentSegment())}
+                          sourceMediaId={mediafileId}
+                          artifactId={recordTypeId}
+                          performedBy={speaker}
+                          topic={topic}
+                          afterUploadCb={afterUploadCb}
                           defaultFilename={defaultFilename}
                           allowWave={false}
                           showFilename={false}

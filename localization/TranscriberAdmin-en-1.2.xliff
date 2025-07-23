@@ -317,6 +317,20 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.activity">
+            <source>Activity</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>   
+         <trans-unit id="artifactType.airesource">
+            <source>AI Generated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>                  
          <trans-unit id="artifactType.backtranslation">
             <source>Phrase Back Translation</source>
             <target/>
@@ -338,6 +352,20 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.intellectualproperty">
+            <source>Intellectual Property</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.keyterm">
+            <source>Key Term</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>         
       	<trans-unit id="artifactType.projectresource">
       		<source>General Resource</source>
       		<target/>
@@ -2083,6 +2111,76 @@
                <context context-type="sourcefile">EmailUnverified.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="faithbridge.addContent">
+            <source>Add {0} as Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.audio">
+            <source>audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.audioResources">
+            <source>Request Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.error">
+            <source>Error: </source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.loading">
+            <source>Loading result...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.newChat">
+            <source>New Chat</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.noInfo">
+            <source>No information found</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.text">
+            <source>text</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.updating">
+            <source>Including sources in text</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="faithbridge.video">
+            <source>video</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="filterMenu.all">
             <source>All</source>
             <target/>
@@ -2148,6 +2246,13 @@
          </trans-unit>
          <trans-unit id="findResource.add">
             <source>Add</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.addError">
+            <source>Aquifer add failed </source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2349,6 +2454,13 @@
                <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.next">
+            <source>Next page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.oralVersion">
             <source>oral-version</source>
             <target/>
@@ -2375,6 +2487,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.previous">
+            <source>Previous page</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FaithbridgeIfrrame.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.query">
@@ -2431,6 +2550,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.showing">
+            <source>{0} to {1} of {2} {3} results</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.source">
@@ -4771,6 +4897,13 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaUpload.faithbridgeTitle">
+            <source>{0} Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.githubSupport">
             <source>Github markdown syntax supported</source>
             <target/>
@@ -5093,6 +5226,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.audioScripture">
+            <source>Audio Scripture</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.bookLevel">
       		<source>{0} for the Book</source>
       		<target/>
@@ -5331,6 +5471,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.research">
+            <source>Research</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailArtifacts.resource">
             <source>Resource</source>
             <target/>
@@ -5431,6 +5578,13 @@
       	</trans-unit>
          <trans-unit id="passageDetailArtifacts.titleDesc">
             <source>for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.transcription">
+            <source>AI Audio Resource Transcript</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddResource.tsx</context>

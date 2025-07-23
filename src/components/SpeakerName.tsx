@@ -25,7 +25,6 @@ interface IProps {
   noNewVoice?: boolean;
   onChange?: (name: string) => void;
   onRights?: (hasRights: boolean) => void;
-  createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
   disabled?: boolean;
@@ -36,7 +35,6 @@ export function SpeakerName({
   noNewVoice,
   onChange,
   onRights,
-  createProject,
   team,
   recordingRequired,
   disabled,
@@ -55,6 +53,7 @@ export function SpeakerName({
     onRights && onRights(false);
     if (noNewVoice) {
       showMessage(t.noVoiceCreation);
+      onChange?.(name);
       return;
     }
     setShowDialog(true);
@@ -229,7 +228,6 @@ export function SpeakerName({
             speaker={value?.name || ''}
             recordType={ArtifactTypeSlug.IntellectualProperty}
             onRights={handleRightsChange}
-            createProject={createProject}
             team={team}
             recordingRequired={recordingRequired}
           />

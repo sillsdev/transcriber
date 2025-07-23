@@ -38,9 +38,10 @@ import { usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
   resources: BibleResource[];
+  onTab?: () => void;
 }
 
-export default function CreateAiRes({ resources }: CreateAiResProps) {
+export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
   const [scopeOpts, setScopeOpts] = useState<OptionProps[]>([]);
   const [plan] = useGlobal('plan'); //will be constant here
@@ -115,14 +116,14 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     setScope(scopeOptions[0]);
     setType(aiQueries[0]?.type.replace('-', ' '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [t, organizedBy]);
 
   const computeQuery = async (type: string, scope: string) => {
     // the localized name Matthew should never be used b/c book data will have it.
     const book =
       allBookData.find((b) => b.code === (passage?.attributes?.book ?? 'MAT'))
         ?.short ?? 'Matthew';
-    let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
+    let ref = `${book} ${passage?.attributes?.reference || '1:1'}`;
     if (
       passageTypeFromRef(passage?.attributes?.reference, flat) ===
       PassageTypeEnum.NOTE
@@ -132,6 +133,8 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
         ref = `${sharedResource.attributes.title} (${book} ${computeSectionRef(
           passage
         )})`;
+      } else {
+        ref = ref.replace(/ NOTE$/, '');
       }
     }
     if (scope === scopeOptions[scopeI.section]) {
@@ -220,7 +223,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
           <Grid item>
             <Autocomplete
               disablePortal
-              id="scope"
+              id="buildType"
               options={typeOpts}
               value={typeOpts.find((item) => item.value === type) ?? null}
               onChange={handleTypeChange}
@@ -233,7 +236,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
           <Grid item>
             <Autocomplete
               disablePortal
-              id="scope"
+              id="buildScope"
               options={scopeOpts}
               value={scopeOpts.find((item) => item.value === scope) ?? null}
               onChange={handleScopeChange}
@@ -286,6 +289,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
                 key={resource.name}
                 resource={resource}
                 onLink={setLink}
+                onTab={onTab}
               />
             ))}
         </Grid>

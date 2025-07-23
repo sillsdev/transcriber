@@ -58,11 +58,9 @@ export const TableRow = ({ value, header }: IProps) => {
       <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
         {value.done}
       </Box>
-      {userIsAdmin && (
-        <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
-          {value.editAction}
-        </Box>
-      )}
+      <Box style={headBold} sx={{ minWidth: 100, textAlign: 'center' }}>
+        {value.editAction}
+      </Box>
     </Stack>
   );
 };

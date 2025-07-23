@@ -69,9 +69,13 @@ const initialState = {
 	}),
 	"artifactType": new LocalizedStrings({
 		"en": {
+			"activity": "Activity",
+			"airesource": "AI Generated",
 			"backtranslation": "Phrase Back Translation",
 			"comment": "Comment",
 			"graphic": "Graphic",
+			"intellectualproperty": "Intellectual Property",
+			"keyterm": "Key Term",
 			"projectresource": "General Resource",
 			"qanda": "Community Test Question and Answer",
 			"resource": "Resource",
@@ -391,6 +395,20 @@ const initialState = {
 			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
 		}
 	}),
+	"faithbridge": new LocalizedStrings({
+		"en": {
+			"addContent": "Add {0} as Resource",
+			"audio": "audio",
+			"audioResources": "Request Audio",
+			"error": "Error: ",
+			"loading": "Loading result...",
+			"newChat": "New Chat",
+			"noInfo": "No information found",
+			"text": "text",
+			"updating": "Including sources in text",
+			"video": "video",
+		}
+	}),
 	"filterMenu": new LocalizedStrings({
 		"en": {
 			"all": "All",
@@ -407,6 +425,7 @@ const initialState = {
 	"findResource": new LocalizedStrings({
 		"en": {
 			"add": "Add",
+			"addError": "Aquifer add failed ",
 			"aiDesc": "Copy the query contents and paste it into one or more of the AI chat tools:",
 			"aquiferSearchTip": "The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.",
 			"resource": "{0} Resource",
@@ -435,10 +454,12 @@ const initialState = {
 			"mediaType": "Media",
 			"movement": "movement",
 			"name": "Name",
+			"next": "Next page",
 			"oralVersion": "oral-version",
 			"oralVersionTpl": "Please provide an oral translation of {0}",
 			"passage": "Passage",
 			"preview": "Preview",
+			"previous": "Previous page",
 			"query": "Query",
 			"querying": "Querying...",
 			"queryBuilder": "AI Query Builder",
@@ -447,6 +468,7 @@ const initialState = {
 			"script": "script",
 			"scriptTpl": "Please provide a script for {0}",
 			"section": "section",
+			"showing": "{0} to {1} of {2} {3} results",
 			"source": "Source",
 			"summary": "summary",
 			"summaryTpl": "Please provide a summary of {0}",
@@ -837,6 +859,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
+			"faithbridgeTitle": "{0} Resource",
 			"githubSupport": "Github markdown syntax supported",
 			"graphicTask": "Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.",
 			"graphicTitle": "Upload Graphic",
@@ -895,6 +918,7 @@ const initialState = {
 			"add": "Add",
 			"allLevel": "All {0}",
 			"allResources": "Show resources for all passages",
+			"audioScripture": "Audio Scripture",
 			"bookLevel": "{0} for the Book",
 			"bookResource": "Book",
 			"canceling": "Canceling resource creation",
@@ -929,6 +953,7 @@ const initialState = {
 			"projectResourceConfigure": "Chunk into Resources",
 			"recordResource": "Record",
 			"reference": "Reference",
+			"research": "Research",
 			"resource": "Resource",
 			"resources": "Resources",
 			"resourcesDeleted": " ({0} resources will be deleted.)",
@@ -944,6 +969,7 @@ const initialState = {
 			"textResource": "Text Resource",
 			"title": "Title",
 			"titleDesc": "for {0}",
+			"transcription": "AI Audio Resource Transcript",
 			"type": "Type",
 			"tip1a": "Resources for:",
 			"tip1b": "Link to a shared resource.",
@@ -1941,6 +1967,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
+				"faithbridge" : new LocalizedStrings(action.payload.data.faithbridge),
 				"filterMenu" : new LocalizedStrings(action.payload.data.filterMenu),
 				"findResource" : new LocalizedStrings(action.payload.data.findResource),
 				"grid" : new LocalizedStrings(action.payload.data.grid),
