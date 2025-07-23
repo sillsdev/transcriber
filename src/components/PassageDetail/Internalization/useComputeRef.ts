@@ -96,7 +96,7 @@ export const useComputeRef = () => {
     parseRef(lastPassage as PassageD);
     if (
       firstPassage?.attributes.startChapter ===
-      lastPassage?.attributes.endChapter
+      lastPassage?.attributes?.endChapter
     ) {
       return `${firstPassage?.attributes?.startChapter || 1}:${
         firstPassage?.attributes?.startVerse || 1
