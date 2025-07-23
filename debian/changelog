@@ -18,8 +18,9 @@ audio - project - manager(4.3.0.0)  experimental; urgency = high
  * TT-6614 add transcription display for audio media (#1981)
  * TT-6617 No offline only faithbridge audio (#1982)
  * TT-6627-8 rename find to research and move Scriptures to add (#1983)
+ * TT-6655 use the reference for note resource research
 
--- Greg Trihus <greg_trihus@sil.org>  Mon, 14 Jul 2025 20:54:00 - 0600
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 23 Jul 2025 17:33:00 - 0600
 
 audio - project - manager(4.1.0.0)  experimental; urgency = high
 
