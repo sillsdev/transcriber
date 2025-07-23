@@ -134,7 +134,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
           passage
         )})`;
       } else {
-        ref = ref.replace(' NOTE', '');
+        ref = ref.replace(/ NOTE$/, '');
       }
     }
     if (scope === scopeOptions[scopeI.section]) {
