@@ -123,7 +123,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
     const book =
       allBookData.find((b) => b.code === (passage?.attributes?.book ?? 'MAT'))
         ?.short ?? 'Matthew';
-    let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
+    let ref = `${book} ${passage?.attributes?.reference || '1:1'}`;
     if (
       passageTypeFromRef(passage?.attributes?.reference, flat) ===
       PassageTypeEnum.NOTE
@@ -133,6 +133,8 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
         ref = `${sharedResource.attributes.title} (${book} ${computeSectionRef(
           passage
         )})`;
+      } else {
+        ref = ref.replace(' NOTE', '');
       }
     }
     if (scope === scopeOptions[scopeI.section]) {
@@ -221,7 +223,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
           <Grid item>
             <Autocomplete
               disablePortal
-              id="scope"
+              id="buildType"
               options={typeOpts}
               value={typeOpts.find((item) => item.value === type) ?? null}
               onChange={handleTypeChange}
@@ -234,7 +236,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
           <Grid item>
             <Autocomplete
               disablePortal
-              id="scope"
+              id="buildScope"
               options={scopeOpts}
               value={scopeOpts.find((item) => item.value === scope) ?? null}
               onChange={handleScopeChange}
