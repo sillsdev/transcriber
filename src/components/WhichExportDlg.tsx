@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ITranscriptionTabStrings,
-  Plan,
-  ExportType,
-  VProject,
-} from '../model';
+import { ITranscriptionTabStrings, Plan, ExportType, VProject } from '../model';
 import {
   Button,
   Dialog,
@@ -19,9 +14,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import moment, { Moment } from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
-import {
-  transcriptionTabSelector,
-} from '../selector';
+import { transcriptionTabSelector } from '../selector';
 
 interface IWhichExportProps {
   project: Plan | VProject | string;
@@ -74,9 +67,9 @@ export const WhichExportDlg = ({
       setOpenExport(false);
       doProjectExport(ExportType.ITF, newDate);
     };
-    var newDate = moment(sinceDate);
+    var newDate = moment.utc(sinceDate);
     if (newDate.isValid()) {
-      doIt(newDate.date() !== snapshotDate?.date() ? newDate : undefined);
+      doIt(newDate !== snapshotDate ? newDate : undefined);
     } else {
       showMessage('invalid date');
     }
