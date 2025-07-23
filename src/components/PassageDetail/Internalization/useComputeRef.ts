@@ -96,11 +96,17 @@ export const useComputeRef = () => {
     parseRef(lastPassage as PassageD);
     if (
       firstPassage?.attributes.startChapter ===
-      lastPassage?.attributes.endChapter
+      lastPassage?.attributes?.endChapter
     ) {
-      return `${firstPassage?.attributes.startChapter}:${firstPassage?.attributes.startVerse}-${lastPassage?.attributes.endVerse}`;
+      return `${firstPassage?.attributes?.startChapter || 1}:${
+        firstPassage?.attributes?.startVerse || 1
+      }-${lastPassage?.attributes?.endVerse || 1}`;
     } else {
-      return `${firstPassage?.attributes.startChapter}:${firstPassage?.attributes.startVerse}-${lastPassage?.attributes.endChapter}:${lastPassage?.attributes.endVerse}`;
+      return `${firstPassage?.attributes?.startChapter || 1}:${
+        firstPassage?.attributes?.startVerse || 1
+      }-${lastPassage?.attributes?.endChapter || 1}:${
+        lastPassage?.attributes?.endVerse || 1
+      }`;
     }
   };
   return { computeMovementRef, computeSectionRef };
