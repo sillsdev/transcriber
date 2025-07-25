@@ -16,7 +16,13 @@ import PreviewIcon from '@mui/icons-material/Visibility';
 import LinkIcon from '@mui/icons-material/Link';
 import { useContext, useEffect, useRef, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { parseRef, remoteIdNum, useRole, useSecResCreate } from '../../../crud';
+import {
+  parseRef,
+  remoteIdNum,
+  useNotes,
+  useRole,
+  useSecResCreate,
+} from '../../../crud';
 import DataTable from '../../DataTable';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector, gridSelector } from '../../../selector';
@@ -43,7 +49,6 @@ import { useSnackBar } from '../../../hoc/SnackBar';
 import { AxiosError } from 'axios';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
-import { useComputeRef } from './useComputeRef';
 
 // Regex to match passage references in the form "chapter:verse-chapter:verse"
 const PASSAGE_REF_REGEX = /(\d+):(\d+)-(\d+)?:?(\d+)?/g;
@@ -165,7 +170,7 @@ export default function FindAquifer({ onClose }: IProps) {
   };
   const { showMessage } = useSnackBar();
   const [errorReporter] = useGlobal('errorReporter');
-  const { computeSectionRef } = useComputeRef();
+  const { curNoteRef } = useNotes();
 
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -242,13 +247,15 @@ export default function FindAquifer({ onClose }: IProps) {
     const pt = passageTypeFromRef(passage?.attributes?.reference);
     if (pt === PassageTypeEnum.NOTE) {
       // Handle note-specific logic here
-      const refs = computeSectionRef(passage);
+      const refs = curNoteRef(passage);
       const m = PASSAGE_REF_REGEX.exec(refs);
       if (m) {
-        passage.attributes.startChapter = parseInt(m[1]);
-        passage.attributes.startVerse = parseInt(m[2]);
-        passage.attributes.endChapter = parseInt(m[4] ? m[3] : m[1]);
-        passage.attributes.endVerse = parseInt(m[4] ? m[4] : m[3] ?? m[2]);
+        passage.attributes.startChapter = parseInt(m[1] || '1');
+        passage.attributes.startVerse = parseInt(m[2] || '1');
+        passage.attributes.endChapter = parseInt(m[4] ? m[3] : m[1] || '1');
+        passage.attributes.endVerse = parseInt(
+          m[4] ? m[4] : m[3] ?? (m[2] || '1')
+        );
       }
     } else {
       parseRef(passage);

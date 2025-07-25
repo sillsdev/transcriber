@@ -9,6 +9,8 @@ import {
   SectionD,
   SharedResource,
   SharedResourceD,
+  SharedResourceReferenceD,
+  SheetLevel,
 } from '../model';
 import related from './related';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -21,14 +23,19 @@ import {
 import { useSelector } from 'react-redux';
 import { passageTypeFromRef } from '../control/RefRender';
 import { PassageTypeEnum } from '../model/passageType';
+import { useComputeRef } from '../components/PassageDetail/Internalization/useComputeRef';
 
 export const useNotes = () => {
   const sharedResources = useOrbitData<SharedResourceD[]>('sharedresource');
+  const sharedRef = useOrbitData<SharedResourceReferenceD[]>(
+    'sharedresourcereference'
+  );
   const passages = useOrbitData<PassageD[]>('passage');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const planType = usePlanType();
   const allBookData = useSelector((state: IState) => state.books.bookData);
+  const { computeMovementRef, computeSectionRef } = useComputeRef();
 
   const getNotes = () => {
     return sharedResources.filter((sr) => {
@@ -72,6 +79,63 @@ export const useNotes = () => {
       )
       .sort(bySeq)
       .map((p) => p.attributes.reference);
+  };
+  const decSeq = (i: Passage, j: Passage) => {
+    return (
+      (j?.attributes?.sequencenum ?? 0) - (i?.attributes?.sequencenum ?? 0)
+    );
+  };
+  const shortBookName = (book: string): string => {
+    const bookData = allBookData.find((b) => b.code === book);
+    return bookData ? bookData.short : book;
+  };
+  const curNoteRef = (passage: PassageD): string => {
+    const sectionId = related(passage, 'section') as string;
+    const secRec = findRecord(memory, 'section', sectionId) as SectionD;
+    if (secRec?.attributes?.level === SheetLevel.Movement)
+      return `${shortBookName(passage.attributes.book)} ${computeMovementRef(
+        passage
+      )}`;
+    const notePassage = passages
+      .filter((p) => related(p, 'section') === sectionId)
+      .sort(decSeq)
+      .find(
+        (p) =>
+          passageTypeFromRef(p.attributes.reference, false) ===
+            PassageTypeEnum.PASSAGE &&
+          p.attributes.sequencenum < passage.attributes.sequencenum
+      );
+    let result = '';
+    if (notePassage?.attributes) {
+      result = `${shortBookName(notePassage.attributes.book)} ${
+        notePassage.attributes.reference || '1:1'
+      }`;
+    }
+    if (result.trim().length === 0) {
+      const resRec = sharedResources.find(
+        (sr) => related(sr, 'passage') === passage.id
+      );
+      const refs = sharedRef.filter(
+        (r) => related(r, 'sharedResource') === resRec?.id
+      );
+      if (resRec) {
+        result = refs
+          .map(
+            (r) =>
+              `${shortBookName(r.attributes.book)} ${r.attributes.chapter}:${
+                r.attributes.verses
+              }`
+          )
+          .join('; ');
+      }
+    }
+    return (
+      result ||
+      `${shortBookName(passage.attributes.book)} ${computeSectionRef(
+        passage
+      )}` ||
+      shortBookName(passage.attributes.book)
+    );
   };
   const noteSource = (r: SharedResource): string => {
     const rec = findRecord(
@@ -118,5 +182,5 @@ export const useNotes = () => {
     }
     return source;
   };
-  return { getNotes, noteRefs, noteSource };
+  return { getNotes, noteRefs, curNoteRef, noteSource };
 };

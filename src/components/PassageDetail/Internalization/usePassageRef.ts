@@ -1,12 +1,11 @@
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { passageTypeFromRef } from '../../../control/RefRender';
-import { passageRefText } from '../../../crud/passage';
 import { useNotes } from '../../../crud/useNotes';
 import { PassageD } from '../../../model';
 import { PassageTypeEnum } from '../../../model/passageType';
 
 export const usePassageRef = () => {
-  const { noteRefs } = useNotes();
+  const { curNoteRef } = useNotes();
   const { allBookData } = usePassageDetailContext();
 
   const shortBook = (book: string): string => {
@@ -23,10 +22,12 @@ export const usePassageRef = () => {
       const pt = passageTypeFromRef(passage?.attributes?.reference);
       if (pt === PassageTypeEnum.NOTE) {
         return `${shortBook(passage?.attributes?.book || 'MAT')} ${
-          noteRefs(passage).join('; ') || '1:1'
+          curNoteRef(passage) || '1:1'
         }`;
       } else {
-        return passageRefText(passage);
+        return `${shortBook(passage?.attributes?.book || 'MAT')} ${
+          passage?.attributes?.reference || '1:1'
+        }`;
       }
     }
     return null;

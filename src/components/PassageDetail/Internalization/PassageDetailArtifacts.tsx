@@ -93,7 +93,7 @@ import { mediaContentType } from '../../../utils/contentType';
 import { useStepPermissions } from '../../../utils/useStepPermission';
 import FindBibleBrain from './FindBibleBrain';
 import { useHandleLink } from './addLinkKind';
-import { useComputeRef } from './useComputeRef';
+import { usePassageRef } from './usePassageRef';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -205,7 +205,7 @@ export function PassageDetailArtifacts() {
   const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
   const handleLink = useHandleLink({ passage, setLink });
-  const { computeSectionRef } = useComputeRef();
+  const passageRef = usePassageRef();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -900,7 +900,7 @@ export function PassageDetailArtifacts() {
         }
       />
       <BigDialog
-        title={t.findResource.replace('{0}', computeSectionRef(passage) ?? '')}
+        title={t.findResource.replace('{0}', passageRef(passage) || '')}
         description={<Typography>{t.findResourceDesc}</Typography>}
         isOpen={findOpen}
         onOpen={handleFindVisible}
