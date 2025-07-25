@@ -27,6 +27,7 @@ import {
   currentDateTime,
   forceLogin,
   useMyNavigate,
+  useDataChanges,
 } from '../utils';
 import {
   related,
@@ -108,6 +109,7 @@ export function Loading() {
   const [inviteError, setInviteError] = useState('');
   const mounted = useRef(0);
   const getGlobal = useGetGlobal();
+  const forceDataChanges = useDataChanges();
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
@@ -200,6 +202,7 @@ export function Loading() {
       getOfflineProject,
       offlineSetup,
       showMessage,
+      forceDataChanges,
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
