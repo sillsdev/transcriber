@@ -320,6 +320,11 @@ const initialState = {
 			"delete": "Delete",
 		}
 	}),
+	"discuss": new LocalizedStrings({
+		"en": {
+			"howToChange": "Change instructions for this step on the workflow settings for this step.",
+		}
+	}),
 	"discussionCard": new LocalizedStrings({
 		"en": {
 			"addComment": "Add",
@@ -1962,6 +1967,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"consultantCheck" : new LocalizedStrings(action.payload.data.consultantCheck),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"discuss" : new LocalizedStrings(action.payload.data.discuss),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),

@@ -1480,6 +1480,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discuss.howToChange">
+         <segment>
+            <source>Change instructions for this step on the workflow settings for this step.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.addComment">
          <segment>
             <source>Add</source>

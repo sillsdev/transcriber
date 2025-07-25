@@ -298,6 +298,10 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
     "delete": string;
 };
 
+export interface IDiscussStrings extends Localize.LocalizedStringsMethods {
+    "howToChange": string;
+};
+
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
     "addComment": string;
     "adminsAlways": string;
@@ -1858,6 +1862,7 @@ export interface ILocalizedStrings {
 	consultantCheck: IConsultantCheckStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
+	discuss: IDiscussStrings;
 	discussionCard: IDiscussionCardStrings;
 	discussionList: IDiscussionListStrings;
 	discussionMenu: IDiscussionMenuStrings;
