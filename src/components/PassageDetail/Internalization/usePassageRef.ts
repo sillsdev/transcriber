@@ -17,7 +17,7 @@ export const usePassageRef = () => {
    * If the passage is a note, it formats it differently.
    * @returns {function(PassageD): string | null} - Function to generate passage reference text.
    */
-  return (passage: PassageD) => {
+  const passageRef = (passage: PassageD) => {
     if (passage) {
       const pt = passageTypeFromRef(passage?.attributes?.reference);
       if (pt === PassageTypeEnum.NOTE) {
@@ -32,4 +32,6 @@ export const usePassageRef = () => {
     }
     return null;
   };
+
+  return { passageRef, shortBook };
 };

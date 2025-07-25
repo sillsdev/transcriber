@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import { passageTypeFromRef } from '../control/RefRender';
 import { PassageTypeEnum } from '../model/passageType';
 import { useComputeRef } from '../components/PassageDetail/Internalization/useComputeRef';
+import { usePassageRef } from '../components/PassageDetail/Internalization/usePassageRef';
 
 export const useNotes = () => {
   const sharedResources = useOrbitData<SharedResourceD[]>('sharedresource');
@@ -36,6 +37,7 @@ export const useNotes = () => {
   const planType = usePlanType();
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const { computeMovementRef, computeSectionRef } = useComputeRef();
+  const { shortBook } = usePassageRef();
 
   const getNotes = () => {
     return sharedResources.filter((sr) => {
@@ -85,15 +87,11 @@ export const useNotes = () => {
       (j?.attributes?.sequencenum ?? 0) - (i?.attributes?.sequencenum ?? 0)
     );
   };
-  const shortBookName = (book: string): string => {
-    const bookData = allBookData.find((b) => b.code === book);
-    return bookData ? bookData.short : book;
-  };
   const curNoteRef = (passage: PassageD): string => {
     const sectionId = related(passage, 'section') as string;
     const secRec = findRecord(memory, 'section', sectionId) as SectionD;
     if (secRec?.attributes?.level === SheetLevel.Movement)
-      return `${shortBookName(passage.attributes.book)} ${computeMovementRef(
+      return `${shortBook(passage.attributes.book)} ${computeMovementRef(
         passage
       )}`;
     const notePassage = passages
@@ -107,7 +105,7 @@ export const useNotes = () => {
       );
     let result = '';
     if (notePassage?.attributes) {
-      result = `${shortBookName(notePassage.attributes.book)} ${
+      result = `${shortBook(notePassage.attributes.book)} ${
         notePassage.attributes.reference || '1:1'
       }`;
     }
@@ -122,7 +120,7 @@ export const useNotes = () => {
         result = refs
           .map(
             (r) =>
-              `${shortBookName(r.attributes.book)} ${r.attributes.chapter}:${
+              `${shortBook(r.attributes.book)} ${r.attributes.chapter}:${
                 r.attributes.verses
               }`
           )
@@ -131,10 +129,8 @@ export const useNotes = () => {
     }
     return (
       result ||
-      `${shortBookName(passage.attributes.book)} ${computeSectionRef(
-        passage
-      )}` ||
-      shortBookName(passage.attributes.book)
+      `${shortBook(passage.attributes.book)} ${computeSectionRef(passage)}` ||
+      shortBook(passage.attributes.book)
     );
   };
   const noteSource = (r: SharedResource): string => {

@@ -92,7 +92,12 @@ jest.mock('../utils/axios', () => ({
 }));
 
 jest.mock('../components/PassageDetail/Internalization/usePassageRef', () => ({
-  usePassageRef: () => jest.fn().mockReturnValue(mockRef),
+  usePassageRef: () => {
+    return {
+      passageRef: jest.fn().mockReturnValue(mockRef),
+      shortBook: jest.fn().mockReturnValue('MAT'),
+    };
+  },
 }));
 
 // Mock the useFaithbridgeResult hook

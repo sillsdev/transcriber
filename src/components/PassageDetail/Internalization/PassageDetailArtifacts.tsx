@@ -205,7 +205,7 @@ export function PassageDetailArtifacts() {
   const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
   const handleLink = useHandleLink({ passage, setLink });
-  const passageRef = usePassageRef();
+  const { passageRef } = usePassageRef();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(

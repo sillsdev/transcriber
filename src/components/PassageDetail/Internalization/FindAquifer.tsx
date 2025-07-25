@@ -250,11 +250,12 @@ export default function FindAquifer({ onClose }: IProps) {
       const refs = curNoteRef(passage);
       const m = PASSAGE_REF_REGEX.exec(refs);
       if (m) {
-        passage.attributes.startChapter = parseInt(m[1] || '1');
-        passage.attributes.startVerse = parseInt(m[2] || '1');
-        passage.attributes.endChapter = parseInt(m[4] ? m[3] : m[1] || '1');
+        passage.attributes.startChapter = parseInt(m[1] || '1', 10);
+        passage.attributes.startVerse = parseInt(m[2] || '1', 10);
+        passage.attributes.endChapter = parseInt(m[4] ? m[3] : m[1] || '1', 10);
         passage.attributes.endVerse = parseInt(
-          m[4] ? m[4] : m[3] ?? (m[2] || '1')
+          m[4] ? m[4] : m[3] ?? (m[2] || '1'),
+          10
         );
       }
     } else {
