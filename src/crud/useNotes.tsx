@@ -24,7 +24,6 @@ import { useSelector } from 'react-redux';
 import { passageTypeFromRef } from '../control/RefRender';
 import { PassageTypeEnum } from '../model/passageType';
 import { useComputeRef } from '../components/PassageDetail/Internalization/useComputeRef';
-import { usePassageRef } from '../components/PassageDetail/Internalization/usePassageRef';
 
 export const useNotes = () => {
   const sharedResources = useOrbitData<SharedResourceD[]>('sharedresource');
@@ -37,8 +36,11 @@ export const useNotes = () => {
   const planType = usePlanType();
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const { computeMovementRef, computeSectionRef } = useComputeRef();
-  const { shortBook } = usePassageRef();
 
+  const shortBook = (book: string): string => {
+    const bookData = allBookData.find((b) => b.code === book);
+    return bookData ? bookData.short : book;
+  };
   const getNotes = () => {
     return sharedResources.filter((sr) => {
       const passRec = findRecord(
@@ -178,5 +180,5 @@ export const useNotes = () => {
     }
     return source;
   };
-  return { getNotes, noteRefs, curNoteRef, noteSource };
+  return { getNotes, noteRefs, curNoteRef, noteSource, shortBook };
 };
