@@ -58,7 +58,7 @@ export const FaithbridgeIframe = ({
   const { canDoSectionStep } = useStepPermissions();
   const hasPermission = canDoSectionStep(currentstep, section);
   const { showMessage } = useSnackBar();
-  const passageRef = usePassageRef();
+  const { passageRef } = usePassageRef();
   const onlineTimer = React.useRef<NodeJS.Timeout | null>(null);
   const token = useContext(TokenContext).state.accessToken ?? '';
 
