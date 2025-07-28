@@ -29,8 +29,6 @@ import {
   useHome,
   useMyNavigate,
   LocalKey,
-  dataPath,
-  PathType,
 } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup, ListEnum } from '../crud';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -208,13 +206,6 @@ export function Access() {
     logout();
     setOfflineOnly(true);
     await offlineSetup();
-  };
-
-  const handleNormal = async () => {
-    ipc?.normalize(
-      await dataPath('sample-a.mp3', PathType.MEDIA),
-      await dataPath('sample-a.norm.mp3', PathType.MEDIA)
-    );
   };
 
   // see: https://web.dev/persistent-storage/
@@ -528,11 +519,6 @@ export function Access() {
           )}
           {importOpen && (
             <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
-          )}
-          {isDeveloper && (
-            <AltButton id="normalize" onClick={handleNormal}>
-              {'Normalize'}
-            </AltButton>
           )}
         </Box>
       )}
