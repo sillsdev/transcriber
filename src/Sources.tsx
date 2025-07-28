@@ -155,7 +155,8 @@ export const Sources = async (
   setLang: (locale: string) => void,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   offlineSetup: () => Promise<void>,
-  showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
+  showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void,
+  forceDataChanges: () => Promise<void>
 ) => {
   const memory = coordinator?.getSource('memory') as Memory;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
@@ -400,6 +401,12 @@ export const Sources = async (
     )) as UserD[];
     if (!Array.isArray(uRecs)) uRecs = [uRecs];
     const user = uRecs[0];
+    if (
+      (new Date() as any) - (new Date(user.attributes.dateUpdated) as any) <=
+      60000
+    ) {
+      await forceDataChanges();
+    }
     const locale = user?.attributes?.locale || 'en';
     setLang(locale);
     localStorage.setItem(LocalKey.userId, user.id);
