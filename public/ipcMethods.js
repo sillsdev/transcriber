@@ -303,6 +303,20 @@ const ipcMethods = () => {
     }
   });
 
+  ipcMain.handle('writeBuffer', async (_event, filePath, arrayBuffer) => {
+    if (process.platform === 'win32') {
+      filePath = filePath.replace(/\//g, '\\');
+    }
+    try {
+      const buffer = Buffer.from(arrayBuffer);
+      fs.writeFileSync(filePath, buffer);
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+
   let isLogingIn = false;
   let isLogOut = false;
 

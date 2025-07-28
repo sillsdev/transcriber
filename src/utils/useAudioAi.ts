@@ -14,12 +14,12 @@ import { useContext, useRef } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { loadBlobAsync } from './loadBlob';
 
-export enum AudioAiFn {
+export enum AudioAiFunc {
   noiseRemoval = 'noiseremoval',
   voiceConversion = 'voiceconversion',
 }
 export interface IRequestAudio {
-  fn: AudioAiFn;
+  func: AudioAiFunc;
   cancelRef: React.MutableRefObject<boolean>;
   file: File;
   targetVoice?: string;
@@ -87,8 +87,8 @@ export const useAudioAi = () => {
     }
   };
 
-  const checkFile = async (fn: AudioAiFn, task: fileTask) => {
-    var response = await axiosGetStream(`aero/${fn}/${task.taskId}`);
+  const checkFile = async (func: AudioAiFunc, task: fileTask) => {
+    var response = await axiosGetStream(`aero/${func}/${task.taskId}`);
     const data = await response?.json();
     if (data) {
       cleanupFile(task);
@@ -97,8 +97,8 @@ export const useAudioAi = () => {
     return undefined;
   };
 
-  const checkAsS3 = async (fn: AudioAiFn, task: fileTask) => {
-    var url = await axiosGet(`aero/${fn}/s3/${task.taskId}`);
+  const checkAsS3 = async (func: AudioAiFunc, task: fileTask) => {
+    var url = await axiosGet(`aero/${func}/s3/${task.taskId}`);
     if (url?.message) {
       cleanupS3(task); //prevent from doing this again before we're done here
       var b = await loadBlobAsync(url?.message);
@@ -113,11 +113,11 @@ export const useAudioAi = () => {
     return undefined;
   };
 
-  const checkTasks = async (fn: AudioAiFn) => {
+  const checkTasks = async (func: AudioAiFunc) => {
     fileList.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
-          var file = await checkFile(fn, filetask);
+          var file = await checkFile(func, filetask);
           if (file) {
             filetask.cb(file);
           }
@@ -135,7 +135,7 @@ export const useAudioAi = () => {
     returnAsS3List.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
-          var file = await checkAsS3(fn, filetask);
+          var file = await checkAsS3(func, filetask);
           if (file) {
             filetask.cb(file);
           }
@@ -152,9 +152,9 @@ export const useAudioAi = () => {
     });
   };
 
-  const launchTimer = (fn: AudioAiFn) => {
+  const launchTimer = (func: AudioAiFunc) => {
     taskTimer.current = setInterval(() => {
-      checkTasks(fn);
+      checkTasks(func);
     }, timerDelay);
   };
 
@@ -165,13 +165,13 @@ export const useAudioAi = () => {
       );
   };
 
-  const doCancel = (fn: AudioAiFn, cb: (file: File | Error) => void) => {
-    checkTasks(fn);
+  const doCancel = (func: AudioAiFunc, cb: (file: File | Error) => void) => {
+    checkTasks(func);
     cb(cancelled);
   };
 
   const s3request = async (
-    fn: AudioAiFn,
+    func: AudioAiFunc,
     cancelRef: React.MutableRefObject<boolean>,
     file: File,
     targetVoice: string | undefined,
@@ -191,7 +191,7 @@ export const useAudioAi = () => {
       if (status.statusNum === 0)
         if (!cancelRef.current)
           if (!cancelRef.current)
-            axiosSendSignedUrl(`aero/${fn}/fromfile`, file.name, targetVoice)
+            axiosSendSignedUrl(`aero/${func}/fromfile`, file.name, targetVoice)
               .then((nrresponse) => {
                 if (nrresponse.status === HttpStatusCode.Ok) {
                   var taskId = nrresponse.data ?? '';
@@ -200,7 +200,7 @@ export const useAudioAi = () => {
                     cb,
                     cancelRef,
                   });
-                  if (!taskTimer.current) launchTimer(fn);
+                  if (!taskTimer.current) launchTimer(func);
                 } else cb(new Error(response.statusText));
               })
               .catch((err) => {
@@ -209,13 +209,13 @@ export const useAudioAi = () => {
               })
               .finally(() => console.log('done', file.name));
           //deleteS3File(file.name));
-          else doCancel(fn, cb);
+          else doCancel(func, cb);
         else deleteS3File(file.name);
     });
   };
 
   const requestAudioAi = async ({
-    fn,
+    func,
     cancelRef,
     file,
     targetVoice,
@@ -224,13 +224,13 @@ export const useAudioAi = () => {
     if (getGlobal('offline')) return '';
     // larger sizes give Network Error
     if (file.size > 6000000 || targetVoice)
-      s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
+      s3request(func, cancelRef, file, targetVoice, cb).catch((err) =>
         cb(err as Error)
       );
     else
-      axiosPostFile(`aero/${fn}`, file)
+      axiosPostFile(`aero/${func}`, file)
         .then((nrresponse) => {
-          if (cancelRef.current) doCancel(fn, cb);
+          if (cancelRef.current) doCancel(func, cb);
           else if (nrresponse.status === HttpStatusCode.Ok) {
             var taskId = nrresponse.data ?? '';
             fileList.push({
@@ -238,9 +238,9 @@ export const useAudioAi = () => {
               cb,
               cancelRef,
             });
-            if (!taskTimer.current) launchTimer(fn);
+            if (!taskTimer.current) launchTimer(func);
           } else if (nrresponse.status === HttpStatusCode.PayloadTooLarge) {
-            s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
+            s3request(func, cancelRef, file, targetVoice, cb).catch((err) =>
               cb(err as Error)
             );
           } else cb(new Error(nrresponse.statusText));
@@ -253,7 +253,7 @@ export const useAudioAi = () => {
             const msg = `payload too large: ${file.size} ... retrying`;
             logError(Severity.info, errorReporter, msg);
 
-            return s3request(fn, cancelRef, file, targetVoice, cb).catch(
+            return s3request(func, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
             );
           } else if (
@@ -263,7 +263,7 @@ export const useAudioAi = () => {
             const msg = `network error (size: ${file.size}) ... retrying `;
             logError(Severity.info, errorReporter, msg);
 
-            return s3request(fn, cancelRef, file, targetVoice, cb).catch(
+            return s3request(func, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
             );
           } else cb(err as Error);

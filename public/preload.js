@@ -90,6 +90,8 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('zipStreamEntryText', zip, name),
   zipStreamClose: async (zip) =>
     await ipcRenderer.invoke('zipStreamClose', zip),
+  writeBuffer: async (filePath, blob) =>
+    await ipcRenderer.invoke('writeBuffer', filePath, blob),
   downloadFile: async (url, localFile) =>
     await ipcRenderer.invoke('downloadFile', url, localFile),
   downloadLaunch: async (url, localFile) =>

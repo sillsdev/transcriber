@@ -256,6 +256,7 @@ export function TeamDialog(props: IProps) {
       case 'noNoise':
       case 'deltaVoice':
       case 'aiTranscribe':
+      case 'normalize':
         setFeatures({ ...features, [what]: value === 'true' });
         break;
       case 'refresh':

@@ -904,6 +904,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.normalize">
+         <segment>
+            <source>Audio Normalize</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
@@ -9115,6 +9121,18 @@
       <unit id="wsAudioPlayer.noiseremovalFailed">
          <segment>
             <source>Noise removal failed (More than likely, the server is unavailable).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalize">
+         <segment>
+            <source>Normalize</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeFail">
+         <segment>
+            <source>Normalization failed: {0}</source>
             <target/>
          </segment>
       </unit>
