@@ -98,4 +98,6 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('downloadStat', token),
   downloadClose: async (token) =>
     await ipcRenderer.invoke('downloadClose', token),
+  normalize: async (input, output) =>
+    await ipcRenderer.invoke('normalize', input, output),
 });
