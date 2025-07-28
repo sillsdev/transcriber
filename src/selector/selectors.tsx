@@ -55,6 +55,9 @@ export const controlSelector = (state: IState) =>
 export const deleteExpandSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'deleteExpansion' });
 
+export const discussSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'discuss' });
+
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
 
