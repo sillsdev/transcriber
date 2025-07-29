@@ -289,6 +289,11 @@ const TeamProvider = (props: IProps) => {
     return projects.filter((p) => grpIds.includes(related(p, 'group')));
   }, [projects, groupMemberships, user]);
 
+  const planSort = (p: PlanD) => {
+    //I suggest prepending the sort order to the plan slug
+    return p?.attributes?.name ?? '';
+  };
+
   const teamProjects = (teamId: string) => {
     const projIds = userProjects
       .filter(
@@ -300,7 +305,7 @@ const TeamProvider = (props: IProps) => {
       .map((p) => p.id);
     return plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+      .sort((i, j) => (planSort(i) <= planSort(j) ? -1 : 1))
       .map((p) => vProject(p));
   };
 
