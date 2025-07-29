@@ -29,12 +29,10 @@ export const useProjectDefaults = () => {
     return getParam(label, proj?.attributes?.defaultParams);
   };
 
-  const setProjectDefault = (label: string, value: any) => {
-    const proj = findRecord(
-      memory,
-      'project',
-      getGlobal('project')
-    ) as ProjectD;
+  const setProjectDefault = (label: string, value: any, projIn?: ProjectD) => {
+    const proj =
+      projIn ||
+      (findRecord(memory, 'project', getGlobal('project')) as ProjectD);
     if (!proj || !proj.attributes) return;
     if (willSetParam(label, value, proj.attributes.defaultParams)) {
       proj.attributes.defaultParams = setParam(
