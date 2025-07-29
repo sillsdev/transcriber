@@ -12,12 +12,15 @@ import related from '../../../crud/related';
 import { findRecord } from '../../../crud/tryFindRecord';
 import { useGlobal } from '../../../context/GlobalContext';
 import { pad3 } from '../../../utils/pad3';
+import { IconButton, Stack } from '@mui/material';
+import ResetIcon from '@mui/icons-material/SettingsBackupRestore';
 
 interface IProps {
   teamId: string;
+  onClose?: () => void;
 }
 
-export function ProjectSort({ teamId }: IProps) {
+export function ProjectSort({ teamId, onClose }: IProps) {
   const { teamProjects } = React.useContext(TeamContext).state;
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
   const [memory] = useGlobal('memory');
@@ -55,11 +58,36 @@ export function ProjectSort({ teamId }: IProps) {
     setSnapshot((s) => s + 1);
   };
 
+  const resetSort = () => {
+    for (let i = 0; i < teamProjects(teamId).length; i += 1) {
+      setProjectDefault(projDefSort, undefined, getProj(i));
+    }
+    onClose?.();
+  };
+
+  React.useEffect(() => {
+    for (let i = 0; i < teamProjects(teamId).length; i += 1) {
+      const curSort = parseInt(
+        getProjectDefault(projDefSort, getProj(i)) || '0',
+        10
+      );
+      if (curSort !== i) {
+        setProjectDefault(projDefSort, pad3(i), getProj(i));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <VertListDnd key={`sort-${snapshot}`} onDrop={onSortEnd} dragHandle>
-      {teamProjects(teamId).map((value, index) => (
-        <SortableItem key={`item-${index}`} value={value} />
-      ))}
-    </VertListDnd>
+    <Stack>
+      <IconButton sx={{ alignSelf: 'flex-end' }} onClick={resetSort}>
+        <ResetIcon />
+      </IconButton>
+      <VertListDnd key={`sort-${snapshot}`} onDrop={onSortEnd} dragHandle>
+        {teamProjects(teamId).map((value, index) => (
+          <SortableItem key={`item-${index}`} value={value} />
+        ))}
+      </VertListDnd>
+    </Stack>
   );
 }

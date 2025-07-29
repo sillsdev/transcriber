@@ -185,7 +185,7 @@ export const TeamItem = (props: IProps) => {
         isOpen={sortVisible}
         onOpen={() => setSortVisible(false)}
       >
-        <ProjectSort teamId={team.id} />
+        <ProjectSort teamId={team.id} onClose={() => setSortVisible(false)} />
       </BigDialog>
       {deleteItem && (
         <Confirm
