@@ -1042,6 +1042,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.sortProjects">
+         <segment>
+            <source>Sort Projects</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.notesHelper">
          <segment>
             <source>Shared explanations, rationales, footnotes, etc.</source>

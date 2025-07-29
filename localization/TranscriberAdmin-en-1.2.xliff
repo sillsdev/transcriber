@@ -1214,6 +1214,13 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.sortProjects">
+            <source>Sort Projects</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.notesHelper">
             <source>Shared explanations, rationales, footnotes, etc.</source>
             <target/>

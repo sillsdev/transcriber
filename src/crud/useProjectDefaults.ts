@@ -12,6 +12,7 @@ export const projDefBook = 'book';
 export const projDefStory = 'story';
 export const projDefFirstMovement = 'firstMovement';
 export const projDefFilterParam = 'ProjectFilter';
+export const projDefSort = 'sort';
 
 export const useProjectDefaults = () => {
   const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
@@ -28,12 +29,10 @@ export const useProjectDefaults = () => {
     return getParam(label, proj?.attributes?.defaultParams);
   };
 
-  const setProjectDefault = (label: string, value: any) => {
-    const proj = findRecord(
-      memory,
-      'project',
-      getGlobal('project')
-    ) as ProjectD;
+  const setProjectDefault = (label: string, value: any, projIn?: ProjectD) => {
+    const proj =
+      projIn ||
+      (findRecord(memory, 'project', getGlobal('project')) as ProjectD);
     if (!proj || !proj.attributes) return;
     if (willSetParam(label, value, proj.attributes.defaultParams)) {
       proj.attributes.defaultParams = setParam(

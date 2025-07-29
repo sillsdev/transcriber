@@ -202,6 +202,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "sortProjects": string;
     "notesHelper": string;
     "notesProject": string;
     "projectPermissions": string;
