@@ -181,7 +181,7 @@ export const TeamItem = (props: IProps) => {
         <StepEditor process={defaultWorkflow} org={team.id} />
       </BigDialog>
       <BigDialog
-        title={'Sort Projects'}
+        title={t.sortProjects}
         isOpen={sortVisible}
         onOpen={() => setSortVisible(false)}
       >

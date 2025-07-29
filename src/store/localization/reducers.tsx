@@ -217,6 +217,7 @@ const initialState = {
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
+			"sortProjects": "Sort Projects",
 			"notesHelper": "Shared explanations, rationales, footnotes, etc.",
 			"notesProject": "Project with Notes",
 			"projectPermissions": "Permissions may be set for projects of this team.",
