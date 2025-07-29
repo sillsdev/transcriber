@@ -48,6 +48,7 @@ import {
   useProjectType,
   isPersonalTeam,
   useOrganizedBy,
+  findRecord,
 } from '../crud';
 import {
   cardsSelector,
@@ -67,6 +68,11 @@ import {
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
+import {
+  projDefBook,
+  projDefSort,
+  useProjectDefaults,
+} from '../crud/useProjectDefaults';
 
 export type TeamIdType = OrganizationD | null;
 
@@ -216,6 +222,7 @@ const TeamProvider = (props: IProps) => {
   const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
   const isMakingPersonal = useRef(false);
   const getGlobal = useGetGlobal();
+  const { getProjectDefault } = useProjectDefaults();
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
     const vproj = plan?.type === 'plan' ? vProject(plan) : plan;
@@ -289,9 +296,23 @@ const TeamProvider = (props: IProps) => {
     return projects.filter((p) => grpIds.includes(related(p, 'group')));
   }, [projects, groupMemberships, user]);
 
-  const planSort = (p: PlanD) => {
+  // cache plan sort values to avoid recalculating
+  const planSortMap = new Map<string, string>();
+  const noPlan = 'Zxx';
+
+  const planSort = (p: PlanD): string => {
+    if (planSortMap.has(p.id)) return planSortMap.get(p.id) || noPlan;
+    const proj = findRecord(
+      memory,
+      'project',
+      related(p, 'project')
+    ) as ProjectD;
+    let key =
+      getProjectDefault(projDefSort, proj) ??
+      getProjectDefault(projDefBook, proj);
+    if (key) planSortMap.set(p.id, key);
     //I suggest prepending the sort order to the plan slug
-    return p?.attributes?.name ?? '';
+    return key ?? p?.attributes?.name ?? noPlan;
   };
 
   const teamProjects = (teamId: string) => {
@@ -305,7 +326,7 @@ const TeamProvider = (props: IProps) => {
       .map((p) => p.id);
     return plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort((i, j) => (planSort(i) <= planSort(j) ? -1 : 1))
+      .sort((i, j) => planSort(i).localeCompare(planSort(j)))
       .map((p) => vProject(p));
   };
 

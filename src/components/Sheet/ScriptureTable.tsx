@@ -127,6 +127,7 @@ import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
 import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
 import { usePeerGroups } from '../Peers/usePeerGroups';
+import bookSortJson from '../../assets/akuosort.json';
 
 const SaveWait = 500;
 
@@ -1585,6 +1586,21 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [scripture, sheet]
   );
+
+  const bookSortMap = new Map<string, string>(
+    bookSortJson as [string, string][]
+  );
+
+  useEffect(() => {
+    if (firstBook) {
+      const firstSort = bookSortMap.get(firstBook) ?? 'B99';
+      const bookSort = getProjectDefault(projDefBook);
+      if (bookSort !== firstSort) {
+        setProjectDefault(projDefBook, firstSort);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstBook]);
 
   const setSectionPublish = async (
     index: number,
