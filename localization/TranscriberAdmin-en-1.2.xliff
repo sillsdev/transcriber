@@ -1053,6 +1053,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.normalize">
+            <source>Audio Normalize</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.notesLabel">
             <source>Introductory Notes Title</source>
             <target/>
@@ -10636,6 +10643,20 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.noiseremovalFailed">
             <source>Noise removal failed (More than likely, the server is unavailable).</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.normalize">
+            <source>Normalize</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.normalizeFail">
+            <source>Normalization failed: {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

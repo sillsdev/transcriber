@@ -179,6 +179,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "normalize": string;
     "notesLabel": string;
     "OBS": string;
     "OBT": string;
@@ -1797,6 +1798,8 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "loopon": string;
     "nextRegion": string;
     "noiseremovalFailed": string;
+    "normalize": string;
+    "normalizeFail": string;
     "pauseRecord": string;
     "pauseTip": string;
     "playTip": string;

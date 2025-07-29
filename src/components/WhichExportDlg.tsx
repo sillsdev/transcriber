@@ -69,7 +69,7 @@ export const WhichExportDlg = ({
     };
     var newDate = moment.utc(sinceDate);
     if (newDate.isValid()) {
-      doIt(newDate !== snapshotDate ? newDate : undefined);
+      doIt(!newDate.isSame(snapshotDate) ? newDate : undefined);
     } else {
       showMessage('invalid date');
     }
