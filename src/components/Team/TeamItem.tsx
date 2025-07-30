@@ -42,7 +42,7 @@ export const TeamItem = (props: IProps) => {
   const t = ctx.state.cardStrings;
   const { createBible, updateBible } = useBible();
   const [openMember, setOpenMember] = useState(false);
-  const { setMyOrgRole, userIsAdmin } = useRole();
+  const { setMyOrgRole, userIsOrgAdmin } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [sortVisible, setSortVisible] = useState(false);
   const getGlobal = useGetGlobal();
@@ -51,6 +51,9 @@ export const TeamItem = (props: IProps) => {
     setMyOrgRole(team.id);
     setOpenMember(true);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const userIsAdmin = useMemo(() => userIsOrgAdmin(team.id), [team]);
 
   const handleSettings = (team: Organization) => () => {
     setEditOpen(true);
