@@ -24,57 +24,49 @@ export function ProjectSort({ teamId, onClose }: IProps) {
   const { teamProjects } = React.useContext(TeamContext).state;
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
   const [memory] = useGlobal('memory');
-  const [snapshot, setSnapshot] = React.useState(0);
-
-  const projMap = new Map<number, ProjectD>();
+  const [projRecs, setProjRecs] = React.useState<ProjectD[]>([]);
 
   const getProj = (i: number) => {
-    if (projMap.has(i)) return projMap.get(i);
     const projId = related(teamProjects(teamId)[i], 'project');
-    const projRec = findRecord(memory, 'project', projId) as ProjectD;
-    projMap.set(i, projRec);
-    return projRec;
+    return findRecord(memory, 'project', projId) as ProjectD;
   };
 
-  const onSortEnd = ({
-    oldIndex,
-    newIndex,
-  }: {
+  const getKey = (p: ProjectD) =>
+    parseInt(getProjectDefault(projDefSort, p) || '-1', 10);
+
+  interface OnSortEndProps {
     oldIndex: number;
     newIndex: number;
-  }) => {
+  }
+
+  const onSortEnd = ({ oldIndex, newIndex }: OnSortEndProps) => {
     if (oldIndex === newIndex) return;
-    const indexes = teamProjects(teamId).map((_, i) => i);
+    const indexes = projRecs.map((_, i) => i);
     const newIndexes = arrayMove(indexes, oldIndex, newIndex) as number[];
     for (let i = 0; i < newIndexes.length; i += 1) {
-      const curSort = parseInt(
-        getProjectDefault(projDefSort, getProj(i)) || '0',
-        10
-      );
-      if (curSort !== newIndexes[i]) {
-        setProjectDefault(projDefSort, pad3(newIndexes[i]), getProj(i));
+      const pRec = projRecs[newIndexes[i]];
+      if (getKey(pRec) !== i) {
+        setProjectDefault(projDefSort, pad3(i), pRec);
       }
     }
-    setSnapshot((s) => s + 1);
+    setProjRecs((prev) => prev.sort((a, b) => getKey(a) - getKey(b)));
   };
 
   const resetSort = () => {
-    for (let i = 0; i < teamProjects(teamId).length; i += 1) {
-      setProjectDefault(projDefSort, undefined, getProj(i));
+    for (let i = 0; i < projRecs.length; i += 1) {
+      setProjectDefault(projDefSort, undefined, projRecs[i]);
     }
     onClose?.();
   };
 
   React.useEffect(() => {
-    for (let i = 0; i < teamProjects(teamId).length; i += 1) {
-      const curSort = parseInt(
-        getProjectDefault(projDefSort, getProj(i)) || '0',
-        10
-      );
-      if (curSort !== i) {
-        setProjectDefault(projDefSort, pad3(i), getProj(i));
+    const projRecs = teamProjects(teamId).map((_, i) => getProj(i));
+    for (let i = 0; i < projRecs.length; i += 1) {
+      if (getKey(projRecs[i]) !== i) {
+        setProjectDefault(projDefSort, pad3(i), projRecs[i]);
       }
     }
+    setProjRecs(projRecs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,9 +75,9 @@ export function ProjectSort({ teamId, onClose }: IProps) {
       <IconButton sx={{ alignSelf: 'flex-end' }} onClick={resetSort}>
         <ResetIcon />
       </IconButton>
-      <VertListDnd key={`sort-${snapshot}`} onDrop={onSortEnd} dragHandle>
-        {teamProjects(teamId).map((value, index) => (
-          <SortableItem key={`item-${index}`} value={value} />
+      <VertListDnd onDrop={onSortEnd} dragHandle>
+        {teamProjects(teamId).map((value) => (
+          <SortableItem key={`item-${value.id}`} value={value} />
         ))}
       </VertListDnd>
     </Stack>
