@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Box,
   Checkbox,
@@ -30,9 +36,11 @@ export const ProjectBook = (props: IProjectDialogState) => {
     setErrmsgx(bookErr);
     setBookErr && setBookErr(bookErr);
   };
-  React.useEffect(() => {
+  useEffect(() => {
     suggestionRef.current = bookSuggestions;
   }, [bookSuggestions]);
+
+  const isScripture = useMemo(() => type === 'scripture', [type]);
 
   const handleChangeBook = (e: any) => {
     e.persist();
@@ -72,46 +80,45 @@ export const ProjectBook = (props: IProjectDialogState) => {
       sx={{
         boxShadow: 2,
         borderRadius: '5px',
-        p: type !== 'scripture' ? 1 : 0,
+        p: isScripture ? 0 : 1,
       }}
     >
-      {type !== 'scripture' && (
+      <FormLabel sx={{ color: 'secondary.main' }}>
+        {t.generalBook.replace('{0}', Akuo)}
+      </FormLabel>
+      {false /* && type === 'scripture' */ ? (
+        <BookSelect
+          onCommit={onCommit}
+          onRevert={onCancel}
+          suggestions={suggestionRef.current ?? []}
+          placeHolder={t.bookSelect}
+          setPreventSave={handleSetPreventSave}
+          autoFocus={false}
+          {...props}
+        />
+      ) : (
         <>
-          <FormLabel sx={{ color: 'secondary.main' }}>
-            {t.generalBook.replace('{0}', Akuo)}
-          </FormLabel>
-          {type === 'scripture' ? (
-            <BookSelect
-              onCommit={onCommit}
-              onRevert={onCancel}
-              suggestions={suggestionRef.current ? suggestionRef.current : []}
-              placeHolder={t.bookSelect}
-              setPreventSave={handleSetPreventSave}
-              autoFocus={false}
-              {...props}
+          <TextField
+            margin="dense"
+            id="extraBook"
+            value={newBook}
+            onChange={handleChangeBook}
+            fullWidth
+            inputProps={{ maxLength: 5 }}
+            disabled={isScripture}
+          />
+          {errmsg && <Typography color="red">{errmsg}</Typography>}
+          {!isScripture && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={newStory}
+                  onChange={handleCheckboxChange}
+                  value="story"
+                />
+              }
+              label={t.generalStory.replace('{0}', Akuo)}
             />
-          ) : (
-            <>
-              <TextField
-                margin="dense"
-                id="extraBook"
-                value={newBook}
-                onChange={handleChangeBook}
-                fullWidth
-                inputProps={{ maxLength: 3 }}
-              />
-              {errmsg && <Typography color="red">{errmsg}</Typography>}
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={newStory}
-                    onChange={handleCheckboxChange}
-                    value="story"
-                  />
-                }
-                label={t.generalStory.replace('{0}', Akuo)}
-              />
-            </>
           )}
         </>
       )}
