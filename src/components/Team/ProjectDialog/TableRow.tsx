@@ -1,9 +1,9 @@
 import { Box, Stack } from '@mui/material';
 import { DragHandle } from '../../../control/DragHandle';
-import { VProjectD } from '../../../model';
+import { ProjectD } from '../../../model';
 
 interface IProps {
-  value: VProjectD;
+  value: ProjectD;
   header?: boolean;
 }
 

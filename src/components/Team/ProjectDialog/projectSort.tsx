@@ -49,7 +49,7 @@ export function ProjectSort({ teamId, onClose }: IProps) {
         setProjectDefault(projDefSort, pad3(i), pRec);
       }
     }
-    setProjRecs((prev) => prev.sort((a, b) => getKey(a) - getKey(b)));
+    setProjRecs((prev) => arrayMove(prev, oldIndex, newIndex));
   };
 
   const resetSort = () => {
@@ -76,7 +76,7 @@ export function ProjectSort({ teamId, onClose }: IProps) {
         <ResetIcon />
       </IconButton>
       <VertListDnd onDrop={onSortEnd} dragHandle>
-        {teamProjects(teamId).map((value) => (
+        {projRecs.map((value) => (
           <SortableItem key={`item-${value.id}`} value={value} />
         ))}
       </VertListDnd>

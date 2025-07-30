@@ -1,8 +1,8 @@
-import { VProjectD } from '../../../model';
+import { ProjectD } from '../../../model';
 import { TableRow } from './TableRow';
 
 interface IProps {
-  value: VProjectD;
+  value: ProjectD;
 }
 
 export const SortableItem = ({ value }: IProps) => <TableRow value={value} />;
