@@ -300,7 +300,7 @@ const TeamProvider = (props: IProps) => {
   const planSortMap = new Map<string, string>();
   const noPlan = 'Zxx';
 
-  const planSort = (p: PlanD): string => {
+  const planKey = (p: PlanD): string => {
     if (planSortMap.has(p.id)) return planSortMap.get(p.id) || noPlan;
     const proj = findRecord(
       memory,
@@ -315,6 +315,14 @@ const TeamProvider = (props: IProps) => {
     return key ?? p?.attributes?.name ?? noPlan;
   };
 
+  const planSort = (i: PlanD, j: PlanD) => {
+    const iKey = planKey(i);
+    const jKey = planKey(j);
+    return iKey !== jKey
+      ? iKey.localeCompare(jKey)
+      : i?.attributes?.name.localeCompare(j?.attributes?.name);
+  };
+
   const teamProjects = (teamId: string) => {
     const projIds = userProjects
       .filter(
@@ -326,7 +334,7 @@ const TeamProvider = (props: IProps) => {
       .map((p) => p.id);
     return plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort((i, j) => planSort(i).localeCompare(planSort(j)))
+      .sort(planSort)
       .map((p) => vProject(p));
   };
 
