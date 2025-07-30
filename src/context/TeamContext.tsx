@@ -320,7 +320,7 @@ const TeamProvider = (props: IProps) => {
     const jKey = planKey(j);
     return iKey !== jKey
       ? iKey.localeCompare(jKey)
-      : i?.attributes?.name.localeCompare(j?.attributes?.name);
+      : i?.attributes?.name?.trim().localeCompare(j?.attributes?.name?.trim());
   };
 
   const teamProjects = (teamId: string) => {

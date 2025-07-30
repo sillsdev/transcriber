@@ -42,7 +42,7 @@ export const TeamItem = (props: IProps) => {
   const t = ctx.state.cardStrings;
   const { createBible, updateBible } = useBible();
   const [openMember, setOpenMember] = useState(false);
-  const { setMyOrgRole } = useRole();
+  const { setMyOrgRole, userIsAdmin } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [sortVisible, setSortVisible] = useState(false);
   const getGlobal = useGetGlobal();
@@ -125,6 +125,11 @@ export const TeamItem = (props: IProps) => {
             lg={5}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
+            {userIsAdmin && (
+              <IconButton onClick={handleSettings(team)}>
+                <SortIcon />
+              </IconButton>
+            )}
             <IconButton onClick={() => setSortVisible(true)}>
               <SortIcon />
             </IconButton>
