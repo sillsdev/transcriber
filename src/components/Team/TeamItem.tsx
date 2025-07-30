@@ -126,13 +126,10 @@ export const TeamItem = (props: IProps) => {
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
             {userIsAdmin && (
-              <IconButton onClick={handleSettings(team)}>
+              <IconButton onClick={() => setSortVisible(true)}>
                 <SortIcon />
               </IconButton>
             )}
-            <IconButton onClick={() => setSortVisible(true)}>
-              <SortIcon />
-            </IconButton>
             <AltButton id="teamMembers" onClick={handleMembers(team)}>
               {t.members.replace('{0}', teamMembers(team.id).toString())}
             </AltButton>
