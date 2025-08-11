@@ -16,18 +16,21 @@ import { IconButton, Stack } from '@mui/material';
 import ResetIcon from '@mui/icons-material/SettingsBackupRestore';
 
 interface IProps {
-  teamId: string;
+  teamId?: string; // Optional, if not provided, will use personal projects
   onClose?: () => void;
 }
 
 export function ProjectSort({ teamId, onClose }: IProps) {
-  const { teamProjects } = React.useContext(TeamContext).state;
+  const { teamProjects, personalProjects } =
+    React.useContext(TeamContext).state;
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
   const [memory] = useGlobal('memory');
   const [projRecs, setProjRecs] = React.useState<ProjectD[]>([]);
 
   const getProj = (i: number) => {
-    const projId = related(teamProjects(teamId)[i], 'project');
+    const projId = teamId
+      ? related(teamProjects(teamId)[i], 'project')
+      : related(personalProjects[i], 'project');
     return findRecord(memory, 'project', projId) as ProjectD;
   };
 
@@ -60,7 +63,8 @@ export function ProjectSort({ teamId, onClose }: IProps) {
   };
 
   React.useEffect(() => {
-    const projRecs = teamProjects(teamId).map((_, i) => getProj(i));
+    const projects = teamId ? teamProjects(teamId) : personalProjects;
+    const projRecs = projects.map((_, i) => getProj(i));
     for (let i = 0; i < projRecs.length; i += 1) {
       if (getKey(projRecs[i]) !== i) {
         setProjectDefault(projDefSort, pad3(i), projRecs[i]);
