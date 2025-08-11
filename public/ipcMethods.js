@@ -22,7 +22,6 @@ const convert = require('xml-js');
 const ChildProcess = require('child_process');
 // execa is an ESM module so we included source to make it work
 const execa = require('./execa');
-const { normalize } = require('./normalizer');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -393,11 +392,12 @@ const ipcMethods = () => {
       input = input.replace(/\//g, '\\');
       output = output.replace(/\//g, '\\');
     }
+    const localMod = await import('./resources/normalizer.js');
     try {
       // see: https://www.electronjs.org/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
       // we modified the code from ffmpeg-normalize to make it work with electronjs
       // we replaced child_process.exec with child_process.execFile
-      await normalize({
+      await localMod.normalize({
         input,
         output,
         loudness: {
