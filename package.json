@@ -219,6 +219,11 @@
     },
     "extraFiles": [
       {
+        "from": "public/resources",
+        "to": "resources",
+        "filter": "*.js"
+      },
+      {
         "from": "public/localization",
         "to": "localization",
         "filter": "*.json"
@@ -251,7 +256,5 @@
   },
   "volta": {
     "node": "18.20.5"
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
