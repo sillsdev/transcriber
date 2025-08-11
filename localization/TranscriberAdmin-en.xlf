@@ -8460,7 +8460,7 @@
       </unit>
       <unit id="vProject.errgeneralBookLen">
          <segment>
-            <source>Book must be 3 characters</source>
+            <source>Book Designation must be 3 to 5 characters</source>
             <target/>
          </segment>
       </unit>
