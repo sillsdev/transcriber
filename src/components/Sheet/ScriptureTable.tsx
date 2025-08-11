@@ -1593,7 +1593,7 @@ export function ScriptureTable(props: IProps) {
 
   useEffect(() => {
     if (firstBook && !getProjectDefault(projDefBook)) {
-      const firstSort = bookSortMap.get(firstBook) ?? 'A00';
+      const firstSort = bookSortMap.get(firstBook) ?? '000';
       setProjectDefault(projDefBook, firstSort);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
