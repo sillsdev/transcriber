@@ -461,7 +461,7 @@ const TeamProvider = (props: IProps) => {
       .map((p) => p.id);
     const personalProjects = plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+      .sort(planSort)
       .map((p) =>
         vProject(
           p,

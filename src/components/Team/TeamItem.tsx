@@ -55,6 +55,12 @@ export const TeamItem = (props: IProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const userIsAdmin = useMemo(() => userIsOrgAdmin(team.id), [team]);
 
+  const hasMoreThanOneProject = useMemo(
+    () => teamProjects(team.id).length > 1,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [team]
+  );
+
   const handleSettings = (team: Organization) => () => {
     setEditOpen(true);
   };
@@ -128,7 +134,7 @@ export const TeamItem = (props: IProps) => {
             lg={5}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
-            {userIsAdmin && (
+            {userIsAdmin && hasMoreThanOneProject && (
               <IconButton onClick={() => setSortVisible(true)}>
                 <SortIcon />
               </IconButton>
