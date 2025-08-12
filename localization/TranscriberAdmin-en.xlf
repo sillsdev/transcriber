@@ -8476,6 +8476,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.generalBookHelper">
+         <segment>
+            <source>(A01 for Genesis, B01 for Matthew, etc.)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.generalStory">
          <segment>
             <source>Show as Stories (not Extras) in {0}</source>

@@ -1776,6 +1776,7 @@ const initialState = {
 			"errgeneralBookLen": "Book Designation must be 3 to 5 characters",
 			"errgeneralBookNonScripture": "Book Designation must not be a Scripture book code.",
 			"generalBook": "{0} Book Designation",
+			"generalBookHelper": "(A01 for Genesis, B01 for Matthew, etc.)",
 			"generalStory": "Show as Stories (not Extras) in {0}",
 			"flat": "Flat",
 			"font": "Font",
