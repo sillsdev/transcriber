@@ -219,9 +219,9 @@
     },
     "extraFiles": [
       {
-        "from": "public/resources",
-        "to": "resources",
-        "filter": "*.js"
+        "from": "public",
+        "to": ".",
+        "filter": "normalizer.js"
       },
       {
         "from": "public/localization",
