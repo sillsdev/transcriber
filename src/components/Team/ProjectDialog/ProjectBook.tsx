@@ -6,23 +6,21 @@ import React, {
   useState,
 } from 'react';
 import {
-  Box,
   Checkbox,
   FormControlLabel,
-  FormLabel,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import { IProjectDialogState } from './ProjectDialog';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
-import { IState, OptionType } from '../../../model';
-import BookSelect from '../../BookSelect';
+import { IState, IVProjectStrings, OptionType } from '../../../model';
 import { Akuo } from '../../../assets/brands';
 
 export const ProjectBook = (props: IProjectDialogState) => {
   const { state, setState, setBookErr } = props;
-  const t = useSelector(vProjectSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   const { book, story, type } = state;
   const [newBook, setNewBook] = useState<string>(book);
   const [errmsg, setErrmsgx] = useState<string>('');
@@ -44,7 +42,7 @@ export const ProjectBook = (props: IProjectDialogState) => {
 
   const handleChangeBook = (e: any) => {
     e.persist();
-    var newbook = (e.target?.value || '').toString().toUpperCase();
+    var newbook = (e.target?.value || '').trim().toString().toUpperCase();
     setNewBook(newbook);
     if (bookSuggestions.find((s) => s.value === newbook)) {
       setErrmsg(t.errgeneralBookNonScripture);
@@ -58,70 +56,49 @@ export const ProjectBook = (props: IProjectDialogState) => {
     }
   };
   const handleCheckboxChange = (
-    event: ChangeEvent<HTMLInputElement>,
+    _event: ChangeEvent<HTMLInputElement>,
     checked: boolean
   ) => {
     setNewStory(checked);
     setState((state) => ({ ...state, story: checked }));
   };
-  const handleSetPreventSave = (val: boolean) => {};
 
-  const onCommit = (
-    newbook: string,
-    e?: React.KeyboardEvent<Element> | undefined
-  ) => {
-    setNewBook(newbook);
-    setState((state) => ({ ...state, book: newbook }));
-  };
-  const onCancel = () => {};
   //future default book for scripture tested but turned off for now
   return (
-    <Box
+    <Stack
+      direction="row"
+      spacing={2}
       sx={{
-        boxShadow: 2,
+        boxShadow: isScripture ? 0 : 2,
         borderRadius: '5px',
         p: isScripture ? 0 : 1,
+        alignItems: 'center',
       }}
     >
-      <FormLabel sx={{ color: 'secondary.main' }}>
-        {t.generalBook.replace('{0}', Akuo)}
-      </FormLabel>
-      {false /* && type === 'scripture' */ ? (
-        <BookSelect
-          onCommit={onCommit}
-          onRevert={onCancel}
-          suggestions={suggestionRef.current ?? []}
-          placeHolder={t.bookSelect}
-          setPreventSave={handleSetPreventSave}
-          autoFocus={false}
-          {...props}
-        />
-      ) : (
-        <>
-          <TextField
-            margin="dense"
-            id="extraBook"
-            value={newBook}
-            onChange={handleChangeBook}
-            fullWidth
-            inputProps={{ maxLength: 5 }}
-            disabled={isScripture}
-          />
-          {errmsg && <Typography color="red">{errmsg}</Typography>}
-          {!isScripture && (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={newStory}
-                  onChange={handleCheckboxChange}
-                  value="story"
-                />
-              }
-              label={t.generalStory.replace('{0}', Akuo)}
+      <TextField
+        required
+        margin="dense"
+        id="extraBook"
+        label={t.generalBook.replace('{0}', Akuo)}
+        value={newBook}
+        onChange={handleChangeBook}
+        inputProps={{ maxLength: 5 }}
+        disabled={isScripture}
+        helperText={!isScripture ? t.generalBookHelper : undefined}
+      />
+      {errmsg && <Typography color="red">{errmsg}</Typography>}
+      {!isScripture && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={newStory}
+              onChange={handleCheckboxChange}
+              value="story"
             />
-          )}
-        </>
+          }
+          label={t.generalStory.replace('{0}', Akuo)}
+        />
       )}
-    </Box>
+    </Stack>
   );
 };

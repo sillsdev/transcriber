@@ -78,7 +78,7 @@ export function ProjectDialog(props: IProps) {
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
-  const { name, type, bcp47 } = state;
+  const { name, type, bcp47, book } = state;
   const [bookErr, setBookErr] = React.useState('');
   const [basicTab, setBasicTab] = useState(true);
   const addingRef = React.useRef(false);
@@ -225,7 +225,8 @@ export function ProjectDialog(props: IProps) {
           name === '' ||
           bcp47 === 'und' ||
           type === '' ||
-          bookErr !== ''
+          bookErr !== '' ||
+          (type !== 'scripture' && book === '')
         }
         primaryKey={'add'}
         primaryAria={t.add}

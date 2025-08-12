@@ -1681,6 +1681,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "errgeneralBookLen": string;
     "errgeneralBookNonScripture": string;
     "generalBook": string;
+    "generalBookHelper": string;
     "generalStory": string;
     "flat": string;
     "font": string;

@@ -9884,9 +9884,15 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-
          <trans-unit id="vProject.generalBook">
             <source>{0} Book Designation</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.generalBookHelper">
+            <source>(A01 for Genesis, B01 for Matthew, etc.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
