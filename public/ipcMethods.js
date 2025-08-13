@@ -394,6 +394,7 @@ const ipcMethods = () => {
     }
     const localMod = await import('./normalizer.js');
     try {
+      // see: https://github.com/peterforgacs/ffmpeg-normalize/blob/master/src/normalizer.ts
       // see: https://www.electronjs.org/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
       // we modified the code from ffmpeg-normalize to make it work with electronjs
       // we replaced child_process.exec with child_process.execFile
