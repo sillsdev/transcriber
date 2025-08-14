@@ -357,8 +357,10 @@ const TeamProvider = (props: IProps) => {
       const scrBook = /^[@AB]\d{2}$/.exec(book);
       if (scrBook) {
         scrBase = book;
-      } else if (book < preBook || book.slice(0, 1) !== scrBase.slice(0, 1)) {
-        let index = parseInt(preBook.slice(3) || '0');
+      } else if (book <= preBook || book.slice(0, 1) !== scrBase.slice(0, 1)) {
+        let index = parseInt(
+          scrBase !== '0' ? preBook.slice(3) || '0' : preBook
+        );
         index += 4; // will we eventually want to insert between existing books?
         book = scrBase + pad2(index);
         setProjectDefault(projDefBook, book, proj);
