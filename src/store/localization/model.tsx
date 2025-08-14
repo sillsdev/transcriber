@@ -1802,6 +1802,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "noiseremovalFailed": string;
     "normalize": string;
     "normalizeFail": string;
+    "normalizeInProgress": string;
     "pauseRecord": string;
     "pauseTip": string;
     "playTip": string;
