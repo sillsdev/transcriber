@@ -35,7 +35,6 @@ import {
   usePlan,
   remoteIdGuid,
   VernacularTag,
-  useRole,
 } from '../../crud';
 import { useGlobal } from '../../context/GlobalContext';
 import { useMediaAttach } from '../../crud/useMediaAttach';
@@ -67,7 +66,6 @@ export function AudioTab() {
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
-  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia'); //verified this is not used in a function 2/18/25
   const { showMessage } = useSnackBar();
@@ -92,7 +90,6 @@ export function AudioTab() {
   const [speaker, setSpeaker] = useState('');
   const [attachPassage, detachPassage] = useMediaAttach();
   const [refresh, setRefresh] = useState(0);
-  const { userIsAdmin } = useRole();
   const cloudSync = useRef(false);
 
   const myToolId = 'AudioTab';
@@ -337,7 +334,7 @@ export function AudioTab() {
       <div>
         <TabAppBar position="fixed" color="default">
           <TabActions>
-            {(userIsAdmin || canEditSheet) && (!isOffline || offlineOnly) && (
+            {canEditSheet && (
               <>
                 <AltButton
                   id="audUpload"
@@ -390,7 +387,7 @@ export function AudioTab() {
               playItem={playItem}
               setPlayItem={setPlayItem}
               onAttach={onAttach}
-              readonly={!userIsAdmin && !canEditSheet}
+              readonly={!canEditSheet}
               sectionArr={sectionArr}
               shared={shared}
               canSetDestination={!isOffline && canPublish}
