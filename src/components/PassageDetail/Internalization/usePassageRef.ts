@@ -15,9 +15,7 @@ export const usePassageRef = () => {
     if (passage) {
       const pt = passageTypeFromRef(passage?.attributes?.reference);
       if (pt === PassageTypeEnum.NOTE) {
-        return `${shortBook(passage?.attributes?.book || 'MAT')} ${
-          curNoteRef(passage) || '1:1'
-        }`;
+        return curNoteRef(passage); //curNoteRef includes shortbook
       } else {
         return `${shortBook(passage?.attributes?.book || 'MAT')} ${
           passage?.attributes?.reference || '1:1'
