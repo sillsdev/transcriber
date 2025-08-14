@@ -1900,6 +1900,7 @@ const initialState = {
 			"noiseremovalFailed": "Noise removal failed (More than likely, the server is unavailable).",
 			"normalize": "Normalize",
 			"normalizeFail": "Normalization failed: {0}",
+			"normalizeInProgress": "Audio loudness normaliziation In Progress...",
 			"pauseRecord": "Pause",
 			"pauseTip": "Pause [{0}]",
 			"playTip": "Play [{0}]",

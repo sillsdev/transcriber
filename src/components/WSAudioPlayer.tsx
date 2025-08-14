@@ -241,6 +241,7 @@ function WSAudioPlayer(props: IProps) {
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const [waitingForAI, setWaitingForAI] = useState(false);
+  const [processMsg, setProcessMsg] = useState<string | undefined>(undefined);
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -777,7 +778,8 @@ function WSAudioPlayer(props: IProps) {
     wsUndo();
     handleChanged();
   };
-  const doingAI = (inprogress: boolean) => {
+  const doingProcess = (inprogress: boolean, msg?: string) => {
+    setProcessMsg(msg ?? t.aiInProgress);
     setWaitingForAI(inprogress);
     setBusy && setBusy(inprogress);
     setBlobReady && setBlobReady(!inprogress);
@@ -809,7 +811,7 @@ function WSAudioPlayer(props: IProps) {
       if (!reload) throw new Exception('need reload defined.');
       cancelAIRef.current = false;
       try {
-        doingAI(true);
+        doingProcess(true);
         const filename = `${Date.now()}ai.wav`;
         wsRegionBlob().then((blob) => {
           if (blob) {
@@ -834,18 +836,18 @@ function WSAudioPlayer(props: IProps) {
                     logError(Severity.error, errorReporter, msg);
                   }
                 }
-                doingAI(false);
+                doingProcess(false);
               },
             });
           } else {
-            doingAI(false);
+            doingProcess(false);
           }
         });
       } catch (error: any) {
         const msg = audioAiMsg(func, targetVoice, error);
         logError(Severity.error, errorReporter, msg);
         showMessage(msg);
-        doingAI(false);
+        doingProcess(false);
       }
     });
   };
@@ -891,7 +893,7 @@ function WSAudioPlayer(props: IProps) {
     if (!reload) throw new Exception('need reload defined.');
 
     try {
-      doingAI(true);
+      doingProcess(true, t.normalizeInProgress);
       const fileBeg = await dataPath(`${Date.now()}b-norm.wav`, PathType.MEDIA);
       const fileEnd = await dataPath(`${Date.now()}e-norm.wav`, PathType.MEDIA);
       const blob = await wsRegionBlob();
@@ -913,7 +915,7 @@ function WSAudioPlayer(props: IProps) {
       if (errorReporter) logError(Severity.error, errorReporter, msg);
       showMessage(msg);
     } finally {
-      doingAI(false);
+      doingProcess(false);
     }
   };
 
@@ -1209,7 +1211,7 @@ function WSAudioPlayer(props: IProps) {
                 <Grid container sx={{ pr: 6 }}>
                   <Grid item xs={12}>
                     <Typography sx={{ whiteSpace: 'normal' }}>
-                      {t.aiInProgress}
+                      {processMsg}
                     </Typography>
                   </Grid>
                   <Grid
@@ -1221,7 +1223,7 @@ function WSAudioPlayer(props: IProps) {
                       id="ai-cancel"
                       onClick={() => {
                         cancelAIRef.current = true;
-                        doingAI(false);
+                        doingProcess(false);
                       }}
                     >
                       {ts.cancel}
