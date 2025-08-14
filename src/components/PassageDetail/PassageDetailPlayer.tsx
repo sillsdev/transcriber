@@ -69,6 +69,7 @@ export interface DetailPlayerProps {
   allowZoomAndSpeed?: boolean;
   position?: number;
   chooserReduce?: number;
+  width: number;
   parentToolId?: string;
   role?: string;
   hasTranscription?: boolean;
@@ -94,6 +95,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     allowZoomAndSpeed,
     position,
     chooserReduce,
+    width,
     parentToolId,
     role,
     hasTranscription,
@@ -398,11 +400,12 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   };
 
   return (
-    <div id="detailplayer">
+    <div id="detailplayer" style={{ width }}>
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
-        size={playerSize - (chooserReduce ?? 0)}
+        width={width}
+        height={playerSize - (chooserReduce ?? 0)}
         blob={audioBlob}
         initialposition={initialposition}
         setInitialPosition={setInitialPosition}

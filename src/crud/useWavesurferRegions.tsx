@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import WaveSurfer from 'wavesurfer.js';
+import { useEffect, useRef } from 'react';
 import { waitForIt } from '../utils/waitForIt';
+import RegionsPlugin, { Region } from 'wavesurfer.js/dist/plugins/regions';
+import WaveSurfer from 'wavesurfer.js';
 
 export interface IRegionChange {
   start: number;
@@ -51,6 +52,8 @@ export const parseRegions = (regionstr: string) => {
 export function useWaveSurferRegions(
   singleRegionOnly: boolean,
   defaultRegionIndex: number,
+  Regions: RegionsPlugin | undefined,
+  ws: WaveSurfer | null,
   onRegion: (count: number, newRegion: boolean) => void,
   onPlayStatus: (playing: boolean) => void,
   duration: () => number,
@@ -62,11 +65,11 @@ export function useWaveSurferRegions(
   onStartRegion?: (start: number) => void,
   verses?: string
 ) {
-  const [ws, setWaveSurfer] = useState<WaveSurfer>();
-  const wavesurferRef = useRef<WaveSurfer>();
+  // const wavesurferRef = useRef<WaveSurfer | null>(null);
   const singleRegionRef = useRef(singleRegionOnly);
   const currentRegionRef = useRef<any>();
   const loopingRegionRef = useRef<any>();
+  const loopingRef = useRef(false);
   const updatingRef = useRef(false);
   const resizingRef = useRef(false);
   const loadingRef = useRef(false);
@@ -75,35 +78,37 @@ export function useWaveSurferRegions(
   const peaksRef = useRef<
     ReadonlyArray<number> | ReadonlyArray<ReadonlyArray<number>>
   >();
-  const regionIds = () =>
-    wavesurferRef.current?.regions
-      ? Object.keys(wavesurferRef.current?.regions.list)
-      : [];
-  const region = (id: string) => wavesurferRef.current?.regions.list[id];
-  const numRegions = () => regionIds().length;
+  const regions = () => Regions?.getRegions() ?? ([] as Region[]);
+  const region = (id: string) => regions().find((x) => x.id === id);
+  const numRegions = () => regions().length;
   const currentRegion = () => {
     return singleRegionRef.current
       ? numRegions() > 0
-        ? region(regionIds()[0])
+        ? regions()[0]
         : undefined
       : currentRegionRef.current;
   };
   const setCurrentRegion = (r: any) => {
-    currentRegionRef.current = r;
-    onCurrentRegion &&
-      onCurrentRegion(r ? { start: r.start, end: r.end } : undefined);
+    //console.log('setCurrentRegion', r?.start, currentRegionRef.current?.start);
+    if (r !== currentRegionRef.current) {
+      loopingRegionRef.current = r;
+      currentRegionRef.current = r;
+      onCurrentRegion &&
+        onCurrentRegion(r ? { start: r.start, end: r.end } : undefined);
+    }
   };
 
   const findNextRegion = (r: any, selfIfAtStart: boolean) => {
     if (!r) return undefined;
     if (selfIfAtStart && (numRegions() === 1 || isNear(r.start))) return r;
-    return r.attributes.nextRegion;
+    return r.attributes?.nextRegion;
   };
 
   useEffect(() => {
-    wavesurferRef.current = ws;
-    if (ws) {
-      ws.on('region-created', function (r: any) {
+    //wavesurferRef.current = ws;
+
+    if (Regions) {
+      Regions.on('region-created', function (r: any) {
         //console.log('region-created', singleRegionRef.current);
         if (singleRegionRef.current) {
           r.drag = true;
@@ -127,13 +132,13 @@ export function useWaveSurferRegions(
             });
         }
       });
-      ws.on('region-removed', function (r: any) {
+      Regions.on('region-removed', function (r: any) {
         if (r.attributes?.prevRegion)
           r.attributes.prevRegion.attributes.nextRegion =
             r.attributes?.nextRegion;
-        if (r.attributes.nextRegion)
+        if (r.attributes?.nextRegion)
           r.attributes.nextRegion.attributes.prevRegion =
-            r.attributes.prevRegion;
+            r.attributes?.prevRegion;
         if (!loadingRef.current) {
           // wait for it to be removed from this list
           waitForIt(
@@ -147,10 +152,14 @@ export function useWaveSurferRegions(
           });
         }
       });
-      ws.on('region-updated', function (r: any) {
+      //was region-updated
+      Regions.on('region-update', function (r: any) {
+        console.log('region-update', r);
         resizingRef.current = r.isResizing;
       });
-      ws.on('region-update-end', function (r: any) {
+      //was region-update-end
+      Regions.on('region-updated', function (r: any) {
+        console.log('region-updated', r);
         if (singleRegionRef.current) {
           if (!loadingRef.current) {
             waitForIt(
@@ -185,40 +194,50 @@ export function useWaveSurferRegions(
             goto(duration());
           }
         }
-        onRegion(regionIds().length, true);
+        onRegion(numRegions(), true);
       });
       // other potentially useful messages
       // ws.on('region-play', function (r: any) {
       //   console.log('region-play', r.start, r.loop);
       // });
-      ws.on('region-in', function (r: any) {
-        setCurrentRegion(r);
+      Regions.on('region-in', function (r: any) {
+        //TODO!! need to check for user interaction vs looping
+        console.log('region-in', r.start);
+        if (!loopingRef.current) setCurrentRegion(r);
       });
-      ws.on('region-out', function (r: any) {
+      Regions.on('region-out', function (r: Region) {
+        console.log(
+          'region-out',
+          r.start,
+          loopingRef.current,
+          loopingRegionRef.current
+        );
         //help it in case it forgot -- unless the user clicked out
         //here is where we could add a pause possibly
-        if (r.loop && r === loopingRegionRef.current) goto(r.start);
-        if (playRegionRef.current && !r.loop) {
+        if (loopingRef.current && r === loopingRegionRef.current) r.play();
+        if (playRegionRef.current && !loopingRef.current) {
           onPlayStatus(false);
         }
       });
-      ws.on('region-click', function (r: any) {
+      Regions.on('region-clicked', function (r: any) {
         setCurrentRegion(r);
-        loopingRegionRef.current = r;
       });
-      ws.on('region-dblclick', function (r: any) {
+      Regions.on('region-double-clicked', function (r: any) {
+        console.log('region-double-clicked', r);
         if (!singleRegionOnly) {
           wsAddOrRemoveRegion();
         }
       });
-      ws.drawer.on('dblclick', (event: any, progress: number) => {
-        if (!singleRegionOnly) {
-          wsAddOrRemoveRegion();
-        }
-      });
+      // TODO
+      //ws.drawer.on('dblclick', (event: any, progress: number) => {
+      //  if (!singleRegionOnly) {
+      //    wsAddOrRemoveRegion();
+      //  }
+      //});
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ws]);
+  }, [ws, Regions]);
 
   const isInRegion = (r: any, value: number) => {
     return value <= r.end && value >= r.start;
@@ -228,23 +247,22 @@ export function useWaveSurferRegions(
     if (!force && currentRegion() && isInRegion(currentRegion(), value))
       return currentRegion();
     var foundIt: any = undefined;
-    regionIds().forEach(function (id) {
-      let r = region(id);
-      if (r.start <= value && r.end >= value) {
+    regions().forEach(function (r) {
+      if ((r?.start ?? 1000) <= value && (r?.end ?? 0) >= value) {
         foundIt = r;
       }
     });
     return foundIt;
   };
-  const updateRegion = (r: any, params: any) => {
+  const updateRegion = (r: Region, params: any) => {
     updatingRef.current = true;
-    r.update(params);
+    r.setOptions(params);
     updatingRef.current = false;
   };
 
   const getPeaks = (num: number = 512) => {
-    if (!peaksRef.current && wavesurferRef.current)
-      peaksRef.current = wavesurferRef.current.backend.getPeaks(num);
+    if (!peaksRef.current && ws)
+      peaksRef.current = ws.exportPeaks({ maxLength: num }); //TODO??what is this num??
     return peaksRef.current;
   };
 
@@ -367,29 +385,29 @@ export function useWaveSurferRegions(
     }
     return sRegions;
   };
-
+  const setAttribute = (r: any, attr: string, value: any) => {
+    if (!(r as any).attributes) {
+      (r as any).attributes = {};
+    }
+    (r as any).attributes[attr] = value;
+  };
   const setPrevNext = (sortedIds: string[]) => {
-    if (
-      !wavesurferRef.current ||
-      sortedIds.length === 0 ||
-      singleRegionRef.current
-    )
-      return;
+    if (!ws || sortedIds.length === 0 || singleRegionRef.current) return;
     var prev: any = undefined;
     sortedIds.forEach(function (id) {
       let r = region(id);
-      if (prev) {
-        prev.attributes.nextRegion = r;
-        r.attributes.prevRegion = prev;
+      if (r && prev) {
+        setAttribute(prev, 'nextRegion', r);
+        setAttribute(r, 'prevRegion', prev);
       }
       prev = r;
     });
   };
+
   function clearRegions() {
-    if (!wavesurferRef.current || !regionIds().length || loadingRef.current)
-      return;
+    if (!ws || !numRegions() || loadingRef.current) return;
     loadingRef.current = true;
-    wavesurferRef.current.regions.clear();
+    Regions?.clearRegions();
     currentRegionRef.current = undefined;
     loopingRegionRef.current = undefined;
     loadingRef.current = false;
@@ -401,10 +419,10 @@ export function useWaveSurferRegions(
     newRegions: boolean = false
   ) {
     if (!newRegions) peaksRef.current = undefined; //because I know this is a new wave
-    if (!wavesurferRef.current) return false;
+    if (!ws) return false;
     loadingRef.current = true;
     paramsRef.current = regions?.params;
-    wavesurferRef.current.regions.clear();
+
     if (!regions || !regions.regions || regions.regions.length === 0) {
       singleRegionRef.current = true;
       loadingRef.current = false;
@@ -421,7 +439,8 @@ export function useWaveSurferRegions(
       region.color = randomColor(0.1);
       region.drag = false;
       region.loop = loop;
-      wavesurferRef.current?.addRegion(region);
+      var r = Regions?.addRegion(region);
+      region.id = r?.id;
     });
     waitForIt(
       'wait for last region',
@@ -429,7 +448,7 @@ export function useWaveSurferRegions(
       () => false,
       400
     ).finally(() => {
-      setPrevNext(regionIds());
+      setPrevNext(regarray.map((r: any) => r.id));
       onRegion(regarray.length, newRegions);
       if (defaultRegionIndex >= 0) {
         currentRegionRef.current = findRegion(
@@ -445,7 +464,7 @@ export function useWaveSurferRegions(
 
   const findPrevRegion = (r: any) => {
     if (!r) return undefined;
-    return r.attributes.prevRegion;
+    return r.attributes?.prevRegion;
   };
 
   const wsSplitRegion = (r: any, split: number) => {
@@ -455,7 +474,7 @@ export function useWaveSurferRegions(
       newStart: r ? r.start : 0,
       newEnd: split,
     };
-    if (!wavesurferRef.current) return ret;
+    if (!ws) return ret;
     singleRegionRef.current = false;
     var region = {
       start: split,
@@ -464,7 +483,7 @@ export function useWaveSurferRegions(
       color: randomColor(0.1),
       loop: r ? r.loop : false,
     };
-    var newRegion = wavesurferRef.current.addRegion(region);
+    var newRegion = Regions?.addRegion(region);
     var newSorted: string[] = [];
     if (r) {
       var sortedIds: string[] = getSortedIds();
@@ -472,7 +491,7 @@ export function useWaveSurferRegions(
       updateRegion(r, { end: split });
       newSorted = sortedIds
         .slice(0, curIndex + 1)
-        .concat(newRegion.id)
+        .concat(newRegion?.id ?? 'newid')
         .concat(sortedIds.slice(curIndex + 1));
     } else {
       region = {
@@ -482,9 +501,9 @@ export function useWaveSurferRegions(
         color: randomColor(0.1),
         loop: false,
       };
-      var firstRegion = wavesurferRef.current.addRegion(region);
-      newSorted.push(firstRegion.id);
-      newSorted.push(newRegion.id);
+      var firstRegion = Regions?.addRegion(region);
+      newSorted.push(firstRegion?.id ?? 'fr');
+      newSorted.push(newRegion?.id ?? 'nr');
     }
     setPrevNext(newSorted);
     if (r && r.loop && ret.newEnd < ret.end)
@@ -533,20 +552,21 @@ export function useWaveSurferRegions(
 
   const getSortedIds = () => {
     var sortedIds: string[] = [];
-    if (!wavesurferRef.current) return sortedIds;
-
-    var ids = regionIds();
-    if (ids.length > 0) {
-      var next: string | undefined = ids[0];
-      while (next) {
-        var r: any = wavesurferRef.current.regions.list[next];
-        if (r) {
-          sortedIds.push(next);
-          if (r.attributes.nextRegion) next = r.attributes.nextRegion.id;
-          else next = undefined;
-        } else next = undefined;
-      }
+    if (!ws || numRegions() === 0) return sortedIds;
+    //do I need to find start = 0?
+    console.log('getSortedIds', regions());
+    var next = regions()[0];
+    while ((next as any).attributes?.prevRegion) {
+      next = (next as any).attributes?.prevRegion;
     }
+    while (next) {
+      sortedIds.push(next.id);
+      next = (next as any).attributes?.nextRegion;
+    }
+    sortedIds.forEach((id) => {
+      var r = region(id);
+      if (r) console.log(r.start, r.end);
+    });
     return sortedIds;
   };
 
@@ -562,7 +582,7 @@ export function useWaveSurferRegions(
   };
 
   function wsAutoSegment(loop: boolean = false, params: IRegionParams) {
-    if (!wavesurferRef.current) return 0;
+    if (!ws) return 0;
     var regions = mergeVerses(extractRegions(params));
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);
@@ -603,24 +623,22 @@ export function useWaveSurferRegions(
   };
 
   const wsGetRegions = () => {
-    if (!wavesurferRef.current || !wavesurferRef.current.regions) return '{}';
-    var regions = JSON.stringify(
-      regionIds().map(function (id) {
-        let r = region(id);
+    if (!ws || !Regions) return '{}';
+
+    var regions = getSortedIds().map(function (id) {
+      let r = region(id);
+      if (r)
         return {
           start: r.start,
           end: r.end,
         };
-      })
-    );
+      else return {};
+    });
     return JSON.stringify({ params: paramsRef.current, regions: regions });
   };
 
   const wsLoopRegion = (loop: boolean) => {
-    regionIds().forEach(function (id) {
-      let r = region(id);
-      r.loop = loop;
-    });
+    loopingRef.current = loop;
     return loop;
   };
   /**
@@ -665,7 +683,7 @@ export function useWaveSurferRegions(
         progress >= currentRegion().end - 0.01 ||
         progress <= currentRegion().start
       ) {
-        if (wavesurferRef.current?.isPlaying()) {
+        if (ws?.isPlaying()) {
           setPlaying(false);
         }
       }
@@ -697,6 +715,5 @@ export function useWaveSurferRegions(
     onRegionProgress,
     onRegionGoTo,
     currentRegion,
-    setWaveSurfer,
   };
 }

@@ -278,7 +278,7 @@ export const processDataChanges = async (pdc: {
               const userrec = GetUser(memory, user);
               if (
                 (upRec.record as Invitation).attributes?.email.toLowerCase() ===
-                userrec.attributes.email.toLowerCase()
+                userrec?.attributes?.email.toLowerCase()
               )
                 AcceptInvitation(remote, upRec.record as InvitationD);
               break;

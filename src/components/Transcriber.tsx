@@ -877,6 +877,7 @@ export function Transcriber(props: IProps) {
     segments: string | undefined,
     thiscomment: string | undefined
   ) => {
+    console.log('save', segments);
     if (transcriptionRef.current && mediaRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
@@ -1047,6 +1048,7 @@ export function Transcriber(props: IProps) {
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
   const onSegmentChange = (segments: string, init: boolean) => {
+    console.log('onSegmentChange', segments, init);
     segmentsRef.current = segments;
   };
   const onSegmentParamChange = (
@@ -1170,6 +1172,7 @@ export function Transcriber(props: IProps) {
                       )}
                     <Grid item xs id="transcriberplayer">
                       <PassageDetailPlayer
+                        width={props.defaultWidth}
                         position={defaultPosition}
                         allowAutoSegment={true}
                         saveSegments={
