@@ -35,6 +35,10 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
     this.props.setPreventSave(true);
   }
 
+  handleMenuClose = () => {
+    this.props.setPreventSave(false);
+  };
+
   handleChange(opt: any) {
     const { onCommit, onRevert, setPreventSave } = this.props;
     const { e } = this.state;
@@ -72,6 +76,7 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
         menuShouldScrollIntoView
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
+        onMenuClose={this.handleMenuClose}
         options={this.props.suggestions}
       />
     );
