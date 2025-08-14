@@ -14,8 +14,8 @@ export const TableRow = ({ value, header }: IProps) => {
         <DragHandle />
         {'\u00A0'}
       </span>
-      <Box sx={{ minWidth: 100, textAlign: 'center' }}>
-        {value.attributes.name}
+      <Box sx={{ minWidth: 100, textAlign: 'left' }}>
+        {value.attributes.name.trim()}
       </Box>
     </Stack>
   );

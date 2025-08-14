@@ -183,6 +183,7 @@ export interface GetSheetProps {
   current?: ISheet[];
   user: string;
   myGroups: GroupD[];
+  isDeveloper?: boolean;
 }
 
 export const getSheet = ({
@@ -208,6 +209,7 @@ export const getSheet = ({
   current,
   user,
   myGroups,
+  isDeveloper = false,
 }: GetSheetProps) => {
   const myWork = current || Array<ISheet>();
   let plansections = sections
@@ -237,7 +239,7 @@ export const getSheet = ({
       item.reference =
         item.passageType === PassageTypeEnum.PASSAGE
           ? ''
-          : item.level === SheetLevel.Book
+          : item.level === SheetLevel.Book && isDeveloper
           ? section.attributes.state
           : item.passageType;
       item.title = section?.attributes?.name;
@@ -317,7 +319,11 @@ export const getSheet = ({
             : IMediaShare.NotPublic;
 
         if (item.mediaShared === IMediaShare.OldVersionOnly) {
-          const all = getAllMediaRecs(related(mediaRec, 'passage'), memory, null);
+          const all = getAllMediaRecs(
+            related(mediaRec, 'passage'),
+            memory,
+            null
+          );
           const pub = all.find((m) => m.attributes.readyToShare);
           const oldpublished = getPublishTo(
             pub?.attributes?.publishTo || '{}',

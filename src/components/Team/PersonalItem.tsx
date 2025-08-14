@@ -13,7 +13,7 @@ import DialogMode from '../../model/dialogMode';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { OrganizationD } from '../../model';
 import SortIcon from '@mui/icons-material/Sort';
-import { ProjectSort } from './ProjectDialog/projectSort';
+import { ProjectSort } from './ProjectDialog/ProjectSort';
 
 export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);

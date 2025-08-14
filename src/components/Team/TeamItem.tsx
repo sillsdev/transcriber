@@ -14,7 +14,7 @@ import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 import { RecordIdentity } from '@orbit/records';
-import { ProjectSort } from './ProjectDialog/projectSort';
+import { ProjectSort } from './ProjectDialog/ProjectSort';
 import SortIcon from '@mui/icons-material/Sort';
 
 interface IProps {
