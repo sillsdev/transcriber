@@ -12,7 +12,6 @@ export const projDefBook = 'book';
 export const projDefStory = 'story';
 export const projDefFirstMovement = 'firstMovement';
 export const projDefFilterParam = 'ProjectFilter';
-export const projDefSort = 'sort';
 
 export const useProjectDefaults = () => {
   const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25

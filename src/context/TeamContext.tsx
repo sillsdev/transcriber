@@ -49,6 +49,9 @@ import {
   isPersonalTeam,
   useOrganizedBy,
   findRecord,
+  useOrgDefaults,
+  orgDefaultProjSort,
+  remoteIdGuid,
 } from '../crud';
 import {
   cardsSelector,
@@ -60,19 +63,22 @@ import {
   vProjectSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
-import { useHome } from '../utils';
+import { pad2, useHome } from '../utils';
 import {
   RecordIdentity,
+  RecordKeyMap,
   RecordOperation,
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
+import { projDefBook, useProjectDefaults } from '../crud/useProjectDefaults';
+import { pad3 } from '../utils/pad3';
 import {
-  projDefBook,
-  projDefSort,
-  useProjectDefaults,
-} from '../crud/useProjectDefaults';
+  getKey,
+  type SortArr,
+  type SortMap,
+} from '../components/Team/ProjectDialog/ProjectSort';
 
 export type TeamIdType = OrganizationD | null;
 
@@ -127,6 +133,10 @@ const initState = {
   importProject: undefined as any,
   doImport: (p: VProject | undefined = undefined) => {},
   resetProjectPermissions: (team: string) => {},
+  generalBook: (team?: string) => '000',
+  updateGeneralBooks: async (arr: SortArr) => {
+    // Implementation here
+  },
 };
 
 export type ICtxState = typeof initState & {};
@@ -222,7 +232,8 @@ const TeamProvider = (props: IProps) => {
   const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
   const isMakingPersonal = useRef(false);
   const getGlobal = useGetGlobal();
-  const { getProjectDefault } = useProjectDefaults();
+  const { getProjectDefault, setProjectDefault } = useProjectDefaults();
+  const { getOrgDefault } = useOrgDefaults();
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
     const vproj = plan?.type === 'plan' ? vProject(plan) : plan;
@@ -288,6 +299,71 @@ const TeamProvider = (props: IProps) => {
     );
   };
 
+  const generalBook = (teamId?: string) => {
+    const projects = teamId ? teamProjects(teamId) : state.personalProjects;
+    const bookSet = new Set(
+      projects.reduce((p, c) => {
+        const projId = related(c, 'project');
+        const projRec = findRecord(memory, 'project', projId) as ProjectD;
+        if (c.type !== 'scripture') {
+          const projBook = getProjectDefault(projDefBook, projRec) as string;
+          p.push(projBook || '000');
+        }
+        return p;
+      }, Array<string>())
+    );
+    let newItem = bookSet.size + 10;
+    while (bookSet.has(pad3(newItem))) {
+      newItem += 10;
+    }
+    return pad3(newItem);
+  };
+
+  const updateBookSec = async (plan: PlanD, seq: number, value: string) => {
+    const bookSec = sections.find(
+      (s) => related(s, 'plan') === plan?.id && s.attributes.sequencenum === seq
+    );
+    if (bookSec) {
+      await memory.update((t) =>
+        t.replaceAttribute(bookSec, 'state', value).toOperation()
+      );
+    }
+  };
+
+  const updatePublishBook = async (proj: ProjectD, book: string) => {
+    const plan = plans.find((p) => related(p, 'project') === proj.id);
+    if (plan) {
+      await updateBookSec(plan, -4, `BOOK Z${book}`);
+      await updateBookSec(plan, -3, `ALTBK S${book}`);
+    }
+  };
+
+  const updateGeneralBooks = async (arr: SortArr) => {
+    let preBook = '000';
+    let scrBase = '0';
+    arr.sort((i, j) => i[1] - j[1]); // it should already be sorted
+    for (const [projId] of arr) {
+      const localId =
+        remoteIdGuid('project', projId, memory.keyMap as RecordKeyMap) ||
+        projId;
+      const proj = findRecord(memory, 'project', localId) as ProjectD;
+      let book = (getProjectDefault(projDefBook, proj) as string) || '000';
+      if (book) {
+        const scrBook = /^[AB]\d{2}$/.exec(book);
+        if (scrBook) {
+          scrBase = book;
+        } else if (book < preBook || book.slice(0, 1) > scrBase.slice(0, 1)) {
+          let index = parseInt(preBook.slice(3) || '0');
+          index += 4; // will we eventually want to insert between existing books?
+          book = scrBase + pad2(index);
+          setProjectDefault(projDefBook, book, proj);
+          await updatePublishBook(proj, book);
+        }
+        preBook = book;
+      }
+    }
+  };
+
   const userProjects = useMemo(() => {
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === user)
@@ -300,24 +376,33 @@ const TeamProvider = (props: IProps) => {
   const planSortMap = new Map<string, string>();
   const noPlan = 'Zxx';
 
-  const planKey = (p: PlanD): string => {
+  const planKey = (p: PlanD, map: SortMap): string => {
     if (planSortMap.has(p.id)) return planSortMap.get(p.id) || noPlan;
     const proj = findRecord(
       memory,
       'project',
       related(p, 'project')
     ) as ProjectD;
-    let key =
-      getProjectDefault(projDefSort, proj) ??
-      getProjectDefault(projDefBook, proj);
+    const sortKeyInt = getKey(proj, map);
+    const sortKey = sortKeyInt !== undefined ? pad3(sortKeyInt) : undefined;
+    let key = sortKey ?? getProjectDefault(projDefBook, proj);
     if (key) planSortMap.set(p.id, key);
     //I suggest prepending the sort order to the plan slug
     return key ?? p?.attributes?.name ?? noPlan;
   };
 
-  const planSort = (i: PlanD, j: PlanD) => {
-    const iKey = planKey(i);
-    const jKey = planKey(j);
+  const getSortMap = (teamId?: string) => {
+    let sortArr = getOrgDefault(
+      orgDefaultProjSort,
+      teamId ?? state.personalTeam
+    ) as SortArr | undefined;
+    if (!Array.isArray(sortArr)) sortArr = [];
+    return new Map<string, number>(sortArr);
+  };
+
+  const planSort = (map: SortMap) => (i: PlanD, j: PlanD) => {
+    const iKey = planKey(i, map);
+    const jKey = planKey(j, map);
     return iKey !== jKey
       ? iKey.localeCompare(jKey)
       : i?.attributes?.name?.trim().localeCompare(j?.attributes?.name?.trim());
@@ -332,9 +417,10 @@ const TeamProvider = (props: IProps) => {
             oProjRead(p.id)?.attributes?.offlineAvailable)
       )
       .map((p) => p.id);
+    const sortMap = getSortMap(teamId);
     return plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort(planSort)
+      .sort(planSort(sortMap))
       .map((p) => vProject(p));
   };
 
@@ -459,9 +545,10 @@ const TeamProvider = (props: IProps) => {
           (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
       )
       .map((p) => p.id);
+    const sortMap = getSortMap();
     const personalProjects = plans
       .filter((p) => projIds.includes(related(p, 'project')))
-      .sort(planSort)
+      .sort(planSort(sortMap))
       .map((p) =>
         vProject(
           p,
@@ -550,6 +637,8 @@ const TeamProvider = (props: IProps) => {
           importProject,
           doImport,
           resetProjectPermissions,
+          generalBook,
+          updateGeneralBooks,
         },
         setState,
       }}

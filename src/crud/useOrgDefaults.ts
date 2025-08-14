@@ -17,6 +17,7 @@ export const orgDefaultFeatures = 'features';
 export const orgDefaultVoices = 'voices';
 export const orgDefaultAsr = 'asr';
 export const orgDefaultPermissions = 'permissions';
+export const orgDefaultProjSort = 'projSort';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');

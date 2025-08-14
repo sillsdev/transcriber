@@ -55,6 +55,7 @@ export const AddCard = (props: IProps) => {
     teamProjects,
     personalProjects,
     loadProject,
+    generalBook,
   } = ctx.state;
   const t = cardStrings;
 
@@ -148,7 +149,11 @@ export const AddCard = (props: IProps) => {
       publishUser,
       publishGroup,
     } = values;
-    var defaultParams = setParam(projDefBook, book, '{}');
+    let defaultParams = setParam(
+      projDefBook,
+      book || generalBook(team?.id),
+      '{}'
+    );
     defaultParams = setParam(projDefStory, story, defaultParams);
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(

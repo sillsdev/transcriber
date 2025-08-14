@@ -182,6 +182,7 @@ export function ScriptureTable(props: IProps) {
   const [plan] = useGlobal('plan'); //will be constant here
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [developer] = useGlobal('developer');
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
@@ -1430,6 +1431,7 @@ export function ScriptureTable(props: IProps) {
         getSharedResource,
         user,
         myGroups,
+        isDeveloper: developer === 'true',
       });
       setSheet(newWorkflow);
 
