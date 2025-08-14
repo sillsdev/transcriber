@@ -97,7 +97,7 @@ export const useMediaUpload = ({
           uploadList[n].size,
           passageId ?? '',
           artifactId,
-          '',
+          sourceMediaId ?? '',
           user
         )
       ).id;
