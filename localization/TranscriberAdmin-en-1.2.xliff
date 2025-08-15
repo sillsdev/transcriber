@@ -9870,13 +9870,6 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.errgeneralBookLen">
-            <source>Book Designation must be 3 to 5 characters</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="vProject.errgeneralBookNonScripture">
             <source>Book Designation must not be a Scripture book code.</source>
             <target/>
@@ -9886,13 +9879,6 @@
          </trans-unit>
          <trans-unit id="vProject.generalBook">
             <source>{0} Book Designation</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="vProject.generalBookHelper">
-            <source>(A01 for Genesis, B01 for Matthew, etc.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

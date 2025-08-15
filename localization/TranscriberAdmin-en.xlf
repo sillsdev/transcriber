@@ -8458,12 +8458,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errgeneralBookLen">
-         <segment>
-            <source>Book Designation must be 3 to 5 characters</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
@@ -8473,12 +8467,6 @@
       <unit id="vProject.generalBook">
          <segment>
             <source>{0} Book Designation</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="vProject.generalBookHelper">
-         <segment>
-            <source>(A01 for Genesis, B01 for Matthew, etc.)</source>
             <target/>
          </segment>
       </unit>
