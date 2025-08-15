@@ -1920,6 +1920,7 @@ const initialState = {
 			"slowerTip": "Slower [{0}]",
 			"stopTip": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
+			"tooQuiet": "The sample is too quiet.",
 			"undoTip": "Undo",
 			"voiceconversionFailed": "Voice convert failed (More than likely, the server is unavailable).",
 		}

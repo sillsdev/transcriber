@@ -9268,6 +9268,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.tooQuiet">
+         <segment>
+            <source>The sample is too quiet.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.undoTip">
          <segment>
             <source>Undo</source>
