@@ -9,7 +9,6 @@ import {
   SectionD,
   SharedResource,
   SharedResourceD,
-  SharedResourceReferenceD,
   SheetLevel,
 } from '../model';
 import related from './related';
@@ -27,9 +26,6 @@ import { useComputeRef } from '../components/PassageDetail/Internalization/useCo
 
 export const useNotes = () => {
   const sharedResources = useOrbitData<SharedResourceD[]>('sharedresource');
-  const sharedRef = useOrbitData<SharedResourceReferenceD[]>(
-    'sharedresourcereference'
-  );
   const passages = useOrbitData<PassageD[]>('passage');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
@@ -110,24 +106,6 @@ export const useNotes = () => {
       result = `${shortBook(notePassage.attributes.book)} ${
         notePassage.attributes.reference || '1:1'
       }`;
-    }
-    if (result.trim().length === 0) {
-      const resRec = sharedResources.find(
-        (sr) => related(sr, 'passage') === passage.id
-      );
-      const refs = sharedRef.filter(
-        (r) => related(r, 'sharedResource') === resRec?.id
-      );
-      if (resRec) {
-        result = refs
-          .map(
-            (r) =>
-              `${shortBook(r.attributes.book)} ${r.attributes.chapter}:${
-                r.attributes.verses
-              }`
-          )
-          .join('; ');
-      }
     }
     return (
       result ||
