@@ -16,7 +16,7 @@ const resource: BibleResource[] = [
   },
   {
     name: ObtHelper,
-    href: 'https://obthelper.com/',
+    href: 'https://www.shemaywam.com/bthelper',
     ai: true,
   },
   {
