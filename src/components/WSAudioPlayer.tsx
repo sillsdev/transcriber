@@ -900,6 +900,17 @@ function WSAudioPlayer(props: IProps) {
       if (blob) {
         // write to local file system
         const arrayBuffer = await blob.arrayBuffer();
+        console.log(arrayBuffer);
+        const absMax = new Uint8Array(arrayBuffer).reduce(
+          (a, b) => Math.max(a, Math.abs(b)),
+          0
+        );
+        const min = new Uint8Array(arrayBuffer).reduce(
+          (a, b) => Math.min(a, b),
+          0
+        );
+        console.log('Abs Max: ', absMax, ' Min: ', min);
+        if (absMax < 255) throw new Exception(t.tooQuiet);
         await ipc?.writeBuffer(fileBeg, arrayBuffer);
         await ipc?.normalize(fileBeg, fileEnd);
         const result = await ipc?.read(fileEnd);
