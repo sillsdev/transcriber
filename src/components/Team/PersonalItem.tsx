@@ -95,11 +95,12 @@ export const PersonalItem = () => {
             md={4}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
-            {personalProjects.length > 1 && (
-              <IconButton onClick={() => setSortVisible(true)}>
-                <SortIcon />
-              </IconButton>
-            )}
+            {personalProjects.length > 1 &&
+              canModify(isOffline, offlineOnly) && (
+                <IconButton onClick={() => setSortVisible(true)}>
+                  <SortIcon />
+                </IconButton>
+              )}
             {canModify(isOffline, offlineOnly) && (
               <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
                 {t.editWorkflow.replace('{0}', '')}
