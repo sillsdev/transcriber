@@ -134,7 +134,7 @@ export const TeamItem = (props: IProps) => {
             lg={5}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
-            {userIsAdmin && hasMoreThanOneProject && (
+            {userIsAdmin && hasMoreThanOneProject && canModify && (
               <IconButton onClick={() => setSortVisible(true)}>
                 <SortIcon />
               </IconButton>
