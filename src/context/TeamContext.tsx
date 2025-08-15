@@ -333,8 +333,8 @@ const TeamProvider = (props: IProps) => {
   const updatePublishBook = async (proj: ProjectD, book: string) => {
     const plan = plans.find((p) => related(p, 'project') === proj.id);
     if (plan) {
-      await updateBookSec(plan, -4, `BOOK Z${book}`);
-      await updateBookSec(plan, -3, `ALTBK S${book}`);
+      await updateBookSec(plan, -4, `BOOK ${book}`);
+      await updateBookSec(plan, -3, `ALTBK ${book}`);
     }
   };
 
