@@ -860,6 +860,10 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return Array<Array<string>>();
     }
+    if (offline && !offlineOnly) {
+      showMessage(ts.NoSaveOffline);
+      return Array<Array<string>>();
+    }
     setUpdate(true);
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
