@@ -1594,9 +1594,11 @@ export function ScriptureTable(props: IProps) {
   );
 
   useEffect(() => {
-    if (firstBook && !getProjectDefault(projDefBook)) {
+    if (firstBook) {
+      const bookSrt = getProjectDefault(projDefBook);
       const firstSort = bookSortMap.get(firstBook) ?? '000';
-      setProjectDefault(projDefBook, firstSort);
+      if (!bookSrt || bookSrt !== firstSort)
+        setProjectDefault(projDefBook, firstSort);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstBook]);
