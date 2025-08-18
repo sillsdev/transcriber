@@ -84,8 +84,6 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import MarkDown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
 import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
@@ -94,6 +92,7 @@ import { useStepPermissions } from '../../../utils/useStepPermission';
 import FindBibleBrain from './FindBibleBrain';
 import { useHandleLink } from './addLinkKind';
 import { usePassageRef } from './usePassageRef';
+import { MarkDownView } from '../../../control/MarkDownView';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -1015,7 +1014,7 @@ export function PassageDetailArtifacts() {
           onOpen={(_open: boolean) => setMarkDoan('')}
           bp={BigDialogBp.sm}
         >
-          <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
+          <MarkDownView value={markDown} />
         </BigDialog>
       )}
       {audioScriptureVisible && (
