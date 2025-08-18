@@ -137,6 +137,8 @@ const initState = {
   updateGeneralBooks: async (arr: SortArr) => {
     // Implementation here
   },
+  tab: 0,
+  setTab: (tab: number) => {},
 };
 
 export type ICtxState = typeof initState & {};
@@ -244,6 +246,10 @@ const TeamProvider = (props: IProps) => {
     setProjectType(projectId);
     setPlan(plan.id);
     return [projectId, orgId];
+  };
+
+  const setTab = (tab: number) => {
+    setState((prev) => ({ ...prev, tab }));
   };
 
   const doImport = (proj: VProject | undefined = undefined) => {
@@ -639,6 +645,7 @@ const TeamProvider = (props: IProps) => {
           resetProjectPermissions,
           generalBook,
           updateGeneralBooks,
+          setTab,
         },
         setState,
       }}

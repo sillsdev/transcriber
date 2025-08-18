@@ -44,8 +44,6 @@ export interface GlobalState {
   saveResult: string | undefined; //verified //PassageDetailContext, UnsavedContext
   snackAlert: AlertSeverity | undefined; //verified //SnackBar
   snackMessage: JSX.Element; //verified //SnackBar
-  tab: number; //verified //GroupTabs, PlanTabs
-
   offline: boolean;
 }
 

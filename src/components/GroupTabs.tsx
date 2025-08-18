@@ -7,6 +7,8 @@ import { TabBox } from '../control';
 import Peer from './Peers/Peer';
 import { groupTabsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import React from 'react';
+import { TeamContext } from '../context/TeamContext';
 
 interface IProps {
   changeTab?: (v: number) => void;
@@ -14,7 +16,8 @@ interface IProps {
 
 const GroupTabs = (props: IProps) => {
   const { changeTab } = props;
-  const [tab, setTab] = useGlobal('tab'); //verified this is not used in a function 2/18/25
+  const ctx = React.useContext(TeamContext);
+  const { tab, setTab } = ctx.state;
   const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
   const t: IGroupTabsStrings = useSelector(groupTabsSelector, shallowEqual);
 
