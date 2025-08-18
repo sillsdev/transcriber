@@ -10662,7 +10662,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.normalizeInProgress">
-            <source>Audio loudness normaliziation In Progress...</source>
+            <source>Audio loudness normalization In Progress...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

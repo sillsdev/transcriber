@@ -9135,8 +9135,8 @@
       </unit>
       <unit id="wsAudioPlayer.normalizeInProgress">
          <segment>
-            <source>Audio loudness normaliziation In Progress...</source>
-            <target/>
+            <source>Audio loudness normalization In Progress...</source>
+            <target>Normalização do volume do áudio Em andamento...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">
