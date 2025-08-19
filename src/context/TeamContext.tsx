@@ -354,19 +354,17 @@ const TeamProvider = (props: IProps) => {
         projId;
       const proj = findRecord(memory, 'project', localId) as ProjectD;
       let book = (getProjectDefault(projDefBook, proj) as string) || '000';
-      if (book) {
-        const scrBook = /^[@AB]\d{2}$/.exec(book);
-        if (scrBook) {
-          scrBase = book;
-        } else if (book < preBook || book.slice(0, 1) > scrBase.slice(0, 1)) {
-          let index = parseInt(preBook.slice(3) || '0');
-          index += 4; // will we eventually want to insert between existing books?
-          book = scrBase + pad2(index);
-          setProjectDefault(projDefBook, book, proj);
-          await updatePublishBook(proj, book);
-        }
-        preBook = book;
+      const scrBook = /^[@AB]\d{2}$/.exec(book);
+      if (scrBook) {
+        scrBase = book;
+      } else if (book <= preBook || book.slice(0, 1) !== scrBase.slice(0, 1)) {
+        let index = parseInt(preBook.slice(3) || '0');
+        index += 4; // will we eventually want to insert between existing books?
+        book = scrBase + pad2(index);
+        setProjectDefault(projDefBook, book, proj);
+        await updatePublishBook(proj, book);
       }
+      preBook = book;
     }
   };
 
