@@ -355,7 +355,7 @@ const TeamProvider = (props: IProps) => {
       const proj = findRecord(memory, 'project', localId) as ProjectD;
       let book = (getProjectDefault(projDefBook, proj) as string) || '000';
       if (book) {
-        const scrBook = /^[AB]\d{2}$/.exec(book);
+        const scrBook = /^[@AB]\d{2}$/.exec(book);
         if (scrBook) {
           scrBase = book;
         } else if (book < preBook || book.slice(0, 1) > scrBase.slice(0, 1)) {
