@@ -142,6 +142,7 @@ export const FaithbridgeIframe = ({
       const query = (data?.messages?.[0]?.content || '').split('(')[0].trim();
       let responseContent = data?.messages?.[1]?.content || '';
       responseContent = responseContent
+        .replace(/<a [^>]+>(<img [^<]+)<\/a>/g, (_match, val) => val) // remove links
         .replace(
           /<img\b[^>]*\b(src|alt)="([^"]*)"[^>]*\b(alt|src)="([^"]*)"[^>]*>/g,
           (_match, attr1, val1, _attr2, val2) =>
