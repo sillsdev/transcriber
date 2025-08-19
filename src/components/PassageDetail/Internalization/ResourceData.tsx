@@ -29,8 +29,7 @@ import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import { LinkEdit } from '../../../control/LinkEdit';
 import { MarkDownEdit } from '../../../control/MarkDownEdit';
 import { mediaContentType } from '../../../utils/contentType';
-import MarkDown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { MarkDownView } from '../../../control/MarkDownView';
 
 interface IProps {
   media?: MediaFileD;
@@ -170,9 +169,7 @@ export function ResourceData(props: IProps) {
             <Typography variant="h6" sx={{ pt: 1 }}>
               {t.transcription}
             </Typography>
-            <MarkDown remarkPlugins={[remarkGfm]}>
-              {media?.attributes.transcription || ''}
-            </MarkDown>
+            <MarkDownView value={media?.attributes.transcription || ''} />
           </Stack>
         )}
     </Stack>

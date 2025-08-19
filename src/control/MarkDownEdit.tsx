@@ -8,14 +8,13 @@ import {
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { LightTooltip } from './LightTooltip';
-import MarkDown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { useEffect, useState } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { IMediaUploadStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mediaUploadSelector } from '../selector';
 import { LaunchLink } from './LaunchLink';
+import { MarkDownView } from './MarkDownView';
 
 const gfmSyntax =
   'https://docs.github.com/{0}/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax';
@@ -59,7 +58,7 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
         >
           <FormLabel component={'legend'}>{t.preview}</FormLabel>
           <Box sx={{ mx: 1 }}>
-            <MarkDown remarkPlugins={[remarkGfm]}>{value}</MarkDown>
+            <MarkDownView value={value} />
           </Box>
         </FormControl>
       )}

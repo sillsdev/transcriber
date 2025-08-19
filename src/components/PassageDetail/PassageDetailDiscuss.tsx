@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import MarkDown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { IDiscussStrings, OrgWorkflowStepD } from '../../model';
 import { Box } from '@mui/material';
 import { shallowEqual, useSelector } from 'react-redux';
 import { discussSelector } from '../../selector';
+import { MarkDownView } from '../../control/MarkDownView';
 
 interface IProps {
   width: number;
@@ -28,7 +27,7 @@ export const PassageDetailDiscuss = ({ width, currentStep }: IProps) => {
 
   return (
     <Box sx={{ maxWidth: width, whiteSpace: 'normal', overflow: 'auto' }}>
-      <MarkDown remarkPlugins={[remarkGfm]}>{value || t.howToChange}</MarkDown>
+      <MarkDownView value={value || t.howToChange} />
     </Box>
   );
 };
