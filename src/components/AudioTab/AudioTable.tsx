@@ -1,3 +1,4 @@
+/* eslint-disable react/default-props-match-prop-types */
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -293,7 +294,7 @@ export const AudioTable = (props: IProps) => {
   );
 
   const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
-    <Table.Cell row={row} {...restProps} style={{ ...style }} value>
+    <Table.Cell value row={row} style={{ ...style }} {...restProps}>
       <MediaActions
         rowIndex={row.index}
         mediaId={row.id}
@@ -324,7 +325,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const VersionCell = ({ value, row, ...restProps }: ICell) => (
-    <Table.Cell row={row} {...restProps} value>
+    <Table.Cell value row={row} {...restProps}>
       <Button color="primary" onClick={handleVerHistOpen(row.passId)}>
         {value}
       </Button>
@@ -332,7 +333,7 @@ export const AudioTable = (props: IProps) => {
   );
 
   const ReferenceCell = ({ row, value, ...props }: ICell) => (
-    <Table.Cell row {...props} value>
+    <Table.Cell value row={row} {...props}>
       <Button color="primary" onClick={handleShowTranscription(row.id)}>
         {value}
       </Button>
@@ -340,12 +341,12 @@ export const AudioTable = (props: IProps) => {
   );
 
   const DateCell = ({ row, value, ...props }: ICell) => (
-    <Table.Cell row {...props} value>
+    <Table.Cell value row={row} {...props}>
       {dateOrTime(value, lang)}
     </Table.Cell>
   );
   const ReadyToShareCell = ({ row, value, ...props }: ICell) => (
-    <Table.Cell row {...props} value>
+    <Table.Cell value row={row} {...props}>
       <IconButton
         onClick={handleChangeReadyToShare(row.index)}
         disabled={(row.passId || '') === '' || !canSetDestination}
@@ -361,7 +362,7 @@ export const AudioTable = (props: IProps) => {
     <UserAvatar userRec={getUser(value)} />
   ));
   const UserCell = ({ row, value, ...props }: ICell) => (
-    <Table.Cell row {...props} value>
+    <Table.Cell value row={row} {...props}>
       <MemoAvatar value={value} />
     </Table.Cell>
   );
