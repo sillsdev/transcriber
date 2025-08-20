@@ -402,6 +402,7 @@ const TeamProvider = (props: IProps) => {
       orgDefaultProjSort,
       teamId ?? state.personalTeam
     ) as SortArr | undefined;
+    console.log(sortArr, state);
     if (!Array.isArray(sortArr)) sortArr = [];
     return new Map<string, number>(sortArr);
   };
@@ -570,6 +571,7 @@ const TeamProvider = (props: IProps) => {
       isMakingPersonal.current = true;
       getTeamId(undefined).then((personalTeam: string) => {
         if (personalTeam) setState((state) => ({ ...state, personalTeam }));
+        else isMakingPersonal.current = false;
       });
     }
     const teams = getTeams();
