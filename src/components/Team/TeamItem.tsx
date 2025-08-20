@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from 'react';
 import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
-import { Grid } from '@mui/material';
+import { Grid, IconButton } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode, OrganizationD } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
@@ -14,6 +14,8 @@ import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 import { RecordIdentity } from '@orbit/records';
+import { ProjectSort } from './ProjectDialog/ProjectSort';
+import SortIcon from '@mui/icons-material/Sort';
 
 interface IProps {
   team: OrganizationD;
@@ -40,14 +42,24 @@ export const TeamItem = (props: IProps) => {
   const t = ctx.state.cardStrings;
   const { createBible, updateBible } = useBible();
   const [openMember, setOpenMember] = useState(false);
-  const { setMyOrgRole } = useRole();
+  const { setMyOrgRole, userIsOrgAdmin } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
+  const [sortVisible, setSortVisible] = useState(false);
   const getGlobal = useGetGlobal();
   const handleMembers = (team: OrganizationD) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
     setOpenMember(true);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const userIsAdmin = useMemo(() => userIsOrgAdmin(team.id), [team]);
+
+  const hasMoreThanOneProject = useMemo(
+    () => teamProjects(team.id).length > 1,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [team]
+  );
 
   const handleSettings = (team: Organization) => () => {
     setEditOpen(true);
@@ -122,6 +134,11 @@ export const TeamItem = (props: IProps) => {
             lg={5}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
+            {userIsAdmin && hasMoreThanOneProject && canModify && (
+              <IconButton onClick={() => setSortVisible(true)}>
+                <SortIcon />
+              </IconButton>
+            )}
             <AltButton id="teamMembers" onClick={handleMembers(team)}>
               {t.members.replace('{0}', teamMembers(team.id).toString())}
             </AltButton>
@@ -173,6 +190,13 @@ export const TeamItem = (props: IProps) => {
         onOpen={handleWorkflow}
       >
         <StepEditor process={defaultWorkflow} org={team.id} />
+      </BigDialog>
+      <BigDialog
+        title={t.sortProjects}
+        isOpen={sortVisible}
+        onOpen={() => setSortVisible(false)}
+      >
+        <ProjectSort teamId={team.id} onClose={() => setSortVisible(false)} />
       </BigDialog>
       {deleteItem && (
         <Confirm

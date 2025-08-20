@@ -21,7 +21,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Box,
 } from '@mui/material';
 
 interface IColSpec {
@@ -242,11 +241,7 @@ function ShapingTable(props: IProps) {
                     {c.title}
                   </TableCell>
                 ) : (
-                  <Box
-                    key={c.name}
-                    component={'span'}
-                    sx={{ display: 'none' }}
-                  ></Box>
+                  <TableCell key={c.name} sx={{ display: 'none' }}></TableCell>
                 )
               )}
             </>
@@ -287,21 +282,25 @@ function ShapingTable(props: IProps) {
                         column: c,
                         style: style(c),
                         align: c.align as any,
-                        key,
                         id: key,
                       };
                       return c.hidden ? (
-                        <Box
+                        <TableCell
                           key={key}
-                          component={'span'}
                           sx={{ display: 'none' }}
-                        ></Box>
+                        ></TableCell>
                       ) : dataCell ? (
-                        dataCell(props)
+                        <React.Fragment key={key}>
+                          {dataCell(props)}
+                        </React.Fragment>
                       ) : !r[c.name] && noDataCell ? (
-                        noDataCell(props)
+                        <React.Fragment key={key}>
+                          {noDataCell(props)}
+                        </React.Fragment>
                       ) : (
-                        <TableCell {...props}>{value}</TableCell>
+                        <TableCell key={key} {...props}>
+                          {value}
+                        </TableCell>
                       );
                     })}
                   </>

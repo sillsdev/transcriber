@@ -23,7 +23,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Options } from '../../control';
-// import { useOrgDefaults, orgDefaultFeatures } from '../../crud';
 import { TeamContext } from '../../context/TeamContext';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
@@ -36,11 +35,13 @@ import {
   orgDefaultPermissions,
   orgDefaultWorkflowProgression,
 } from '../../crud';
+import { isElectron } from '../../api-variable';
 
 export enum FeatureSlug {
   NoNoise = 'noNoise',
   DeltaVoice = 'deltaVoice',
   AiTranscribe = 'aiTranscribe',
+  Normalize = 'normalize',
 }
 
 const Details = styled(AccordionDetails)<AccordionDetailsProps>(
@@ -149,14 +150,15 @@ export function TeamSettings(props: IProps) {
               options={workflowOptions}
               onChange={setProgression}
             />
-            {!offline && (
-              <FormControl
-                component="fieldset"
-                sx={{ border: '1px solid grey', mr: 1, px: 2 }}
-              >
-                <FormLabel sx={{ color: 'secondary.main' }}>
-                  {t.experimentalFeatures}
-                </FormLabel>
+
+            <FormControl
+              component="fieldset"
+              sx={{ border: '1px solid grey', mr: 1, px: 2 }}
+            >
+              <FormLabel sx={{ color: 'secondary.main' }}>
+                {t.experimentalFeatures}
+              </FormLabel>
+              {!offline && (
                 <Stack direction="row" spacing={1}>
                   <FormControlLabel
                     control={
@@ -170,6 +172,8 @@ export function TeamSettings(props: IProps) {
                     label={<Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>}
                   />
                 </Stack>
+              )}
+              {!offline && (
                 <Stack direction="row" spacing={1}>
                   <FormControlLabel
                     control={
@@ -191,6 +195,8 @@ export function TeamSettings(props: IProps) {
                     </IconButton>
                   )}
                 </Stack>
+              )}
+              {!offline && (
                 <Stack direction="row" spacing={1}>
                   <FormControlLabel
                     control={
@@ -214,8 +220,23 @@ export function TeamSettings(props: IProps) {
                     </IconButton>
                   )}
                 </Stack>
-              </FormControl>
-            )}
+              )}
+              {isElectron && (
+                <Stack direction="row" spacing={1}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={
+                          values?.features?.[FeatureSlug.Normalize] ?? false
+                        }
+                        onChange={handleFeatures(FeatureSlug.Normalize)}
+                      />
+                    }
+                    label={t.normalize}
+                  />
+                </Stack>
+              )}
+            </FormControl>
           </Stack>
         </Details>
       </Accordion>

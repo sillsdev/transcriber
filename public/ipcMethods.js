@@ -302,6 +302,20 @@ const ipcMethods = () => {
     }
   });
 
+  ipcMain.handle('writeBuffer', async (_event, filePath, arrayBuffer) => {
+    if (process.platform === 'win32') {
+      filePath = filePath.replace(/\//g, '\\');
+    }
+    try {
+      const buffer = Buffer.from(arrayBuffer);
+      fs.writeFileSync(filePath, buffer);
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+
   let isLogingIn = false;
   let isLogOut = false;
 
@@ -371,6 +385,37 @@ const ipcMethods = () => {
   ipcMain.handle('downloadClose', async (event, token) => {
     downloadClose(token);
     return;
+  });
+
+  ipcMain.handle('normalize', async (event, input, output) => {
+    if (process.platform === 'win32') {
+      input = input.replace(/\//g, '\\');
+      output = output.replace(/\//g, '\\');
+    }
+    const localMod = await import('./normalizer.js');
+    try {
+      // see: https://github.com/peterforgacs/ffmpeg-normalize/blob/master/src/normalizer.ts
+      // see: https://www.electronjs.org/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
+      // we modified the code from ffmpeg-normalize to make it work with electronjs
+      // we replaced child_process.exec with child_process.execFile
+      await localMod.normalize({
+        input,
+        output,
+        loudness: {
+          normalization: 'ebuR128',
+          target: {
+            input_i: -23,
+            input_lra: 7.0,
+            input_tp: -2.0,
+          },
+        },
+        verbose: true,
+      });
+      return;
+    } catch (error) {
+      console.error(error);
+      return JSON.stringify(error);
+    }
   });
 };
 

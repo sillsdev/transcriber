@@ -34,7 +34,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { useGlobal } from '../../../context/GlobalContext';
-import { usePlanType, useSharedResRead } from '../../../crud';
+import { useNotes, usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
   resources: BibleResource[];
@@ -53,6 +53,7 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
   const [terms, setTerms] = useState<string[]>([]);
   const { passage } = usePassageDetailContext();
   const { computeMovementRef, computeSectionRef } = useComputeRef();
+  const { curNoteRef } = useNotes();
   const { verseTerms } = useKeyTerms();
   const [link, setLink] = useState<string>();
   const { readSharedResource } = useSharedResRead();
@@ -130,11 +131,9 @@ export default function CreateAiRes({ resources, onTab }: CreateAiResProps) {
     ) {
       const sharedResource = readSharedResource(passage?.id ?? '');
       if (sharedResource) {
-        ref = `${sharedResource.attributes.title} (${book} ${computeSectionRef(
-          passage
-        )})`;
+        ref = `${sharedResource.attributes.title} (${curNoteRef(passage)})`;
       } else {
-        ref = ref.replace(/ NOTE$/, '');
+        ref = curNoteRef(passage);
       }
     }
     if (scope === scopeOptions[scopeI.section]) {

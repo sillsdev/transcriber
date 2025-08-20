@@ -1,3 +1,26 @@
+audio - project - manager(4.3.1.0)  experimental; urgency = high
+
+ * TT-4172 Project card sorting (#2013)
+ * TT-5853 separate tabs for teams and plans (#2022)
+ * TT-6566 use correct permissions offline (#2023)
+ * TT-6576 No offline paste (#2021)
+ * TT-6588 reset save when closing book editor (#2011)
+ * TT-6612 if user has been updated, get any changes made on the backend (#1996)
+ * TT-6641 don't provide audio scripture for general projects (#1999)
+ * TT-6642 handle desktop markdown links (#2020)
+ * TT-6655 Note reference (#1997)
+ * TT-6661 create AI uses note title with refs in parenthesis
+ * TT-6664 Instructions for discuss step (#1998)
+ * TT-6668 Find Resources for passage or section
+ * TT-6675 Audio Normalization (#2001)
+ * TT-6679 remove duplicate book name (#2012)
+ * TT-6698 Fix PBT offline use (#2010)
+ * TT-6712 remove links to faithbridge images from text result
+ * Update OBT helper link
+ * Combine multiple identities for a single user
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 20 Aug 2025 20:17:00 - 0600
+
 audio - project - manager(4.3.0.0)  experimental; urgency = high
 
  * TT - 6167 allow loading more aquifer resources (#1968)

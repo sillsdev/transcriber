@@ -901,6 +901,12 @@
             <target>Nuevo proyecto de audio</target>
          </segment>
       </unit>
+      <unit id="cards.normalize">
+         <segment>
+            <source>Audio Normalize</source>
+            <target>Normalizar audio</target>
+         </segment>
+      </unit>
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
@@ -1031,6 +1037,12 @@
          <segment>
             <source>Settings</source>
             <target>Ajustes</target>
+         </segment>
+      </unit>
+      <unit id="cards.sortProjects">
+         <segment>
+            <source>Sort Projects</source>
+            <target>Ordenar proyectos</target>
          </segment>
       </unit>
       <unit id="cards.notesHelper">
@@ -1477,6 +1489,12 @@
             <target>Borrar</target>
          </segment>
       </unit>
+      <unit id="discuss.howToChange">
+         <segment>
+            <source>Change instructions for this step on the workflow settings for this step.</source>
+            <target>Cambie las instrucciones para este paso en la configuración del flujo de trabajo para este paso.</target>
+         </segment>
+      </unit>
       <unit id="discussionCard.addComment">
          <segment>
             <source>Add</source>
@@ -1864,7 +1882,7 @@
       <unit id="faithbridge.video">
          <segment>
             <source>video</source>
-            <target/>
+            <target>vídeo</target>
          </segment>
       </unit>
       <unit id="filterMenu.all">
@@ -8437,12 +8455,6 @@
             <target>Configuración del editor</target>
          </segment>
       </unit>
-      <unit id="vProject.errgeneralBookLen">
-         <segment>
-            <source>Book must be 3 characters</source>
-            <target>El libro debe tener 3 caracteres</target>
-         </segment>
-      </unit>
       <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
@@ -9109,6 +9121,24 @@
             <target>Falló la eliminación de ruido (Lo más probable es que el servidor no esté disponible).</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.normalize">
+         <segment>
+            <source>Normalize</source>
+            <target>Normalizar</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeFail">
+         <segment>
+            <source>Normalization failed: {0}</source>
+            <target>Error en la normalización: {0}</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeInProgress">
+         <segment>
+            <source>Audio loudness normalization In Progress...</source>
+            <target>Normalización del volumen del audio en curso...</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.pauseRecord">
          <segment>
             <source>Pause</source>
@@ -9221,6 +9251,12 @@
          <segment>
             <source>Timestamp [{0}]</source>
             <target>Marca de tiempo [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.tooQuiet">
+         <segment>
+            <source>The sample is too quiet.</source>
+            <target>La muestra es demasiado baja.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.undoTip">

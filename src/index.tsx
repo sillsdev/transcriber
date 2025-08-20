@@ -203,7 +203,6 @@ Promise.all(promises)
       project: '',
       projType: '',
       plan: '',
-      tab: 0,
       group: '',
       user: '',
       lang: 'en',

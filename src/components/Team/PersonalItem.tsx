@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
-import { Grid } from '@mui/material';
+import { Grid, IconButton } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
@@ -12,6 +12,8 @@ import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 import DialogMode from '../../model/dialogMode';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { OrganizationD } from '../../model';
+import SortIcon from '@mui/icons-material/Sort';
+import { ProjectSort } from './ProjectDialog/ProjectSort';
 
 export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
@@ -25,6 +27,7 @@ export const PersonalItem = () => {
   const [editOpen, setEditOpen] = useState(false);
   const { createBible, updateBible } = useBible();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
+  const [sortVisible, setSortVisible] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
 
   const handleSettings = () => {
@@ -92,6 +95,12 @@ export const PersonalItem = () => {
             md={4}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
+            {personalProjects.length > 1 &&
+              canModify(isOffline, offlineOnly) && (
+                <IconButton onClick={() => setSortVisible(true)}>
+                  <SortIcon />
+                </IconButton>
+              )}
             {canModify(isOffline, offlineOnly) && (
               <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
                 {t.editWorkflow.replace('{0}', '')}
@@ -121,6 +130,13 @@ export const PersonalItem = () => {
         onOpen={handleWorkflow}
       >
         <StepEditor process={defaultWorkflow} org={personalTeam} />
+      </BigDialog>
+      <BigDialog
+        title={t.sortProjects}
+        isOpen={sortVisible}
+        onOpen={() => setSortVisible(false)}
+      >
+        <ProjectSort onClose={() => setSortVisible(false)} />
       </BigDialog>
       {editOpen && (
         <TeamDialog

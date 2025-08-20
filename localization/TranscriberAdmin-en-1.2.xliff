@@ -1053,6 +1053,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.normalize">
+            <source>Audio Normalize</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.notesLabel">
             <source>Introductory Notes Title</source>
             <target/>
@@ -1202,6 +1209,13 @@
          </trans-unit>
          <trans-unit id="cards.settings">
             <source>Settings</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.sortProjects">
+            <source>Sort Projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectMenu.tsx</context>
@@ -1725,13 +1739,20 @@
                <context context-type="sourcefile">DeleteExpansion.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="discussionCard.addComment">
-      		<source>Add</source>
+      	<trans-unit id="discuss.howToChange">
+      		<source>Change instructions for this step on the workflow settings for this step.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">DiscussionCard.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="discussionCard.addComment">
+            <source>Add</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">DiscussionCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="discussionCard.adminsAlways">
             <source>Admins are always allowed.</source>
             <target/>
@@ -9849,13 +9870,6 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.errgeneralBookLen">
-            <source>Book must be 3 characters</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="vProject.errgeneralBookNonScripture">
             <source>Book Designation must not be a Scripture book code.</source>
             <target/>
@@ -9863,7 +9877,6 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-
          <trans-unit id="vProject.generalBook">
             <source>{0} Book Designation</source>
             <target/>
@@ -10634,6 +10647,27 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.normalize">
+            <source>Normalize</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.normalizeFail">
+            <source>Normalization failed: {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.normalizeInProgress">
+            <source>Audio loudness normalization In Progress...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.pauseRecord">
             <source>Pause</source>
             <target/>
@@ -10762,6 +10796,13 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.timerTip">
             <source>Timestamp [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.tooQuiet">
+            <source>The sample is too quiet.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

@@ -62,6 +62,7 @@ export interface IFetchOrbitData {
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject;
   offlineSetup: () => Promise<void>;
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
+  forceDataChanges: () => Promise<void>;
 }
 
 export const fetchOrbitData =
@@ -78,6 +79,7 @@ export const fetchOrbitData =
     getOfflineProject,
     offlineSetup,
     showMessage,
+    forceDataChanges,
   }: IFetchOrbitData) =>
   (dispatch: any) => {
     Sources(
@@ -93,7 +95,8 @@ export const fetchOrbitData =
       setLang,
       getOfflineProject,
       offlineSetup,
-      showMessage
+      showMessage,
+      forceDataChanges
     ).then((fr) => {
       dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
     });

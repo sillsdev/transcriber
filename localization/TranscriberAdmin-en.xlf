@@ -904,6 +904,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.normalize">
+         <segment>
+            <source>Audio Normalize</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
@@ -1033,6 +1039,12 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.sortProjects">
+         <segment>
+            <source>Sort Projects</source>
             <target/>
          </segment>
       </unit>
@@ -1477,6 +1489,12 @@
       <unit id="deleteExpansion.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discuss.howToChange">
+         <segment>
+            <source>Change instructions for this step on the workflow settings for this step.</source>
             <target/>
          </segment>
       </unit>
@@ -8440,12 +8458,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errgeneralBookLen">
-         <segment>
-            <source>Book must be 3 characters</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
@@ -9112,6 +9124,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.normalize">
+         <segment>
+            <source>Normalize</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeFail">
+         <segment>
+            <source>Normalization failed: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeInProgress">
+         <segment>
+            <source>Audio loudness normalization In Progress...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.pauseRecord">
          <segment>
             <source>Pause</source>
@@ -9223,6 +9253,12 @@
       <unit id="wsAudioPlayer.timerTip">
          <segment>
             <source>Timestamp [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.tooQuiet">
+         <segment>
+            <source>The sample is too quiet.</source>
             <target/>
          </segment>
       </unit>

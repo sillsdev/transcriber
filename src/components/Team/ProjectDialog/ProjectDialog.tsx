@@ -22,7 +22,7 @@ import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
-import { ProjectBook } from './ProjectBook';
+import { ProjectStory } from './ProjectStory';
 import { StyledDialogTitle } from '../../StyledDialogTitle';
 import { AltActionBar } from '../../../AltActionBar';
 import Tags from '../../../control/Tags';
@@ -79,7 +79,6 @@ export function ProjectDialog(props: IProps) {
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
-  const [bookErr, setBookErr] = React.useState('');
   const [basicTab, setBasicTab] = useState(true);
   const addingRef = React.useRef(false);
 
@@ -181,11 +180,7 @@ export function ProjectDialog(props: IProps) {
               <ProjectDescription state={state} setState={setState} />
             </Box>
             <ProjectType type={type} onChange={handleTypeChange} />
-            <ProjectBook
-              state={state}
-              setState={setState}
-              setBookErr={setBookErr}
-            />
+            <ProjectStory state={state} setState={setState} />
             <Stack sx={{ pt: 1, pb: 2 }}>
               <Language
                 {...state}
@@ -224,8 +219,7 @@ export function ProjectDialog(props: IProps) {
           (nameInUse && nameInUse(name)) ||
           name === '' ||
           bcp47 === 'und' ||
-          type === '' ||
-          bookErr !== ''
+          type === ''
         }
         primaryKey={'add'}
         primaryAria={t.add}

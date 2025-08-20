@@ -179,6 +179,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "normalize": string;
     "notesLabel": string;
     "OBS": string;
     "OBT": string;
@@ -201,6 +202,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "sortProjects": string;
     "notesHelper": string;
     "notesProject": string;
     "projectPermissions": string;
@@ -296,6 +298,10 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
     "advanced": string;
     "dangerZone": string;
     "delete": string;
+};
+
+export interface IDiscussStrings extends Localize.LocalizedStringsMethods {
+    "howToChange": string;
 };
 
 export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods {
@@ -1672,7 +1678,6 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "description": string;
     "edit": string;
     "editorSettings": string;
-    "errgeneralBookLen": string;
     "errgeneralBookNonScripture": string;
     "generalBook": string;
     "generalStory": string;
@@ -1793,6 +1798,9 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "loopon": string;
     "nextRegion": string;
     "noiseremovalFailed": string;
+    "normalize": string;
+    "normalizeFail": string;
+    "normalizeInProgress": string;
     "pauseRecord": string;
     "pauseTip": string;
     "playTip": string;
@@ -1812,6 +1820,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "slowerTip": string;
     "stopTip": string;
     "timerTip": string;
+    "tooQuiet": string;
     "undoTip": string;
     "voiceconversionFailed": string;
 };
@@ -1858,6 +1867,7 @@ export interface ILocalizedStrings {
 	consultantCheck: IConsultantCheckStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
+	discuss: IDiscussStrings;
 	discussionCard: IDiscussionCardStrings;
 	discussionList: IDiscussionListStrings;
 	discussionMenu: IDiscussionMenuStrings;

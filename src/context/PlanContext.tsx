@@ -40,6 +40,8 @@ const initState = {
   setSectionArr: (sectionArr: [number, string][]) => {},
   togglePublishing: () => {},
   setCanAddPublishing: (canAddPublishing: boolean) => {},
+  tab: 0,
+  setTab: (tab: number) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -79,6 +81,10 @@ const PlanProvider = (props: IProps) => {
     discussions,
     groupmemberships,
   });
+
+  const setTab = (tab: number) => {
+    setState((state) => ({ ...state, tab }));
+  };
 
   const getSectionMap = () => {
     return getProjectDefault(projDefSectionMap) as
@@ -162,6 +168,7 @@ const PlanProvider = (props: IProps) => {
           canPublish,
           togglePublishing,
           setCanAddPublishing,
+          setTab,
         },
         setState,
       }}

@@ -901,6 +901,12 @@
             <target>Новый аудио проект</target>
          </segment>
       </unit>
+      <unit id="cards.normalize">
+         <segment>
+            <source>Audio Normalize</source>
+            <target>Нормализация звука</target>
+         </segment>
+      </unit>
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
@@ -1031,6 +1037,12 @@
          <segment>
             <source>Settings</source>
             <target>Настройки</target>
+         </segment>
+      </unit>
+      <unit id="cards.sortProjects">
+         <segment>
+            <source>Sort Projects</source>
+            <target>Сортировка проектов</target>
          </segment>
       </unit>
       <unit id="cards.notesHelper">
@@ -1477,6 +1489,12 @@
             <target>Удалить</target>
          </segment>
       </unit>
+      <unit id="discuss.howToChange">
+         <segment>
+            <source>Change instructions for this step on the workflow settings for this step.</source>
+            <target>Измените инструкции для этого шага в настройках рабочего процесса для этого шага.</target>
+         </segment>
+      </unit>
       <unit id="discussionCard.addComment">
          <segment>
             <source>Add</source>
@@ -1864,7 +1882,7 @@
       <unit id="faithbridge.video">
          <segment>
             <source>video</source>
-            <target/>
+            <target>видео</target>
          </segment>
       </unit>
       <unit id="filterMenu.all">
@@ -8437,12 +8455,6 @@
             <target>Настройки редактора</target>
          </segment>
       </unit>
-      <unit id="vProject.errgeneralBookLen">
-         <segment>
-            <source>Book must be 3 characters</source>
-            <target>Книга должна состоять из 3 символов</target>
-         </segment>
-      </unit>
       <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
@@ -9109,6 +9121,24 @@
             <target>Удаление шумов не удалось (Более чем вероятно, что сервер недоступен).</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.normalize">
+         <segment>
+            <source>Normalize</source>
+            <target>Нормализация</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeFail">
+         <segment>
+            <source>Normalization failed: {0}</source>
+            <target>Нормализация не удалась: {0}</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.normalizeInProgress">
+         <segment>
+            <source>Audio loudness normaliziation In Progress...</source>
+            <target>Нормализация громкости звука в процессе...</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.pauseRecord">
          <segment>
             <source>Pause</source>
@@ -9221,6 +9251,12 @@
          <segment>
             <source>Timestamp [{0}]</source>
             <target>Отметка времени [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.tooQuiet">
+         <segment>
+            <source>The sample is too quiet.</source>
+            <target>Образец слишком тихий.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.undoTip">

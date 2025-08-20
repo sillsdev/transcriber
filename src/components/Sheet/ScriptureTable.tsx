@@ -127,6 +127,7 @@ import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
 import { OrganizationSchemeStepD } from '../../model/organizationSchemeStep';
 import { usePeerGroups } from '../Peers/usePeerGroups';
+import bookSortJson from '../../assets/akuosort.json';
 
 const SaveWait = 500;
 
@@ -181,6 +182,7 @@ export function ScriptureTable(props: IProps) {
   const [plan] = useGlobal('plan'); //will be constant here
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [developer] = useGlobal('developer');
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
@@ -858,6 +860,10 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return Array<Array<string>>();
     }
+    if (offline && !offlineOnly) {
+      showMessage(ts.NoSaveOffline);
+      return Array<Array<string>>();
+    }
     setUpdate(true);
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
@@ -1429,6 +1435,7 @@ export function ScriptureTable(props: IProps) {
         getSharedResource,
         user,
         myGroups,
+        isDeveloper: developer === 'true',
       });
       setSheet(newWorkflow);
 
@@ -1585,6 +1592,20 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [scripture, sheet]
   );
+
+  const bookSortMap = new Map<string, string>(
+    bookSortJson as [string, string][]
+  );
+
+  useEffect(() => {
+    if (firstBook && scripture) {
+      const bookSrt = getProjectDefault(projDefBook);
+      const firstSort = bookSortMap.get(firstBook) ?? '000';
+      if (!bookSrt || bookSrt !== firstSort)
+        setProjectDefault(projDefBook, firstSort);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstBook, scripture]);
 
   const setSectionPublish = async (
     index: number,

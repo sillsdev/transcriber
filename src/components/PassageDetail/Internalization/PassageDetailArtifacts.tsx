@@ -84,8 +84,6 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import MarkDown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
 import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
@@ -93,7 +91,8 @@ import { mediaContentType } from '../../../utils/contentType';
 import { useStepPermissions } from '../../../utils/useStepPermission';
 import FindBibleBrain from './FindBibleBrain';
 import { useHandleLink } from './addLinkKind';
-import { useComputeRef } from './useComputeRef';
+import { usePassageRef } from './usePassageRef';
+import { MarkDownView } from '../../../control/MarkDownView';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -205,7 +204,7 @@ export function PassageDetailArtifacts() {
   const [biblebrainClose, setBiblebrainClose] = useState(false);
   const getGlobal = useGetGlobal();
   const handleLink = useHandleLink({ passage, setLink });
-  const { computeSectionRef } = useComputeRef();
+  const { passageRef } = usePassageRef();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -900,7 +899,7 @@ export function PassageDetailArtifacts() {
         }
       />
       <BigDialog
-        title={t.findResource.replace('{0}', computeSectionRef(passage) ?? '')}
+        title={t.findResource.replace('{0}', passageRef(passage) || '')}
         description={<Typography>{t.findResourceDesc}</Typography>}
         isOpen={findOpen}
         onOpen={handleFindVisible}
@@ -1015,7 +1014,7 @@ export function PassageDetailArtifacts() {
           onOpen={(_open: boolean) => setMarkDoan('')}
           bp={BigDialogBp.sm}
         >
-          <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
+          <MarkDownView value={markDown} />
         </BigDialog>
       )}
       {audioScriptureVisible && (

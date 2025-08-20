@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
+import NormalizeIcon from '../control/NormalizeIcon';
 import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
@@ -41,7 +42,13 @@ import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
-import { logError, Severity, useCheckOnline } from '../utils';
+import {
+  dataPath,
+  logError,
+  PathType,
+  Severity,
+  useCheckOnline,
+} from '../utils';
 import {
   IRegion,
   IRegionChange,
@@ -56,7 +63,7 @@ import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
 import { AltButton } from '../control';
-import { AudioAiFn, useAudioAi } from '../utils/useAudioAi';
+import { AudioAiFunc, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
 import { useGlobal } from '../context/GlobalContext';
 import { AxiosError } from 'axios';
@@ -72,6 +79,8 @@ import VoiceConversionLogo from '../control/VoiceConversionLogo';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
 import SelectVoice from '../business/voice/SelectVoice';
+import { isElectron } from '../api-variable';
+const ipc = (window as any)?.electron;
 
 const HandScissors = FaHandScissors as unknown as React.FC<IconBaseProps>;
 const AngleDoubleUp = FaAngleDoubleUp as unknown as React.FC<IconBaseProps>;
@@ -232,6 +241,7 @@ function WSAudioPlayer(props: IProps) {
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const [waitingForAI, setWaitingForAI] = useState(false);
+  const [processMsg, setProcessMsg] = useState<string | undefined>(undefined);
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -768,21 +778,22 @@ function WSAudioPlayer(props: IProps) {
     wsUndo();
     handleChanged();
   };
-  const doingAI = (inprogress: boolean) => {
+  const doingProcess = (inprogress: boolean, msg?: string) => {
+    setProcessMsg(msg ?? t.aiInProgress);
     setWaitingForAI(inprogress);
     setBusy && setBusy(inprogress);
     setBlobReady && setBlobReady(!inprogress);
   };
   const audioAiMsg = (
-    fn: AudioAiFn,
+    func: AudioAiFunc,
     targetVoice?: string,
     error?: Error | AxiosError
   ) => {
     let msg =
-      t.getString(`${fn}Failed`) ??
+      t.getString(`${func}Failed`) ??
       t.aiFailed
         .replace('{0}', targetVoice ? ` for ${targetVoice}` : '')
-        .replace('{1}', fn);
+        .replace('{1}', func);
     if (error instanceof Error) {
       msg += ` ${error.message}`;
     }
@@ -791,7 +802,7 @@ function WSAudioPlayer(props: IProps) {
     }
     return msg;
   };
-  const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
+  const applyAudioAi = (func: AudioAiFunc, targetVoice?: string) => {
     checkOnline((online) => {
       if (!online) {
         showMessage(ts.mustBeOnline);
@@ -800,12 +811,12 @@ function WSAudioPlayer(props: IProps) {
       if (!reload) throw new Exception('need reload defined.');
       cancelAIRef.current = false;
       try {
-        doingAI(true);
+        doingProcess(true);
         const filename = `${Date.now()}ai.wav`;
         wsRegionBlob().then((blob) => {
           if (blob) {
             requestAudioAi({
-              fn,
+              func,
               cancelRef: cancelAIRef,
               file: new File([blob], filename, { type: 'audio/wav' }),
               targetVoice,
@@ -820,28 +831,28 @@ function WSAudioPlayer(props: IProps) {
                   }
                 } else {
                   if ((file as Error).message !== 'canceled') {
-                    const msg = audioAiMsg(fn, targetVoice, file);
+                    const msg = audioAiMsg(func, targetVoice, file);
                     showMessage(msg);
                     logError(Severity.error, errorReporter, msg);
                   }
                 }
-                doingAI(false);
+                doingProcess(false);
               },
             });
           } else {
-            doingAI(false);
+            doingProcess(false);
           }
         });
       } catch (error: any) {
-        const msg = audioAiMsg(fn, targetVoice, error);
+        const msg = audioAiMsg(func, targetVoice, error);
         logError(Severity.error, errorReporter, msg);
         showMessage(msg);
-        doingAI(false);
+        doingProcess(false);
       }
     });
   };
   const handleNoiseRemoval = () => {
-    applyAudioAi(AudioAiFn.noiseRemoval);
+    applyAudioAi(AudioAiFunc.noiseRemoval);
   };
   const applyVoiceChange = () => {
     checkOnline(async (online) => {
@@ -852,7 +863,7 @@ function WSAudioPlayer(props: IProps) {
       if (!voice) return;
       const targetVoice = await voiceUrl(voice);
       if (targetVoice) {
-        applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
+        applyAudioAi(AudioAiFunc.voiceConversion, targetVoice);
         setVoiceVisible(false);
         showMessage(t.beginVoiceConvert);
       }
@@ -876,6 +887,47 @@ function WSAudioPlayer(props: IProps) {
       }
       setVoiceVisible(true);
     });
+  };
+
+  const handleNormal = async () => {
+    if (!reload) throw new Exception('need reload defined.');
+
+    try {
+      doingProcess(true, t.normalizeInProgress);
+      const fileBeg = await dataPath(`${Date.now()}b-norm.wav`, PathType.MEDIA);
+      const fileEnd = await dataPath(`${Date.now()}e-norm.wav`, PathType.MEDIA);
+      const blob = await wsRegionBlob();
+      if (blob) {
+        // write to local file system
+        const arrayBuffer = await blob.arrayBuffer();
+        console.log(arrayBuffer);
+        const absMax = new Uint8Array(arrayBuffer).reduce(
+          (a, b) => Math.max(a, Math.abs(b)),
+          0
+        );
+        const min = new Uint8Array(arrayBuffer).reduce(
+          (a, b) => Math.min(a, b),
+          0
+        );
+        console.log('Abs Max: ', absMax, ' Min: ', min);
+        if (absMax < 255) throw new Exception(t.tooQuiet);
+        await ipc?.writeBuffer(fileBeg, arrayBuffer);
+        await ipc?.normalize(fileBeg, fileEnd);
+        const result = await ipc?.read(fileEnd);
+        const regionblob = new Blob([result], { type: blob.type });
+        const newblob = await wsRegionReplace(regionblob);
+        if (newblob) reload(newblob);
+        setChanged && setChanged(true);
+        await ipc?.delete(fileBeg);
+        await ipc?.delete(fileEnd);
+      }
+    } catch (error: any) {
+      const msg = t.normalizeFail.replace('{0}', error.message);
+      if (errorReporter) logError(Severity.error, errorReporter, msg);
+      showMessage(msg);
+    } finally {
+      doingProcess(false);
+    }
   };
 
   const onSplit = (split: IRegionChange) => {};
@@ -1072,6 +1124,35 @@ function WSAudioPlayer(props: IProps) {
                         </span>
                       </LightTooltip>
                     )}
+                  {features?.normalize && isElectron && (
+                    <LightTooltip title={t.normalize}>
+                      <span>
+                        <IconButton
+                          id="normalize"
+                          onClick={handleNormal}
+                          disabled={
+                            !ready ||
+                            playing ||
+                            recording ||
+                            duration === 0 ||
+                            waitingForAI
+                          }
+                        >
+                          <NormalizeIcon
+                            width={'20pt'}
+                            height={'20pt'}
+                            disabled={
+                              !ready ||
+                              playing ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  )}
                   {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
@@ -1141,7 +1222,7 @@ function WSAudioPlayer(props: IProps) {
                 <Grid container sx={{ pr: 6 }}>
                   <Grid item xs={12}>
                     <Typography sx={{ whiteSpace: 'normal' }}>
-                      {t.aiInProgress}
+                      {processMsg}
                     </Typography>
                   </Grid>
                   <Grid
@@ -1153,7 +1234,7 @@ function WSAudioPlayer(props: IProps) {
                       id="ai-cancel"
                       onClick={() => {
                         cancelAIRef.current = true;
-                        doingAI(false);
+                        doingProcess(false);
                       }}
                     >
                       {ts.cancel}

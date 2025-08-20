@@ -194,6 +194,7 @@ const initialState = {
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
 			"newProject": "New Audio Project",
+			"normalize": "Audio Normalize",
 			"notesLabel": "Introductory Notes Title",
 			"OBS": "Storying",
 			"OBT": "Oral Bible Translation (complete)",
@@ -216,6 +217,7 @@ const initialState = {
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
+			"sortProjects": "Sort Projects",
 			"notesHelper": "Shared explanations, rationales, footnotes, etc.",
 			"notesProject": "Project with Notes",
 			"projectPermissions": "Permissions may be set for projects of this team.",
@@ -318,6 +320,11 @@ const initialState = {
 			"advanced": "Advanced",
 			"dangerZone": "Danger Zone",
 			"delete": "Delete",
+		}
+	}),
+	"discuss": new LocalizedStrings({
+		"en": {
+			"howToChange": "Change instructions for this step on the workflow settings for this step.",
 		}
 	}),
 	"discussionCard": new LocalizedStrings({
@@ -1766,7 +1773,6 @@ const initialState = {
 			"description": "Description",
 			"edit": "Edit",
 			"editorSettings": "Editor Settings",
-			"errgeneralBookLen": "Book must be 3 characters",
 			"errgeneralBookNonScripture": "Book Designation must not be a Scripture book code.",
 			"generalBook": "{0} Book Designation",
 			"generalStory": "Show as Stories (not Extras) in {0}",
@@ -1890,6 +1896,9 @@ const initialState = {
 			"loopon": "Loop On",
 			"nextRegion": "Next Segment [{0}]",
 			"noiseremovalFailed": "Noise removal failed (More than likely, the server is unavailable).",
+			"normalize": "Normalize",
+			"normalizeFail": "Normalization failed: {0}",
+			"normalizeInProgress": "Audio loudness normalization In Progress...",
 			"pauseRecord": "Pause",
 			"pauseTip": "Pause [{0}]",
 			"playTip": "Play [{0}]",
@@ -1909,6 +1918,7 @@ const initialState = {
 			"slowerTip": "Slower [{0}]",
 			"stopTip": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
+			"tooQuiet": "The sample is too quiet.",
 			"undoTip": "Undo",
 			"voiceconversionFailed": "Voice convert failed (More than likely, the server is unavailable).",
 		}
@@ -1962,6 +1972,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"consultantCheck" : new LocalizedStrings(action.payload.data.consultantCheck),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"discuss" : new LocalizedStrings(action.payload.data.discuss),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
 				"discussionList" : new LocalizedStrings(action.payload.data.discussionList),
 				"discussionMenu" : new LocalizedStrings(action.payload.data.discussionMenu),

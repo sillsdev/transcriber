@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IPassageDetailArtifactsStrings } from '../../../model';
 import { ListItemText } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
@@ -11,6 +11,7 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { usePassageType } from '../../../crud/usePassageType';
 import related from '../../../crud/related';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { usePlanType } from '../../../crud';
 
 interface IProps {
   action?: (what: string) => void;
@@ -25,6 +26,9 @@ export const AddResource = (props: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [plan] = useGlobal('plan'); //will be constant here
+  const planType = usePlanType();
+
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
@@ -42,12 +46,18 @@ export const AddResource = (props: IProps) => {
       action(what);
     }
   };
-
-  useEffect(() => {
-    const pt = getPassageTypeFromId(related(passage, 'passagetype'));
-    setBiblebrain(pt === PassageTypeEnum.PASSAGE);
+  const isScripture = useMemo(
+    () => planType(plan)?.scripture,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage]);
+    [plan]
+  );
+  useEffect(() => {
+    if (isScripture) {
+      const pt = getPassageTypeFromId(related(passage, 'passagetype'));
+      setBiblebrain(pt === PassageTypeEnum.PASSAGE);
+    } else setBiblebrain(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passage, isScripture]);
 
   return (
     <div>
