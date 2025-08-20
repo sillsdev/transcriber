@@ -402,7 +402,6 @@ const TeamProvider = (props: IProps) => {
       orgDefaultProjSort,
       teamId ?? state.personalTeam
     ) as SortArr | undefined;
-    console.log(sortArr, state);
     if (!Array.isArray(sortArr)) sortArr = [];
     return new Map<string, number>(sortArr);
   };
@@ -564,7 +563,7 @@ const TeamProvider = (props: IProps) => {
       );
     setState((state) => ({ ...state, personalProjects }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProjects, organizations, plans, isOffline]);
+  }, [userProjects, organizations, plans, isOffline, state.personalTeam]);
 
   useEffect(() => {
     if (!state.personalTeam && !isMakingPersonal.current) {
