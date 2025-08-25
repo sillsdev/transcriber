@@ -836,7 +836,7 @@ export function PlanSheet(props: IProps) {
         }
       });
     }
-    if (refErr && !warning) setWarning(addPt(t.refErr));
+    if (refErr && !warning) setWarning(t.refErr);
     else if (!refErr && warning) setWarning(undefined);
   };
 
