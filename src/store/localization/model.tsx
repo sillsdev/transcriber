@@ -1250,6 +1250,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "reference": string;
     "saveFirst": string;
     "saving": string;
+    "setupBookFirst": string;
     "title": string;
 };
 
@@ -1709,6 +1710,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "scenes": string;
     "sections": string;
     "sets": string;
+    "setupBook": string;
     "sharedResources": string;
     "spellCheck": string;
     "stories": string;

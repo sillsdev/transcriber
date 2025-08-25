@@ -7460,6 +7460,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTable.setupBookFirst">
+            <source>Enter a book in the book column for Scripture or perform the sort on the Home screen.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="scriptureTable.title">
             <source>Title</source>
             <target/>
@@ -10082,6 +10089,13 @@
          </trans-unit>
          <trans-unit id="vProject.sets">
             <source>Set/Sets</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LastEdit.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.setupBook">
+            <source>Open Scripture book {0} and make sure book column contains a Scripture book.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LastEdit.tsx</context>

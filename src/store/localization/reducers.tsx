@@ -1317,6 +1317,7 @@ const initialState = {
 			"reference": "Reference",
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
+			"setupBookFirst": "Enter a book in the book column for Scripture or perform the sort on the Home screen.",
 			"title": "Title",
 		}
 	}),
@@ -1804,6 +1805,7 @@ const initialState = {
 			"scenes": "Scene/Scenes",
 			"sections": "Section/Sections",
 			"sets": "Set/Sets",
+			"setupBook": "Open Scripture book {0} and make sure book column contains a Scripture book.",
 			"sharedResources": "Shared Resources",
 			"spellCheck": "Spell Check",
 			"stories": "Story/Stories",

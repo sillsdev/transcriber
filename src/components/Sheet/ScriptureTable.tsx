@@ -1597,12 +1597,26 @@ export function ScriptureTable(props: IProps) {
     bookSortJson as [string, string][]
   );
 
+  const updateBook = (seq: number, book: string) => {
+    let idx = sheet.findIndex((s) => s.sectionSeq === seq && !s.deleted);
+    if (idx !== -1) {
+      var newsht = [...sheetRef.current];
+      const parse = sheet[idx]?.reference?.split(' ');
+      const reference = `${parse?.[0]} ${book}`;
+      newsht[idx] = { ...sheet[idx], reference };
+      setSheet(newsht);
+    }
+  };
+
   useEffect(() => {
     if (firstBook && scripture) {
       const bookSrt = getProjectDefault(projDefBook);
       const firstSort = bookSortMap.get(firstBook) ?? '000';
-      if (!bookSrt || bookSrt !== firstSort)
+      if (!bookSrt || bookSrt !== firstSort) {
         setProjectDefault(projDefBook, firstSort);
+        updateBook(-3, firstBook);
+        updateBook(-4, firstBook);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstBook, scripture]);
@@ -1768,6 +1782,11 @@ export function ScriptureTable(props: IProps) {
   };
 
   const doPublish = async () => {
+    if (!firstBook) {
+      showMessage(t.setupBookFirst);
+      return;
+    }
+
     let currentChapter = 0;
 
     const startChapter = (s: ISheet) => {

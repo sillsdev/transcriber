@@ -6394,6 +6394,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.setupBookFirst">
+         <segment>
+            <source>Enter a book in the book column for Scripture or perform the sort on the Home screen.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
@@ -8641,6 +8647,12 @@
       <unit id="vProject.sets">
          <segment>
             <source>Set/Sets</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.setupBook">
+         <segment>
+            <source>Open Scripture book {0} and make sure book column contains a Scripture book.</source>
             <target/>
          </segment>
       </unit>
