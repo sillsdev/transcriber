@@ -11,6 +11,8 @@ import {
   SharedResourceD,
   MediaFileD,
   GroupD,
+  BookSeq,
+  AltBkSeq,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -231,9 +233,9 @@ export const getSheet = ({
       item.passageType =
         item.level === SheetLevel.Movement
           ? PassageTypeEnum.MOVEMENT
-          : item.level === SheetLevel.Book && item.sectionSeq === -4
+          : item.level === SheetLevel.Book && item.sectionSeq === BookSeq
           ? PassageTypeEnum.BOOK
-          : item.level === SheetLevel.Book && item.sectionSeq === -3
+          : item.level === SheetLevel.Book && item.sectionSeq === AltBkSeq
           ? PassageTypeEnum.ALTBOOK
           : PassageTypeEnum.PASSAGE;
       item.reference =

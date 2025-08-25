@@ -657,7 +657,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target>Если у вас есть существующий проект Audacity и вы хотите привязать его к этому отрывку, нажмите ОБЗОР. Чтобы создать новый проект Audacity с автоматически созданным именем, нажмите СОЗДАТЬ.</target>
          </segment>
       </unit>
@@ -1725,7 +1725,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target>Этот файл не был экспортирован из последней версии. Повторите экспорт файла PTF из онлайн-версии.</target>
          </segment>
       </unit>
@@ -1767,7 +1767,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target>Этот файл был экспортирован с более новой версией программы. Вы должны скачать последнюю версию перед импортом! Если продолжить, некоторые данные могут быть импортированы с ошибками.</target>
          </segment>
       </unit>
@@ -1815,7 +1815,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
+            <source>I'm verified!  Carry on!</source>
             <target>Я проверен! Переносите!</target>
          </segment>
       </unit>
@@ -2595,7 +2595,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target>Если эта ошибка возникла при импорте изменений в автономном режиме, пожалуйста, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, сделанные в автономном режиме.</target>
          </segment>
       </unit>
@@ -2661,7 +2661,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target>ITF не содержит текущий проект. Он содержит проект {0}.</target>
          </segment>
       </unit>
@@ -3567,7 +3567,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target>Приглашение не принято. Вы должны войти по электронной почте, на которую было отправлено приглашение.</target>
          </segment>
       </unit>
@@ -5139,7 +5139,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнить любой шаг, даже если он назначен группе, в которой они не состоят.</target>
          </segment>
       </unit>
@@ -5151,7 +5151,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного делают консультанты в этом программном обеспечении. Комментарии независимого консультанта будут видны всем членам команды.</target>
          </segment>
       </unit>
@@ -5175,13 +5175,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target>Комментарии наставника будут видны только CIT. Наставники могут одобрить комментарии CIT, чтобы они стали видны остальным членам команды.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
             <target>Общая группа сверстников без особых прав. Используется для распределения обсуждений по группам.</target>
          </segment>
       </unit>
@@ -5907,7 +5907,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target>Частота синхронизации данных в минутах. 0 для отключения синхронизации.</target>
          </segment>
       </unit>
@@ -6391,6 +6391,18 @@
             <target>Сохранение...</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.setupGeneralBook">
+         <segment>
+            <source>Perform sort on home screen to setup book codes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.setupScriptureBook">
+         <segment>
+            <source>Choose the book in the passage book column.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
@@ -6669,13 +6681,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Срок действия вашего логина {Pt} истек и не может быть автоматически продлен. Пожалуйста, выйдите из системы и войдите снова.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Срок действия вашего ключа входа истек и не может быть продлен автоматически. Пожалуйста, выйдите и войдите снова.</target>
          </segment>
       </unit>
@@ -7653,7 +7665,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target>Транскрипция обновлена {0}. Сохранить их изменения? {1}</target>
          </segment>
       </unit>
@@ -7863,7 +7875,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target>Аудио проект не может быть экспортирован. Экспортируемый файл слишком большой.</target>
          </segment>
       </unit>
@@ -7905,7 +7917,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target>У вас есть новые локальные изменения, которые не были включены в экспорт PTF. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
@@ -8763,7 +8775,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target>Настройте аудио проект, разделив работу на отрывки, которые могут быть назначены различным транскрипторам и редакторам. Транскрипторы и редакторы могут работать онлайн или оффлайн, загружая или импортируя аудио проект.</target>
          </segment>
       </unit>
@@ -8781,7 +8793,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target>Аудио проект был настроен онлайн. Транскрипторы и редакторы могут работать в режиме онлайн, в автономном режиме, выбрав опцию Доступно Офлайн в меню аудиопроекта или в автономном режиме, импортируя его.</target>
          </segment>
       </unit>
@@ -9039,7 +9051,7 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
             <target>AI Service In Progress... Это удаленная служба, которая может занять много времени, если запись большая или если есть другие запросы, опережающие ваш.</target>
          </segment>
       </unit>
@@ -9135,8 +9147,8 @@
       </unit>
       <unit id="wsAudioPlayer.normalizeInProgress">
          <segment>
-            <source>Audio loudness normaliziation In Progress...</source>
-            <target>Нормализация громкости звука в процессе...</target>
+            <source>Audio loudness normalization In Progress...</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

@@ -27,6 +27,10 @@ import {
   RoleNames,
   SectionD,
   SheetLevel,
+  ProjectTypeD,
+  PassageD,
+  BookSeq,
+  AltBkSeq,
 } from '../model';
 import { OptionType } from '../model';
 import {
@@ -63,7 +67,7 @@ import {
   vProjectSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
-import { pad2, useHome } from '../utils';
+import { logError, pad2, Severity, useHome } from '../utils';
 import {
   RecordIdentity,
   RecordKeyMap,
@@ -79,6 +83,9 @@ import {
   type SortArr,
   type SortMap,
 } from '../components/Team/ProjectDialog/ProjectSort';
+import bookSortJson from '../assets/akuosort.json';
+import { passageTypeFromRef } from '../control/RefRender';
+import { PassageTypeEnum } from '../model/passageType';
 
 export type TeamIdType = OrganizationD | null;
 
@@ -134,9 +141,8 @@ const initState = {
   doImport: (p: VProject | undefined = undefined) => {},
   resetProjectPermissions: (team: string) => {},
   generalBook: (team?: string) => '000',
-  updateGeneralBooks: async (arr: SortArr) => {
-    // Implementation here
-  },
+  updateGeneralBooks: async (arr: SortArr) => {},
+  checkScriptureBooks: (projects: VProjectD[]) => {},
   tab: 0,
   setTab: (tab: number) => {},
 };
@@ -164,6 +170,7 @@ const TeamProvider = (props: IProps) => {
   );
   const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
   const sections = useOrbitData<SectionD[]>('section');
+  const passages = useOrbitData<PassageD[]>('passage');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const sharedStrings = ts;
   const cardStrings: ICardsStrings = useSelector(cardsSelector, shallowEqual);
@@ -199,6 +206,7 @@ const TeamProvider = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [errorReporter] = useGlobal('errorReporter');
   const [importOpen, setImportOpen] = useState(false);
   const [importProject, setImportProject] = useState<VProject>();
   const [state, setState] = useState({
@@ -339,8 +347,8 @@ const TeamProvider = (props: IProps) => {
   const updatePublishBook = async (proj: ProjectD, book: string) => {
     const plan = plans.find((p) => related(p, 'project') === proj.id);
     if (plan) {
-      await updateBookSec(plan, -4, `BOOK ${book}`);
-      await updateBookSec(plan, -3, `ALTBK ${book}`);
+      await updateBookSec(plan, BookSeq, `BOOK ${book}`);
+      await updateBookSec(plan, AltBkSeq, `ALTBK ${book}`);
     }
   };
 
@@ -353,10 +361,26 @@ const TeamProvider = (props: IProps) => {
         remoteIdGuid('project', projId, memory.keyMap as RecordKeyMap) ||
         projId;
       const proj = findRecord(memory, 'project', localId) as ProjectD;
+      const pType = findRecord(
+        memory,
+        'projecttype',
+        related(proj, 'projecttype')
+      ) as ProjectTypeD;
       let book = (getProjectDefault(projDefBook, proj) as string) || '000';
-      const scrBook = /^[@AB]\d{2}$/.exec(book);
-      if (scrBook) {
-        scrBase = book;
+      if (pType?.attributes?.name.toLowerCase() === 'scripture') {
+        const scrBook = /^[@AB]\d{2}$/.exec(book);
+        if (scrBook) {
+          scrBase = book;
+        } else {
+          // this should not happen if books are assigned when sort is opened
+          const n = arr.findIndex((i) => i[0] === projId);
+          scrBase = `E${pad2(n + 1)}`;
+          logError(
+            Severity.error,
+            errorReporter,
+            `Missing book in passage row of ${proj?.attributes?.name}`
+          );
+        }
       } else if (book <= preBook || book.slice(0, 1) !== scrBase.slice(0, 1)) {
         let index = parseInt(
           scrBase !== '0' ? preBook.slice(3) || '0' : preBook
@@ -368,6 +392,57 @@ const TeamProvider = (props: IProps) => {
       }
       preBook = book;
     }
+  };
+
+  const bookSortMap = new Map<string, string>(
+    bookSortJson as [string, string][]
+  );
+
+  const checkScriptureBooks = (projects: VProjectD[]) => {
+    projects.forEach((p) => {
+      if (p?.attributes?.type.toLowerCase() !== 'scripture') return;
+      const flat = p?.attributes?.flat;
+      const projRec = findRecord(
+        memory,
+        'project',
+        related(p, 'project')
+      ) as ProjectD;
+      const bookSort = getProjectDefault(projDefBook, projRec) as
+        | string
+        | undefined;
+      if (!/^[@AB]\d{2}$/.test(bookSort || '')) {
+        const sectIds = sections
+          .filter((s) => related(s, 'plan') === p.id)
+          .map((s) => s.id);
+        if (!sectIds || sectIds.length === 0) {
+          logError(
+            Severity.info,
+            errorReporter,
+            `Please load project data for ${projRec?.attributes?.name}`
+          );
+        }
+        let book = passages
+          .filter(
+            (p) =>
+              sectIds.includes(related(p, 'section')) &&
+              passageTypeFromRef(p?.attributes?.reference, flat) ===
+                PassageTypeEnum.PASSAGE
+          )
+          .sort(
+            (i, j) => i?.attributes?.sequencenum - j?.attributes?.sequencenum
+          )
+          .find((p) => p?.attributes?.book)?.attributes?.book;
+        const bookSort = book ? bookSortMap.get(book) : undefined;
+        if (bookSort) setProjectDefault(projDefBook, bookSort, projRec);
+        if (!bookSort) {
+          logError(
+            Severity.error,
+            errorReporter,
+            `Missing book in passage row of ${projRec?.attributes?.name}`
+          );
+        }
+      }
+    });
   };
 
   const userProjects = useMemo(() => {
@@ -393,6 +468,15 @@ const TeamProvider = (props: IProps) => {
     const sortKey = sortKeyInt !== undefined ? pad3(sortKeyInt) : undefined;
     let key = sortKey ?? getProjectDefault(projDefBook, proj);
     if (key) planSortMap.set(p.id, key);
+    else {
+      logError(
+        Severity.info,
+        errorReporter,
+        'No sort book sort key found for: ' +
+          p?.attributes?.name +
+          '. sorting by name'
+      );
+    }
     //I suggest prepending the sort order to the plan slug
     return key ?? p?.attributes?.name ?? noPlan;
   };
@@ -646,6 +730,7 @@ const TeamProvider = (props: IProps) => {
           resetProjectPermissions,
           generalBook,
           updateGeneralBooks,
+          checkScriptureBooks,
           setTab,
         },
         setState,

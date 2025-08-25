@@ -1317,6 +1317,8 @@ const initialState = {
 			"reference": "Reference",
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
+			"setupGeneralBook": "Perform sort on home screen to setup book codes.",
+			"setupScriptureBook": "Choose the book in the passage book column.",
 			"title": "Title",
 		}
 	}),

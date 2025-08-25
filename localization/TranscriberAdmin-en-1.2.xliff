@@ -7460,6 +7460,20 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTable.setupGeneralBook">
+            <source>Perform sort on home screen to setup book codes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTable.setupScriptureBook">
+            <source>Choose the book in the passage book column.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="scriptureTable.title">
             <source>Title</source>
             <target/>
