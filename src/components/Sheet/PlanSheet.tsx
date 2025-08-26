@@ -827,12 +827,13 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [toolsChanged]);
 
-  const warningTest = (refCol: number) => {
+  const warningTest = (bookCol: number, refCol: number) => {
     let refErr = false;
     if (refCol > 0) {
       rowData.forEach((row, rowIndex) => {
         if (isPassageType(rowIndex)) {
           if (refErrTest(row[refCol])) refErr = true;
+          if (!row[bookCol]) refErr = true; //book is required
         }
       });
     }
@@ -847,6 +848,10 @@ export function PlanSheet(props: IProps) {
     }
     if (filtered && !publishingOn) {
       showMessage(t.removeFilter);
+      return;
+    }
+    if (warning) {
+      showMessage(t.refErr);
       return;
     }
     onPublishing(false);
@@ -865,8 +870,9 @@ export function PlanSheet(props: IProps) {
         filtered,
         anyRecording,
       });
-      if (colSlugs.indexOf('book') > -1) {
-        warningTest(colSlugs.indexOf('reference'));
+      const bookCol = colSlugs.indexOf('book');
+      if (bookCol > -1) {
+        warningTest(bookCol, colSlugs.indexOf('reference'));
       }
       setData(data);
     }
