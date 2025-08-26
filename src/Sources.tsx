@@ -331,11 +331,6 @@ export const Sources = async (
       coordinator.addSource(datachangeremote);
     }
   } //!offline
-  if (!coordinator.activated)
-    await coordinator.activate({ logLevel: LogLevel.Warnings });
-
-  console.log('Coordinator will log warnings');
-
   let goRemote =
     !offline &&
     (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
@@ -359,6 +354,11 @@ export const Sources = async (
       }
     }
   }
+
+  if (!coordinator.activated)
+    await coordinator.activate({ logLevel: LogLevel.Warnings });
+
+  console.log('Coordinator will log warnings');
 
   var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
@@ -395,17 +395,22 @@ export const Sources = async (
   }
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
   if (!offline) {
+    console.log(`Activating remote for user: ${tokData.sub}`);
     await remote.activated;
+    console.log(`Activated remote for user: ${tokData.sub}`);
     let uRecs = (await remote.query((q) =>
       q.findRecords('user').filter({ attribute: 'auth0Id', value: tokData.sub })
     )) as UserD[];
+    console.log(`has user rec: ${tokData.sub}`);
     if (!Array.isArray(uRecs)) uRecs = [uRecs];
     const user = uRecs[0];
     if (
       (new Date() as any) - (new Date(user.attributes.dateUpdated) as any) <=
       60000
     ) {
+      console.log(`Forcing data changes`);
       await forceDataChanges();
+      console.log(`Forcing complete`);
     }
     const locale = user?.attributes?.locale || 'en';
     setLang(locale);
@@ -417,6 +422,7 @@ export const Sources = async (
   var user = localStorage.getItem(LocalKey.userId) as string;
   setUser(user);
   if (requestedSchema > 4) {
+    console.log(`Updating translation type`);
     await updateBackTranslationType(
       memory,
       tokenCtx.state.accessToken || '',
@@ -427,6 +433,7 @@ export const Sources = async (
   }
   if (requestedSchema > 5) {
     const token = tokenCtx.state.accessToken || null;
+    console.log(`Updating consultant workflow step`);
     await updateConsultantWorkflowStep(token, memory, user);
   }
   return { syncBuffer, syncFile, goRemote };
