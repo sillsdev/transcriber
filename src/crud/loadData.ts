@@ -230,13 +230,6 @@ async function processData(
         console.log('memory synced');
       })
       .catch((err) => orbitError(orbitInfo(err, 'Sync error')));
-    /* don't think we need this because we're doing this after the coordinator now
-    ** but if we run into issues with the backup not being complete,
-    ** move loadData back up before the coordinator and put this back in
-    await backup
-      .sync(transform)
-      .then((x) => console.log('backup sync complete'))
-      .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed'))); */
   } catch (err: any) {
     orbitError(orbitInfo(err, 'Backup update error'));
   }
