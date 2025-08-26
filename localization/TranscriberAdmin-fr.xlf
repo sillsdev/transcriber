@@ -5560,7 +5560,7 @@
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Ce projet audio contient des références non valides et ne se synchronisera pas correctement avec {0}. (Une référence valide serait 3:2-5 ou similaire).</target>
+            <target>Ce projet contient des livres ou des références invalides et ne sera ni synchronisé ni publié. (Une référence valide serait 3:2-5 ou similaire.)</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -6394,13 +6394,13 @@
       <unit id="scriptureTable.setupGeneralBook">
          <segment>
             <source>Perform sort on home screen to setup book codes.</source>
-            <target/>
+            <target>Allez à la page d'accueil et triez les projets pour définir les codes des livres.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.setupScriptureBook">
          <segment>
             <source>Choose the book in the passage book column.</source>
-            <target/>
+            <target>Faites une sélection dans la colonne Livre pour chaque passage qui n'en a pas.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.title">

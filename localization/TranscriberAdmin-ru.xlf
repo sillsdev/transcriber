@@ -5560,7 +5560,7 @@
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Этот аудиопроект содержит недопустимые ссылки и не будет синхронизирован с {0} должным образом. (Правильная ссылка - 3:2-5 или подобная).</target>
+            <target>Этот проект содержит недействительные книги или ссылки и не будет синхронизироваться или публиковаться. (Действительной ссылкой будет 3:2-5 или подобная.)</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -6394,13 +6394,13 @@
       <unit id="scriptureTable.setupGeneralBook">
          <segment>
             <source>Perform sort on home screen to setup book codes.</source>
-            <target/>
+            <target>Перейдите на главную страницу и отсортируйте проекты, чтобы установить коды книг.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.setupScriptureBook">
          <segment>
             <source>Choose the book in the passage book column.</source>
-            <target/>
+            <target>Сделайте выбор в столбце «Книга» для каждого отрывка, у которого его нет.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.title">

@@ -5560,7 +5560,7 @@
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>该音频项目包含无效的参考资料，无法正常同步到{0}。(有效引用应为 3:2-5 或类似内容）。</target>
+            <target>该项目包含无效的书籍或参考信息，无法同步或发布。（有效参考格式应为3:2-5或类似格式。）</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -6394,13 +6394,13 @@
       <unit id="scriptureTable.setupGeneralBook">
          <segment>
             <source>Perform sort on home screen to setup book codes.</source>
-            <target/>
+            <target>请前往主页，对项目进行排序以设置书籍代码。</target>
          </segment>
       </unit>
       <unit id="scriptureTable.setupScriptureBook">
          <segment>
             <source>Choose the book in the passage book column.</source>
-            <target/>
+            <target>请为每个未标注代码的段落，在“书籍”列中进行选择。</target>
          </segment>
       </unit>
       <unit id="scriptureTable.title">

@@ -5561,7 +5561,7 @@
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Proyek audio ini mengandung acuan yang tidak sah sehingga tidak dapat dikirim/terima ke {0} dengan benar. (Acuan yang valid 3:2-5 dsb.)</target>
+            <target>Proyek ini mengandung buku atau referensi yang tidak valid dan tidak akan disinkronkan atau diterbitkan. (Referensi yang valid adalah 3:2-5 atau sejenisnya.)</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -6395,13 +6395,13 @@
       <unit id="scriptureTable.setupGeneralBook">
          <segment>
             <source>Perform sort on home screen to setup book codes.</source>
-            <target/>
+            <target>Buka halaman Beranda dan urutkan proyek untuk mengatur kode buku.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.setupScriptureBook">
          <segment>
             <source>Choose the book in the passage book column.</source>
-            <target/>
+            <target>Pilih kolom Buku untuk setiap bagian yang tidak memiliki kode buku.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.title">
