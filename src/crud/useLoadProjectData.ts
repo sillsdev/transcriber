@@ -15,6 +15,7 @@ export const useLoadProjectData = () => {
   const [coordinator] = useGlobal('coordinator');
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
+  const [, setCompleted] = useGlobal('progress');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
   const checkOnline = useCheckOnline('LoadProjectData');
@@ -28,6 +29,7 @@ export const useLoadProjectData = () => {
       LoadProjectData(
         projectId,
         coordinator,
+        setCompleted,
         online && !getGlobal('offline'),
         getGlobal('projectsLoaded'),
         AddProjectLoaded,
