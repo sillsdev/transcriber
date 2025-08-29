@@ -5,22 +5,26 @@ import {
   OrganizationMembershipD,
   GroupMembershipD,
 } from '../model';
-import { useRole, allUsersRec } from '.';
+import { useRole } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import { useMemo } from 'react';
+import useAllUsers from './useAllUsers';
 
 export const useAddToOrgAndGroup = () => {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
+  const allUsersRec = useAllUsers();
   const [user] = useGlobal('user');
   const { getRoleId } = useRole();
+
+  const memberId = useMemo(() => getRoleId(RoleNames.Member), [getRoleId]);
 
   return (userRec: User, newRec: boolean) => {
     const addMemberships = () => {
       let orgMember: OrganizationMembershipD = {
         type: 'organizationmembership',
       } as any;
-      const memberId = getRoleId(RoleNames.Member);
-      const allUsersGroup = allUsersRec(memory, organization);
+      const allUsersGroup = allUsersRec(organization);
       let groupMbr: GroupMembershipD = {
         type: 'groupmembership',
       } as any;

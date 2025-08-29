@@ -1,4 +1,3 @@
-export * from './allUsers';
 export * from './artifactTypeSlug';
 export * from './fileOrder';
 export * from './fontChoice';
