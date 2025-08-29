@@ -318,13 +318,21 @@ const importFromElectron =
     })
       .then((response) => {
         const filename = response.data.message;
-        const xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
+        const cleanup = () => {
+          xhr.onload = null;
+          xhr.onerror = null;
+          xhr.onabort = null;
+          // @ts-ignore
+          xhr = null;
+        };
         /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
         xhr.open('PUT', response.data.fileURL, true);
         xhr.setRequestHeader('Content-Type', response.data.contentType);
         xhr.send(file.slice());
         xhr.onload = async () => {
           if (xhr.status < 300) {
+            cleanup();
             dispatch({
               payload: pendingmsg.replace('{0}', '20'),
               type: IMPORT_PENDING,
@@ -396,11 +404,11 @@ const importFromElectron =
               errorReporter,
               `upload ${filename}: ${xhr.responseText}`
             );
-
             dispatch({
               payload: errorStatus(xhr.status, xhr.responseText),
               type: IMPORT_ERROR,
             });
+            cleanup();
           }
         };
       })
@@ -501,10 +509,11 @@ export const importSyncFromElectron =
     completemsg,
   }: ImportSyncFromElectronProps) =>
   (dispatch: any) => {
+    const uint8Array = new Uint8Array(file);
     dispatch(
       importFromElectron(
         filename,
-        new Blob([file]),
+        new Blob([uint8Array]),
         0,
         token,
         errorReporter,
