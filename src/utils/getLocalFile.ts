@@ -11,7 +11,7 @@ function getFileBlob(url: string, cb: (response: any) => void) {
   };
   xhr.open('GET', url);
   xhr.responseType = 'blob';
-  xhr.onload = async () => {
+  xhr.onload = () => {
     cb(xhr.response);
     cleanup();
   };
