@@ -19,12 +19,17 @@ import {
 } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
-import { setDefaultProj, allUsersRec } from '.';
+import { setDefaultProj } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { useTeamApiPull } from './useTeamApiPull';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
-import { RecordIdentity } from '@orbit/records';
+import {
+  RecordIdentity,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
+import useAllUsersRec from './useAllUsers';
 
 export const useTeamCreate = () => {
   const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
@@ -37,18 +42,23 @@ export const useTeamCreate = () => {
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();
+  const allUsersRec = useAllUsersRec();
   const teamApiPull = useTeamApiPull();
   const checkOnline = useCheckOnline('Team Create');
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { AddOrgNoteCategories } = useArtifactCategory();
+  const { AddOrgNoteCategoryOps } = useArtifactCategory();
 
   const memory = useMemo(
     () => coordinator?.getSource('memory') as Memory,
     [coordinator]
   );
 
-  const OrgRelated = async (orgRec: OrganizationD) => {
+  const orgRoleId = useMemo(() => getRoleId(RoleNames.Admin), [getRoleId]);
+
+  const OrgRelated = (t: RecordTransformBuilder, orgRec: OrganizationD) => {
+    const opArray: RecordOperation[] = [];
+
     let orgMember: OrganizationMembershipD = {
       type: 'organizationmembership',
       attributes: {},
@@ -58,9 +68,7 @@ export const useTeamCreate = () => {
       attributes: {},
     } as GroupMembershipD;
 
-    const orgRoleId = getRoleId(RoleNames.Admin);
-
-    let allUsersGroup = allUsersRec(memory, orgRec.id);
+    let allUsersGroup = allUsersRec(orgRec.id);
     if (!allUsersGroup) {
       let group: GroupD = {
         type: 'group',
@@ -70,30 +78,43 @@ export const useTeamCreate = () => {
           allUsers: true,
         },
       } as GroupD;
-      await memory.update((t) => [
-        ...AddRecord(t, group, user, memory),
-        ...ReplaceRelatedRecord(t, group, 'owner', 'organization', orgRec.id),
-      ]);
+      opArray.push(
+        ...[
+          ...AddRecord(t, group, user, memory),
+          ...ReplaceRelatedRecord(t, group, 'owner', 'organization', orgRec.id),
+        ]
+      );
       allUsersGroup = group;
     }
-    await memory.update((t) => [
-      ...AddRecord(t, orgMember, user, memory),
-      ...ReplaceRelatedRecord(t, orgMember, 'user', 'user', user),
-      ...ReplaceRelatedRecord(
-        t,
-        orgMember,
-        'organization',
-        'organization',
-        orgRec.id
-      ),
-      ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleId),
-    ]);
-    await memory.update((t) => [
-      ...AddRecord(t, groupMbr, user, memory),
-      ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
-      ...ReplaceRelatedRecord(t, groupMbr, 'group', 'group', allUsersGroup?.id),
-      ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', orgRoleId),
-    ]);
+    opArray.push(
+      ...[
+        ...AddRecord(t, orgMember, user, memory),
+        ...ReplaceRelatedRecord(t, orgMember, 'user', 'user', user),
+        ...ReplaceRelatedRecord(
+          t,
+          orgMember,
+          'organization',
+          'organization',
+          orgRec.id
+        ),
+        ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleId),
+      ]
+    );
+    opArray.push(
+      ...[
+        ...AddRecord(t, groupMbr, user, memory),
+        ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
+        ...ReplaceRelatedRecord(
+          t,
+          groupMbr,
+          'group',
+          'group',
+          allUsersGroup?.id
+        ),
+        ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', orgRoleId),
+      ]
+    );
+    return opArray;
   };
 
   interface ICreateOrgProps {
@@ -103,7 +124,9 @@ export const useTeamCreate = () => {
 
   const createOrg = async (props: ICreateOrgProps) => {
     const { orgRec, process } = props;
-    await memory.update((t) => [
+
+    const t = new RecordTransformBuilder();
+    const opArray: RecordOperation[] = [
       ...AddRecord(t, orgRec, user, memory),
       ...ReplaceRelatedRecord(
         t,
@@ -112,10 +135,12 @@ export const useTeamCreate = () => {
         'user',
         user
       ),
-    ]);
-    await OrgRelated(orgRec as OrganizationD);
-    await AddOrgNoteCategories(orgRec.id);
-    await CreateOrgWorkflowSteps(process, orgRec.id as string);
+    ];
+    opArray.push(...OrgRelated(t, orgRec as OrganizationD));
+    opArray.push(...AddOrgNoteCategoryOps(t, orgRec.id));
+    opArray.push(...CreateOrgWorkflowSteps(t, process, orgRec.id as string));
+    await memory.update(opArray);
+    // the next line prevents shutting off busy until all workflow steps are created
     if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     setOrganization(orgRec.id as string);
     setOrgRole(RoleNames.Admin);

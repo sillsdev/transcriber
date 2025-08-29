@@ -8,13 +8,7 @@ import {
   WorkflowStepD,
 } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
-import {
-  logError,
-  Severity,
-  toCamel,
-  useWaitForRemoteQueue,
-  waitForIt,
-} from '../utils';
+import { toCamel, useWaitForRemoteQueue, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
 import { workflowStepsSelector } from '../selector';
@@ -24,6 +18,7 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { addPt } from '../utils/addPt';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 export const defaultWorkflow = 'draft';
 
@@ -37,11 +32,10 @@ export const useOrgWorkflowSteps = () => {
   );
 
   const [memory] = useGlobal('memory');
-  const [organization] = useGlobal('organization');
+  const workflowsteps = useOrbitData<WorkflowStepD[]>('workflowstep');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [errorReporter] = useGlobal('errorReporter');
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const getGlobal = useGetGlobal();
   const creatingRef = useRef(false);
@@ -63,16 +57,15 @@ export const useOrgWorkflowSteps = () => {
   const AddOrgWFToOps = async (
     tb: RecordTransformBuilder,
     wf: WorkflowStepD,
-    org?: string
+    org: string,
+    ops: RecordOperation[]
   ) => {
-    let myOrgId = org ?? organization;
     // NB: The remoteId was not updated even though this always gets created online
     // let myOrgRemoteId = remoteId('organization', myOrgId, memory?.keyMap as RecordKeyMap);
     // if (!offline && !myOrgRemoteId) {
     //   console.error(`no org remoteId for ${myOrgId}`);
     //   return; // offline users won't have an org remoteId
     // }
-    var ops: RecordOperation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
       attributes: {
@@ -86,14 +79,9 @@ export const useOrgWorkflowSteps = () => {
         wfs as InitializedRecord,
         'organization',
         'organization',
-        myOrgId
+        org
       )
     );
-    try {
-      await memory.update(ops);
-    } catch (ex) {
-      logError(Severity.error, errorReporter, ex as Error);
-    }
   };
 
   const QueryOrgWorkflowSteps = async (process: string, org: string) => {
@@ -119,24 +107,23 @@ export const useOrgWorkflowSteps = () => {
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
 
-  const CreateOrgWorkflowSteps = async (process: string, org: string) => {
-    creatingRef.current = true;
-    const workflowsteps = (
-      (await memory.query((q) =>
-        q
-          .findRecords('workflowstep')
-          .filter({ attribute: 'process', value: process })
-      )) as WorkflowStepD[]
-    )
-      .filter((s) => Boolean(s?.keys?.remoteId) !== getGlobal('offlineOnly'))
+  const CreateOrgWorkflowSteps = (
+    tb: RecordTransformBuilder,
+    process: string,
+    org: string
+  ) => {
+    const offlineOnly = getGlobal('offlineOnly');
+    const processSteps = workflowsteps
+      .filter(
+        (s) =>
+          s.attributes.process === process &&
+          Boolean(s?.keys?.remoteId) !== offlineOnly
+      )
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
-    var tb = new RecordTransformBuilder();
-    //originally had them all in one ops, but it was too fast
-    //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
-    for (var ix = 0; ix < workflowsteps.length; ix++)
-      await AddOrgWFToOps(tb, workflowsteps[ix] as WorkflowStepD, org);
-    creatingRef.current = false;
-    return await QueryOrgWorkflowSteps(process, org);
+    const opArray: RecordOperation[] = [];
+    for (var ix = 0; ix < processSteps.length; ix++)
+      AddOrgWFToOps(tb, processSteps[ix] as WorkflowStepD, org, opArray);
+    return opArray;
   };
 
   interface IGetSteps {
