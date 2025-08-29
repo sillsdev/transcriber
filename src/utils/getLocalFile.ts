@@ -1,12 +1,20 @@
 export {};
 
 function getFileBlob(url: string, cb: (response: any) => void) {
-  var xhr = new XMLHttpRequest();
+  let xhr = new XMLHttpRequest();
+  const cleanup = () => {
+    xhr.onload = null;
+    xhr.onerror = null;
+    xhr.onabort = null;
+    // @ts-ignore
+    xhr = null;
+  };
   xhr.open('GET', url);
   xhr.responseType = 'blob';
-  xhr.addEventListener('load', function () {
+  xhr.onload = () => {
     cb(xhr.response);
-  });
+    cleanup();
+  };
   xhr.send();
 }
 var blobToFile = function (blob: Blob, name: string, mimeType: string) {

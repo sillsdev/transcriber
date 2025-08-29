@@ -95,12 +95,20 @@ export const uploadFile = (
   errorReporter: any
 ): Promise<{ statusNum: number; statusText: string }> => {
   return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
+    const cleanup = () => {
+      xhr.onload = null;
+      xhr.onerror = null;
+      xhr.onabort = null;
+      // @ts-ignore
+      xhr = null;
+    };
     xhr.open('PUT', data.audioUrl, true);
     xhr.setRequestHeader('Content-Type', data.contentType);
     xhr.send(file.slice());
     xhr.onload = () => {
       if (xhr.status < 300) {
+        cleanup();
         resolve({ statusNum: 0, statusText: '' });
       } else {
         logError(
@@ -108,13 +116,16 @@ export const uploadFile = (
           errorReporter,
           `upload ${file.name}: (${xhr.status}) ${xhr.responseText}`
         );
+        cleanup();
         reject({ statusNum: 500, statusText: 'upload failed' });
       }
     };
     xhr.onerror = (evt: any) => {
+      cleanup();
       reject({ statusNum: 500, statusText: 'upload failed' });
     };
     xhr.onabort = (evt: any) => {
+      cleanup();
       reject({ statusNum: 500, statusText: 'upload aborted' });
     };
   });
