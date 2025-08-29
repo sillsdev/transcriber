@@ -121,8 +121,8 @@ export const useOrgWorkflowSteps = () => {
       )
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     const opArray: RecordOperation[] = [];
-    for (var ix = 0; ix < processSteps.length; ix++)
-      AddOrgWFToOps(tb, processSteps[ix] as WorkflowStepD, org, opArray);
+    for (let stepIndex = 0; stepIndex < processSteps.length; stepIndex++)
+      AddOrgWFToOps(tb, processSteps[stepIndex] as WorkflowStepD, org, opArray);
     return opArray;
   };
 
