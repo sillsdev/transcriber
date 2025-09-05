@@ -21,6 +21,11 @@ import { default as Detail } from './PassageDetail';
 import { default as Auth } from '../hoc/PrivateRoute';
 import { isElectron } from '../api-variable';
 import { ErrorPage } from '../components/ErrorPage';
+import { ScriptureBurrito } from './ScriptureBurrito';
+import { BurritoStep } from './BurritoStep';
+import { BurritoBooks } from './BurritoBooks';
+import { BurritoContents } from './BurritoContents';
+import { BurritoWrapper } from './BurritoWrapper';
 
 const routes = createRoutesFromElements([
   <Route errorElement={<ErrorPage />}>
@@ -33,6 +38,26 @@ const routes = createRoutesFromElements([
     <Route path="/loading" element={<Auth el={<Loading />} />} />
     <Route path="/createProfile" element={<Auth el={<CreateProfile />} />} />
     <Route path="/team" element={<Auth el={<Team />} />} />
+    <Route
+      path="/burrito/:teamId/books"
+      element={<Auth el={<BurritoBooks />} />}
+    />
+    <Route
+      path="/burrito/:teamId/contents"
+      element={<Auth el={<BurritoContents />} />}
+    />
+    <Route
+      path="/burrito/:teamId/wrapper"
+      element={<Auth el={<BurritoWrapper />} />}
+    />
+    <Route
+      path="/burrito/:teamId/:step"
+      element={<Auth el={<BurritoStep />} />}
+    />
+    <Route
+      path="/burrito/:teamId"
+      element={<Auth el={<ScriptureBurrito />} />}
+    />
     <Route path="/plan/:prjId/:tabNm" element={<Auth el={<Plan />} />} />
     <Route path="/work/:prjId/:pasId" element={<Auth el={<Team />} />} />
     <Route path="/work/:prjId" element={<Auth el={<Team />} />} />

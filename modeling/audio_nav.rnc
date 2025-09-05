@@ -1,18 +1,19 @@
 ﻿datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 
-start = element audioNav { ( book | extra )+ }
+start = element publication { pubId, pubTitle, pubDesc?, rights, ( book | extra )+ }
 
-book = element book { title, scope, ( section | note )+ }
+pubId = attribute pubId { xsd:string { pattern = "[1-3A-Z]{3}[1-3A-Z]{3}" } }
+pubTitle = attribute pubTitle { xsd:string }
+pubDesc = attribute pubDesc { xsd:string }
+book = element book { title, scope, ( section )+ }
 extra = element extra { title, section+ }
-title = element title {
-  attribute ingredient { xsd:IDREF },
-  attribute graphic { xsd:IDREF }, 
-  xsd:string }
+title = element title { ingredient, graphic, xsd:string }
+graphic = attribute graphic { xsd:IDREF }
 bookId = attribute book { xsd:string { pattern = "[1-3A-Z]{3}" } }
 range = attribute range { xsd:string { pattern = "[1-9]\d*:[1-9]\d*(([1-9]\d*:)?[1-9]\d*)?" } }
 scope = element scope { bookId, range*  }
-section = element section { title, ( section | passage )+ }
-passage = element passage { scope, media, note*, ingredient*, term*, bt* }
+section = element section { orbRef, title, ( section | passage | note )+ }
+passage = element passage { orbRef, scope, media, note*, ingredient*, term*, bt* }
 term = element term { attribute id { xsd:NMTOKEN }, ( ingredient | text )+ }
 bt = element bt {
   attribute btType {"wbt" | "pbt"},
@@ -43,3 +44,4 @@ transcript = element transcript { lang, scriptDir?, fontName?, xsd:string }
 color = attribute color { xsd:string { pattern = "#[0-9A-F]{6}" } }
 category = element category { color, title }
 note = element note { ingredient, title, category }
+orbRef = attribute orbRef { xsd:string { pattern = "[A-Z]+-[0-9]+" } }
