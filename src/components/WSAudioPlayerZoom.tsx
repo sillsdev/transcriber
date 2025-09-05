@@ -96,7 +96,7 @@ function WSAudioPlayerZoom(props: IProps) {
                 <IconButton
                   id="wsZoomIn"
                   onClick={handleZoomIn}
-                  disabled={!ready || zoom === maxZoom}
+                  disabled={!ready || zoom === maxZoom || zoom === 0}
                 >
                   <ZoomInIcon />
                 </IconButton>
@@ -121,7 +121,7 @@ function WSAudioPlayerZoom(props: IProps) {
                 <IconButton
                   id="wsZoomFull"
                   onClick={handleZoomFull}
-                  disabled={!ready}
+                  disabled={!ready || zoom === 0}
                 >
                   <ZoomWidthIcon />
                 </IconButton>

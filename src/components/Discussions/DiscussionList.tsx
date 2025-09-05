@@ -39,7 +39,7 @@ import { useGlobal } from '../../context/GlobalContext';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
 import Confirm from '../AlertDialog';
-import { onlyUnique, prettySegment, waitForIt } from '../../utils';
+import { prettySegment, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
 import { discussionListSelector } from '../../selector';
@@ -330,6 +330,7 @@ export function DiscussionList() {
   }, [highlightedRef]);
 
   useEffect(() => {
+    if (adding) return;
     var markers = displayDiscussions
       .filter(
         (d) =>
@@ -337,6 +338,16 @@ export function DiscussionList() {
           DiscussionRegion(d) &&
           related(d, 'mediafile') === mediafileId
       )
+      .map((d) => DiscussionRegion(d))
+      .map((r, i) => {
+        return {
+          time: r?.start || 0,
+          color: theme.palette.secondary.light,
+          label: `${r?.start}-${r?.end}`,
+          //position: (i % 2 === 0 ? 'top' : 'bottom') as 'top' | 'bottom',
+        };
+      });
+    /*
       .map((d) => DiscussionRegion(d)?.start || 0)
       .filter(onlyUnique)
       .map((t) => {
@@ -345,9 +356,10 @@ export function DiscussionList() {
           color: theme.palette.secondary.light,
         };
       });
+      */
     setDiscussionMarkers(markers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayDiscussions, mediafileId]);
+  }, [displayDiscussions, mediafileId, adding]);
 
   useEffect(() => {
     setAdding(false);

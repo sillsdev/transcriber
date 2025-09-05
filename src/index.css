@@ -12,3 +12,46 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Custom waveform cursor with play icon */
+
+/* Hide cursor when no audio is loaded */
+#wsAudioWaveform:empty ::part(cursor),
+#wsAudioWaveform[data-duration="0"] ::part(cursor) {
+  display: none !important;
+}
+
+#wsAudioWaveform ::part(cursor)::before {
+  content: "▶" !important;
+  position: absolute !important;
+  top: 5% !important;
+  transform: translate(-10%, -50%) !important;
+  color:  #ff4444 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+}
+
+#wsAudioWaveform ::part(cursor):hover {
+  transform: translateX(-50%) scale(1.2) !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4) !important;
+}
+
+/* Marker region styling */
+.marker-region {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+  /* Make markers appear wider for better clickability */
+  min-width: 20px !important;
+  width: 20px !important;
+  /* Center the marker on its time position */
+  transform: translateX(-50%) !important;
+}
+
+.marker-region:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+  z-index: 10 !important;
+  /* Make hover state even more prominent */
+  min-width: 30px !important;
+  width: 30px !important;
+}

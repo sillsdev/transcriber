@@ -164,7 +164,6 @@ function WSAudioPlayer(props: IProps) {
     allowSpeed,
     allowDeltaVoice,
     oneTryOnly,
-    width,
     height,
     segments,
     verses,
@@ -255,8 +254,11 @@ function WSAudioPlayer(props: IProps) {
     useContext(HotKeyContext).state;
   const [pxPerSec, setPxPerSecx] = useState(maxZoom);
   const pxPerSecRef = useRef(maxZoom);
+  const insertingRef = useRef(false);
+  const currentSegmentRef = useRef<IRegion | undefined>(undefined);
 
   const setPxPerSec = (px: number) => {
+    if (recordingRef.current) return;
     pxPerSecRef.current = px;
     setPxPerSecx(px);
   };
@@ -269,6 +271,23 @@ function WSAudioPlayer(props: IProps) {
         }
       }
     : undefined;
+  const singleRegionOnly = useMemo(
+    () => allowRecord || !allowSegment,
+    [allowRecord, allowSegment]
+  );
+
+  const myOnCurrentSegment = (currentSegment: IRegion | undefined) => {
+    console.log('myOnCurrentSegment', currentSegment);
+    if (singleRegionOnly && currentSegment) {
+      console.log('singleRegionOnly');
+      //play it??
+      //wsPlayRegion(currentSegment);
+      //onPlayStatus && onPlayStatus(true);
+    }
+    currentSegmentRef.current = currentSegment;
+    onCurrentSegment && onCurrentSegment(currentSegment);
+  };
+
   const {
     isReady,
     wsLoad,
@@ -314,9 +333,9 @@ function WSAudioPlayer(props: IProps) {
     onMarkerClick,
     () => {}, //on error...probably should report?
     height - 120,
-    allowRecord,
+    allowRecord || !allowSegment,
     currentSegmentIndex,
-    onCurrentSegment,
+    myOnCurrentSegment,
     onStartRegion,
     verses
   );
@@ -329,7 +348,6 @@ function WSAudioPlayer(props: IProps) {
     onRecordError,
     onRecordDataAvailable
   );
-
   const setProcessingRecording = (value: boolean) => {
     setProcessingRecordingx(value);
     processRecordRef.current = value;
@@ -386,17 +404,23 @@ function WSAudioPlayer(props: IProps) {
     )
       return false;
     if (!recordingRef.current) {
+      setPxPerSec(100);
       setBlobReady && setBlobReady(false);
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
-      recordOverwritePosition.current = recordStartPosition.current;
       wsStartRecord();
       setRecording(startRecording(500));
+
+      insertingRef.current = durationRef.current > 0;
+      recordOverwritePosition.current = insertingRef.current
+        ? recordStartPosition.current
+        : undefined;
     } else {
       setProcessingRecording(true);
       stopRecording();
       wsStopRecord();
       setRecording(false);
+      //TODO will this be after the wsready? if yes then do this...setPxPerSec(wsFillPx())
       if (oneTryOnly) setOneShotUsed(true);
     }
     return true;
@@ -543,12 +567,13 @@ function WSAudioPlayer(props: IProps) {
   }, [initialposition, isReady]);
 
   useEffect(() => {
-    if (ready && markers && markers !== markersRef.current) {
+    if (ready && duration > 0 && markers && markers !== markersRef.current) {
+      console.log('useEffect markers', markers, markersRef.current);
       markersRef.current = markers;
       wsAddMarkers(markers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [markers, ready]);
+  }, [markers, duration, ready]);
 
   useEffect(() => {
     if (segments !== segmentsRef.current) {
@@ -614,8 +639,8 @@ function WSAudioPlayer(props: IProps) {
     if (durationRef.current === 0 || recordingRef.current) return false;
     var nowplaying = play;
 
-    if (play && regionOnly) {
-      wsPlayRegion();
+    if (play && regionOnly && currentSegmentRef.current) {
+      wsPlayRegion(currentSegmentRef.current);
     } else nowplaying = wsTogglePlay();
 
     if (
@@ -634,13 +659,15 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, request, duration]);
 
-  function onRecordStart() {}
+  function onRecordStart() {
+    setPxPerSec(100);
+  }
 
   async function onRecordStop(blob: Blob) {
     await wsInsertAudio(
       blob,
       recordStartPosition.current,
-      recordOverwritePosition.current || recordStartPosition.current
+      recordOverwritePosition.current
     );
     recordOverwritePosition.current = undefined;
     setProcessingRecording(false);
@@ -660,20 +687,31 @@ function WSAudioPlayer(props: IProps) {
   }
 
   async function onRecordDataAvailable(e: any, blob: Blob) {
-    var newPos = await wsInsertAudio(
-      blob,
-      recordStartPosition.current,
-      recordOverwritePosition.current || recordStartPosition.current,
-      e?.type
-    );
-    recordOverwritePosition.current = newPos;
-    setDuration(wsDuration());
-    wsGoto(newPos || wsDuration());
+    if (blob.size > 0) {
+      var newPos = await wsInsertAudio(
+        blob,
+        recordStartPosition.current,
+        recordOverwritePosition.current,
+        e?.type
+      );
+      if (insertingRef.current) recordOverwritePosition.current = newPos;
+      /* it's not actually loaded yet
+      setDuration(wsDuration());
+      console.log(
+        'onRecordDataAvailable',
+        newPos,
+        'duration',
+        durationRef.current
+      );
+      wsGoto(newPos || wsDuration());*/
+    }
   }
+
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    setPxPerSec(wsFillPx());
+    console.log('onWSReady', durationRef.current);
+    if (!recordingRef.current) setPxPerSec(wsFillPx());
 
     if (segmentsRef.current?.length > 2) loadRegions();
 
@@ -723,6 +761,7 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const handleChanged = async () => {
+    console.log('handleChanged', durationRef.current);
     setChanged && setChanged(durationRef.current !== 0);
     setBlobReady && setBlobReady(false);
     wsBlob().then((newblob) => {
@@ -885,16 +924,11 @@ function WSAudioPlayer(props: IProps) {
       if (blob) {
         // write to local file system
         const arrayBuffer = await blob.arrayBuffer();
-        console.log(arrayBuffer);
         const absMax = new Uint8Array(arrayBuffer).reduce(
           (a, b) => Math.max(a, Math.abs(b)),
           0
         );
-        const min = new Uint8Array(arrayBuffer).reduce(
-          (a, b) => Math.min(a, b),
-          0
-        );
-        console.log('Abs Max: ', absMax, ' Min: ', min);
+
         if (absMax < 255) throw new Exception(t.tooQuiet);
         await ipc?.writeBuffer(fileBeg, arrayBuffer);
         await ipc?.normalize(fileBeg, fileEnd);
@@ -926,15 +960,16 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [voice]
   );
-
+  /* box -> or is width just wrong? sx={{ width: width }}>*/
   return (
-    <Box sx={{ width: width }}>
+    <Box>
       <Paper sx={{ p: 1, mb: 1 }}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             whiteSpace: 'nowrap',
+            width: '100%',
           }}
           style={style}
         >
@@ -1010,7 +1045,7 @@ function WSAudioPlayer(props: IProps) {
                     <WSAudioPlayerZoom
                       // startBig={allowRecord || false}
                       ready={ready && !recording}
-                      fillPx={wsFillPx()}
+                      fillPx={recording ? 100 : wsFillPx()}
                       curPx={pxPerSec}
                       onZoom={wsZoom}
                     ></WSAudioPlayerZoom>
@@ -1212,11 +1247,7 @@ function WSAudioPlayer(props: IProps) {
                 </Grid>
               )}
             </Grid>
-            <div
-              id="wsAudioWaveform"
-              ref={waveformRef}
-              style={{ width: width - 16 }} //paper margin
-            />
+            <div id="wsAudioWaveform" ref={waveformRef} />
             {justPlayButton || (
               <Grid container sx={toolbarProp}>
                 <Grid item>

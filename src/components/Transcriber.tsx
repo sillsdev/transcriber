@@ -1048,7 +1048,6 @@ export function Transcriber(props: IProps) {
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
   const onSegmentChange = (segments: string, init: boolean) => {
-    console.log('onSegmentChange', segments, init);
     segmentsRef.current = segments;
   };
   const onSegmentParamChange = (
