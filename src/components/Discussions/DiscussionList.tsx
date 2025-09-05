@@ -343,7 +343,7 @@ export function DiscussionList() {
         return {
           time: r?.start || 0,
           color: theme.palette.secondary.light,
-          label: `${r?.start}-${r?.end}`,
+          label: `${r?.start}`, //`${r?.start}-${r?.end}`,
           //position: (i % 2 === 0 ? 'top' : 'bottom') as 'top' | 'bottom',
         };
       });

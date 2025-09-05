@@ -271,25 +271,28 @@ function WSAudioPlayer(props: IProps) {
         }
       }
     : undefined;
-  const singleRegionOnly = useMemo(
-    () => allowRecord || !allowSegment,
-    [allowRecord, allowSegment]
-  );
+  const singleRegionOnly = useMemo(() => {
+    return allowRecord || !allowSegment;
+  }, [allowRecord, allowSegment]);
 
-  const myOnCurrentSegment = (currentSegment: IRegion | undefined) => {
-    console.log('myOnCurrentSegment', currentSegment);
-    if (singleRegionOnly && currentSegment) {
-      console.log('singleRegionOnly');
+  const myOnCurrentSegment = useMemo(
+    () => (currentSegment: IRegion | undefined) => {
+      console.log('myOnCurrentSegment', currentSegment);
+      //
+      //if (singleRegionOnly && currentSegment) {
+      //console.log('singleRegionOnly');
       //play it??
       //wsPlayRegion(currentSegment);
       //onPlayStatus && onPlayStatus(true);
-    }
-    currentSegmentRef.current = currentSegment;
-    onCurrentSegment && onCurrentSegment(currentSegment);
-  };
+      //}
+      currentSegmentRef.current = currentSegment;
+      onCurrentSegment && onCurrentSegment(currentSegment);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [] //singleRegionOnly]
+  );
 
   const {
-    isReady,
     wsLoad,
     wsClear,
     wsTogglePlay,
@@ -333,7 +336,7 @@ function WSAudioPlayer(props: IProps) {
     onMarkerClick,
     () => {}, //on error...probably should report?
     height - 120,
-    allowRecord || !allowSegment,
+    singleRegionOnly,
     currentSegmentIndex,
     myOnCurrentSegment,
     onStartRegion,
@@ -552,19 +555,18 @@ function WSAudioPlayer(props: IProps) {
   }, [autoStart]);
 
   useEffect(() => {
-    console.log('useEffect height, waitingForAI', height, waitingForAI);
     wsSetHeight(waitingForAI ? 0 : height - 120); //does this need to be smarter?
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, waitingForAI]);
 
   useEffect(() => {
     if (initialposition !== undefined) {
-      if (isReady) wsGoto(initialposition);
+      if (ready) wsGoto(initialposition);
       else initialPosRef.current = initialposition;
       setInitialPosition && setInitialPosition(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialposition, isReady]);
+  }, [initialposition, ready]);
 
   useEffect(() => {
     if (ready && duration > 0 && markers && markers !== markersRef.current) {
@@ -641,6 +643,7 @@ function WSAudioPlayer(props: IProps) {
 
     if (play && regionOnly && currentSegmentRef.current) {
       wsPlayRegion(currentSegmentRef.current);
+      nowplaying = true;
     } else nowplaying = wsTogglePlay();
 
     if (

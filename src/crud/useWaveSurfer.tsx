@@ -115,6 +115,12 @@ export function useWaveSurfer(
   }, [isReady]);
 
   useEffect(() => {
+    const setProgress = (value: number) => {
+      progressRef.current = value;
+      onRegionProgress(value);
+      onProgress(value);
+    };
+
     setProgress(currentTime);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime]);
@@ -123,6 +129,7 @@ export function useWaveSurfer(
     playingRef.current = value;
     if (onPlayStatus) onPlayStatus(playingRef.current);
   };
+
   const wsDuration = () => durationRef.current || 0;
   const wsFillPx = () => fillpxRef.current;
   const isNear = (position: number) => {
@@ -184,11 +191,11 @@ export function useWaveSurfer(
     Regions,
     wavesurferRef.current,
     onRegion,
-    onRegionPlayStatus,
     wsDuration,
     isNear,
     wsGoto,
     progress,
+    () => isPlayingRef.current,
     setPlaying,
     onCurrentRegion,
     onStartRegion,
@@ -277,7 +284,8 @@ export function useWaveSurfer(
         wsLoad();
       }
     };
-
+    console.log('wavesurfer useEffect');
+    regionsLoadedRef.current = false;
     if (wavesurfer) {
       //setWaveSurfer(wavesurfer);
       wavesurfer.on('ready', handleReady);
@@ -348,9 +356,8 @@ export function useWaveSurfer(
       }
       onCanUndo && onCanUndo(false);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [container, wavesurfer]);
+  }, [wavesurfer]);
 
   useEffect(() => {
     // Removes events, elements and disconnects Web Audio nodes on component unmount
@@ -362,16 +369,11 @@ export function useWaveSurfer(
         isPlayingRef.current = false;
         ws.unAll();
         ws.destroy();
+        wavesurferRef.current = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const setProgress = (value: number) => {
-    progressRef.current = value;
-    onRegionProgress(value);
-    onProgress(value);
-  };
 
   const setDuration = (value: number) => {
     durationRef.current = value;
@@ -889,7 +891,6 @@ export function useWaveSurfer(
   };
 
   return {
-    isReady,
     wsLoad,
     wsBlob,
     wsRegionBlob,

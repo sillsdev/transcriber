@@ -59,11 +59,11 @@ export function useWaveSurferRegions(
   Regions: RegionsPlugin | undefined,
   ws: WaveSurfer | null,
   onRegion: (count: number, newRegion: boolean) => void,
-  onPlayStatus: (playing: boolean) => void,
   duration: () => number,
   isNear: (test: number) => boolean,
   goto: (position: number) => void,
   progress: () => number,
+  isPlaying: () => boolean,
   setPlaying: (playing: boolean) => void,
   onCurrentRegion?: (currentRegion: IRegion | undefined) => void,
   onStartRegion?: (start: number) => void,
@@ -78,7 +78,7 @@ export function useWaveSurferRegions(
   const updatingRef = useRef(false);
   const resizingRef = useRef(false);
   const loadingRef = useRef(false);
-  const playRegionRef = useRef(false);
+  const playRegionRef = useRef<Region | undefined>();
   const paramsRef = useRef<IRegionParams>();
   const peaksRef = useRef<Array<number> | undefined>();
   const regions = () =>
@@ -111,13 +111,24 @@ export function useWaveSurferRegions(
     if (selfIfAtStart && (numRegions() === 1 || isNear(r.start))) return r;
     return (r as any).attributes?.nextRegion;
   };
+  const playRegion = (r: Region) => {
+    playRegionRef.current = r;
+    r.play();
+  };
   const wsPlayRegion = (r: IRegion) => {
     console.log('wsPlayRegion', ws?.getCurrentTime(), progress(), r.start);
     updatingRef.current = true;
     var reg = findRegion(r.start, true);
-    playRegionRef.current = true;
-    reg?.play();
+    if (!isInRegion(reg, ws?.getCurrentTime() ?? progress())) goto(r.start);
+    playRegion(reg);
   };
+  useEffect(() => {
+    return () => {
+      if (Regions) Regions.unAll();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     //wavesurferRef.current = ws;
 
@@ -250,13 +261,11 @@ export function useWaveSurferRegions(
         //help it in case it forgot -- unless the user clicked out
         //here is where we could add a pause possibly
         if (loopingRef.current) {
-          if (r === loopingRegionRef.current && ws?.isPlaying()) r.play();
-        } else if (playRegionRef.current) {
+          if (r === loopingRegionRef.current && isPlaying()) {
+            r.play();
+          }
+        } else if (playRegionRef.current === r) {
           //we just wanted to play this region
-          console.log(
-            'region-out playRegionRef.current',
-            playRegionRef.current
-          );
           setPlaying(false);
         }
       });
@@ -276,7 +285,7 @@ export function useWaveSurferRegions(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ws, singleRegionOnly, Regions]);
 
-  const isInRegion = (r: any, value: number) => {
+  const isInRegion = (r: Region, value: number) => {
     return value <= r.end && value >= r.start;
   };
 
@@ -768,7 +777,7 @@ export function useWaveSurferRegions(
     return Math.round(n * 10) / 10;
   }
   function resetPlayingRegion() {
-    playRegionRef.current = false;
+    playRegionRef.current = undefined;
   }
   function justPlayRegion(progress: number) {
     if (
@@ -777,12 +786,11 @@ export function useWaveSurferRegions(
       roundToTenths(currentRegion().start) <= roundToTenths(progress) && //account for discussion topic rounding
       currentRegion().end > progress + 0.01
     ) {
-      playRegionRef.current = true;
-      currentRegion().play();
+      playRegion(currentRegion());
       console.log('justPlayRegion true', progress, currentRegion());
       return true;
     }
-    playRegionRef.current = false;
+    resetPlayingRegion();
     return false;
   }
   function onRegionProgress(progress: number) {
