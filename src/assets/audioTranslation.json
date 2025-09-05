@@ -1,0 +1,131 @@
+{
+  "format": "scripture burrito",
+  "meta": {
+    "version": "1.0.0",
+    "category": "source",
+    "generator": {
+      "softwareName": "Audio Project Manager",
+      "softwareVersion": "3.3.0",
+      "userName": "Greg Trihus"
+    },
+    "defaultLocale": "en",
+    "dateCreated": "2018-03-15T19:38:40.762935+00:00",
+    "comments": ["Initial version of Scripture Burrito audio translation"]
+  },
+  "idAuthorities": {
+    "apm": {
+      "id": "https://www.audioprojectmanager.org",
+      "name": {
+        "en": "Audio Project Manager"
+      }
+    }
+  },
+  "identification": {
+    "primary": {
+      "apm": {
+        "6e0d81a24efbb679": {
+          "revision": "9",
+          "timestamp": "2018-03-15T19:38:40.762935+00:00"
+        }
+      }
+    },
+    "name": {
+      "en": "TEST Audio Bible - Local"
+    },
+    "description": {
+      "en": "TEST Audio Bible - Description"
+    },
+    "abbreviation": {
+      "en": "DBLTD"
+    }
+  },
+  "languages": [
+    {
+      "tag": "en",
+      "name": {
+        "en": "English"
+      }
+    }
+  ],
+  "type": {
+    "flavorType": {
+      "name": "scripture",
+      "flavor": {
+        "name": "audioTranslation",
+        "performance": ["singleVoice"],
+        "formats": {
+          "format1": {
+            "compression": "mp3",
+            "trackConfiguration": "2/0 (stereo)"
+          }
+        }
+      },
+      "currentScope": {
+        "MAT": []
+      }
+    }
+  },
+  "confidential": false,
+  "agencies": [
+    {
+      "id": "apm::SIL",
+      "roles": [
+        "rightsHolder",
+        "content",
+        "publication",
+        "management",
+        "finance",
+        "qa"
+      ],
+      "url": "http://www.sil.org",
+      "name": {
+        "en": "SIL Global"
+      },
+      "abbr": {
+        "en": "SIL"
+      }
+    }
+  ],
+  "targetAreas": [
+    {
+      "code": "US",
+      "name": {
+        "en": "United States"
+      }
+    }
+  ],
+  "localizedNames": {
+    "book-mat": {
+      "abbr": {
+        "en": "Mt"
+      },
+      "short": {
+        "en": "Matthew"
+      },
+      "long": {
+        "en": "The Gospel according to Matthew"
+      }
+    }
+  },
+  "ingredients": {
+    "audio/GEN/GEN_001.mp3": {
+      "checksum": {
+        "md5": "b5fd441feb7eed02c68dca3d8dbbfe80"
+      },
+      "mimeType": "audio/mpeg",
+      "size": 10168353,
+      "scope": {
+        "GEN": ["1"]
+      }
+    }
+  },
+  "copyright": {
+    "shortStatements": [
+      {
+        "statement": "<p>&copy; 2024, SIL International. All rights reserved.</p>",
+        "mimetype": "text/html",
+        "lang": "en"
+      }
+    ]
+  }
+}

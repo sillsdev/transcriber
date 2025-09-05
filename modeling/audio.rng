@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="audioNav">
+      <oneOrMore>
+        <choice>
+          <ref name="book"/>
+          <ref name="extra"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </start>
+  <define name="book">
+    <element name="book">
+      <ref name="title"/>
+      <ref name="scope"/>
+      <oneOrMore>
+        <choice>
+          <ref name="section"/>
+          <ref name="note"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="extra">
+    <element name="extra">
+      <ref name="title"/>
+      <oneOrMore>
+        <ref name="section"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="title">
+    <element name="title">
+      <attribute name="ingredient">
+        <data type="IDREF"/>
+      </attribute>
+      <attribute name="graphic">
+        <data type="IDREF"/>
+      </attribute>
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="bookId">
+    <attribute name="book">
+      <data type="string">
+        <param name="pattern">[1-3A-Z]{3}</param>
+      </data>
+    </attribute>
+  </define>
+  <define name="range">
+    <attribute name="range">
+      <data type="string">
+        <param name="pattern">[1-9]\d*:[1-9]\d*(([1-9]\d*:)?[1-9]\d*)?</param>
+      </data>
+    </attribute>
+  </define>
+  <define name="scope">
+    <element name="scope">
+      <ref name="bookId"/>
+      <zeroOrMore>
+        <ref name="range"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="section">
+    <element name="section">
+      <ref name="title"/>
+      <oneOrMore>
+        <choice>
+          <ref name="section"/>
+          <ref name="passage"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="passage">
+    <element name="passage">
+      <ref name="scope"/>
+      <ref name="media"/>
+      <zeroOrMore>
+        <ref name="note"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="ingredient"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="term"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="bt"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="term">
+    <element name="term">
+      <attribute name="id">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <oneOrMore>
+        <choice>
+          <ref name="ingredient"/>
+          <text/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="bt">
+    <element name="bt">
+      <attribute name="btType">
+        <choice>
+          <value>wbt</value>
+          <value>pbt</value>
+        </choice>
+      </attribute>
+      <optional>
+        <attribute name="timestamp">
+          <data type="IDREF"/>
+        </attribute>
+      </optional>
+      <ref name="ingredient"/>
+      <optional>
+        <ref name="transcript"/>
+      </optional>
+    </element>
+  </define>
+  <define name="version">
+    <attribute name="version">
+      <data type="nonNegativeInteger"/>
+    </attribute>
+  </define>
+  <define name="media">
+    <element name="media">
+      <ref name="ingredient"/>
+      <ref name="version"/>
+      <optional>
+        <ref name="rights"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="segment"/>
+      </zeroOrMore>
+      <ref name="transcript"/>
+      <zeroOrMore>
+        <ref name="discussion"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="rights">
+    <attribute name="idAuthority">
+      <data type="IDREF"/>
+    </attribute>
+  </define>
+  <define name="discussion">
+    <element name="discussion">
+      <ref name="topic"/>
+      <oneOrMore>
+        <ref name="comment"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="topic">
+    <attribute name="topic">
+      <data type="string"/>
+    </attribute>
+  </define>
+  <define name="comment">
+    <element name="comment">
+      <attribute name="author">
+        <data type="string"/>
+      </attribute>
+      <oneOrMore>
+        <choice>
+          <ref name="ingredient"/>
+          <text/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="ingredient">
+    <attribute name="ingredient">
+      <data type="IDREF"/>
+    </attribute>
+  </define>
+  <define name="segment">
+    <element name="segment">
+      <attribute name="segType">
+        <choice>
+          <value>verse</value>
+          <value>bt</value>
+        </choice>
+      </attribute>
+      <oneOrMore>
+        <ref name="timestamp"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="timestamp">
+    <element name="timestamp">
+      <attribute name="start">
+        <data type="decimal"/>
+      </attribute>
+      <attribute name="end">
+        <data type="decimal"/>
+      </attribute>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="lang">
+    <attribute name="lang">
+      <data type="string">
+        <param name="pattern">[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?</param>
+      </data>
+    </attribute>
+  </define>
+  <define name="scriptDir">
+    <attribute name="dir">
+      <choice>
+        <value>ltr</value>
+        <value>rtl</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="fontName">
+    <attribute name="font">
+      <data type="string"/>
+    </attribute>
+  </define>
+  <define name="transcript">
+    <element name="transcript">
+      <ref name="lang"/>
+      <optional>
+        <ref name="scriptDir"/>
+      </optional>
+      <optional>
+        <ref name="fontName"/>
+      </optional>
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="color">
+    <attribute name="color">
+      <data type="string">
+        <param name="pattern">#[0-9A-F]{6}</param>
+      </data>
+    </attribute>
+  </define>
+  <define name="category">
+    <element name="category">
+      <ref name="color"/>
+      <ref name="title"/>
+    </element>
+  </define>
+  <define name="note">
+    <element name="note">
+      <ref name="ingredient"/>
+      <ref name="title"/>
+      <ref name="category"/>
+    </element>
+  </define>
+</grammar>

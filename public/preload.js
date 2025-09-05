@@ -32,6 +32,7 @@ contextBridge.exposeInMainWorld('electron', {
   closeApp: async () => await ipcRenderer.invoke('closeApp'),
   importOpen: async () => await ipcRenderer.invoke('importOpen'),
   execPath: async () => await ipcRenderer.invoke('execPath'),
+  md5File: async (filePath) => await ipcRenderer.invoke('md5File', filePath),
   isWindows: async () => await ipcRenderer.invoke('isWindows'),
   isMac: async () => await ipcRenderer.invoke('isMac'),
   isProcessRunning: async (name) =>

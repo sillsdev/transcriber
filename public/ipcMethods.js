@@ -22,6 +22,7 @@ const convert = require('xml-js');
 const ChildProcess = require('child_process');
 // execa is an ESM module so we included source to make it work
 const execa = require('./execa');
+const md5File = require('md5-file');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -46,6 +47,10 @@ const ipcMethods = () => {
 
   ipcMain.handle('customAdd', async (event, word) => {
     session.defaultSession.addWordToSpellCheckerDictionary(word);
+  });
+
+  ipcMain.handle('md5File', async (event, file) => {
+    return md5File.sync(file);
   });
 
   ipcMain.handle('isWindows', async () => {

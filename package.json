@@ -22,9 +22,11 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.5",
     "@hello-pangea/dnd": "^17.0.0",
+    "@mui/base": "^5.0.0-beta.68",
     "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.16.12",
     "@mui/x-data-grid": "^6.18.4",
+    "@mui/x-tree-view": "^7.29.1",
     "@orbit/coordinator": "^0.17.0",
     "@orbit/core": "^0.17.0",
     "@orbit/indexeddb": "^0.17.2",
@@ -50,6 +52,7 @@
     "keytar": "^7.9.0",
     "lodash": "^4.17.21",
     "luxon": "^3.7.1",
+    "md5-file": "^5.0.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.6.0",
     "mui-language-picker": "^2.5.2",
@@ -141,6 +144,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@craco/types": "^7.1.0",
+    "@jest/globals": "^30.0.3",
     "@redux-devtools/extension": "^3.3.0",
     "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/jest-dom": "^5.17.0",
@@ -168,7 +172,6 @@
     "electron-builder": "^24.13.3",
     "env-cmd": "^10.1.0",
     "isbinaryfile": "5.0.4",
-    "md5-file": "^5.0.0",
     "npm-watch": "^0.13.0",
     "prop-types": "^15.8.1",
     "react-error-overlay": "^6.1.0",
@@ -259,7 +262,5 @@
   },
   "volta": {
     "node": "18.20.5"
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }

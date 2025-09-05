@@ -9,6 +9,7 @@ export enum PathType {
   FONTS = 'fonts',
   MEDIA = 'media',
   ZIP = 'zip',
+  BURRITO = 'burrito',
 }
 
 export const dataPath = async (
@@ -23,6 +24,7 @@ export const dataPath = async (
       case PathType.AVATARS:
       case PathType.LOGOS:
       case PathType.FONTS:
+      case PathType.BURRITO:
         localName = path.join(
           homeDir,
           process.env.REACT_APP_OFFLINEDATA,
@@ -55,7 +57,8 @@ export const dataPath = async (
     //s3 paths look like https://sil-transcriber-userfiles-dev.s3.amazonaws.com/noorg/B14___01_2Thess______ENGESVN2DA.mp3?AWSAccessKeyId=xxx
     if (type === PathType.MEDIA && relPath?.includes('s3.amazonaws')) {
       // This logic handles names with slashes. Sholdn't nappen again
-      const fileName = parse(relPath).pathname?.split('?')[0].split('/').pop() || '';
+      const fileName =
+        parse(relPath).pathname?.split('?')[0].split('/').pop() || '';
       localName = path.join(
         homeDir,
         process.env.REACT_APP_OFFLINEDATA,
