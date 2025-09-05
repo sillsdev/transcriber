@@ -1,3 +1,15 @@
+audio - project - manager(4.3.2.0)  experimental; urgency = high
+
+ * TT-6716 Check and fix Scripture book on sort
+ * TT-6718 No publishing without a book code
+ * TT-6720 Improve clean memory reload 10 fold
+ * TT-6724 Project load feedback
+ * TT-6728 Free up memory from xhr uploads
+ * TT-6729 Speed up team creation
+ * TT-6734 only update user role if changed
+
+-- Greg Trihus <greg_trihus@sil.org>  Mon, 5 Sep 2025 21:02:00 - 0600
+
 audio - project - manager(4.3.1.0)  experimental; urgency = high
 
  * TT-4172 Project card sorting (#2013)
