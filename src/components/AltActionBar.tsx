@@ -1,19 +1,18 @@
-import { BoxProps } from "@mui/material";
-import { ActionRow, AltButton, PriButton } from "../control";
-
+import { BoxProps } from '@mui/material';
+import { ActionRow, AltButton, PriButton } from '../control';
 
 interface IAltActionBar extends BoxProps {
-    primaryLabel: string;
-    primaryOnClick: () => void;
-    primaryDisabled?: boolean;
-    primaryKey: string;
-    primaryAria: string;
-    altShown?: boolean;
-    altLabel: string;
-    altOnClick: () => void;
-    altDisabled?: boolean;
-    altKey: string;
-    altAria: string;
+  primaryLabel: string;
+  primaryOnClick: () => void;
+  primaryDisabled?: boolean;
+  primaryKey: string;
+  primaryAria: string;
+  altShown?: boolean;
+  altLabel: string;
+  altOnClick: () => void;
+  altDisabled?: boolean;
+  altKey: string;
+  altAria: string;
 }
 
 export const AltActionBar = ({
@@ -30,13 +29,15 @@ export const AltActionBar = ({
   altAria,
   ...rest
 }: IAltActionBar) => (
-  <ActionRow sx={{ 
-    textAlign: 'left', 
-    padding: '0px', 
-    backgroundColor: 'primary.contrastText', 
-    zIndex: '100', 
-    ...rest.sx 
-  }}>
+  <ActionRow
+    sx={{
+      textAlign: 'left',
+      padding: '0px',
+      backgroundColor: 'primary.contrastText',
+      zIndex: '100',
+      ...rest.sx,
+    }}
+  >
     <PriButton
       id="primaryAction"
       key={primaryKey}
@@ -45,18 +46,18 @@ export const AltActionBar = ({
       sx={{ marginLeft: '0' }}
       onClick={primaryOnClick}
     >
-      {primaryLabel}  
+      {primaryLabel}
     </PriButton>
-    { altShown && 
-      (<AltButton
+    {altShown && (
+      <AltButton
         id="altAction"
         key={altKey}
         aria-label={altAria}
         onClick={altOnClick}
-        sx={{ marginLeft:'8px' }}
+        sx={{ marginLeft: '8px' }}
       >
         {altLabel}
-      </AltButton>)
-    }
+      </AltButton>
+    )}
   </ActionRow>
 );
