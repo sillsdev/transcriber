@@ -24,7 +24,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
 import { ProjectStory } from './ProjectStory';
 import { StyledDialogTitle } from '../../StyledDialogTitle';
-import { AltActionBar } from '../../../AltActionBar';
+import { AltActionBar } from '../../AltActionBar';
 import Tags from '../../../control/Tags';
 
 const initState = {
