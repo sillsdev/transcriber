@@ -29,8 +29,13 @@ interface IProps {
 }
 
 export function ProjectSort({ teamId, onClose }: IProps) {
-  const { teamProjects, personalProjects, personalTeam, updateGeneralBooks } =
-    React.useContext(TeamContext).state;
+  const {
+    teamProjects,
+    personalProjects,
+    personalTeam,
+    updateGeneralBooks,
+    checkScriptureBooks,
+  } = React.useContext(TeamContext).state;
   const [, setBusy] = useGlobal('remoteBusy');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const [sortKey, setSortKey] = React.useState<SortArr>([]);
@@ -98,6 +103,7 @@ export function ProjectSort({ teamId, onClose }: IProps) {
       if (!Array.isArray(sortOrder)) sortOrder = [];
       defSort.current = sortOrder.map((i) => [i[0], i[1]]);
       const projects = teamId ? teamProjects(teamId) : personalProjects;
+      checkScriptureBooks(projects);
       const projRecs = projects.map((_, i) => getProj(i));
       const sortMap = new Map<string, number>(sortOrder);
       for (let i = 0; i < projRecs.length; i += 1) {

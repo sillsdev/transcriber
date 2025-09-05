@@ -22,19 +22,17 @@ import {
   LocalKey,
   Online,
 } from './utils';
-import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
   isElectron,
   API_CONFIG,
   OrbitNetworkErrorRetries,
 } from './api-variable';
-import { RecordQueryBuilder } from '@orbit/records';
+import { RecordQueryBuilder, UninitializedRecord } from '@orbit/records';
 import { related } from './crud';
 import { OfflineProject } from './model';
 import { TokenProvider } from './context/TokenProvider';
 import { ErrorFallback } from './components/ErrorFallback';
 import DataProvider from './hoc/DataProvider';
-import { backupToMemory } from './crud/syncToMemory';
 import Coordinator from '@orbit/coordinator';
 import MemorySource from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -92,18 +90,12 @@ export async function restoreBackup(coordinator?: Coordinator) {
       600
     );
     console.log('restore backup', localStorage.getItem(LocalKey.migration));
-
-    const sortedFiles = updateableFiles
-      .concat(staticFiles)
-      .concat(localFiles)
-      .sort((i, j) => (i.sort <= j.sort ? -1 : 1));
-    for (let file of sortedFiles) {
-      await backupToMemory({
-        table: file.table,
-        backup: myBackup,
-        memory: myMemory,
-      });
-    }
+    // Query all records from the IndexedDB backup source
+    let allRecords = (await backup.query((q) =>
+      q.findRecords()
+    )) as UninitializedRecord[];
+    // Sync the records from IndexedDB into the memory source
+    await memory.sync((t) => allRecords?.map((r: any) => t.addRecord(r)));
 
     const ops = myMemory?.cache.query((q: RecordQueryBuilder) =>
       q.findRecords('offlineproject')

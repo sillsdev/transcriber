@@ -657,7 +657,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target>Apabila Anda sudah memiliki proyek Audacity yang akan disambung dengan bagian ini, klik JELAJAHI. Untuk membuat proyek Audacity baru yang akan diberi nama secara otomatis, klik BUAT.</target>
          </segment>
       </unit>
@@ -1725,7 +1725,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target>Berkas tidak diekspor dari versi terbaru. Ekspor kembali berkas PTF Anda dari versi online.</target>
          </segment>
       </unit>
@@ -1767,7 +1767,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target>Berkas ini telah diekspor dengan versi program yang lebih baru. Anda harus mengunduh versi terbaru sebelum mengimpor! Kalau tidak, beberapa data mungkin tidak diimpor dengan benar.</target>
          </segment>
       </unit>
@@ -1816,7 +1816,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
+            <source>I'm verified!  Carry on!</source>
             <target>Saya terverifikasi! Lanjut!</target>
          </segment>
       </unit>
@@ -2596,7 +2596,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target>Jika error ini terjadi saat mengimpor perubahan offline, segera tutup aplikasi APM dan buka kembali. Jika error terus berlanjut, hubungi dukungan teknis. Jika Anda terus menggunakan aplikasi APM, Anda akan kehilangan perubahan offline.</target>
          </segment>
       </unit>
@@ -2662,7 +2662,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target>ITF tidak mengandung proyek audio ini. ITF mengandung proyek audio {0}.</target>
          </segment>
       </unit>
@@ -3568,7 +3568,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target>Undangan tidak diterima. Anda harus masuk dengan alamat email yang menerima undangan.</target>
          </segment>
       </unit>
@@ -5140,7 +5140,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target>Apakah kita memerlukan grup ini? Atau cukup gunakan admin tim? Orang-orang dalam grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan milik mereka.</target>
          </segment>
       </unit>
@@ -5152,7 +5152,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas apa yang dilakukan oleh konsultan di perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
          </segment>
       </unit>
@@ -5176,13 +5176,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target>Catatan dari Mentor hanya terlihat oleh Konsultan Sedang Dilatih. Mentor dapat menyetujui catatan dari Konsultan Sedang Dilatih untuk menampilkannya kepada tim.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
             <target>Kelompok Rekan Umum tanpa izin khusus. Pakai untuk menugaskan diskusi kepada kelompok rekan.</target>
          </segment>
       </unit>
@@ -5561,7 +5561,7 @@
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Proyek audio ini mengandung acuan yang tidak sah sehingga tidak dapat dikirim/terima ke {0} dengan benar. (Acuan yang valid 3:2-5 dsb.)</target>
+            <target>Proyek ini mengandung buku atau referensi yang tidak valid dan tidak akan disinkronkan atau diterbitkan. (Referensi yang valid adalah 3:2-5 atau sejenisnya.)</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -5908,7 +5908,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target>Seringnya sinkronisasi data (menit). 0 untuk menghentikan sinkronisasi.</target>
          </segment>
       </unit>
@@ -6392,6 +6392,18 @@
             <target>Menyimpan...</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.setupGeneralBook">
+         <segment>
+            <source>Perform sort on home screen to setup book codes.</source>
+            <target>Buka halaman Beranda dan urutkan proyek untuk mengatur kode buku.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.setupScriptureBook">
+         <segment>
+            <source>Choose the book in the passage book column.</source>
+            <target>Pilih kolom Buku untuk setiap bagian yang tidak memiliki kode buku.</target>
+         </segment>
+      </unit>
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
@@ -6670,13 +6682,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Login {Pt} Anda telah kedaluwarsa dan tidak dapat diperbarui secara otomatis. Mohon keluar dan masuk kembali.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Login Anda telah kedaluwarsa dan tidak dapat diperbarui secara otomatis. Mohon keluar dan masuk kembali.</target>
          </segment>
       </unit>
@@ -7654,7 +7666,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target>Transkripsi diperbarui {0}. Simpan perubahan? {1}</target>
          </segment>
       </unit>
@@ -7864,7 +7876,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target>Proyek audio ini tidak dapat diekspor. Berkas ekspor terlalu besar.</target>
          </segment>
       </unit>
@@ -7906,7 +7918,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target>Ada perubahan lokal (di komputer ini) yang tidak dimasukkan dalam ekspor berkas ptf. Ekspor berkas itf juga supaya semua perubahan dimasukkan.</target>
          </segment>
       </unit>
@@ -8764,7 +8776,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target>Atur proyek audio dan bagikan tugas menjadi beberapa bagian yang akan ditugaskan ke para pengetik dan penyunting. Pengetik dan penyunting dapat bekerja dengan koneksi internet. Untuk bekerta tanpa koneksi internet, pengetik dan penyunting dapat mengunduh atau mengimpor proyek audio.</target>
          </segment>
       </unit>
@@ -8782,7 +8794,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target>Proyek audio telah disiapkan secara online. Para pengetik dan penyuntik dapat bekerja dengan koneksi internet, ataupun tanpa koneksi dengan memilih opsi Tersedia Tanpa Koneksi Internet pada menu kartu proyek audio, atau offline dengan cara mengimpornya.</target>
          </segment>
       </unit>
@@ -9040,7 +9052,7 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
             <target>Layanan AI Sedang Berlangsung... Ini adalah layanan jarak jauh yang mungkin memerlukan waktu lama jika rekamannya besar, atau jika ada permintaan lain yang mendahului permintaan Anda.</target>
          </segment>
       </unit>

@@ -11,10 +11,11 @@ import {
   DialogProps,
 } from '@mui/material';
 import UserList from '../control/UserList';
-import { related, allUsersRec } from '../crud';
+import { related } from '../crud';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { shallowEqual, useSelector } from 'react-redux';
 import { userTableSelector } from '../selector';
+import useAllUsers from '../crud/useAllUsers';
 
 const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiPaper-root': {
@@ -34,6 +35,7 @@ export function UserAdd(props: IProps) {
   const [scroll] = React.useState<DialogProps['scroll']>('paper');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
+  const allUsersRec = useAllUsers();
   const t: IUsertableStrings = useSelector(userTableSelector, shallowEqual);
 
   // const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
@@ -53,7 +55,7 @@ export function UserAdd(props: IProps) {
   const isIncluded = (userId: string): boolean => {
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length === 0) return false;
-    const groupId = allUsersRec(memory, organization)?.id;
+    const groupId = allUsersRec(organization)?.id;
     const memberRecs = memory?.cache.query((q) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];

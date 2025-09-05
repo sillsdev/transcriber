@@ -6488,7 +6488,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.refErr">
-            <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <source>This project contains invalid Books or References and will not sync or publish. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -7455,6 +7455,20 @@
          </trans-unit>
          <trans-unit id="scriptureTable.saving">
             <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTable.setupGeneralBook">
+            <source>Go the the Home page and sort the projects to set the book codes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTable.setupScriptureBook">
+            <source>Make a selection in the Book column for each passage without one.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>

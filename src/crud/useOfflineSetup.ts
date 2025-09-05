@@ -13,6 +13,8 @@ import {
   WorkflowStepD,
   ArtifactCategoryD,
   ArtifactTypeD,
+  AltBkSeq,
+  BookSeq,
 } from '../model';
 import {
   RecordTransformBuilder,
@@ -422,9 +424,14 @@ export const useOfflineSetup = () => {
           usfm: 'toc2',
           title: 'altbookname',
           abbrev: 'ALTBK',
-          defaultOrder: -3,
+          defaultOrder: AltBkSeq,
         },
-        { usfm: 'toc1', title: 'bookname', abbrev: 'BOOK', defaultOrder: -4 },
+        {
+          usfm: 'toc1',
+          title: 'bookname',
+          abbrev: 'BOOK',
+          defaultOrder: BookSeq,
+        },
         { usfm: 'fn', title: 'audionote', abbrev: 'NOTE', defaultOrder: 0 },
         {
           usfm: 'c',

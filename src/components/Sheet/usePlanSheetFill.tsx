@@ -620,7 +620,7 @@ export const usePlanSheetFill = ({
         return {
           value: e,
           readOnly: !canEditSheet,
-          className: 'book ' + calcClassName,
+          className: 'book ' + (!e ? 'refErr ' : '') + calcClassName,
           dataEditor: bookEditor,
         };
       if (

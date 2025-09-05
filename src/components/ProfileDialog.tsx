@@ -332,6 +332,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
+  const [roleChanged, setRoleChanged] = useState(false);
   const [readOnly, setReadOnly] = useState(true);
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
@@ -416,6 +417,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
 
   const handleRoleChange = (e: string) => {
     toolChanged(toolId, true);
+    setRoleChanged(true);
     setRole(e);
   };
 
@@ -503,14 +505,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
           }
         });
       setLang(locale);
-      const mbrRec = getMbrRoleRec(
-        'organization',
-        organization,
-        currentUserId
-      ) as OrganizationMembershipD;
-      if (mbrRec) {
-        const curRoleId = related(mbrRec, 'role');
-        if (curRoleId !== role) {
+
+      if (roleChanged && role) {
+        const mbrRec = getMbrRoleRec(
+          'organization',
+          organization,
+          currentUserId
+        ) as OrganizationMembershipD;
+        if (mbrRec) {
           memory.update((t) =>
             UpdateRelatedRecord(t, mbrRec, 'role', 'role', role, user)
           );

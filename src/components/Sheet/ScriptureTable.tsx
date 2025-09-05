@@ -28,6 +28,8 @@ import {
   OrgWorkflowStepD,
   ProjectD,
   SharedResourceD,
+  AltBkSeq,
+  BookSeq,
 } from '../../model';
 import * as actions from '../../store';
 import Memory from '@orbit/memory';
@@ -1597,12 +1599,26 @@ export function ScriptureTable(props: IProps) {
     bookSortJson as [string, string][]
   );
 
+  const updateBook = (seq: number, book: string) => {
+    let idx = sheet.findIndex((s) => s.sectionSeq === seq && !s.deleted);
+    if (idx !== -1) {
+      var newsht = [...sheetRef.current];
+      const parse = sheet[idx]?.reference?.split(' ');
+      const reference = `${parse?.[0]} ${book}`;
+      newsht[idx] = { ...sheet[idx], reference };
+      setSheet(newsht);
+    }
+  };
+
   useEffect(() => {
     if (firstBook && scripture) {
       const bookSrt = getProjectDefault(projDefBook);
       const firstSort = bookSortMap.get(firstBook) ?? '000';
-      if (!bookSrt || bookSrt !== firstSort)
+      if (!bookSrt || bookSrt !== firstSort) {
         setProjectDefault(projDefBook, firstSort);
+        updateBook(AltBkSeq, firstBook);
+        updateBook(BookSeq, firstBook);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstBook, scripture]);
@@ -1652,6 +1668,10 @@ export function ScriptureTable(props: IProps) {
   };
 
   const onPublishing = async (update: boolean) => {
+    if (!firstBook) {
+      showMessage(scripture ? t.setupScriptureBook : t.setupGeneralBook);
+      return;
+    }
     if (update) await doPublish();
     else if (!hidePublishing) togglePublishing(); //turn it off
     //if we're going to show now and we don't already have some rows...ask
@@ -1712,7 +1732,8 @@ export function ScriptureTable(props: IProps) {
     t.chapter.replace('{0}', chapter.toString());
 
   const AddBook = (newsht: ISheet[], passageType: PassageTypeEnum) => {
-    const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
+    const sequencenum =
+      passageType === PassageTypeEnum.BOOK ? BookSeq : AltBkSeq;
     const baseName = scripture
       ? firstBook
         ? bookMap[firstBook]

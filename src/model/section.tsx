@@ -1,6 +1,9 @@
 import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
+export const BookSeq = -4;
+export const AltBkSeq = -3;
+
 export interface Section extends BaseModel {
   attributes: {
     sequencenum: number;

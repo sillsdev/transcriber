@@ -7,7 +7,7 @@ import {
   ArtifactCategoryD,
   Organization,
 } from '../model';
-import { RecordTransformBuilder } from '@orbit/records';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { related } from './related';
@@ -75,11 +75,12 @@ export const useArtifactCategory = (teamId?: string) => {
     return cleanFileName(orgRec?.attributes?.slug + 'cat' + name) ?? '';
   };
 
-  const AddOrgNoteCategories = async (orgId?: string) => {
-    if (offlineOnly) return;
+  const AddOrgNoteCategoryOps = (t: RecordTransformBuilder, orgId?: string) => {
+    if (offlineOnly) return [];
     // Add default note categories
 
-    specialNoteCategories.forEach(async (category) => {
+    const opArray: RecordOperation[] = [];
+    specialNoteCategories.forEach((category) => {
       let noteCategory: ArtifactCategoryD = {
         type: 'artifactcategory',
         attributes: {
@@ -90,17 +91,27 @@ export const useArtifactCategory = (teamId?: string) => {
           note: true,
         },
       } as ArtifactCategoryD;
-      await memory.update((t) => [
-        ...AddRecord(t, noteCategory, user, memory),
-        ...ReplaceRelatedRecord(
-          t,
-          noteCategory,
-          'organization',
-          'organization',
-          orgId ?? curOrg
-        ),
-      ]);
+      opArray.push(
+        ...[
+          ...AddRecord(t, noteCategory, user, memory),
+          ...ReplaceRelatedRecord(
+            t,
+            noteCategory,
+            'organization',
+            'organization',
+            orgId ?? curOrg
+          ),
+        ]
+      );
     });
+    return opArray;
+  };
+
+  const AddOrgNoteCategories = async (orgId?: string) => {
+    if (offlineOnly) return;
+    // Add default note categories
+
+    await memory.update((t) => AddOrgNoteCategoryOps(t, orgId));
   };
   const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
@@ -290,6 +301,6 @@ export const useArtifactCategory = (teamId?: string) => {
     scriptureTypeCategory,
     slugFromId,
     defaultMediaName,
-    AddOrgNoteCategories,
+    AddOrgNoteCategoryOps,
   };
 };

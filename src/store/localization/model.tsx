@@ -1250,6 +1250,8 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "reference": string;
     "saveFirst": string;
     "saving": string;
+    "setupGeneralBook": string;
+    "setupScriptureBook": string;
     "title": string;
 };
 
