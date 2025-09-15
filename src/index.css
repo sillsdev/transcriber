@@ -43,15 +43,25 @@ code {
   box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
   /* Make markers appear wider for better clickability */
   min-width: 20px !important;
-  width: 20px !important;
+  width: 50px !important;
   /* Center the marker on its time position */
   transform: translateX(-50%) !important;
+  z-index: 20 !important;
+  position: relative !important;
+  font-weight: bold !important;
 }
-
+/* this used to work but doesn't now */
 .marker-region:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-  z-index: 10 !important;
+  z-index: 20 !important;
   /* Make hover state even more prominent */
   min-width: 30px !important;
-  width: 30px !important;
+  width: 50px !important;
+  opacity: 0.8 !important;
+  /* Combine translateX(-50%) and scale(1.2) transforms */
+  transform: translateX(-50%) scale(1.5) !important;
+  transition: all 0.2s ease !important;
+  /* Add a background color to make hover more visible */
+  background-color:  rgba(76, 0, 255, 0.3) !important;
+  border: 2px solid rgba(76, 0, 255, 0.3) !important;
 }

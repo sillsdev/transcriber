@@ -19,6 +19,7 @@ import { convertToWav } from '../utils/wav';
 import { useGlobal } from '../context/GlobalContext';
 import { maxZoom } from '../components/WSAudioPlayerZoom';
 import WaveSurfer from 'wavesurfer.js';
+import { NamedRegions } from '../utils';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -31,6 +32,7 @@ export interface IMarker {
 }
 
 export function useWaveSurfer(
+  allowSegment: NamedRegions | undefined,
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
@@ -63,7 +65,6 @@ export function useWaveSurfer(
   const [undoBuffer, setUndoBuffer] = useState<AudioBuffer | undefined>();
   const inputRegionsRef = useRef<IRegions>();
   const regionsLoadedRef = useRef(false);
-  const markersRef = useRef([] as IMarker[]);
 
   const audioContextRef = useRef<AudioContext>();
   const fillpxRef = useRef(0);
@@ -74,21 +75,24 @@ export function useWaveSurfer(
   const positionRef = useRef(-1);
   const [recording, setRecordingx] = useState(false);
   const recordingRef = useRef(false);
-  const plugins = useMemo(() => {
-    const regionsPlugin = RegionsPlugin.create();
-    setRegions(regionsPlugin);
-
-    const zoomPlugin = onZoom
-      ? ZoomPlugin.create({
-          scale: 0.5,
-          maxZoom: maxZoom,
-        })
-      : undefined;
-    if (zoomPlugin)
-      return [Timeline.create({}), zoomPlugin, regionsPlugin].filter(Boolean);
-    return [Timeline.create({}), regionsPlugin].filter(Boolean);
+  const plugins = useMemo(
+    () => {
+      const regionsPlugin = RegionsPlugin.create();
+      setRegions(regionsPlugin);
+      console.log('plugins', allowSegment);
+      const zoomPlugin = onZoom
+        ? ZoomPlugin.create({
+            scale: 0.5,
+            maxZoom: maxZoom,
+          })
+        : undefined;
+      if (zoomPlugin)
+        return [Timeline.create({}), zoomPlugin, regionsPlugin].filter(Boolean);
+      return [Timeline.create({}), regionsPlugin].filter(Boolean);
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    []
+  );
 
   //put these all in refs to be used in functions
   const { wavesurfer, isPlaying, currentTime, isReady } = useWavesurfer({
@@ -101,10 +105,6 @@ export function useWaveSurfer(
     plugins: plugins,
     fillParent: true, // This ensures the waveform fills the container
   });
-
-  useEffect(() => {
-    wavesurferRef.current = wavesurfer;
-  }, [wavesurfer]);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;
@@ -124,11 +124,6 @@ export function useWaveSurfer(
     setProgress(currentTime);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime]);
-
-  const onRegionPlayStatus = (value: boolean) => {
-    playingRef.current = value;
-    if (onPlayStatus) onPlayStatus(playingRef.current);
-  };
 
   const wsDuration = () => durationRef.current || 0;
   const wsFillPx = () => fillpxRef.current;
@@ -166,17 +161,16 @@ export function useWaveSurfer(
   const setPlaying = (value: boolean) => setPlayingx(value, singleRegionOnly);
 
   const {
+    setupRegions,
     wsAutoSegment,
-    wsSplitRegion,
+    wsAddRegion,
     wsRemoveSplitRegion,
-    wsAddOrRemoveRegion,
     wsPrevRegion,
     wsNextRegion,
     loadRegions,
     clearRegions,
     wsGetRegions,
-    wsAddMarker,
-    wsClearMarkers,
+    wsAddMarkers,
     wsPlayRegion,
     wsLoopRegion,
     justPlayRegion,
@@ -185,6 +179,7 @@ export function useWaveSurfer(
     onRegionProgress,
     onRegionGoTo,
     currentRegion,
+    wsSetRegionColor,
   } = useWaveSurferRegions(
     singleRegionOnly,
     currentSegmentIndex ?? -1,
@@ -231,9 +226,6 @@ export function useWaveSurfer(
     }
   };
 
-  //TODO...is there a way to know if destroyed?
-  //const wavesurfer = () => wavesurferRef.current;
-  //wavesurferRef.current?.isDestroyed ? undefined : wavesurferRef.current;
   const audioContext = () => {
     audioContextRef.current =
       audioContextRef.current ?? new window.AudioContext();
@@ -256,6 +248,7 @@ export function useWaveSurfer(
   };
   useEffect(() => {
     const handleReady = () => {
+      isReadyRef.current = true;
       console.log(
         'handleReady getDuration',
         wavesurferRef.current?.getDuration(),
@@ -267,6 +260,12 @@ export function useWaveSurfer(
       //recording also sends ready
       if (loadRequests.current > 0) loadRequests.current--;
       if (!loadRequests.current) {
+        setDuration(wavesurferRef.current?.getDuration() || 0);
+        console.log(
+          'handleReady regionsLoaded?',
+          regionsLoadedRef.current,
+          inputRegionsRef.current
+        );
         if (!regionsLoadedRef.current) {
           //we need to call this even if undefined to setup regions variables
           regionsLoadedRef.current = loadRegions(
@@ -284,14 +283,21 @@ export function useWaveSurfer(
         wsLoad();
       }
     };
-    console.log('wavesurfer useEffect');
+    console.log('wavesurfer useEffect', allowSegment, Boolean(wavesurfer));
+    wavesurferRef.current = wavesurfer;
     regionsLoadedRef.current = false;
     if (wavesurfer) {
+      //the regions useEffect isn't called when the wavesurfer is recreated so call it explicitly
+      setupRegions(wavesurfer);
       //setWaveSurfer(wavesurfer);
       wavesurfer.on('ready', handleReady);
-      //wavesurferRef.current.on('destroy', function () {
-      //  wavesurferRef.current = undefined;
-      //});
+      wavesurfer.on('destroy', function () {
+        //this is received way more times than expected
+        console.log('wavesurfer destroy', allowSegment);
+        wavesurferRef.current = null;
+        //prevent region-removed messages from the destroy
+        Regions?.unAll();
+      });
 
       /* if dragging this never comes and we don't need it otherwise
       wavesurferRef.current.on('click', function (relativeX: number) {
@@ -327,10 +333,8 @@ export function useWaveSurfer(
       });
       */
       wavesurfer.on('dblclick', (relativeX: number, relativeY: number) => {
-        // relativeX and relativeY represent the coordinates of the double-click
-        // You can use these to determine where on the waveform the double-click occurred
         if (!singleRegionOnly) {
-          wsAddOrRemoveRegion();
+          wsAddRegion();
         }
       });
 
@@ -396,6 +400,7 @@ export function useWaveSurfer(
     clearRegions();
     wsGoto(0);
     loadBlob();
+    console.log('wsClear done');
     setDuration(0);
     onReady();
   };
@@ -429,6 +434,7 @@ export function useWaveSurfer(
       setPlayerUrl('');
       blobAudioRef.current = undefined;
       blobRef.current = undefined;
+      console.log('loadBlob no blob');
       setDuration(0);
       return;
     }
@@ -450,6 +456,7 @@ export function useWaveSurfer(
     );
   };
   const wsLoad = (blob?: Blob, regions: string = '') => {
+    console.log('wsLoad', blob);
     setDuration(0);
     if (regions) inputRegionsRef.current = parseRegions(regions);
     regionsLoadedRef.current = false;
@@ -480,6 +487,7 @@ export function useWaveSurfer(
       loadRegions(parseRegions(regions), loop);
       regionsLoadedRef.current = true;
     } else {
+      console.log('wsLoadRegions not ready -- store the regions', regions);
       inputRegionsRef.current = parseRegions(regions);
       regionsLoadedRef.current = false;
     }
@@ -715,9 +723,10 @@ export function useWaveSurfer(
       if (isPlayingRef.current) return '#44ff44';
       return '#A8DBA8';
     };
-    wavesurferRef.current?.setOptions({
-      waveColor: getWaveColor(),
-    });
+    if (wavesurfer)
+      wavesurfer.setOptions({
+        waveColor: getWaveColor(),
+      });
   }, [recording, isPlaying, wavesurfer]);
 
   const setRecording = (value: boolean) => {
@@ -743,17 +752,6 @@ export function useWaveSurfer(
     clearRegions();
     setUndoBuffer(undefined);
     onCanUndo(false);
-  };
-  const wsAddMarkers = (markers: IMarker[]) => {
-    console.log('wsAddMarkers', markers);
-    markersRef.current = markers;
-    if (isReadyRef.current) {
-      wsClearMarkers();
-
-      markers.forEach((m, i) => {
-        wsAddMarker(m, i);
-      });
-    }
   };
 
   //delete the audio in the current region
@@ -919,11 +917,11 @@ export function useWaveSurfer(
     wsAutoSegment,
     wsPrevRegion,
     wsNextRegion,
-    wsSplitRegion,
-    wsAddOrRemoveRegion,
+    wsAddRegion,
     wsRemoveSplitRegion,
     wsStartRecord,
     wsStopRecord,
     wsAddMarkers,
+    wsSetRegionColor,
   };
 }

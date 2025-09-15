@@ -228,7 +228,7 @@ function WSAudioPlayer(props: IProps) {
   const [progress, setProgress] = useState(0);
   const durationRef = useRef(0);
   const initialPosRef = useRef(initialposition);
-  const segmentsRef = useRef(segments);
+  const segmentsRef = useRef('{}'); //do not set to segments
   const markersRef = useRef<IMarker[]>([]);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
@@ -277,7 +277,6 @@ function WSAudioPlayer(props: IProps) {
 
   const myOnCurrentSegment = useMemo(
     () => (currentSegment: IRegion | undefined) => {
-      console.log('myOnCurrentSegment', currentSegment);
       //
       //if (singleRegionOnly && currentSegment) {
       //console.log('singleRegionOnly');
@@ -319,12 +318,13 @@ function WSAudioPlayer(props: IProps) {
     wsPrevRegion,
     wsNextRegion,
     wsRemoveSplitRegion,
-    wsAddOrRemoveRegion,
+    wsAddRegion,
     wsSetHeight,
     wsStartRecord,
     wsStopRecord,
     wsAddMarkers,
   } = useWaveSurfer(
+    allowSegment,
     waveformRef,
     onWSReady,
     onWSProgress,
@@ -398,7 +398,6 @@ function WSAudioPlayer(props: IProps) {
     return false;
   };
   const handleRecorder = () => {
-    console.log('handleRecorder');
     if (
       !allowRecord ||
       playingRef.current ||
@@ -570,7 +569,6 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     if (ready && duration > 0 && markers && markers !== markersRef.current) {
-      console.log('useEffect markers', markers, markersRef.current);
       markersRef.current = markers;
       wsAddMarkers(markers);
     }
@@ -585,7 +583,7 @@ function WSAudioPlayer(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segments, looping]);
+  }, [segments, ready]);
 
   const loadRegions = () => {
     wsLoadRegions(segmentsRef.current, loopingRef.current);
@@ -715,19 +713,18 @@ function WSAudioPlayer(props: IProps) {
     setDuration(wsDuration());
     console.log('onWSReady', durationRef.current);
     if (!recordingRef.current) setPxPerSec(wsFillPx());
-
-    if (segmentsRef.current?.length > 2) loadRegions();
+    if (segmentsRef.current) loadRegions();
 
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
     initialPosRef.current = undefined;
   }
+
   function onWSProgress(progress: number) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
   function onWSRegion(count: number, newRegion: boolean) {
-    console.log('onWSRegion', count, newRegion);
     setHasRegion(count);
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
@@ -764,7 +761,6 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const handleChanged = async () => {
-    console.log('handleChanged', durationRef.current);
     setChanged && setChanged(durationRef.current !== 0);
     setBlobReady && setBlobReady(false);
     wsBlob().then((newblob) => {
@@ -1220,7 +1216,7 @@ function WSAudioPlayer(props: IProps) {
                   canSetDefault={canSetDefaultParams}
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
-                  wsAddOrRemoveRegion={wsAddOrRemoveRegion}
+                  wsAddRegion={wsAddRegion}
                   wsClearRegions={handleClearRegions}
                   setBusy={setBusy}
                 />

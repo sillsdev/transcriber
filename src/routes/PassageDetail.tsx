@@ -134,7 +134,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     const newWidth = Math.max(window.innerWidth, minWidthRef.current);
     setWidth(newWidth);
     setHeight(window.innerHeight);
-    console.log('setDimensions height', window.innerHeight);
+
     let newDiscWidth = discussionSizeRef.current.width;
     if (newDiscWidth > newWidth - minWidthRef.current + 450) newDiscWidth = 450;
     const newDiscHeight = window.innerHeight - 275;
@@ -280,6 +280,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                           <PassageDetailPlayer
                             width={paneWidth}
                             chooserReduce={chooserSize}
+                            allowSegment={undefined}
                           />
                         )}
                       </Pane>

@@ -10,7 +10,7 @@ import RemoveOneIcon from '@mui/icons-material/Clear';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ClearIcon from '@mui/icons-material/Delete';
 import { HotKeyContext } from '../context/HotKeyContext';
-import PlusMinusLogo from '../control/PlusMinus';
+import AddIcon from '@mui/icons-material/Add';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
 import { useSelector } from 'react-redux';
 import WSSegmentParameters from './WSSegmentParameters';
@@ -30,7 +30,7 @@ interface IProps {
   onParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
   wsAutoSegment?: (loop: boolean | undefined, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
-  wsAddOrRemoveRegion: () => IRegionChange | undefined;
+  wsAddRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
   setBusy?: (value: boolean) => void;
 }
@@ -47,7 +47,7 @@ function WSAudioPlayerSegment(props: IProps) {
     onParamChange,
     wsAutoSegment,
     wsRemoveSplitRegion,
-    wsAddOrRemoveRegion,
+    wsAddRegion,
     wsClearRegions,
     setBusy,
   } = props;
@@ -113,7 +113,7 @@ function WSAudioPlayerSegment(props: IProps) {
   const handleSplit = () => {
     if (!readyRef.current) return false;
     if (setBusy) setBusy(true);
-    var result = wsAddOrRemoveRegion();
+    var result = wsAddRegion();
     if (result && onSplit) onSplit(result);
     if (setBusy) setBusy(false);
     return true;
@@ -140,6 +140,7 @@ function WSAudioPlayerSegment(props: IProps) {
     setSegParams(params);
     onParamChange && onParamChange(params, teamDefault);
   };
+
   return (
     <GrowingDiv>
       <ToolbarGrid container>
@@ -190,8 +191,12 @@ function WSAudioPlayerSegment(props: IProps) {
             title={t.splitSegment.replace('{0}', localizeHotKey(ADDREMSEG_KEY))}
           >
             <span>
-              <IconButton id="wsSplit" onClick={handleSplit}>
-                <PlusMinusLogo disabled={!ready || busyRef.current} />
+              <IconButton
+                id="wsSplit"
+                onClick={handleSplit}
+                disabled={!ready || busyRef.current}
+              >
+                <AddIcon />
               </IconButton>
             </span>
           </LightTooltip>
@@ -203,7 +208,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <IconButton
                 id="wsJoin"
                 onClick={handleRemoveNextSplit}
-                disabled={!ready || busyRef.current}
+                disabled={!ready || busyRef.current || currentNumRegions === 0}
               >
                 <RemoveOneIcon />
               </IconButton>
@@ -214,7 +219,7 @@ function WSAudioPlayerSegment(props: IProps) {
               <IconButton
                 id="wsSegmentClear"
                 onClick={handleClearSegments}
-                disabled={!ready || busyRef.current}
+                disabled={!ready || busyRef.current || currentNumRegions === 0}
               >
                 <ClearIcon fontSize="small" />
               </IconButton>
