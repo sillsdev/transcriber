@@ -404,7 +404,6 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
-        width={width}
         height={playerSize - (chooserReduce ?? 0)}
         blob={audioBlob}
         initialposition={initialposition}

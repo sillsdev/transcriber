@@ -104,7 +104,6 @@ interface IProps {
   allowDeltaVoice?: boolean;
   alternatePlayer?: boolean;
   oneTryOnly?: boolean;
-  width: number;
   height: number;
   segments: string;
   verses?: string;

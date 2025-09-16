@@ -344,19 +344,8 @@ export function DiscussionList() {
           time: r?.start || 0,
           color: theme.palette.secondary.light,
           label: `${r?.start}`, //`${r?.start}-${r?.end}`,
-          //position: (i % 2 === 0 ? 'top' : 'bottom') as 'top' | 'bottom',
         };
       });
-    /*
-      .map((d) => DiscussionRegion(d)?.start || 0)
-      .filter(onlyUnique)
-      .map((t) => {
-        return {
-          time: t,
-          color: theme.palette.secondary.light,
-        };
-      });
-      */
     setDiscussionMarkers(markers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayDiscussions, mediafileId, adding]);

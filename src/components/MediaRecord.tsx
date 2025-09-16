@@ -484,7 +484,6 @@ function MediaRecord(props: IProps) {
         allowZoom={true}
         allowDeltaVoice={allowDeltaVoice}
         oneTryOnly={oneTryOnly}
-        width={500} //TODO
         height={size || 300}
         blob={originalBlob}
         onBlobReady={onBlobReady}
