@@ -711,7 +711,6 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    console.log('onWSReady', durationRef.current);
     if (!recordingRef.current) setPxPerSec(wsFillPx());
     if (segmentsRef.current) loadRegions();
 
