@@ -697,12 +697,6 @@ function WSAudioPlayer(props: IProps) {
       if (insertingRef.current) recordOverwritePosition.current = newPos;
       /* it's not actually loaded yet
       setDuration(wsDuration());
-      console.log(
-        'onRecordDataAvailable',
-        newPos,
-        'duration',
-        durationRef.current
-      );
       wsGoto(newPos || wsDuration());*/
     }
   }
@@ -957,7 +951,7 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [voice]
   );
-  /* box -> or is width just wrong? sx={{ width: width }}>*/
+
   return (
     <Box>
       <Paper sx={{ p: 1, mb: 1 }}>
