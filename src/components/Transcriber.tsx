@@ -877,7 +877,6 @@ export function Transcriber(props: IProps) {
     segments: string | undefined,
     thiscomment: string | undefined
   ) => {
-    console.log('save', segments);
     if (transcriptionRef.current && mediaRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;

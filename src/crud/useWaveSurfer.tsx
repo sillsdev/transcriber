@@ -28,7 +28,6 @@ export interface IMarker {
   time: number;
   label?: string;
   color?: string;
-  //position?: 'top' | 'bottom';
 }
 
 export function useWaveSurfer(
@@ -50,7 +49,6 @@ export function useWaveSurfer(
   onStartRegion?: (start: number) => void,
   verses?: string
 ) {
-  //const isMounted = useMounted('wavesurfer');
   const [errorReporter] = useGlobal('errorReporter');
   const progressRef = useRef(0);
   const [Regions, setRegions] = useState<RegionsPlugin>();
@@ -136,7 +134,6 @@ export function useWaveSurfer(
     var duration = wsDuration();
     if (position > duration) position = duration;
     onRegionGoTo(position);
-    //if (duration) position = position / duration;
     if (position === duration && isPlayingRef.current) {
       //if playing, position messages come in after this one that set it back to previously playing position.  Turn this off first in hopes that all messages are done before we set the position...
       wavesurferRef.current?.pause();
@@ -151,8 +148,6 @@ export function useWaveSurfer(
     }
     if (progress() !== position) {
       wavesurferRef.current?.setTime(position); //seekAndCenter not avail?
-      //force a redraw
-      //wavesurferRef.current?.setOptions({});
     }
   };
 
@@ -231,7 +226,6 @@ export function useWaveSurfer(
   };
 
   const setupZoom = () => {
-    // set up zoom
     if (durationRef.current > 0 && !recordingRef.current) {
       const containerWidth = container.current?.clientWidth || 0; // Get the width of the waveform container in pixels.
       // Calculate the actual pixels per second
@@ -241,7 +235,6 @@ export function useWaveSurfer(
       onZoom && onZoom(fillpxRef.current);
     } else {
       onZoom && onZoom(maxZoom);
-      // Set data attribute to 0 when no audio
     }
   };
   useEffect(() => {
@@ -274,7 +267,6 @@ export function useWaveSurfer(
     if (wavesurfer) {
       //the regions useEffect isn't called when the wavesurfer is recreated so call it explicitly
       setupRegions(wavesurfer);
-      //setWaveSurfer(wavesurfer);
       wavesurfer.on('ready', handleReady);
       wavesurfer.on('destroy', function () {
         //this is received way more times than expected
@@ -389,7 +381,6 @@ export function useWaveSurfer(
   }, 10);
 
   const loadBlob = async (blob?: Blob, position: number = 0) => {
-    // setIsReady(false);
     positionRef.current = position;
     if (!blob) {
       setPlayerUrl('');
@@ -453,31 +444,6 @@ export function useWaveSurfer(
   };
   const wsBlob = async () => {
     return blobRef.current;
-    /*
-        //var backend = wavesurfer?.backend as any;
-    //var originalBuffer = backend?.buffer;
-    const originalBuffer = wavesurfer?.getDecodedData();
-    if (originalBuffer) {
-      var channels = originalBuffer.numberOfChannels;
-      var data_left = originalBuffer.getChannelData(0);
-      var data_right = null;
-      if (channels === 2) {
-        data_right = originalBuffer.getChannelData(1);
-        if (!data_left && data_right) {
-          data_left = data_right;
-          data_right = null;
-          channels = 1;
-        }
-      }
-      var wavblob = await convertToWav(data_left, data_right, {
-        isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
-        numChannels: channels,
-        sampleRate: originalBuffer.sampleRate,
-      });
-      return wavblob;
-    }
-    return undefined;
-    */
   };
 
   const wsRegionBlob = async () => {
@@ -488,11 +454,8 @@ export function useWaveSurfer(
     var len = end - start;
     if (!len) return wsBlob();
 
-    //var backend = wavesurfer?.backend as any;
-    //var originalBuffer = backend.buffer;
     const originalBuffer = blobAudioRef.current;
     if (!originalBuffer) return wsBlob();
-    // Get the original audio buffer
 
     // Calculate the number of frames for the region
     const startFrame = Math.floor(start * originalBuffer.sampleRate);
@@ -542,7 +505,7 @@ export function useWaveSurfer(
 
   const wsSetHeight = (height: number) =>
     wavesurferRef.current?.setOptions({
-      height: height, // Sets the waveform height to 300 pixels
+      height: height, // Sets the waveform height
     });
 
   const trimTo = (val: number, places: number) => {
@@ -564,8 +527,6 @@ export function useWaveSurfer(
   }
   const copyOriginal = () => {
     if (!wavesurferRef.current) return undefined;
-    //var backend = wavesurfer?.backend as any;
-    //var originalBuffer = backend?.buffer;
     const originalBuffer = blobAudioRef.current;
     if (originalBuffer && originalBuffer.length > 1) {
       var len = originalBuffer.length;
@@ -761,15 +722,10 @@ export function useWaveSurfer(
       return blob;
     }
 
-    //var backend = wavesurfer?.backend as any;
-    //const audioContext = backend.ac;
-
-    //var originalBuffer = backend.buffer;
     const originalBuffer = blobAudioRef.current;
     if (!originalBuffer) return await wsBlob();
 
     // Load the new Blob and replace the region
-    //const arrayBuffer = await readFileAsArrayBuffer(blob);
     const newBuffer = await decodeAudioData(
       audioContext(),
       await blob.arrayBuffer()

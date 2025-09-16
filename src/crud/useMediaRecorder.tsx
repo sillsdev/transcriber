@@ -145,9 +145,7 @@ export function useMediaRecorder(
   function startRecording(timeSlice?: number) {
     var recorder = mediaRecorderRef.current || startRecorder();
     setPlayerUrl('');
-
     mediaChunks.current = [];
-    console.log('startRecording', mediaChunks.current.length);
     if (recorder) {
       recorder.start(timeSlice);
       onStart();
