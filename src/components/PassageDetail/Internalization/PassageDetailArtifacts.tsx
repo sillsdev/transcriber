@@ -964,6 +964,7 @@ export function PassageDetailArtifacts() {
       >
         {projResWizVisible ? (
           <ProjectResourceConfigure
+            width={800}
             media={projMediaRef.current}
             items={projIdentRef.current}
             onOpen={handleProjResWizVisible}

@@ -481,11 +481,10 @@ function MediaRecord(props: IProps) {
         )}
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
-        allowSilence={allowWave}
         allowZoom={true}
         allowDeltaVoice={allowDeltaVoice}
         oneTryOnly={oneTryOnly}
-        size={size || 300}
+        height={size || 300}
         blob={originalBlob}
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}

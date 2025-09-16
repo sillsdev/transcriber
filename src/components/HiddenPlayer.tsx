@@ -73,7 +73,7 @@ export function HiddenPlayer(props: HiddenPlayerProps) {
       <WSAudioPlayer
         id="hiddenPlayer"
         allowRecord={false}
-        size={150}
+        height={150}
         blob={audioBlob}
         initialposition={initialposition}
         setInitialPosition={setInitialPosition}

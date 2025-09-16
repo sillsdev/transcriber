@@ -24,13 +24,7 @@ import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
 import NormalizeIcon from '../control/NormalizeIcon';
 import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
-import {
-  FaHandScissors,
-  FaAngleDoubleUp,
-  FaAngleDoubleDown,
-  FaDotCircle,
-  FaStopCircle,
-} from 'react-icons/fa';
+import { FaHandScissors, FaDotCircle, FaStopCircle } from 'react-icons/fa';
 import type { IconBaseProps } from 'react-icons/lib';
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
@@ -38,10 +32,9 @@ import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration } from '../control/Duration';
 import { GrowingSpacer } from '../control/GrowingSpacer';
 import { LightTooltip } from '../control/LightTooltip';
-import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
-import WSAudioPlayerZoom from './WSAudioPlayerZoom';
+import WSAudioPlayerZoom, { maxZoom } from './WSAudioPlayerZoom';
 import {
   dataPath,
   logError,
@@ -61,7 +54,6 @@ import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils/namedSegments';
 import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
 import { AltButton } from '../control';
 import { AudioAiFunc, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
@@ -80,11 +72,10 @@ import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
 import SelectVoice from '../business/voice/SelectVoice';
 import { isElectron } from '../api-variable';
+import WSAudioPlayerRate from './WSAudioPlayerRate';
 const ipc = (window as any)?.electron;
 
 const HandScissors = FaHandScissors as unknown as React.FC<IconBaseProps>;
-const AngleDoubleUp = FaAngleDoubleUp as unknown as React.FC<IconBaseProps>;
-const AngleDoubleDown = FaAngleDoubleDown as unknown as React.FC<IconBaseProps>;
 const DotCircle = FaDotCircle as unknown as React.FC<IconBaseProps>;
 const StopCircle = FaStopCircle as unknown as React.FC<IconBaseProps>;
 
@@ -110,11 +101,10 @@ interface IProps {
   allowSegment?: NamedRegions | undefined;
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
-  allowSilence?: boolean;
   allowDeltaVoice?: boolean;
   alternatePlayer?: boolean;
   oneTryOnly?: boolean;
-  size: number;
+  height: number;
   segments: string;
   verses?: string;
   currentSegmentIndex?: number;
@@ -149,21 +139,13 @@ interface IProps {
   reload?: (blob: Blob) => void;
   noNewVoice?: boolean;
 }
-function valuetext(value: number) {
-  return `${Math.floor(value)}%`;
-}
 
-const SPEED_STEP = 0.1;
-const MIN_SPEED = 0.5;
-const MAX_SPEED = 1.5;
 const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
 const ALT_PLAY_PAUSE_KEY = 'ALT+F1,ALT+CTRL+SPACE';
 const HOME_KEY = 'CTRL+HOME';
 const BACK_KEY = 'F2,CTRL+SHIFT+<';
 const AHEAD_KEY = 'F3,CTRL+SHIFT+>';
 const END_KEY = 'CTRL+END';
-const SLOWER_KEY = 'F4,CTRL+4';
-const FASTER_KEY = 'F5,CTRL+5';
 const TIMER_KEY = 'F6,CTRL+6';
 const RECORD_KEY = 'F9,CTRL+9';
 const LEFT_KEY = 'CTRL+ARROWLEFT';
@@ -179,10 +161,9 @@ function WSAudioPlayer(props: IProps) {
     allowSegment,
     allowAutoSegment,
     allowSpeed,
-    allowSilence,
     allowDeltaVoice,
     oneTryOnly,
-    size,
+    height,
     segments,
     verses,
     currentSegmentIndex,
@@ -217,8 +198,7 @@ function WSAudioPlayer(props: IProps) {
     reload,
     noNewVoice,
   } = props;
-  const waveformRef = useRef<any>();
-  const timelineRef = useRef<any>();
+  const waveformRef = useRef<HTMLDivElement | null>(null);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [org] = useGlobal('organization');
   const [features, setFeatures] = useState<IFeatures>();
@@ -247,7 +227,7 @@ function WSAudioPlayer(props: IProps) {
   const [progress, setProgress] = useState(0);
   const durationRef = useRef(0);
   const initialPosRef = useRef(initialposition);
-  const segmentsRef = useRef(segments);
+  const segmentsRef = useRef('{}'); //do not set to segments
   const markersRef = useRef<IMarker[]>([]);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
@@ -271,6 +251,45 @@ function WSAudioPlayer(props: IProps) {
   const checkOnline = useCheckOnline(t.reduceNoise);
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
+  const [pxPerSec, setPxPerSecx] = useState(maxZoom);
+  const pxPerSecRef = useRef(maxZoom);
+  const insertingRef = useRef(false);
+  const currentSegmentRef = useRef<IRegion | undefined>(undefined);
+
+  const setPxPerSec = (px: number) => {
+    if (recordingRef.current) return;
+    pxPerSecRef.current = px;
+    setPxPerSecx(px);
+  };
+
+  const onZoom = allowZoom
+    ? (px: number) => {
+        px = Math.round(px * 10) / 10;
+        if (px !== pxPerSecRef.current) {
+          setPxPerSec(px);
+        }
+      }
+    : undefined;
+  const singleRegionOnly = useMemo(() => {
+    return allowRecord || !allowSegment;
+  }, [allowRecord, allowSegment]);
+
+  const myOnCurrentSegment = useMemo(
+    () => (currentSegment: IRegion | undefined) => {
+      //
+      //if (singleRegionOnly && currentSegment) {
+      //console.log('singleRegionOnly');
+      //play it??
+      //wsPlayRegion(currentSegment);
+      //onPlayStatus && onPlayStatus(true);
+      //}
+      currentSegmentRef.current = currentSegment;
+      onCurrentSegment && onCurrentSegment(currentSegment);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [] //singleRegionOnly]
+  );
+
   const {
     wsLoad,
     wsClear,
@@ -284,7 +303,6 @@ function WSAudioPlayer(props: IProps) {
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
-    wsIsReady,
     wsLoadRegions,
     wsClearRegions,
     wsGetRegions,
@@ -293,36 +311,37 @@ function WSAudioPlayer(props: IProps) {
     wsRegionReplace,
     wsUndo,
     wsInsertAudio,
-    wsInsertSilence,
+    wsFillPx,
     wsZoom,
-    wsPctWidth,
     wsAutoSegment,
     wsPrevRegion,
     wsNextRegion,
     wsRemoveSplitRegion,
-    wsAddOrRemoveRegion,
+    wsAddRegion,
     wsSetHeight,
     wsStartRecord,
     wsStopRecord,
     wsAddMarkers,
   } = useWaveSurfer(
-    waveformRef.current,
+    allowSegment,
+    waveformRef,
     onWSReady,
     onWSProgress,
     onWSRegion,
     onWSCanUndo,
     onWSPlayStatus,
     onInteraction,
+    onZoom,
     onMarkerClick,
     () => {}, //on error...probably should report?
-    allowZoom ? size - 120 : size - 106,
-    allowRecord,
-    timelineRef.current,
+    height - 120,
+    singleRegionOnly,
     currentSegmentIndex,
-    onCurrentSegment,
+    myOnCurrentSegment,
     onStartRegion,
     verses
   );
+
   //because we have to call hooks consistently, call this even if we aren't going to record
   const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(
     allowRecord,
@@ -331,22 +350,11 @@ function WSAudioPlayer(props: IProps) {
     onRecordError,
     onRecordDataAvailable
   );
-
   const setProcessingRecording = (value: boolean) => {
     setProcessingRecordingx(value);
     processRecordRef.current = value;
   };
   //#region hotkey handlers
-  const handleFaster = () => {
-    if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
-    setPlaybackRate(Math.min(MAX_SPEED, playbackRef.current + SPEED_STEP));
-    return true;
-  };
-  const handleSlower = () => {
-    if (playbackRef.current === MIN_SPEED || recordingRef.current) return false;
-    setPlaybackRate(Math.max(MIN_SPEED, playbackRef.current - SPEED_STEP));
-    return true;
-  };
   const handleJumpForward = () => {
     return handleJumpFn(jump);
   };
@@ -397,17 +405,23 @@ function WSAudioPlayer(props: IProps) {
     )
       return false;
     if (!recordingRef.current) {
+      setPxPerSec(100);
       setBlobReady && setBlobReady(false);
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
-      recordOverwritePosition.current = recordStartPosition.current;
       wsStartRecord();
       setRecording(startRecording(500));
+
+      insertingRef.current = durationRef.current > 0;
+      recordOverwritePosition.current = insertingRef.current
+        ? recordStartPosition.current
+        : undefined;
     } else {
       setProcessingRecording(true);
       stopRecording();
       wsStopRecord();
       setRecording(false);
+      //TODO will this be after the wsready? if yes then do this...setPxPerSec(wsFillPx())
       if (oneTryOnly) setOneShotUsed(true);
     }
     return true;
@@ -466,10 +480,6 @@ function WSAudioPlayer(props: IProps) {
       },
     },
   ];
-  const speedKeys = [
-    { key: FASTER_KEY, cb: handleFaster },
-    { key: SLOWER_KEY, cb: handleSlower },
-  ];
 
   const recordKeys = [{ key: RECORD_KEY, cb: handleRecorder }];
 
@@ -477,6 +487,9 @@ function WSAudioPlayer(props: IProps) {
     { key: LEFT_KEY, cb: handlePrevRegion },
     { key: RIGHT_KEY, cb: handleNextRegion },
   ];
+  const handleRefresh = () => {
+    setVoice(getOrgDefault(orgDefaultVoices)?.fullName);
+  };
 
   useEffect(() => {
     return () => {
@@ -485,10 +498,10 @@ function WSAudioPlayer(props: IProps) {
       simplePlayerKeys.forEach((k) => unsubscribe(k.key));
       recordKeys.forEach((k) => unsubscribe(k.key));
       segmentKeys.forEach((k) => unsubscribe(k.key));
-      speedKeys.forEach((k) => unsubscribe(k.key));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     if (justPlayButton) simplePlayerKeys.forEach((k) => subscribe(k.key, k.cb));
     else playerKeys.forEach((k) => subscribe(k.key, k.cb));
@@ -503,13 +516,7 @@ function WSAudioPlayer(props: IProps) {
     if (allowSegment) segmentKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSegment]);
-  useEffect(() => {
-    if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSpeed]);
-  const handleRefresh = () => {
-    setVoice(getOrgDefault(orgDefaultVoices)?.fullName);
-  };
+
   useEffect(() => {
     if (org) {
       setFeatures(getOrgDefault(orgDefaultFeatures));
@@ -534,6 +541,7 @@ function WSAudioPlayer(props: IProps) {
       handleRecorder();
     }, 1000 * 0.5);
   };
+
   useEffect(() => {
     if (autoStart) {
       launchTimer();
@@ -545,25 +553,26 @@ function WSAudioPlayer(props: IProps) {
   }, [autoStart]);
 
   useEffect(() => {
-    wsSetHeight(waitingForAI ? 0 : allowZoom ? size - 120 : size - 106); //does this need to be smarter?
-  }, [size, wsSetHeight, allowZoom, waitingForAI]);
+    wsSetHeight(waitingForAI ? 0 : height - 120); //does this need to be smarter?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height, waitingForAI]);
 
   useEffect(() => {
     if (initialposition !== undefined) {
-      if (wsIsReady()) wsGoto(initialposition);
+      if (ready) wsGoto(initialposition);
       else initialPosRef.current = initialposition;
       setInitialPosition && setInitialPosition(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialposition]);
+  }, [initialposition, ready]);
 
   useEffect(() => {
-    if (ready && markers && markers !== markersRef.current) {
+    if (ready && duration > 0 && markers && markers !== markersRef.current) {
       markersRef.current = markers;
       wsAddMarkers(markers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [markers, ready]);
+  }, [markers, duration, ready]);
 
   useEffect(() => {
     if (segments !== segmentsRef.current) {
@@ -573,7 +582,7 @@ function WSAudioPlayer(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segments, looping]);
+  }, [segments, ready]);
 
   const loadRegions = () => {
     wsLoadRegions(segmentsRef.current, loopingRef.current);
@@ -628,9 +637,12 @@ function WSAudioPlayer(props: IProps) {
   const handlePlayStatus = (play: boolean) => {
     if (durationRef.current === 0 || recordingRef.current) return false;
     var nowplaying = play;
-    if (play && regionOnly) {
-      wsPlayRegion();
+
+    if (play && regionOnly && currentSegmentRef.current) {
+      wsPlayRegion(currentSegmentRef.current);
+      nowplaying = true;
     } else nowplaying = wsTogglePlay();
+
     if (
       nowplaying &&
       wsPosition().toFixed(2) === durationRef.current.toFixed(2)
@@ -647,13 +659,15 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, request, duration]);
 
-  function onRecordStart() {}
+  function onRecordStart() {
+    setPxPerSec(100);
+  }
 
   async function onRecordStop(blob: Blob) {
     await wsInsertAudio(
       blob,
       recordStartPosition.current,
-      recordOverwritePosition.current || recordStartPosition.current
+      recordOverwritePosition.current
     );
     recordOverwritePosition.current = undefined;
     setProcessingRecording(false);
@@ -673,25 +687,31 @@ function WSAudioPlayer(props: IProps) {
   }
 
   async function onRecordDataAvailable(e: any, blob: Blob) {
-    var newPos = await wsInsertAudio(
-      blob,
-      recordStartPosition.current,
-      recordOverwritePosition.current || recordStartPosition.current,
-      e?.type
-    );
-    recordOverwritePosition.current = newPos;
-    setDuration(wsDuration());
-    wsGoto(newPos || wsDuration());
+    if (blob.size > 0) {
+      var newPos = await wsInsertAudio(
+        blob,
+        recordStartPosition.current,
+        recordOverwritePosition.current,
+        e?.type
+      );
+      if (insertingRef.current) recordOverwritePosition.current = newPos;
+      /* it's not actually loaded yet
+      setDuration(wsDuration());
+      wsGoto(newPos || wsDuration());*/
+    }
   }
+
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 2) loadRegions();
+    if (!recordingRef.current) setPxPerSec(wsFillPx());
+    if (segmentsRef.current) loadRegions();
 
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
     initialPosRef.current = undefined;
   }
+
   function onWSProgress(progress: number) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
@@ -707,11 +727,6 @@ function WSAudioPlayer(props: IProps) {
     setPlaying(status);
     if (onPlayStatus) onPlayStatus(status);
   }
-
-  const handleSliderChange = (event: Event, value: number | number[]) => {
-    if (Array.isArray(value)) value = value[0]; //won't be
-    setPlaybackRate(value / 100);
-  };
 
   const setPlaying = (value: boolean) => {
     playingRef.current = value;
@@ -900,16 +915,11 @@ function WSAudioPlayer(props: IProps) {
       if (blob) {
         // write to local file system
         const arrayBuffer = await blob.arrayBuffer();
-        console.log(arrayBuffer);
         const absMax = new Uint8Array(arrayBuffer).reduce(
           (a, b) => Math.max(a, Math.abs(b)),
           0
         );
-        const min = new Uint8Array(arrayBuffer).reduce(
-          (a, b) => Math.min(a, b),
-          0
-        );
-        console.log('Abs Max: ', absMax, ' Min: ', min);
+
         if (absMax < 255) throw new Exception(t.tooQuiet);
         await ipc?.writeBuffer(fileBeg, arrayBuffer);
         await ipc?.normalize(fileBeg, fileEnd);
@@ -943,13 +953,14 @@ function WSAudioPlayer(props: IProps) {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Paper sx={{ p: 1, margin: 'auto' }}>
+    <Box>
+      <Paper sx={{ p: 1, mb: 1 }}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
             whiteSpace: 'nowrap',
+            width: '100%',
           }}
           style={style}
         >
@@ -1025,8 +1036,9 @@ function WSAudioPlayer(props: IProps) {
                     <WSAudioPlayerZoom
                       // startBig={allowRecord || false}
                       ready={ready && !recording}
-                      wsZoom={wsZoom}
-                      wsPctWidth={wsPctWidth}
+                      fillPx={recording ? 100 : wsFillPx()}
+                      curPx={pxPerSec}
+                      onZoom={wsZoom}
                     ></WSAudioPlayerZoom>
                   </Grid>
                   <VertDivider id="wsAudioDiv3" />
@@ -1034,23 +1046,6 @@ function WSAudioPlayer(props: IProps) {
               )}
               {allowRecord && (
                 <>
-                  {allowSilence && (
-                    <>
-                      <WSAudioPlayerSilence
-                        disabled={
-                          !ready ||
-                          recording ||
-                          playing ||
-                          processingRecording ||
-                          waitingForAI
-                        }
-                        wsInsertSilence={wsInsertSilence}
-                        wsPosition={wsPosition}
-                        handleChanged={handleChanged}
-                      />
-                      <VertDivider id="wsAudioDiv4" />
-                    </>
-                  )}
                   {features?.noNoise && !offline && (
                     <LightTooltip
                       id="noiseRemovalTip"
@@ -1213,7 +1208,7 @@ function WSAudioPlayer(props: IProps) {
                   canSetDefault={canSetDefaultParams}
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
-                  wsAddOrRemoveRegion={wsAddOrRemoveRegion}
+                  wsAddRegion={wsAddRegion}
                   wsClearRegions={handleClearRegions}
                   setBusy={setBusy}
                 />
@@ -1243,9 +1238,7 @@ function WSAudioPlayer(props: IProps) {
                 </Grid>
               )}
             </Grid>
-            <div id="wsAudioTimeline" ref={timelineRef} />
             <div id="wsAudioWaveform" ref={waveformRef} />
-
             {justPlayButton || (
               <Grid container sx={toolbarProp}>
                 <Grid item>
@@ -1403,67 +1396,12 @@ function WSAudioPlayer(props: IProps) {
                 {allowSpeed && (
                   <>
                     <VertDivider id="wsAudioDiv6" />
-                    <Grid item>
-                      <Box sx={toolbarProp}>
-                        <>
-                          <LightTooltip
-                            id="wsAudioSlowerTip"
-                            title={t.slowerTip.replace(
-                              '{0}',
-                              localizeHotKey(SLOWER_KEY)
-                            )}
-                          >
-                            <span>
-                              <IconButton
-                                id="wsAudioSlower"
-                                onClick={handleSlower}
-                                disabled={
-                                  playbackRate === MIN_SPEED || recording
-                                }
-                              >
-                                <AngleDoubleDown fontSize="small" />{' '}
-                              </IconButton>
-                            </span>
-                          </LightTooltip>
-                          <IosSlider
-                            id="wsAudioPlaybackSpeed"
-                            aria-label="ios slider"
-                            value={
-                              typeof playbackRate === 'number'
-                                ? playbackRate * 100
-                                : 0
-                            }
-                            step={SPEED_STEP * 100}
-                            marks
-                            min={MIN_SPEED * 100}
-                            max={MAX_SPEED * 100}
-                            valueLabelDisplay="on"
-                            getAriaValueText={valuetext}
-                            valueLabelFormat={valuetext}
-                            onChange={handleSliderChange}
-                          />
-                          <LightTooltip
-                            id="wsAudioFasterTip"
-                            title={t.fasterTip.replace(
-                              '{0}',
-                              localizeHotKey(FASTER_KEY)
-                            )}
-                          >
-                            <span>
-                              <IconButton
-                                id="wsAudioFaster"
-                                onClick={handleFaster}
-                                disabled={
-                                  playbackRate === MAX_SPEED || recording
-                                }
-                              >
-                                <AngleDoubleUp fontSize="small" />{' '}
-                              </IconButton>
-                            </span>
-                          </LightTooltip>
-                        </>
-                      </Box>
-                    </Grid>
+                    <WSAudioPlayerRate
+                      playbackRate={playbackRate}
+                      setPlaybackRate={setPlaybackRate}
+                      recording={recording}
+                      localizeHotKey={localizeHotKey}
+                    />
                   </>
                 )}
                 {onSaveProgress && (

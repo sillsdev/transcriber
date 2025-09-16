@@ -9354,7 +9354,7 @@
       </unit>
       <unit id="wsAudioPlayerSegment.splitSegment">
          <segment>
-            <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <source>Add Boundary [Double Click/{0}]</source>
             <target/>
          </segment>
       </unit>

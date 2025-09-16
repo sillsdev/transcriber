@@ -145,6 +145,11 @@ export function PassageDetailItem(props: IProps) {
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
+  const [paneWidth, setPaneWidth] = useState(0);
+  useEffect(() => {
+    setPaneWidth(width - discussionSize.width - 16);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discussionSize, width]);
 
   const setUploadVisible = (value: boolean) => {
     if (value) {
@@ -376,10 +381,9 @@ export function PassageDetailItem(props: IProps) {
                     onChange={handleHorizonalSplitSize}
                   >
                     <Pane>
-                      <PassageDetailChooser
-                        width={width - discussionSize.width - 16}
-                      />
+                      <PassageDetailChooser width={paneWidth} />
                       <PassageDetailPlayer
+                        width={paneWidth}
                         allowSegment={segments}
                         allowAutoSegment={segments !== undefined}
                         saveSegments={
@@ -411,7 +415,7 @@ export function PassageDetailItem(props: IProps) {
                             currentVersion={currentVersion}
                             rowData={rowData}
                             segments={segString}
-                            width={width - discussionSize.width - 16}
+                            width={paneWidth}
                           />
                         </Box>
                         <Box sx={rowProp}>
