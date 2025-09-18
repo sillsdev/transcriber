@@ -311,7 +311,6 @@ export function useWaveSurfer(
       if (blobToLoad.current) {
         wsLoad();
       }
-      onCanUndo && onCanUndo(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wavesurfer]);
