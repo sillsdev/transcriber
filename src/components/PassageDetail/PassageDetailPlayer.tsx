@@ -400,11 +400,12 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   };
 
   return (
-    <div id="detailplayer" style={{ width }}>
+    <div id="detailplayer">
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
         height={playerSize - (chooserReduce ?? 0)}
+        width={width}
         blob={audioBlob}
         initialposition={initialposition}
         setInitialPosition={setInitialPosition}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IPassageRecordStrings } from '../model';
@@ -76,6 +76,8 @@ function PassageRecordDlg(props: IProps) {
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
   const [hasRights, setHasRights] = useState(false);
+  const [dialogWidth, setDialogWidth] = useState<number>(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const { startSave } = useContext(UnsavedContext).state;
   const t: IPassageRecordStrings = useSelector(
     passageRecordSelector,
@@ -109,6 +111,25 @@ function PassageRecordDlg(props: IProps) {
 
   useEffect(() => setBusy(false), [visible]);
 
+  useEffect(() => {
+    const updateWidth = () => {
+      if (dialogRef.current) {
+        // Get the computed style to account for padding
+        const computedStyle = window.getComputedStyle(dialogRef.current);
+        const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+        const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+        const contentWidth =
+          dialogRef.current.clientWidth - paddingLeft - paddingRight;
+        setDialogWidth(contentWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, dialogRef.current]);
+
   const handleSave = () => {
     startSave(myToolId);
   };
@@ -127,7 +148,7 @@ function PassageRecordDlg(props: IProps) {
       disableEnforceFocus
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
-      <DialogContent>
+      <DialogContent id="recDlgContent" ref={dialogRef}>
         {!busy && (
           <SpeakerName
             name={speaker || ''}
@@ -153,6 +174,10 @@ function PassageRecordDlg(props: IProps) {
           setCanSave={setCanSave}
           setCanCancel={setCanCancel}
           setStatusText={setStatusText}
+          width={dialogWidth}
+          allowZoom={true}
+          allowNoNoise={true}
+          allowDeltaVoice={true}
         />
         {metaData}
       </DialogContent>

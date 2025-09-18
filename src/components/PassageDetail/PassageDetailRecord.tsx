@@ -32,7 +32,7 @@ import { useStepPermissions } from '../../utils/useStepPermission';
 
 interface IProps {
   ready?: () => boolean;
-  width?: number;
+  width: number;
 }
 
 const SaveWait = 500;
@@ -255,7 +255,10 @@ export function PassageDetailRecord(props: IProps) {
         setStatusText={setStatusText}
         doReset={resetMedia}
         setDoReset={setResetMedia}
-        size={300 - chooserSize}
+        height={300 - chooserSize}
+        width={props.width}
+        allowNoNoise={true}
+        allowDeltaVoice={true}
         metaData={
           <>
             <Typography

@@ -105,6 +105,7 @@ interface IProps {
   alternatePlayer?: boolean;
   oneTryOnly?: boolean;
   height: number;
+  width: number;
   segments: string;
   verses?: string;
   currentSegmentIndex?: number;
@@ -138,6 +139,7 @@ interface IProps {
   onMarkerClick?: (time: number) => void;
   reload?: (blob: Blob) => void;
   noNewVoice?: boolean;
+  allowNoNoise?: boolean;
 }
 
 const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
@@ -164,6 +166,7 @@ function WSAudioPlayer(props: IProps) {
     allowDeltaVoice,
     oneTryOnly,
     height,
+    width,
     segments,
     verses,
     currentSegmentIndex,
@@ -197,6 +200,7 @@ function WSAudioPlayer(props: IProps) {
     onMarkerClick,
     reload,
     noNewVoice,
+    allowNoNoise,
   } = props;
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
@@ -274,21 +278,18 @@ function WSAudioPlayer(props: IProps) {
     return allowRecord || !allowSegment;
   }, [allowRecord, allowSegment]);
 
-  const myOnCurrentSegment = useMemo(
-    () => (currentSegment: IRegion | undefined) => {
-      //
-      //if (singleRegionOnly && currentSegment) {
-      //console.log('singleRegionOnly');
-      //play it??
-      //wsPlayRegion(currentSegment);
-      //onPlayStatus && onPlayStatus(true);
-      //}
-      currentSegmentRef.current = currentSegment;
-      onCurrentSegment && onCurrentSegment(currentSegment);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [] //singleRegionOnly]
-  );
+  const myOnCurrentSegment = (currentSegment: IRegion | undefined) => {
+    console.log('myOnCurrentSegment', currentSegment);
+    //
+    //if (singleRegionOnly && currentSegment) {
+    //console.log('singleRegionOnly');
+    //play it??
+    //wsPlayRegion(currentSegment);
+    //onPlayStatus && onPlayStatus(true);
+    //}
+    currentSegmentRef.current = currentSegment;
+    onCurrentSegment && onCurrentSegment(currentSegment);
+  };
 
   const {
     wsLoad,
@@ -642,11 +643,7 @@ function WSAudioPlayer(props: IProps) {
       wsPlayRegion(currentSegmentRef.current);
       nowplaying = true;
     } else nowplaying = wsTogglePlay();
-
-    if (
-      nowplaying &&
-      wsPosition().toFixed(2) === durationRef.current.toFixed(2)
-    )
+    if (nowplaying && Math.abs(wsPosition() - durationRef.current) < 0.2)
       wsGoto(0);
     setPlaying(nowplaying);
     if (onPlayStatus && isPlaying !== undefined && nowplaying !== isPlaying) {
@@ -954,7 +951,7 @@ function WSAudioPlayer(props: IProps) {
 
   return (
     <Box>
-      <Paper sx={{ p: 1, mb: 1 }}>
+      <Paper sx={{ p: 1, mb: 1, width: { width } }}>
         <Box
           sx={{
             display: 'flex',
@@ -1046,7 +1043,7 @@ function WSAudioPlayer(props: IProps) {
               )}
               {allowRecord && (
                 <>
-                  {features?.noNoise && !offline && (
+                  {allowNoNoise && features?.noNoise && !offline && (
                     <LightTooltip
                       id="noiseRemovalTip"
                       title={
@@ -1400,7 +1397,6 @@ function WSAudioPlayer(props: IProps) {
                       playbackRate={playbackRate}
                       setPlaybackRate={setPlaybackRate}
                       recording={recording}
-                      localizeHotKey={localizeHotKey}
                     />
                   </>
                 )}

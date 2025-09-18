@@ -280,7 +280,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                           <PassageDetailPlayer
                             width={paneWidth}
                             chooserReduce={chooserSize}
-                            allowSegment={undefined}
+                            allowZoomAndSpeed={true}
                           />
                         )}
                       </Pane>
