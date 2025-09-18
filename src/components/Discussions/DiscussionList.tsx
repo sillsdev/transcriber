@@ -80,7 +80,8 @@ export function DiscussionList() {
     []
   );
   const [collapsed, setCollapsed] = useState(false);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAddingx] = useState(false);
+  const addingRef = useRef(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const ctx = useContext(PassageDetailContext);
   const {
@@ -92,6 +93,7 @@ export function DiscussionList() {
     playerMediafile,
     setDiscussionMarkers,
   } = ctx.state;
+  const currentSegmentRef = useRef(currentSegment);
   const discussionSizeRef = useRef(discussionSize);
   const { toolsChanged, isChanged, startSave, startClear, clearCompleted } =
     useContext(UnsavedContext).state;
@@ -99,6 +101,10 @@ export function DiscussionList() {
     discussionListSelector,
     shallowEqual
   );
+  useEffect(() => {
+    currentSegmentRef.current = currentSegment;
+  }, [currentSegment]);
+
   const mediafileId = useMemo(() => {
     return playerMediafile?.id ?? '';
   }, [playerMediafile]);
@@ -154,6 +160,11 @@ export function DiscussionList() {
     );
     return mygroups.map((g) => related(g, 'group'));
   }, [groupMemberships, userId]);
+
+  const setAdding = (adding: boolean) => {
+    addingRef.current = adding;
+    setAddingx(adding);
+  };
 
   useEffect(() => {
     discussionSizeRef.current = discussionSize;
@@ -263,15 +274,15 @@ export function DiscussionList() {
     }
   };
   const resetDiscussionList = () => {
-    if (adding) {
+    if (addingRef.current) {
       const whole = prettySegment({
         start: 0,
         end: playerMediafile?.attributes?.duration || 0,
       });
       const lastDot = whole.lastIndexOf('.');
       const topic =
-        currentSegment.slice(0, lastDot) !== whole.slice(0, lastDot)
-          ? currentSegment ?? ''
+        currentSegmentRef.current.slice(0, lastDot) !== whole.slice(0, lastDot)
+          ? currentSegmentRef.current ?? ''
           : '';
       setDisplayDiscussions([
         {
@@ -401,14 +412,14 @@ export function DiscussionList() {
 
   const handleSaveFirstConfirmed = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    if (adding) myIds.push(NewDiscussionToolId);
+    if (addingRef.current) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startSave(id));
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    if (adding) myIds.push(NewDiscussionToolId);
+    if (addingRef.current) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startClear(id));
     waitSaveOrClear();
   };

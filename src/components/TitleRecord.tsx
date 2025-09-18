@@ -5,6 +5,8 @@ import { ISharedStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { VernacularTag } from '../crud';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { getRefWidth } from '../utils/getRefWidth';
 
 interface IProps {
   recToolId: string;
@@ -37,10 +39,23 @@ export default function TitleRecord(props: IProps) {
     onCancel,
     onSave,
   } = props;
+  const [stackWidth, setStackWidth] = useState<number>(0);
+  const stackRef = useRef<HTMLDivElement>(null);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
+  const updateStackWidth = useCallback(() => {
+    setStackWidth(getRefWidth(stackRef));
+  }, []);
+
+  useEffect(() => {
+    updateStackWidth();
+    window.addEventListener('resize', updateStackWidth);
+    return () => window.removeEventListener('resize', updateStackWidth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stackRef.current]);
+
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack ref={stackRef} direction="column" spacing={2}>
       <MediaRecord
         toolId={recToolId}
         passageId={passageId}
@@ -53,7 +68,10 @@ export default function TitleRecord(props: IProps) {
         setCanSave={handleSetCanSave}
         setStatusText={setStatusText}
         afterUploadCb={afterUploadCb}
-        size={200}
+        height={200}
+        width={stackWidth}
+        allowDeltaVoice={true}
+        allowNoNoise={false}
         autoStart={false}
       />
       <ActionRow>

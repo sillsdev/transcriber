@@ -74,6 +74,7 @@ export function HiddenPlayer(props: HiddenPlayerProps) {
         id="hiddenPlayer"
         allowRecord={false}
         height={150}
+        width={300}
         blob={audioBlob}
         initialposition={initialposition}
         setInitialPosition={setInitialPosition}

@@ -15,7 +15,11 @@ const theme = createTheme({
     secondary: {
       main: '#00A7E1', //Original: 00A7E1, Better color: 25CBB8
     },
-  },
+    // Custom colors - simple key-value pairs
+    custom: {
+      currentRegion: 'rgb(102, 255, 0, .5)',
+    },
+  } as any,
   typography: {
     button: {
       textTransform: 'capitalize',

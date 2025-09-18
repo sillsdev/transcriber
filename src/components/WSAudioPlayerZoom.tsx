@@ -10,6 +10,7 @@ import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomWidthIcon from '@mui/icons-material/Pageview';
 import { useSelector } from 'react-redux';
 import { audioPlayerZoomSelector } from '../selector';
+import { useGlobal } from '../context/GlobalContext';
 
 interface IProps {
   ready: boolean;
@@ -17,9 +18,10 @@ interface IProps {
   curPx: number;
   onZoom: (val: number) => void;
 }
-export const maxZoom = 200;
+export const maxZoom = 300;
 
 function WSAudioPlayerZoom(props: IProps) {
+  const [isDeveloper] = useGlobal('developer');
   const { ready, onZoom, fillPx, curPx } = props;
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -61,7 +63,7 @@ function WSAudioPlayerZoom(props: IProps) {
   };
   const handleZoomOut = () => {
     if (!readyRef.current) return false;
-    setZoom(Math.max(zoomRef.current / 2, maxZoom));
+    setZoom(Math.max(zoomRef.current / 2, fillPx));
     return true;
   };
 

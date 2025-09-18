@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Grid, Box, IconButton, SxProps } from '@mui/material';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import type { IconBaseProps } from 'react-icons/lib';
@@ -8,6 +8,7 @@ import { IWsAudioPlayerStrings } from '../model';
 import { useSelector } from 'react-redux';
 import { wsAudioPlayerSelector } from '../selector';
 import { shallowEqual } from 'react-redux';
+import { HotKeyContext } from '../context/HotKeyContext';
 
 const AngleDoubleUp = FaAngleDoubleUp as unknown as React.FC<IconBaseProps>;
 const AngleDoubleDown = FaAngleDoubleDown as unknown as React.FC<IconBaseProps>;
@@ -28,15 +29,21 @@ interface IProps {
   playbackRate: number;
   setPlaybackRate: (rate: number) => void;
   recording: boolean;
-  localizeHotKey: (key: string) => string;
 }
 
 function WSAudioPlayerRate(props: IProps) {
-  const { playbackRate, setPlaybackRate, recording, localizeHotKey } = props;
+  const { playbackRate, setPlaybackRate, recording } = props;
+  const playbackRateRef = useRef(playbackRate);
+  const { subscribe, unsubscribe, localizeHotKey } =
+    useContext(HotKeyContext).state;
   const t: IWsAudioPlayerStrings = useSelector(
     wsAudioPlayerSelector,
     shallowEqual
   );
+
+  useEffect(() => {
+    playbackRateRef.current = playbackRate;
+  }, [playbackRate]);
 
   const handleSliderChange = (event: Event, value: number | number[]) => {
     if (Array.isArray(value)) value = value[0]; //won't be
@@ -44,17 +51,28 @@ function WSAudioPlayerRate(props: IProps) {
   };
 
   const handleFaster = () => {
-    if (playbackRate === MAX_SPEED || recording) return false;
-    setPlaybackRate(Math.min(MAX_SPEED, playbackRate * 2));
+    if (playbackRateRef.current === MAX_SPEED || recording) return false;
+    setPlaybackRate(Math.min(MAX_SPEED, playbackRateRef.current * 2));
     return true;
   };
 
   const handleSlower = () => {
-    if (playbackRate === MIN_SPEED || recording) return false;
-    setPlaybackRate(Math.max(MIN_SPEED, playbackRate / 2));
+    if (playbackRateRef.current === MIN_SPEED || recording) return false;
+    setPlaybackRate(Math.max(MIN_SPEED, playbackRateRef.current / 2));
     return true;
   };
-
+  useEffect(() => {
+    const keys = [
+      { key: SLOWER_KEY, cb: handleSlower },
+      { key: FASTER_KEY, cb: handleFaster },
+    ];
+    keys.forEach((k) => subscribe(k.key, k.cb));
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      keys.forEach((k) => unsubscribe(k.key));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <Grid item>

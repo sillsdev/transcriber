@@ -12,7 +12,15 @@ import {
   SxProps,
   LinearProgress,
 } from '@mui/material';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
+import { getRefWidth } from '../utils/getRefWidth';
 import {
   ArtifactTypeSlug,
   useArtifactType,
@@ -82,6 +90,8 @@ export function ProvideRights(props: IProps) {
   const [resetMedia, setResetMedia] = useState(false);
   const [statement, setStatement] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const [paperWidth, setPaperWidth] = useState<number>(0);
+  const paperRef = useRef<HTMLDivElement>(null);
   const getGlobal = useGetGlobal();
   const {
     toolChanged,
@@ -139,6 +149,17 @@ export function ProvideRights(props: IProps) {
     setState({ ...state, fullName: speaker } as IVoicePerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
+
+  const updatePaperWidth = useCallback(() => {
+    setPaperWidth(getRefWidth(paperRef));
+  }, []);
+
+  useEffect(() => {
+    updatePaperWidth();
+    window.addEventListener('resize', updatePaperWidth);
+    return () => window.removeEventListener('resize', updatePaperWidth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paperRef.current]);
 
   useEffect(() => {
     if (saveRequested(toolId) && canSave) handleSave();
@@ -260,7 +281,7 @@ export function ProvideRights(props: IProps) {
 
   return (
     <div>
-      <Paper sx={paperProps}>
+      <Paper id="provideRights" ref={paperRef} sx={paperProps}>
         {!recordingRequired && (
           <Box sx={rowProp}>
             <Button
@@ -292,11 +313,13 @@ export function ProvideRights(props: IProps) {
           allowWave={false}
           showFilename={false}
           allowDeltaVoice={false}
+          allowNoNoise={false}
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
           doReset={resetMedia}
           setDoReset={setResetMedia}
-          size={200}
+          height={200}
+          width={paperWidth - 20 || 500}
           onSaving={() => setSaving(true)}
         />
         <Box sx={rowProp}>

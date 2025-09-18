@@ -499,11 +499,14 @@ export function PassageDetailItem(props: IProps) {
                           setStatusText={setStatusText}
                           doReset={resetMedia}
                           setDoReset={setResetMedia}
-                          size={200}
+                          height={200}
+                          width={paneWidth}
                           onRecording={onRecordingOrPlaying}
                           onPlayStatus={onRecordingOrPlaying}
                           oneTryOnly={oneTryOnly}
                           noNewVoice={true}
+                          allowDeltaVoice={true}
+                          allowNoNoise={true}
                         />
                         <Box sx={rowProp}>
                           <Typography variant="caption" sx={statusProps}>

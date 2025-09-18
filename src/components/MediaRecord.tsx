@@ -62,7 +62,8 @@ interface IProps {
   oneTryOnly?: boolean;
   allowWave?: boolean;
   showFilename?: boolean;
-  size?: number;
+  height?: number;
+  width: number;
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
   showLoad?: boolean;
@@ -71,6 +72,8 @@ interface IProps {
   autoStart?: boolean;
   trackState?: (mediaState: IMediaState) => void;
   noNewVoice?: boolean;
+  allowNoNoise?: boolean;
+  allowZoom?: boolean;
 }
 
 function MediaRecord(props: IProps) {
@@ -101,13 +104,16 @@ function MediaRecord(props: IProps) {
     autoStart,
     doReset,
     setDoReset,
-    size,
+    height,
     metaData,
     showLoad,
     preload,
     onLoaded,
     trackState,
     noNewVoice,
+    allowNoNoise,
+    allowZoom,
+    width,
   } = props;
   const t: IPassageRecordStrings = useSelector(passageRecordSelector);
   const convert_status = useSelector(
@@ -469,7 +475,7 @@ function MediaRecord(props: IProps) {
   const segments = '{}';
 
   return (
-    <Paper id="mediaRecord">
+    <Paper id="mediaRecord" sx={{ width: width }}>
       {showLoad &&
         mediaId &&
         mediaState.status === MediaSt.FETCHED &&
@@ -481,10 +487,11 @@ function MediaRecord(props: IProps) {
         )}
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
-        allowZoom={true}
+        allowZoom={allowZoom}
         allowDeltaVoice={allowDeltaVoice}
         oneTryOnly={oneTryOnly}
-        height={size || 300}
+        width={width - 20}
+        height={height || 300}
         blob={originalBlob}
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
@@ -496,6 +503,7 @@ function MediaRecord(props: IProps) {
         segments={segments}
         reload={gotTheBlob}
         noNewVoice={noNewVoice}
+        allowNoNoise={allowNoNoise}
       />
       {warning && (
         <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">

@@ -304,8 +304,11 @@ export default function TargetWordAdd(props: IProps) {
           showFilename={false}
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
-          size={200}
+          height={200}
+          width={350}
           autoStart={true}
+          allowDeltaVoice={false}
+          allowNoNoise={false}
         />
       )}
       <StatusMessage variant="caption">{statusText}</StatusMessage>

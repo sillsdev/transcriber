@@ -577,6 +577,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
         allowSegment={NamedRegions.Verse}
         onSegment={handleSegment}
         suggestedSegments={pastedSegments}
+        allowZoomAndSpeed={true}
       />
       <StyledPaper style={heightStyle}>
         <StyledTable id="verse-sheet" data-testid="verse-sheet">

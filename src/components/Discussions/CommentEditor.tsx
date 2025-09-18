@@ -211,8 +211,12 @@ export const CommentEditor = (props: IProps) => {
           showFilename={false}
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
-          size={200}
+          height={200}
+          width={250}
           autoStart={true}
+          allowDeltaVoice={false}
+          allowNoNoise={false}
+          allowZoom={false}
         />
       )}
       <RowDiv>

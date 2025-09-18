@@ -8,7 +8,7 @@ import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions';
 import toWav from 'audiobuffer-to-wav';
 
 import { logError, Severity } from '../utils/logErrorService';
-import { waitForIt } from '../utils/waitForIt';
+
 import {
   IRegion,
   IRegions,
@@ -113,13 +113,14 @@ export function useWaveSurfer(
   }, [isReady]);
 
   useEffect(() => {
+    const roundToFiveDecimals = (n: number) => Math.round(n * 100000) / 100000;
     const setProgress = (value: number) => {
       progressRef.current = value;
       onRegionProgress(value);
       onProgress(value);
     };
 
-    setProgress(currentTime);
+    setProgress(roundToFiveDecimals(currentTime));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime]);
 
@@ -137,14 +138,6 @@ export function useWaveSurfer(
     if (position === duration && isPlayingRef.current) {
       //if playing, position messages come in after this one that set it back to previously playing position.  Turn this off first in hopes that all messages are done before we set the position...
       wavesurferRef.current?.pause();
-      await waitForIt(
-        'wavesurfer stop',
-        () => !isPlayingRef.current,
-        () => {
-          return false;
-        },
-        100
-      );
     }
     if (progress() !== position) {
       wavesurferRef.current?.setTime(position); //seekAndCenter not avail?
@@ -174,6 +167,7 @@ export function useWaveSurfer(
     onRegionGoTo,
     currentRegion,
     wsSetRegionColor,
+    wsRemoveCurrentRegion,
   } = useWaveSurferRegions(
     singleRegionOnly,
     currentSegmentIndex ?? -1,
@@ -293,6 +287,11 @@ export function useWaveSurfer(
         }
       });
       */
+      wavesurfer.on('click', (relativeX: number, relativeY: number) => {
+        if (singleRegionOnly) {
+          wsRemoveCurrentRegion();
+        }
+      });
       wavesurfer.on('dblclick', (relativeX: number, relativeY: number) => {
         if (!singleRegionOnly) {
           wsAddRegion();
@@ -312,7 +311,6 @@ export function useWaveSurfer(
       if (blobToLoad.current) {
         wsLoad();
       }
-      onCanUndo && onCanUndo(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wavesurfer]);
@@ -813,5 +811,6 @@ export function useWaveSurfer(
     wsStopRecord,
     wsAddMarkers,
     wsSetRegionColor,
+    wsRemoveCurrentRegion,
   };
 }
