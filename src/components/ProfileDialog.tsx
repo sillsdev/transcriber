@@ -303,9 +303,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const [sync, setSync] = useState(true);
   const [syncFreq, setSyncFreq] = useState(2);
   const [role, setRole] = useState('');
-  const [locale, setLocale] = useState<string>(
-    localeDefault(isDeveloper === 'true')
-  );
+  const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
   const [sharedContent, setSharedContent] = useState(false);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
@@ -584,9 +582,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
-    setLocale(
-      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
-    );
+    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);
@@ -738,9 +734,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
     setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
-    setLocale(
-      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
-    );
+    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);

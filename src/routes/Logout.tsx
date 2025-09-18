@@ -54,7 +54,7 @@ export function Logout() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
-    setLanguage(localeDefault(isDeveloper === 'true'));
+    setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
       // ctx.logout();

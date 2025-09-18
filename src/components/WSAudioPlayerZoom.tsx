@@ -127,7 +127,7 @@ function WSAudioPlayerZoom(props: IProps) {
                 </IconButton>
               </span>
             </LightTooltip>
-            <Chip label={zoom} size="small" />
+            {isDeveloper && <Chip label={zoom} size="small" />}
           </>
         </Grid>
       </ToolbarGrid>

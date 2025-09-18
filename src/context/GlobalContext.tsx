@@ -29,7 +29,7 @@ export interface GlobalState {
   changed: boolean; //verified //UnsavedContext
   connected: boolean; //verified //useCheckOnline
   dataChangeCount: number; //verified
-  developer: string | null; //not verified but not userfacing
+  developer: boolean; //not verified but not userfacing
   enableOffsite: boolean; //verified
   home: boolean; //verified //TeamScreen, useHome
   importexportBusy: boolean; //verified

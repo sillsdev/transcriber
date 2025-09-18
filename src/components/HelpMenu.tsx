@@ -99,8 +99,9 @@ export function HelpMenu(props: IProps) {
   };
 
   const handleDeveloper = () => {
-    localStorage.setItem('developer', !developer ? 'true' : 'false');
-    setDeveloper(!developer ? 'true' : 'false');
+    let newVal = developer ? false : true;
+    localStorage.setItem('developer', newVal.toString());
+    setDeveloper(newVal);
     setAnchorEl(null);
   };
 

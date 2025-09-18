@@ -186,7 +186,7 @@ export function Loading() {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
     }
-    setLanguage(localeDefault(isDeveloper === 'true'));
+    setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData({
