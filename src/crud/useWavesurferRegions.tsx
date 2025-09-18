@@ -87,7 +87,7 @@ export function useWaveSurferRegions(
   const currentRegionOriginalColorRef = useRef<string>(''); // Store the original color of the current region
 
   const CLICK_DEBOUNCE_MS = 100; // Minimum time between clicks
-  const CURRENT_REGION_COLOR = 'rgba(0, 255, 0, 0.3)'; // Green color for current region
+  const CURRENT_REGION_COLOR = 'rgb(102, 255, 0, .5)'; // Green color for current region
   const NEXT_BORDER_COLOR = 'red';
 
   const regions = () =>
@@ -100,6 +100,10 @@ export function useWaveSurferRegions(
     return currentRegionRef.current;
   };
   const isMarker = (r: any) => r.start === r.end;
+
+  useEffect(() => {
+    singleRegionRef.current = singleRegionOnly;
+  }, [singleRegionOnly]);
 
   // handle region clicks with deduplication
   const handleRegionClick = (r: Region) => {
@@ -144,7 +148,8 @@ export function useWaveSurferRegions(
     return Math.abs(position - duration()) < 0.3;
   };
 
-  const setCurrentRegion = (r: any) => {
+  const setCurrentRegion = (r: Region | undefined) => {
+    if (r && isMarker(r)) return;
     if (r !== currentRegionRef.current) {
       // Reset previous current region to its original color and remove border
       if (currentRegionRef.current) {
@@ -170,7 +175,6 @@ export function useWaveSurferRegions(
       } else {
         currentRegionOriginalColorRef.current = '';
       }
-
       loopingRegionRef.current = r;
       currentRegionRef.current = r;
       onCurrentRegion &&
@@ -642,14 +646,7 @@ export function useWaveSurferRegions(
     ).finally(() => {
       setPrevNext(regarray.map((r: any) => r.id));
       onRegion(regarray.length, newRegions);
-
-      if (defaultRegionIndex >= 0) {
-        currentRegionRef.current = findRegion(
-          regarray[defaultRegionIndex]?.start ?? 0
-        );
-      } else {
-        onRegionGoTo(0);
-      }
+      onRegionGoTo(regarray[defaultRegionIndex]?.start ?? 0);
       loadingRef.current = false;
 
       if (savedMarkers) wsAddMarkers(savedMarkers);
@@ -670,10 +667,11 @@ export function useWaveSurferRegions(
   };
 
   const wsSplitRegion = (r: any, split: number) => {
+    if (r?.start === split || r?.end === split) return undefined;
     var ret: IRegionChange = {
-      start: r ? r.start : 0,
-      end: r ? r.end : duration(),
-      newStart: r ? r.start : 0,
+      start: r?.start ?? 0,
+      end: r?.end ?? duration(),
+      newStart: r?.start ?? 0,
       newEnd: split,
     };
     if (!wsRef.current) return ret;
@@ -682,12 +680,12 @@ export function useWaveSurferRegions(
       end: ret.end,
       drag: false,
       color: randomColor(0.1),
-      loop: r ? r.loop : false,
+      loop: r?.loop ?? false,
     };
+    var sortedIds: string[] = getSortedIds(); //need to get sorted ids before adding the new region
     var newRegion = Regions?.addRegion(region);
     var newSorted: string[] = [];
     if (r) {
-      var sortedIds: string[] = getSortedIds();
       var curIndex = sortedIds.findIndex((s) => s === r.id);
       updateRegion(r, { end: split });
       newSorted = sortedIds
@@ -707,6 +705,7 @@ export function useWaveSurferRegions(
       newSorted.push(newRegion?.id ?? 'nr');
     }
     setPrevNext(newSorted);
+
     if (r && r.loop && ret.newEnd < ret.end)
       //&& playing
       goto(ret.start + 0.01);
@@ -753,8 +752,8 @@ export function useWaveSurferRegions(
   const getSortedIds = () => {
     var sortedIds: string[] = [];
     if (!wsRef.current || numRegions() === 0) return sortedIds;
-    //do I need to find start = 0?
     var next = regions()[0];
+    //back up to the start
     while ((next as any).attributes?.prevRegion) {
       next = (next as any).attributes?.prevRegion;
     }
@@ -767,6 +766,15 @@ export function useWaveSurferRegions(
 
   const wsAddRegion = () => {
     return wsSplitRegion(currentRegion(), progress());
+  };
+
+  const wsRemoveCurrentRegion = () => {
+    const region = currentRegion();
+    if (region) {
+      region.remove();
+      return true;
+    }
+    return false;
   };
 
   function wsAutoSegment(loop: boolean = false, params: IRegionParams) {
@@ -812,16 +820,22 @@ export function useWaveSurferRegions(
   const wsGetRegions = () => {
     if (!wsRef.current || !Regions) return '{}';
 
-    var regions = getSortedIds().map(function (id) {
+    var sortedRegions = getSortedIds().map(function (id) {
       let r = region(id);
       if (r)
         return {
           start: roundToFiveDecimals(r.start),
           end: roundToFiveDecimals(r.end),
         };
-      else return {};
+      else {
+        console.log('wsGetRegions', id, 'not found');
+        return {};
+      }
     });
-    return JSON.stringify({ params: paramsRef.current, regions: regions });
+    return JSON.stringify({
+      params: paramsRef.current,
+      regions: sortedRegions,
+    });
   };
   const wsGetMarkers = () => {
     return markers();
@@ -831,9 +845,9 @@ export function useWaveSurferRegions(
     region.element!.style.transform = `translateX(-50%) scale(${
       hover ? 1.2 : 1
     })`;
-    region.element!.style.opacity = hover ? '0.7' : '1';
-    region.element!.style.backgroundColor = hover ? 'rgba(255, 0, 0, 0.3)' : '';
-    region.element!.style.border = hover ? '2px solid red' : '';
+    region.element!.style.border = hover
+      ? '2px solid blue'
+      : '1px solid rgb(51, 184, 231)';
   };
   const wsAddMarker = (m: IMarker, index: number) => {
     if (!wsRef.current || !Regions) return;
@@ -982,5 +996,6 @@ export function useWaveSurferRegions(
     onRegionGoTo,
     currentRegion,
     wsSetRegionColor,
+    wsRemoveCurrentRegion,
   };
 }
