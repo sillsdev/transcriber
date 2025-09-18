@@ -89,7 +89,7 @@ export function useWaveSurferRegions(
   const currentRegionOriginalColorRef = useRef<string>(''); // Store the original color of the current region
 
   const CLICK_DEBOUNCE_MS = 100; // Minimum time between clicks
-  const CURRENT_REGION_COLOR = theme.palette.custom.currentRegion; // Green color for current region
+  const CURRENT_REGION_COLOR = (theme.palette as any).custom.currentRegion; // Green color for current region
   const NEXT_BORDER_COLOR = 'red';
 
   const regions = () =>
