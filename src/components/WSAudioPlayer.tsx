@@ -279,7 +279,6 @@ function WSAudioPlayer(props: IProps) {
   }, [allowRecord, allowSegment]);
 
   const myOnCurrentSegment = (currentSegment: IRegion | undefined) => {
-    console.log('myOnCurrentSegment', currentSegment);
     //
     //if (singleRegionOnly && currentSegment) {
     //console.log('singleRegionOnly');
