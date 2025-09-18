@@ -5,7 +5,8 @@ import { ISharedStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { VernacularTag } from '../crud';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { getRefWidth } from '../utils/getRefWidth';
 
 interface IProps {
   recToolId: string;
@@ -42,22 +43,14 @@ export default function TitleRecord(props: IProps) {
   const stackRef = useRef<HTMLDivElement>(null);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  useEffect(() => {
-    const updateWidth = () => {
-      if (stackRef.current) {
-        // Get the computed style to account for padding
-        const computedStyle = window.getComputedStyle(stackRef.current);
-        const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
-        const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-        const contentWidth =
-          stackRef.current.clientWidth - paddingLeft - paddingRight;
-        setStackWidth(contentWidth);
-      }
-    };
+  const updateStackWidth = useCallback(() => {
+    setStackWidth(getRefWidth(stackRef));
+  }, []);
 
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+  useEffect(() => {
+    updateStackWidth();
+    window.addEventListener('resize', updateStackWidth);
+    return () => window.removeEventListener('resize', updateStackWidth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stackRef.current]);
 

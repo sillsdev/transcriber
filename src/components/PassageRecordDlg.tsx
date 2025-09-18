@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IPassageRecordStrings } from '../model';
+import { getRefWidth } from '../utils/getRefWidth';
 import {
   Dialog,
   DialogActions,
@@ -111,22 +118,14 @@ function PassageRecordDlg(props: IProps) {
 
   useEffect(() => setBusy(false), [visible]);
 
-  useEffect(() => {
-    const updateWidth = () => {
-      if (dialogRef.current) {
-        // Get the computed style to account for padding
-        const computedStyle = window.getComputedStyle(dialogRef.current);
-        const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
-        const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-        const contentWidth =
-          dialogRef.current.clientWidth - paddingLeft - paddingRight;
-        setDialogWidth(contentWidth);
-      }
-    };
+  const updateDialogWidth = useCallback(() => {
+    setDialogWidth(getRefWidth(dialogRef));
+  }, []);
 
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+  useEffect(() => {
+    updateDialogWidth();
+    window.addEventListener('resize', updateDialogWidth);
+    return () => window.removeEventListener('resize', updateDialogWidth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, dialogRef.current]);
 

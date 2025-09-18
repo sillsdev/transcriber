@@ -12,7 +12,15 @@ import {
   SxProps,
   LinearProgress,
 } from '@mui/material';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
+import { getRefWidth } from '../utils/getRefWidth';
 import {
   ArtifactTypeSlug,
   useArtifactType,
@@ -142,22 +150,14 @@ export function ProvideRights(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
 
-  useEffect(() => {
-    const updateWidth = () => {
-      if (paperRef.current) {
-        // Get the computed style to account for padding
-        const computedStyle = window.getComputedStyle(paperRef.current);
-        const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
-        const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-        const contentWidth =
-          paperRef.current.clientWidth - paddingLeft - paddingRight;
-        setPaperWidth(contentWidth);
-      }
-    };
+  const updatePaperWidth = useCallback(() => {
+    setPaperWidth(getRefWidth(paperRef));
+  }, []);
 
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+  useEffect(() => {
+    updatePaperWidth();
+    window.addEventListener('resize', updatePaperWidth);
+    return () => window.removeEventListener('resize', updatePaperWidth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paperRef.current]);
 

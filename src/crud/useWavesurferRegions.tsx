@@ -6,6 +6,7 @@ import RegionsPlugin, {
 } from 'wavesurfer.js/dist/plugins/regions';
 import WaveSurfer from 'wavesurfer.js';
 import { IMarker } from './useWaveSurfer';
+import { useTheme } from '@mui/material';
 
 export interface IRegionChange {
   start: number;
@@ -70,6 +71,7 @@ export function useWaveSurferRegions(
   onMarkerClick?: (time: number) => void,
   verses?: string
 ) {
+  const theme = useTheme();
   const wsRef = useRef<WaveSurfer | null>(ws);
   const singleRegionRef = useRef(singleRegionOnly);
   const currentRegionRef = useRef<any>();
@@ -87,7 +89,7 @@ export function useWaveSurferRegions(
   const currentRegionOriginalColorRef = useRef<string>(''); // Store the original color of the current region
 
   const CLICK_DEBOUNCE_MS = 100; // Minimum time between clicks
-  const CURRENT_REGION_COLOR = 'rgb(102, 255, 0, .5)'; // Green color for current region
+  const CURRENT_REGION_COLOR = theme.palette.custom.currentRegion; // Green color for current region
   const NEXT_BORDER_COLOR = 'red';
 
   const regions = () =>
@@ -846,8 +848,8 @@ export function useWaveSurferRegions(
       hover ? 1.2 : 1
     })`;
     region.element!.style.border = hover
-      ? '2px solid blue'
-      : '1px solid rgb(51, 184, 231)';
+      ? `2px solid ${theme.palette.primary.main}`
+      : `1px solid ${theme.palette.secondary.light}`;
   };
   const wsAddMarker = (m: IMarker, index: number) => {
     if (!wsRef.current || !Regions) return;
