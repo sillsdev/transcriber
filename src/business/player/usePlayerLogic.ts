@@ -84,8 +84,10 @@ export const usePlayerLogic = (props: PlayerLogicProps) => {
       //might be "[]"
       if ((segs.regions?.length ?? 0) < 3) {
         setCurrentSegment({ start: 0, end: durationRef.current }, -1);
+        return true;
       }
     }
+    return false;
   };
 
   const onCurrentSegment = (segment: IRegion | undefined) => {
@@ -99,8 +101,7 @@ export const usePlayerLogic = (props: PlayerLogicProps) => {
             (r: IRegion) => r.start <= segment?.start && r.end >= segment?.end
           ) + 1;
     } else {
-      setSegmentToWhole();
-      return;
+      if (setSegmentToWhole()) return;
     }
     setCurrentSegment && setCurrentSegment(segment, index);
   };
