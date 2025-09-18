@@ -1437,7 +1437,7 @@ export function ScriptureTable(props: IProps) {
         getSharedResource,
         user,
         myGroups,
-        isDeveloper: developer === 'true',
+        isDeveloper: developer,
       });
       setSheet(newWorkflow);
 

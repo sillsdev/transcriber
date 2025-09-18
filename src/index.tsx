@@ -210,7 +210,7 @@ Promise.all(promises)
       loadComplete: false,
       importexportBusy: false,
       autoOpenAddMedia: false,
-      developer: localStorage.getItem(LocalKey.developer),
+      developer: localStorage.getItem(LocalKey.developer) === 'true',
       offline: isElectron,
       errorReporter: bugsnagClient,
       alertOpen: false,

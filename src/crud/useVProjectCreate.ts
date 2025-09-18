@@ -61,7 +61,7 @@ export const useVProjectCreate = () => {
       attributes: {
         name,
         description,
-        uilanguagebcp47: localeDefault(isDeveloper === 'true'),
+        uilanguagebcp47: localeDefault(isDeveloper),
         language,
         languageName,
         isPublic,
