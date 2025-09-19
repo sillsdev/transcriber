@@ -95,7 +95,8 @@ export function useWaveSurfer(
   //put these all in refs to be used in functions
   const { wavesurfer, isPlaying, currentTime, isReady } = useWavesurfer({
     container: container, //containerRef as React.RefObject<HTMLDivElement>,
-    progressColor: '#3B8686',
+    progressColor: '#96c1c1',
+    waveColor: '#9fc5e8',
     cursorColor: '#1b0707',
     url: playerUrl,
     height: height,
