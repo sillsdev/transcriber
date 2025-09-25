@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useWavesurfer } from '@wavesurfer/react';
 import Timeline from 'wavesurfer.js/dist/plugins/timeline';
 import ZoomPlugin from 'wavesurfer.js/dist/plugins/zoom';
-//import RecordPlugin from 'wavesurfer.js/dist/plugins/record';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions';
 import toWav from 'audiobuffer-to-wav';
 

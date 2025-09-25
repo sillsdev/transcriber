@@ -307,7 +307,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                       )}
                       {tool === ToolSlug.Transcribe && (
                         <PassageDetailTranscribe
-                          width={paneWidth}
+                          width={paneWidth - 60}
                           artifactTypeId={artifactId}
                           onFilter={handleFilter}
                         />

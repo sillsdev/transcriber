@@ -432,6 +432,9 @@ export function useWaveSurferRegions(
     });
 
     const sortedBoundaries = Array.from(boundaries).sort((a, b) => a - b);
+    const labelFromVerses = (position: number) =>
+      versesegs.find((v) => roundToFiveDecimals(v.start) === position)?.label ||
+      '';
     const fromVerses = (position: number) =>
       versesegs.some(
         (v) =>
@@ -442,7 +445,7 @@ export function useWaveSurferRegions(
     let start = sortedBoundaries[0];
 
     // Create regions between consecutive boundaries
-    for (let i = 1; i < sortedBoundaries.length - 1; i++) {
+    for (let i = 1; i < sortedBoundaries.length; i++) {
       let end = sortedBoundaries[i];
       const length = end - start;
       // Only add regions that meet the minimum length requirement
@@ -450,6 +453,7 @@ export function useWaveSurferRegions(
         result.push({
           start: start,
           end: end,
+          label: labelFromVerses(start),
         });
         start = end;
       } else {
@@ -640,19 +644,16 @@ export function useWaveSurferRegions(
       region.id = r?.id;
     });
     console.log('loadRegions', regarray.length, numRegions());
-    waitForIt(
-      'wait for last region',
-      () => numRegions() === regarray.length,
-      () => false,
-      100
-    ).finally(() => {
-      setPrevNext(regarray.map((r: any) => r.id));
-      onRegion(regarray.length, newRegions);
-      onRegionGoTo(regarray[defaultRegionIndex]?.start ?? 0);
-      loadingRef.current = false;
+    if (numRegions() !== regarray.length) {
+      console.log('wHY NOT');
+    }
 
-      if (savedMarkers) wsAddMarkers(savedMarkers);
-    });
+    setPrevNext(regarray.map((r: any) => r.id));
+    onRegion(regarray.length, newRegions);
+    onRegionGoTo(regarray[defaultRegionIndex]?.start ?? 0);
+    loadingRef.current = false;
+
+    if (savedMarkers) wsAddMarkers(savedMarkers);
     return true;
   }
   const wsAddMarkers = (markers: IMarker[]) => {
@@ -828,6 +829,7 @@ export function useWaveSurferRegions(
         return {
           start: roundToFiveDecimals(r.start),
           end: roundToFiveDecimals(r.end),
+          label: r.content?.textContent || '',
         };
       else {
         console.log('wsGetRegions', id, 'not found');
